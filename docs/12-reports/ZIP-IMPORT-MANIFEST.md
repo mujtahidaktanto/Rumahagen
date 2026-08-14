@@ -1,0 +1,121 @@
+# RUMAHAGEN ZIP Import Manifest
+
+Source: ._raw
+
+Total ZIP entries: 110
+Mapped into repo: {len(mapped)}
+Omitted byte-identical duplicates: {len(omitted)}
+
+## Omitted duplicates
+- `0007_m12_organization__2_.sql` — byte-identical duplicate of corresponding -FIXED migration
+- `0008_m03_listing__2_.sql` — byte-identical duplicate of corresponding -FIXED migration
+- `0009_m04_learning_center__2_.sql` — byte-identical duplicate of corresponding -FIXED migration
+- `0010_m05_events__2_.sql` — byte-identical duplicate of corresponding -FIXED migration
+
+## Mapping
+- `0001_extensions_helpers__1_.sql` → `supabase/migrations/0001_extensions_helpers.sql`
+- `0002_m10_rbac_foundation__1_.sql` → `supabase/migrations/0002_m10_rbac_foundation.sql`
+- `0003_m01_auth__1_.sql` → `supabase/migrations/0003_m01_auth.sql`
+- `0004_region_reference__1_.sql` → `supabase/migrations/0004_region_reference.sql`
+- `0005_m02_agent_profile__3_.sql` → `supabase/migrations/0005_m02_agent_profile.sql`
+- `0006_m06_developer__1_.sql` → `supabase/migrations/0006_m06_developer.sql`
+- `0007_m12_organization-FIXED.sql` → `supabase/migrations/0007_m12_organization.sql`
+- `0007_m12_organization__1_.sql` → `supabase/migrations-archive/0007_m12_organization-PRA-FIX-T1-04.sql`
+- `0008_m03_listing-FIXED.sql` → `supabase/migrations/0008_m03_listing.sql`
+- `0008_m03_listing__1_.sql` → `supabase/migrations-archive/0008_m03_listing-PRA-FIX-T1-02-T3-06.sql`
+- `0009_m04_learning_center-FIXED.sql` → `supabase/migrations/0009_m04_learning_center.sql`
+- `0009_m04_learning_center__1_.sql` → `supabase/migrations-archive/0009_m04_learning_center-PRA-FIX-T1-01.sql`
+- `0010_m05_events-FIXED.sql` → `supabase/migrations/0010_m05_events.sql`
+- `0010_m05_events__1_.sql` → `supabase/migrations-archive/0010_m05_events-PRA-FIX-T1-03.sql`
+- `0011_m07_dbr__2_.sql` → `supabase/migrations/0011_m07_dbr.sql`
+- `0012_m08_notifications__1_.sql` → `supabase/migrations/0012_m08_notifications.sql`
+- `0013_m09_admin__1_.sql` → `supabase/migrations/0013_m09_admin.sql`
+- `0014_m11_seo__1_.sql` → `supabase/migrations/0014_m11_seo.sql`
+- `0015_m13_ai_assistant__1_.sql` → `supabase/migrations/0015_m13_ai_assistant.sql`
+- `ADR-005-Search-Strategy-Review.md` → `docs/02-architecture/adr-reviews/ADR-005-Search-Strategy-Review.md`
+- `ADR-006-Job-Queue-Strategy-Review.md` → `docs/02-architecture/adr-reviews/ADR-006-Job-Queue-Strategy-Review.md`
+- `ADR-008-Maps-Provider-Review__1_.md` → `docs/02-architecture/adr-reviews/ADR-008-Maps-Provider-Review.md`
+- `ADR-018-Caching-Strategy-Review.md` → `docs/02-architecture/adr-reviews/ADR-018-Caching-Strategy-Review.md`
+- `ADR-047-Image-Duplicate-Detection.md` → `docs/02-architecture/adr-reviews/ADR-047-Image-Duplicate-Detection.md`
+- `ADR-Consolidation-Supporting-Deliverables.md` → `docs/12-reports/ADR-Consolidation-Supporting-Deliverables.md`
+- `AI-CONTEXT-PACK-v1_1.md` → `docs/11-ai-context/AI-CONTEXT-PACK-v1.1.md`
+- `AI-DEVELOPMENT-BLUEPRINT-v1_6-FINAL__1_.md` → `docs/11-ai-context/AI-DEVELOPMENT-BLUEPRINT-v1.6-FINAL.md`
+- `API-Specification-RUMAHAGEN-v1_3-FINAL-FIXED.md` → `docs/04-api/API-Specification-RUMAHAGEN-v1.3-FINAL-FIXED.md`
+- `API-Specification-RUMAHAGEN-v1_3-FINAL.md` → `docs/_archive/API-Specification/API-Specification-RUMAHAGEN-v1_3-FINAL.md`
+- `Architecture-Evolution-Proposal-Organization-Management-System-v0_9-FINAL.md` → `docs/02-architecture/Architecture-Evolution-Proposal-Organization-Management-System-v0.9-FINAL.md`
+- `Authorization-Access-Control-Specification-v1_1-FINAL.md` → `docs/06-security/Authorization-Access-Control-Specification-v1.1-FINAL.md`
+- `CHANGELOG-v0_4_1.md` → `docs/_archive/CHANGELOG/CHANGELOG-v0.4.1.md`
+- `CHANGELOG-v0_7_1.md` → `docs/_archive/CHANGELOG/CHANGELOG-v0.7.1.md`
+- `CHANGELOG-v0_7_19-FINAL.md` → `docs/_archive/CHANGELOG/CHANGELOG-v0.7.19-FINAL.md`
+- `CHANGELOG-v0_7_2.md` → `docs/_archive/CHANGELOG/CHANGELOG-v0.7.2.md`
+- `CHANGELOG-v0_7_20-FINAL.md` → `docs/_archive/CHANGELOG/CHANGELOG-v0.7.20-FINAL.md`
+- `CHANGELOG-v0_7_21-VERIFIED-FINAL.md` → `docs/00-governance/CHANGELOG-v0.7.21-VERIFIED-FINAL.md`
+- `CURRENT-PROJECT-STATE-rev10-KONSOLIDASI-FINAL.md` → `docs/00-governance/CURRENT-PROJECT-STATE-rev10-KONSOLIDASI-FINAL.md`
+- `CURRENT-PROJECT-STATE-updated-v5.md` → `docs/_archive/CURRENT-PROJECT-STATE/CURRENT-PROJECT-STATE-updated-v5.md`
+- `CURRENT-PROJECT-STATE-updated-v7.md` → `docs/_archive/CURRENT-PROJECT-STATE/CURRENT-PROJECT-STATE-updated-v7.md`
+- `CURRENT-PROJECT-STATE-updated-v8__1_.md` → `docs/_archive/CURRENT-PROJECT-STATE/CURRENT-PROJECT-STATE-updated-v8__1_.md`
+- `CURRENT-PROJECT-STATE-updated-v9.md` → `docs/_archive/CURRENT-PROJECT-STATE/CURRENT-PROJECT-STATE-updated-v9.md`
+- `CURRENT-PROJECT-STATE-updated.md` → `docs/_archive/CURRENT-PROJECT-STATE/CURRENT-PROJECT-STATE-updated.md`
+- `DEVELOPMENT-ROADMAP.md` → `docs/10-roadmap/DEVELOPMENT-ROADMAP.md`
+- `Database-Dictionary-Migration-Ready-v1_0-FINAL.md` → `docs/03-database/Database-Dictionary-Migration-Ready-v1.0-FINAL.md`
+- `Database-Migration-Full-v1_0__1_.sql` → `supabase/reference/Database-Migration-Full-v1.0.sql`
+- `ERD-Skema-Database-RUMAHAGEN-v1_4-FINAL.md` → `docs/03-database/ERD-Skema-Database-RUMAHAGEN-v1.4-FINAL.md`
+- `Engineering-Alignment-Framework-v1_0.md` → `docs/00-governance/Engineering-Alignment-Framework-v1.0.md`
+- `Entity-Mapping-RUMAHAGEN-v1_0-FINAL.md` → `docs/01-product/Entity-Mapping-RUMAHAGEN-v1.0-FINAL.md`
+- `Functional-Specification-RUMAHAGEN-v1_0-FINAL.md` → `docs/05-ux/Functional-Specification-RUMAHAGEN-v1.0-FINAL.md`
+- `ISSUE-REGISTER-Konsolidasi-FINAL.md` → `docs/_archive/ISSUE-REGISTER/ISSUE-REGISTER-Konsolidasi-FINAL.md`
+- `ISSUE-REGISTER-Konsolidasi-FINAL__3_.md` → `docs/_archive/ISSUE-REGISTER/ISSUE-REGISTER-Konsolidasi-FINAL__3_.md`
+- `ISSUE-REGISTER-Konsolidasi-v2_0-KONSOLIDASI-FINAL.md` → `docs/12-reports/ISSUE-REGISTER-Konsolidasi-v2.0-KONSOLIDASI-FINAL.md`
+- `Issue-Register-Resolution-Package-v1_0.md` → `docs/12-reports/Issue-Register-Resolution-Package-v1.0.md`
+- `MP-01-Authentication-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-01-Authentication-Module-Planning-v1_0-FINAL.md`
+- `MP-02-ProfilAgen-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-02-ProfilAgen-Module-Planning-v1_0-FINAL.md`
+- `MP-03-Listing-Module-Planning-v1_0-FINAL__1_.md` → `docs/09-module-planning/MP-03-Listing-Module-Planning-v1_0-FINAL.md`
+- `MP-04-LearningCenter-Module-Planning-v1_0-FINAL__1_.md` → `docs/09-module-planning/MP-04-LearningCenter-Module-Planning-v1_0-FINAL.md`
+- `MP-05-KalenderEvent-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-05-KalenderEvent-Module-Planning-v1_0-FINAL.md`
+- `MP-06-DirektoriDeveloper-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-06-DirektoriDeveloper-Module-Planning-v1_0-FINAL.md`
+- `MP-07-DBRScoring-Module-Planning-v1_0-FINAL__1_.md` → `docs/09-module-planning/MP-07-DBRScoring-Module-Planning-v1_0-FINAL.md`
+- `MP-08-DashboardNotifikasi-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-08-DashboardNotifikasi-Module-Planning-v1_0-FINAL.md`
+- `MP-09-AdminPanel-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-09-AdminPanel-Module-Planning-v1_0-FINAL.md`
+- `MP-10-RBAC-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-10-RBAC-Module-Planning-v1_0-FINAL.md`
+- `MP-11-SEOAnalytics-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-11-SEOAnalytics-Module-Planning-v1_0-FINAL.md`
+- `MP-12-Organization-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-12-Organization-Module-Planning-v1_0-FINAL.md`
+- `MP-13-AIAssistant-Module-Planning-v1_0-FINAL.md` → `docs/09-module-planning/MP-13-AIAssistant-Module-Planning-v1_0-FINAL.md`
+- `Module-Dependency-Matrix-RUMAHAGEN-v1_0-FINAL__1_.md` → `docs/09-module-planning/Module-Dependency-Matrix-RUMAHAGEN-v1.0-FINAL.md`
+- `Module-Implementation-Strategy-RUMAHAGEN-v1_0-FINAL.md` → `docs/09-module-planning/Module-Implementation-Strategy-RUMAHAGEN-v1.0-FINAL.md`
+- `P7-Hasil-UISpec-DuplicateModal-WarningBanner.md` → `docs/05-ux/P7-Hasil-UISpec-DuplicateModal-WarningBanner.md`
+- `PRD-RUMAHAGEN-v1_3-FINAL.md` → `docs/01-product/PRD-RUMAHAGEN-v1.3-FINAL.md`
+- `PROJECT-CONSTITUTION-v1_9-FINAL.md` → `docs/00-governance/PROJECT-CONSTITUTION-v1.9-FINAL.md`
+- `Paket-Prompt-Konsolidasi-Riwayat-Versi-Dokumen.md` → `docs/12-reports/Paket-Prompt-Konsolidasi-Riwayat-Versi-Dokumen.md`
+- `Prompt-Drift-Detection-Audit-ADR.md` → `docs/12-reports/Prompt-Drift-Detection-Audit-ADR.md`
+- `README-seed-superadmin.md` → `supabase/seed/README-seed-superadmin.md`
+- `SEO-Analytics-Specification-RUMAHAGEN-v1_1-FINAL.md` → `docs/07-seo/SEO-Analytics-Specification-RUMAHAGEN-v1.1-FINAL.md`
+- `SYSTEM-ARCHITECTURE-Consolidation-Supporting-Deliverables.md` → `docs/12-reports/SYSTEM-ARCHITECTURE-Consolidation-Supporting-Deliverables.md`
+- `SYSTEM-ARCHITECTURE-v1_6-FINAL.md` → `docs/02-architecture/SYSTEM-ARCHITECTURE-v1.6-FINAL.md`
+- `TASK-TEMPLATE-v1_1.md` → `docs/00-governance/TASK-TEMPLATE-v1.1.md`
+- `Technical-Specification-RUMAHAGEN-v1_0-FINAL.md` → `docs/08-technical-spec/Technical-Specification-RUMAHAGEN-v1.0-FINAL.md`
+- `UI-Specification-RUMAHAGEN-v1_0-FINAL.md` → `docs/05-ux/UI-Specification-RUMAHAGEN-v1.0-FINAL.md`
+- `User-Flow-RUMAHAGEN-v1_2-FINAL.md` → `docs/05-ux/User-Flow-RUMAHAGEN-v1.2-FINAL.md`
+- `architecture-decision-records-FINAL-v1_1-plus-ADR029.md` → `docs/02-architecture/architecture-decision-records-FINAL-v1.1-plus-ADR029.md`
+- `architecture-decision-records-v1_1.md` → `docs/_archive/architecture-decision-records/architecture-decision-records-v1_1.md`
+- `decision-log-FINAL-v8Agustus2026.md` → `docs/00-governance/decision-log-FINAL.md`
+- `dependency-manifest-v1_6-FINAL.md` → `docs/02-architecture/dependency-manifest-v1.6-FINAL.md`
+- `document-governance-baseline-register-v1_11-KONSOLIDASI-FINAL.md` → `docs/00-governance/document-governance-baseline-register-v1.11-KONSOLIDASI-FINAL.md`
+- `document-governance-baseline-register-v1_4.md` → `docs/_archive/document-governance-baseline-register/document-governance-baseline-register-v1_4.md`
+- `document-governance-baseline-register-v1_6.md` → `docs/_archive/document-governance-baseline-register/document-governance-baseline-register-v1_6.md`
+- `document-governance-baseline-register-v1_7.md` → `docs/_archive/document-governance-baseline-register/document-governance-baseline-register-v1_7.md`
+- `document-governance-baseline-register-v1_8-FINAL__3_.md` → `docs/_archive/document-governance-baseline-register/document-governance-baseline-register-v1_8-FINAL__3_.md`
+- `document-governance-baseline-register-v1_9-FINAL.md` → `docs/_archive/document-governance-baseline-register/document-governance-baseline-register-v1_9-FINAL.md`
+- `executive-architecture-review.md` → `docs/12-reports/executive-architecture-review.md`
+- `foundation-validation-report.md` → `docs/12-reports/foundation-validation-report.md`
+- `migrations-RENAME-ARCHIVE-MANIFEST.md` → `docs/12-reports/migrations-RENAME-ARCHIVE-MANIFEST.md`
+- `project-manifest-v1_10.md` → `docs/_archive/project-manifest/project-manifest-v1_10.md`
+- `project-manifest-v1_24-FINAL__1_.md` → `docs/_archive/project-manifest/project-manifest-v1_24-FINAL__1_.md`
+- `project-manifest-v1_25-FINAL.md` → `docs/_archive/project-manifest/project-manifest-v1_25-FINAL.md`
+- `project-manifest-v1_26-KONSOLIDASI-FINAL.md` → `docs/_archive/project-manifest/project-manifest-v1_26-KONSOLIDASI-FINAL.md`
+- `project-manifest-v1_28-KONSOLIDASI-FINAL.md` → `docs/00-governance/project-manifest-v1.28-KONSOLIDASI-FINAL.md`
+- `project-manifest-v1_8.md` → `docs/_archive/project-manifest/project-manifest-v1_8.md`
+- `project-manifest-v1_9.md` → `docs/_archive/project-manifest/project-manifest-v1_9.md`
+- `project-manifest__10_.md` → `docs/_archive/project-manifest/project-manifest__10_.md`
+- `seed-superadmin.ts` → `supabase/seed/seed-superadmin.ts`
+- `synchronization-report-adr-001.md` → `docs/02-architecture/synchronization-report-adr-001.md`
+- `technology-decisions-v1_6-FINAL.md` → `docs/02-architecture/technology-decisions-v1.6-FINAL.md`
