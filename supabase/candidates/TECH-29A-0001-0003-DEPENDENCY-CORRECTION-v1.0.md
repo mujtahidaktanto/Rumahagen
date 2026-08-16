@@ -13,15 +13,16 @@ GitHub tracking: Issue #1 — TECH-29A blocker: canonical 0001 migration has dep
 Preserve canonical source unchanged. Correct execution dependency only. No authorization semantics, role vocabulary, permission vocabulary, RLS intent, table definitions, constraints, or business rules are changed.
 
 ## Controlled execution sequence
-1. Execute the extension declarations and `set_updated_at()` portion of canonical 0001.
-2. Execute canonical 0002 unchanged.
+1. Execute only the extension declarations and `set_updated_at()` portion of canonical 0001.
+2. Execute the table/seed/RLS-enable portion of canonical 0002 without its policies that call authorization helpers.
 3. Execute the table/constraint/trigger/RLS-enable portion of canonical 0003 without its policies that call authorization helpers.
 4. Execute the three authorization helper functions from canonical 0001 unchanged, after `users`, `roles`, `permissions`, and `role_permissions` exist.
-5. Execute the policy portion of canonical 0003 unchanged.
-6. Continue with canonical 0004–0015 in order.
+5. Execute the policy portion of canonical 0002 unchanged.
+6. Execute the policy portion of canonical 0003 unchanged.
+7. Continue with canonical 0004–0015 in order.
 
 ## Why this correction is required
-Canonical 0001 defines SQL-language helpers against tables created by later migrations. PostgreSQL validates SQL function bodies at creation time, so the original order is not executable on an empty database. Canonical 0003 also creates policies that require the helpers, creating a dependency cycle that must be resolved by splitting execution only at the dependency boundary.
+There is a dependency cycle across the first three canonical migrations: 0001 helper functions reference tables created by 0002/0003; 0002 RLS policies call those helpers; and 0003 RLS policies also call those helpers. PostgreSQL therefore cannot execute the three files literally on an empty database. The correction splits only the dependency-sensitive sections while preserving their canonical definitions.
 
 ## Non-goals
 - Do not modify canonical migration files on `main`.
@@ -31,4 +32,4 @@ Canonical 0001 defines SQL-language helpers against tables created by later migr
 - Do not authorize production execution.
 
 ## Acceptance gate
-The correction is acceptable only if the resulting objects and definitions are byte/semantic equivalent to the canonical source sections and the subsequent 0004–0015 migrations execute without requiring additional undocumented edits.
+The correction is acceptable only if the resulting objects and definitions are semantically equivalent to the canonical source sections and canonical 0004–0015 execute without additional undocumented edits.
