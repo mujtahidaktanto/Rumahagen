@@ -1,0 +1,22 @@
+{
+  "project": "RumahAgen",
+  "arb_batch": "Batch-1 Foundation",
+  "arb": "ARB-02",
+  "madcr": "MADCR-036",
+  "status": "ACTIVE",
+  "decision_type": "Architecture",
+  "domain": "M15 - Title",
+  "formal_approval": true,
+  "invariants": [
+    "Title Definition != Award Instance",
+    "Semantic separation is immutable",
+    "Award Instance retains minimal provenance: Title Definition + Applicable Version"
+  ],
+  "business_rule_boundaries": [
+    "Rename behavior",
+    "Historical preservation / retirement",
+    "Credential relationship"
+  ],
+  "implementation_authorized": false,
+  "bolt_authorized": false
+}

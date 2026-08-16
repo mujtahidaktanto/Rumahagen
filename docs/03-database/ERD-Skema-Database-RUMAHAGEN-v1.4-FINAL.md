@@ -44,7 +44,7 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 
 ## 2. Data Dictionary Detail
 
-### 2.1 `users` (Modul 1 — tabel induk semua role)  
+### 2.1 `users` (Modul 1 — tabel induk semua role)
 > **Entity ID:** `ENT-M01-User`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -59,7 +59,7 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 | created_at | TIMESTAMP | NOT NULL | |
 | updated_at | TIMESTAMP | NOT NULL | |
 
-### 2.2 `agent_verification_documents` (Modul 1)  
+### 2.2 `agent_verification_documents` (Modul 1)
 > **Entity ID:** `ENT-M01-AgentVerificationDocument`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -73,7 +73,7 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 | rejection_reason | TEXT | NULLABLE | |
 | created_at | TIMESTAMP | | |
 
-### 2.3 `agent_profiles` (Modul 2)  
+### 2.3 `agent_profiles` (Modul 2)
 > **Entity ID:** `ENT-M02-AgentProfile`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -95,7 +95,7 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 
 > Badge & sertifikat agen **tidak disimpan sebagai field terpisah** di sini — ditampilkan via query relasi ke `certificates` (Modul 4) berdasarkan `user_id`.
 
-### 2.3b `agent_reviews` (Modul 2 — **baru, v1.1**, resolusi konflik #7)  
+### 2.3b `agent_reviews` (Modul 2 — **baru, v1.1**, resolusi konflik #7)
 > **Entity ID:** `ENT-M02-AgentReview`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -115,7 +115,7 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 
 ---
 
-### 2.4 `listings` (Modul 3 — tabel inti)  
+### 2.4 `listings` (Modul 3 — tabel inti)
 > **Entity ID:** `ENT-M03-Listing`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -166,7 +166,7 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 | sold_or_rented_at | TIMESTAMP | NULLABLE | |
 | created_at / updated_at | TIMESTAMP | | |
 
-### 2.5 `listing_photos`  
+### 2.5 `listing_photos`
 > **Entity ID:** `ENT-M03-ListingPhoto`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -179,7 +179,7 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 | file_hash | VARCHAR(64) | NULLABLE | **(v1.4, baru)** SHA-256 hex digest file foto mentah, dihitung server-side saat upload — dipakai untuk deteksi duplikat exact-match (`ADR-047`, `OD-25`) |
 | photo_hash | VARCHAR(64) | NULLABLE | **(v1.4, baru)** Perceptual hash (64-bit) via library `image-hash`, dihitung server-side saat upload — dipakai untuk deteksi kemiripan foto toleran kompresi/resize (`ADR-047`, `OD-25`); dibandingkan sebagai Hamming Distance, bukan exact-match |
 
-### 2.6 `listing_videos`  
+### 2.6 `listing_videos`
 > **Entity ID:** `ENT-M03-ListingVideo`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -188,14 +188,14 @@ Diagram visual ERD tersedia terpisah di file `ERD-Diagram.mermaid`. Dokumen ini 
 | url | VARCHAR(500) | NOT NULL |
 | type | ENUM | `video`, `virtual_tour` |
 
-### 2.7 `amenities` (master) & `listing_amenities` (pivot)  
+### 2.7 `amenities` (master) & `listing_amenities` (pivot)
 > **Entity ID:** `ENT-M03-Amenity` (amenities) / `ENT-M03-ListingAmenity` (listing_amenities, association)
 ```
 amenities: id (PK), name (VARCHAR, e.g. "Kolam Renang", "Keamanan 24 Jam")
 listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 ```
 
-### 2.8 `listing_price_history`  
+### 2.8 `listing_price_history`
 > **Entity ID:** `ENT-M03-ListingPriceHistory`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -205,7 +205,7 @@ listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 | new_price | DECIMAL(18,2) | |
 | changed_at | TIMESTAMP | |
 
-### 2.9 `listing_leads` (pencatatan klik CTA WhatsApp)  
+### 2.9 `listing_leads` (pencatatan klik CTA WhatsApp)
 > **Entity ID:** `ENT-M03-ListingLead`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -217,7 +217,7 @@ listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 | user_agent | VARCHAR(255) | NULLABLE | |
 | created_at | TIMESTAMP | | |
 
-### 2.10 `listing_views` (opsional, analitik traffic)  
+### 2.10 `listing_views` (opsional, analitik traffic)
 > **Entity ID:** `ENT-M03-ListingView`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -227,7 +227,7 @@ listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 
 ---
 
-### 2.11 `developer_partners` (Modul 6)  
+### 2.11 `developer_partners` (Modul 6)
 > **Entity ID:** `ENT-M06-DeveloperPartner`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -239,7 +239,7 @@ listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 | status | ENUM | `active`, `inactive` |
 | created_at | TIMESTAMP | |
 
-### 2.12 `developer_projects`  
+### 2.12 `developer_projects`
 > **Entity ID:** `ENT-M06-DeveloperProject`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -260,7 +260,7 @@ listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 | status | ENUM | `active`, `coming_soon`, `sold_out`, `inactive` | |
 | created_at / updated_at | TIMESTAMP | | |
 
-### 2.13 `developer_project_media`  
+### 2.13 `developer_project_media`
 > **Entity ID:** `ENT-M06-DeveloperProjectMedia`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -269,7 +269,7 @@ listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 | type | ENUM | `photo`, `video`, `brochure`, `price_list` |
 | url | VARCHAR(500) | NOT NULL |
 
-### 2.14 `agent_project_claims`  
+### 2.14 `agent_project_claims`
 > **Entity ID:** `ENT-M06-AgentProjectClaim`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -281,7 +281,7 @@ listing_amenities: listing_id (FK), amenity_id (FK)  -- composite PK
 
 ---
 
-### 2.15 `courses` (Modul 4)  
+### 2.15 `courses` (Modul 4)
 > **Entity ID:** `ENT-M04-Course`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -348,7 +348,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.21 `events` (Modul 5)  
+### 2.21 `events` (Modul 5)
 > **Entity ID:** `ENT-M05-Event`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -369,7 +369,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | end_at | TIMESTAMP | NULLABLE | |
 | created_at / updated_at | TIMESTAMP | | |
 
-### 2.22 `event_registrations`  
+### 2.22 `event_registrations`
 > **Entity ID:** `ENT-M05-EventRegistration`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -382,7 +382,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.23 `dbr_simulations` (Modul 7)  
+### 2.23 `dbr_simulations` (Modul 7)
 > **Entity ID:** `ENT-M07-DbrSimulation`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -404,7 +404,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | pdf_export_url | VARCHAR(500) | NULLABLE | |
 | created_at | TIMESTAMP | | |
 
-### 2.24 `dbr_config` (parameter global, dikelola Admin — Modul 9)  
+### 2.24 `dbr_config` (parameter global, dikelola Admin — Modul 9)
 > **Entity ID:** `ENT-M07-DbrConfig`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -416,7 +416,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.25 `notifications` (Modul 8)  
+### 2.25 `notifications` (Modul 8)
 > **Entity ID:** `ENT-M08-Notification`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -432,7 +432,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.26 `system_configs` (Modul 9)  
+### 2.26 `system_configs` (Modul 9)
 > **Entity ID:** `ENT-M09-SystemConfig`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -442,7 +442,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | updated_by | UUID/BIGINT | FK → users.id | |
 | updated_at | TIMESTAMP | | |
 
-### 2.27 `audit_logs`  
+### 2.27 `audit_logs`
 > **Entity ID:** `ENT-M09-AuditLog`
 | Field | Tipe | Constraint |
 |---|---|---|
@@ -458,7 +458,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.28 `roles` (Modul 10)  
+### 2.28 `roles` (Modul 10)
 > **Entity ID:** `ENT-M10-Role`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -471,7 +471,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 > **Klarifikasi seed role final (v1.2, OD-02, resolved 4 Agustus 2026):** tabel ini di-seed dengan **7 baris fisik** — `superadmin`, `manager`, `admin`, `instructor`, `agent`, `developer_partner`, `buyer`. **Guest eksplisit BUKAN baris tabel ini** — direpresentasikan murni sebagai state tidak-login (`users` tanpa sesi aktif, tanpa `role_id`), konsisten dengan desain kolom `code` di atas yang sejak v1.1 tidak pernah mencantumkan `guest`. Ini menutup drift penghitungan "7 vs 8" yang sebelumnya tercatat di beberapa dokumen turunan — lihat `decision-log.md` §11 OD-02 dan `PROJECT-CONSTITUTION.md` §3.1.
 
-### 2.29 `permissions` (Modul 10)  
+### 2.29 `permissions` (Modul 10)
 > **Entity ID:** `ENT-M10-Permission`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -482,7 +482,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | description | VARCHAR(255) | | Deskripsi human-readable, mis. "Approve registrasi agen baru" |
 | UNIQUE | (module_code, action_code) | | Satu baris permission per kombinasi modul+aksi |
 
-### 2.30 `role_permissions` (pivot, Modul 10)  
+### 2.30 `role_permissions` (pivot, Modul 10)
 > **Entity ID:** `ENT-M10-RolePermission`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -500,7 +500,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.33 `ref_provinces` (Referensi Wilayah — mendukung API Bagian 8)  
+### 2.33 `ref_provinces` (Referensi Wilayah — mendukung API Bagian 8)
 > **Entity ID:** `ENT-M03-RefProvince`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -508,7 +508,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | code | VARCHAR(10) | UNIQUE, NOT NULL | Kode wilayah resmi (mis. kode Kemendagri) |
 | name | VARCHAR(100) | NOT NULL | mis. "Banten", "Jawa Barat" |
 
-### 2.34 `ref_cities`  
+### 2.34 `ref_cities`
 > **Entity ID:** `ENT-M03-RefCity`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -518,7 +518,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | name | VARCHAR(100) | NOT NULL | mis. "Tangerang Selatan" |
 | type | ENUM | NOT NULL | `kota`, `kabupaten` |
 
-### 2.35 `ref_districts`  
+### 2.35 `ref_districts`
 > **Entity ID:** `ENT-M03-RefDistrict`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -527,7 +527,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | code | VARCHAR(10) | UNIQUE, NOT NULL | |
 | name | VARCHAR(100) | NOT NULL | mis. "Serpong" |
 
-### 2.36 `ref_villages` (kelurahan/desa — disiapkan untuk API Bagian 8 & kebutuhan lain seperti alamat profil, belum dipakai `listings` saat ini karena form listing hanya sampai level Kecamatan)  
+### 2.36 `ref_villages` (kelurahan/desa — disiapkan untuk API Bagian 8 & kebutuhan lain seperti alamat profil, belum dipakai `listings` saat ini karena form listing hanya sampai level Kecamatan)
 > **Entity ID:** `ENT-M03-RefVillage`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -541,7 +541,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.37 `url_redirects` (M11 — SEO & Analytics)  
+### 2.37 `url_redirects` (M11 — SEO & Analytics)
 > **Entity ID:** `ENT-M11-UrlRedirect`
 | Field | Tipe | Constraint | Keterangan |
 |---|---|---|---|
@@ -558,7 +558,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 ---
 
-### 2.38 `organizations` (Modul 12 — **baru, v1.3**)  
+### 2.38 `organizations` (Modul 12 — **baru, v1.3**)
 > **Entity ID:** `ENT-M12-Organization` | **Dasar:** REQ-M12-001, 002, 006–009, 019 | `ADR-026`/`ADR-043`
 
 | Field | Tipe | Constraint | Keterangan |
@@ -579,7 +579,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | deleted_at | TIMESTAMP | NULLABLE | **Soft-delete** — diterapkan konsisten dengan prinsip `ADR-046`/OD-07 (entitas direferensikan FK oleh `organization_members`/`listings` dan tampil di halaman publik `/organization/[slug]`); ini **penerapan prinsip yang sudah Approved**, bukan keputusan arsitektur baru |
 | created_at / updated_at | TIMESTAMP | | |
 
-### 2.39 `organization_members` (Modul 12 — **baru, v1.3**)  
+### 2.39 `organization_members` (Modul 12 — **baru, v1.3**)
 > **Entity ID:** `ENT-M12-OrganizationMember` | **Dasar:** REQ-M12-003, 016 | `ADR-026`/`ADR-043`
 
 | Field | Tipe | Constraint | Keterangan |
@@ -593,7 +593,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | left_at | TIMESTAMP | NULLABLE | |
 | UNIQUE | (agent_id) WHERE status='active' | | **Constraint kunci** — menegakkan "1 agen maksimal 1 Organization aktif" (REQ-M12-003) di level database |
 
-### 2.40 `organization_invitations` (Modul 12 — **baru, v1.3**)  
+### 2.40 `organization_invitations` (Modul 12 — **baru, v1.3**)
 > **Entity ID:** `ENT-M12-OrganizationInvitation` | **Dasar:** REQ-M12-010–013 | `ADR-026`/`ADR-043`
 
 | Field | Tipe | Constraint | Keterangan |
@@ -611,7 +611,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 
 > **Business rule level-aplikasi (bukan constraint DB, dicatat untuk API Spec Langkah 6):** cooldown 24 jam per (organization_id, agent_id, initiated_by_type) setelah `rejected` (REQ-M12-013); cross-cancellation seluruh `agent_request` pending lain saat salah satu `accepted` (REQ-M12-012).
 
-### 2.41 `ai_providers` (Modul 13 — **baru, v1.3**)  
+### 2.41 `ai_providers` (Modul 13 — **baru, v1.3**)
 > **Entity ID:** `ENT-M13-AiProvider` | **Dasar:** REQ-M13-002, 008 | `ADR-028`/`ADR-045`
 
 | Field | Tipe | Constraint | Keterangan |
@@ -626,7 +626,7 @@ quiz_options: id (PK), question_id (FK → quiz_questions.id), option_text, is_c
 | requires_expiry_warning | BOOLEAN | default false | `true` khusus `github_models` (PAT bisa punya masa berlaku) |
 | status | ENUM | NOT NULL, default `active` | `active`, `inactive` |
 
-### 2.42 `agent_ai_connections` (Modul 13 — **baru, v1.3**)  
+### 2.42 `agent_ai_connections` (Modul 13 — **baru, v1.3**)
 > **Entity ID:** `ENT-M13-AgentAiConnection` | **Dasar:** REQ-M13-001, 007 | `ADR-028`/`ADR-045`
 
 | Field | Tipe | Constraint | Keterangan |

@@ -1,0 +1,104 @@
+-- RUMAHAGEN TECH-26 AUTHORIZATION SEED CANDIDATE v1.0
+-- REVIEW-ONLY. NOT AUTHORIZED FOR PRODUCTION EXECUTION.
+-- Source: Authorization-Access-Control-Specification-v1_1-FINAL.md
+-- Existing physical model: permissions(module_code, action_code), role_permissions(... granted_scope)
+-- IMPORTANT: candidate only; no role creation; no production execution.
+
+BEGIN;
+
+-- New Session permission rows in the approved M04 Learning namespace.
+-- Existing M04 Course/Enrollment permissions are NOT reused.
+INSERT INTO permissions (module_code, action_code, scope_type, description)
+VALUES
+('M04','Create-LearningSession','own','Create Learning Session'),
+('M04','View-LearningSession','own','View Learning Session'),
+('M04','Update-LearningSession','own','Update Learning Session'),
+('M04','Delete-LearningSession','own','Delete Learning Session'),
+('M04','Manage-LearningSession','own','Governed Learning Session lifecycle/management'),
+('M04','Create-SessionEnrollment','own','Create own Session Enrollment'),
+('M04','View-SessionEnrollment','own','View own/scoped Session Enrollment'),
+('M04','View-SessionEvidence','own','View own/scoped Session participation evidence'),
+('M04','Manage-SessionAttendance','own','Review/evaluate Session attendance'),
+('M04','Manage-SessionCompletion','own','Evaluate/finalize Session completion'),
+('M04','View-SessionArtifact','own','View permitted Session artifact'),
+('M04','Assign-LearningSession','all','Assign/revoke HOST or INSTRUCTOR on Learning Session'),
+('M04','Manage-SessionProvider','all','Manage Session provider binding'),
+('M04','Manage-SessionVisibility','own','Manage Session visibility')
+ON CONFLICT (module_code, action_code) DO NOTHING;
+
+-- Candidate role_permissions. Uses existing role codes only.
+-- Superadmin is included for traceability; runtime may still use application-level bypass.
+INSERT INTO role_permissions (role_id, permission_id, granted_scope)
+SELECT r.id, p.id, x.granted_scope
+FROM (VALUES
+('superadmin','Create-LearningSession','all'),
+('superadmin','View-LearningSession','all'),
+('superadmin','Update-LearningSession','all'),
+('superadmin','Delete-LearningSession','all'),
+('superadmin','Manage-LearningSession','all'),
+('superadmin','Create-SessionEnrollment','all'),
+('superadmin','View-SessionEnrollment','all'),
+('superadmin','View-SessionEvidence','all'),
+('superadmin','Manage-SessionAttendance','all'),
+('superadmin','Manage-SessionCompletion','all'),
+('superadmin','View-SessionArtifact','all'),
+('superadmin','Assign-LearningSession','all'),
+('superadmin','Manage-SessionProvider','all'),
+('superadmin','Manage-SessionVisibility','all'),
+
+('manager','Create-LearningSession','all'),
+('manager','View-LearningSession','all'),
+('manager','Update-LearningSession','all'),
+('manager','Delete-LearningSession','all'),
+('manager','Manage-LearningSession','all'),
+('manager','Create-SessionEnrollment','all'),
+('manager','View-SessionEnrollment','all'),
+('manager','View-SessionEvidence','all'),
+('manager','Manage-SessionAttendance','all'),
+('manager','Manage-SessionCompletion','all'),
+('manager','View-SessionArtifact','all'),
+('manager','Assign-LearningSession','all'),
+('manager','Manage-SessionProvider','all'),
+('manager','Manage-SessionVisibility','all'),
+
+('admin','Create-LearningSession','all'),
+('admin','View-LearningSession','all'),
+('admin','Update-LearningSession','all'),
+('admin','Delete-LearningSession','all'),
+('admin','Manage-LearningSession','all'),
+('admin','Create-SessionEnrollment','all'),
+('admin','View-SessionEnrollment','all'),
+('admin','View-SessionEvidence','all'),
+('admin','Manage-SessionAttendance','all'),
+('admin','Manage-SessionCompletion','all'),
+('admin','View-SessionArtifact','all'),
+('admin','Assign-LearningSession','all'),
+('admin','Manage-SessionProvider','all'),
+('admin','Manage-SessionVisibility','all'),
+
+('instructor','Create-LearningSession','own'),
+('instructor','View-LearningSession','own'),
+('instructor','Update-LearningSession','own'),
+('instructor','Delete-LearningSession','own'),
+('instructor','Manage-LearningSession','own'),
+('instructor','Create-SessionEnrollment','own'),
+('instructor','View-SessionEnrollment','own'),
+('instructor','View-SessionEvidence','own'),
+('instructor','Manage-SessionAttendance','own'),
+('instructor','Manage-SessionCompletion','own'),
+('instructor','View-SessionArtifact','own'),
+('instructor','Manage-SessionVisibility','own'),
+
+('agent','Create-SessionEnrollment','own'),
+('agent','View-SessionEnrollment','own'),
+('agent','View-SessionEvidence','own'),
+('agent','View-SessionArtifact','own')
+) AS x(role_code, action_code, granted_scope)
+JOIN roles r ON r.code = x.role_code
+JOIN permissions p ON p.module_code='M04' AND p.action_code=x.action_code
+ON CONFLICT (role_id, permission_id) DO NOTHING;
+
+-- Deliberately no Instructor/Agent assignment permission and no provider-management grant.
+-- Host/Instructor capability remains resource-level through learning_session_assignments.
+
+COMMIT;

@@ -1,0 +1,14 @@
+{
+  "project": "RumahAgen",
+  "arb_batch": "Batch-1",
+  "arb_session": "ARB-01",
+  "change_request": "CR-06",
+  "decision_record": "ARB-DECISION-RECORD-001",
+  "status": "ACTIVE",
+  "canonical_register": "CDR-XXX",
+  "formal_approval": true,
+  "canonicalization_authorized": true,
+  "implementation_authorized": false,
+  "bolt_authorized": false,
+  "next_agenda": "ARB-02 / MADCR-036"
+}

@@ -1,0 +1,558 @@
+# Repository Package File Inventory
+
+Generated: 2026-08-16T07:31:41
+
+Package file count: **552**
+
+- `.gitignore`
+- `README.md`
+- `docs/00-governance/current/ARCHITECTURE-DECISION-RECORDS-v1.1-D6-CROSS-AEP-CONTROL.md`
+- `docs/00-governance/current/CHANGELOG-v0.7.21-D6-GLOBAL-SYNCHRONIZED.md`
+- `docs/00-governance/current/CURRENT-PROJECT-STATE-rev11-D6-GLOBAL-SYNCHRONIZED.md`
+- `docs/00-governance/current/D6-CANONICAL-AEP-STATE-MATRIX-v1.0.md`
+- `docs/00-governance/current/D6-CANONICAL-CROSS-AEP-HANDOFF-CONTRACTS-v1.0.md`
+- `docs/00-governance/current/D6-GLOBAL-CONTROLLED-RESIDUAL-REGISTER-v1.0.md`
+- `docs/00-governance/current/D6-IMPLEMENTATION-AUTHORIZATION-HOLD-v1.0.md`
+- `docs/00-governance/current/D6-POST-EDIT-RECONCILIATION-v1.0.md`
+- `docs/00-governance/current/PROJECT-CONSTITUTION-v1.10-D6-GLOBAL-SYNCHRONIZED.md`
+- `docs/00-governance/current/SYSTEM-ARCHITECTURE-v1.7-D6-GLOBAL-SYNCHRONIZED.md`
+- `docs/00-governance/current/document-governance-baseline-register-v1.10-D6-GLOBAL-SYNCHRONIZED.md`
+- `docs/00-governance/current/project-manifest-v1.29-D6-GLOBAL-SYNCHRONIZED.md`
+- `docs/01-architecture/aep/AEP1/AEP1_Final_Synchronization_Reconciliation_v1.0.docx`
+- `docs/01-architecture/aep/AEP2/AEP2_Final_Synchronization_Record_v1.0.docx`
+- `docs/01-architecture/aep/AEP3/AEP3_Final_Synchronization_Package_v1.0.docx`
+- `docs/01-architecture/aep/AEP4/RUMAHAGEN-AEP4-STEP-16-FINAL-SYNCHRONIZATION-CONSOLIDATED-PACKAGE-v1.0.docx`
+- `docs/01-architecture/aep/master/AEP_Learning_Economy_v1.0.md`
+- `docs/01-architecture/aep/master/AEP_Monetization_Subscription_Promotion_Payment_Gateway_v1.0.md`
+- `docs/01-architecture/aep/master/AEP_Title_Business_Rules_Baseline_v1.0.md`
+- `docs/01-architecture/aep/master/Learning_Session_Architecture_Evolution_v2(1).pdf`
+- `docs/01-architecture/aep/master/MAEP-v1.1-CHANGE-REGISTER.md`
+- `docs/01-architecture/aep/master/MAEP-v1.1-CORRECTION-SYNCHRONIZATION.md`
+- `docs/01-architecture/aep/master/MASTER-ARCHITECTURE-EVOLUTION-PROPOSAL.md`
+- `docs/01-architecture/aep/master/RUMAHAGEN_Learning_Session_AEP_and_Business_Rules_v1.0.md`
+- `docs/01-architecture/aep/master/RUMAHAGEN_MASTER_AEP_v1.0.md`
+- `docs/02-business-rules/Business_Rules_Learning_Economy_RumahAgen_v1.0.md`
+- `docs/02-business-rules/MBR-SOURCE-RECOVERY-REGISTER-v1.0.md`
+- `docs/02-business-rules/RUMAHAGEN_COMMERCIAL_BR_RECONCILIATION_v1.1.md`
+- `docs/02-business-rules/RUMAHAGEN_MASTER_BR_FINAL_TRACEABILITY_GATE_v1.3.docx`
+- `docs/02-business-rules/RUMAHAGEN_MASTER_BR_TRACEABILITY_AUDIT_v1.0.md`
+- `docs/02-business-rules/RUMAHAGEN_MASTER_BUSINESS_RULES_v1.2_FINAL_CONSOLIDATION_CANDIDATE.docx`
+- `docs/02-business-rules/RUMAHAGEN_TITLE_BR_TRACEABILITY_AUDIT_v1.0.docx`
+- `docs/02-business-rules/RUMAHAGEN_TITLE_TRACEABILITY_RECONCILIATION_v1.1.md`
+- `docs/02-business-rules/Title_Business_Rules_Baseline_v1.0_Consolidated.md`
+- `docs/03-adr/ADR-BATCH-1-EVIDENCE-PACK-MADCR-010.md`
+- `docs/03-adr/ADR-BATCH-1-EVIDENCE-PACK-MADCR-011.md`
+- `docs/03-adr/ADR-BATCH-1-EVIDENCE-PACK-MADCR-036.md`
+- `docs/03-adr/ADR-BATCH-1-EVIDENCE-PACK-MADCR-046.md`
+- `docs/03-adr/ADR-BATCH-1-EVIDENCE-PACK-MADCR-049.md`
+- `docs/03-adr/ADR-DRAFT-MADCR-010.md`
+- `docs/03-adr/ADR-DRAFT-MADCR-011.md`
+- `docs/03-adr/ADR-DRAFT-MADCR-036.md`
+- `docs/03-adr/ADR-DRAFT-MADCR-046.md`
+- `docs/03-adr/RUMAHAGEN-MADCR-049-FORMAL-DECISION-CLOSURE-v1.0.docx`
+- `docs/03-adr/RUMAHAGEN-MADCR-053-FORMAL-DECISION-CLOSURE-v1.0.docx`
+- `docs/03-adr/RUMAHAGEN-MADCR-054-FORMAL-DECISION-CLOSURE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-PROJECT-KNOWLEDGE-REFRESH-CURRENT-STATE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-01-INDEPENDENT-TECHNICAL-PRODUCT-RESIDUAL-CLOSURE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-02-VISIBILITY-AUTHORIZATION-SCOPE-RECONCILIATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-03-AUTHORIZATION-RBAC-RECONCILIATION-READINESS-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-04-PERMISSION-CATALOGUE-SCOPE-RECONCILIATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-05-AUTHORIZATION-SCOPE-RLS-DESIGN-READINESS-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-06-LEARNING-SESSION-RESOURCE-SCOPE-RELATIONSHIP-DESIGN-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-07-PHYSICAL-SESSION-SCOPE-SCHEMA-IMPACT-EVIDENCE-REVIEW-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-08-SESSION-PHYSICAL-RELATIONSHIP-DECISION-GATE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-09-PHYSICAL-ERD-SCHEMA-DELTA-SPECIFICATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-10-PHYSICAL-DATABASE-MIGRATION-READINESS-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-11-MIGRATION-SPECIFICATION-DRAFT-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-11-MIGRATION-SPECIFICATION-VERIFICATION-PACKAGE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-12-MIGRATION-DRAFT-REMEDIATED-v1.1.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-12-MIGRATION-VERIFICATION-DRY-RUN-REVIEW-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-AUTHORIZATION-GATE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-14-STAGING-RUNTIME-VERIFICATION-READINESS-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-15-PERMISSION-CATALOGUE-RECONCILIATION-STAGING-AUTHORIZATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-15-R1-PERMISSION-CATALOGUE-RECONCILIATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-16-PROVIDER-CAPABILITY-VERIFICATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-16-R1-PROVIDER-CAPABILITY-VERIFICATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-17-SESSION-TECHNICAL-RESIDUAL-CLOSURE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-18-TECHNICAL-EXECUTION-AUTHORIZATION-CONSOLIDATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-19-PHYSICAL-AUTHORIZATION-SCOPE-RLS-DESIGN-PACKAGE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-19-R1-PHYSICAL-AUTHORIZATION-SCOPE-RLS-DESIGN-PACKAGE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-20-PHYSICAL-AUTHORIZATION-CATALOGUE-CLOSURE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-21-SESSION-PERMISSION-CATALOGUE-ROLE-MAPPING-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-22-RESOURCE-LEVEL-SESSION-AUTHORIZATION-EVIDENCE-GATE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-23-PHYSICAL-SESSION-ASSIGNMENT-SCHEMA-RLS-SPECIFICATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-24-SESSION-ASSIGNMENT-MIGRATION-RLS-CANDIDATE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-24-SESSION-ASSIGNMENT-MIGRATION-RLS-CANDIDATE-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-24-SESSION-ASSIGNMENT-STATIC-VERIFICATION-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-25-CONSOLIDATED-SESSION-MIGRATION-CANDIDATE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-25-CONSOLIDATED-SESSION-MIGRATION-CANDIDATE-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-25-STATIC-VERIFICATION-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-26-AUTHORIZATION-SEED-CANDIDATE-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-26-AUTHORIZATION-SEED-RECONCILIATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-26-AUTHORIZATION-SEED-STATIC-VERIFICATION-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-27-AUTHORIZATION-SEED-DECISION-MATRIX-v1.0.csv`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-27-FINAL-AUTHORIZATION-SEED-GATE-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-28-AUTHORIZATION-SEED-FREEZE-RLS-MAPPING-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-28-FINAL-AUTHORIZATION-SEED-CANDIDATE-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-28-FINAL-AUTHORIZATION-STATIC-VERIFICATION-v1.0.sql`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-29-STAGING-AUTHORIZATION-RUNTIME-VERIFICATION-v1.0.docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-SYNC-KNOWLEDGE-REFRESH-ADDENDUM-v1.1 (1).docx`
+- `docs/04-tech-sync/current/RUMAHAGEN-TECH-SYNC-KNOWLEDGE-REFRESH-ADDENDUM-v1.1.docx`
+- `docs/04-tech-sync/current/TECH-29-REPOSITORY-STAGING-CONTROL.md`
+- `docs/04-tech-sync/current/TECH-29A-04-REPOSITORY-INTEGRITY-REVIEW-v1.0.md`
+- `docs/04-tech-sync/current/TECH-29A-06-CANONICAL-REPOSITORY-RECONCILIATION-v1.0.md`
+- `docs/04-tech-sync/current/TECH-29A-07-LOCAL-PUSH-CHECKLIST-v1.0.md`
+- `docs/05-cross-aep/RUMAHAGEN-CROSS-AEP-STEP-01-CANONICAL-CONSOLIDATION-MATRIX-v1.0.docx`
+- `docs/05-cross-aep/RUMAHAGEN-CROSS-AEP-STEP-02-ARCHITECTURE-DELTA-DEPENDENCY-SPECIFICATION-v1.0.docx`
+- `docs/05-cross-aep/RUMAHAGEN-CROSS-AEP-STEP-03-GLOBAL-SYNC-EXECUTION-PLAN-CHANGE-MAP-v1.0.docx`
+- `docs/05-cross-aep/RUMAHAGEN-CROSS-AEP-STEP-09-D5-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `docs/05-cross-aep/RUMAHAGEN-CROSS-AEP-STEP-10-D6-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `docs/06-source-register/GITHUB-REMOTE-BASELINE-VERIFIED.md`
+- `docs/06-source-register/REPOSITORY-FILE-INVENTORY.md`
+- `docs/06-source-register/SOURCE-MANIFEST.csv`
+- `source-archive/README.md`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Final_Synchronization_Reconciliation_v1.0.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_01_Governance_ADR_Reconciliation.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_02_ERD_Entity_Impact_and_Delta.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_03_API_Synchronization_Specification.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_04_RBAC_Permission_Impact_Specification.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_05_User_Flow_Impact_Specification.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_06_PRD_Impact_Specification.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_07_Cross_Document_Traceability_Audit.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_08_Schema_Database_Impact_Specification.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_09_Payment_Integration_Contract_Impact_Specification.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_10_Engineering_Guidebook_Playbook_Impact_Specification.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP1_Impact_11_Test_and_Business_Rule_Traceability.docx`
+- `source-archive/materials/AEP1 impact(1)/AEP2_Impact_02_Decision_Formalization_LE001_LE008.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Final_Synchronization_Record_v1.0.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_01_Governance_ADR_Reconciliation.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_02_Decision_Formalization_LE001_LE008.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_03_Learning_Economy_Domain_Architecture_Impact.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_04_ERD_Entity_Relationship_Impact.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_05_Schema_Database_Impact_Specification.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_06_Payment_Learning_Integration_Contract_Impact.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_07_API_Impact_Specification.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_08_RBAC_Permission_Impact_Specification.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_09_User_Flow_Impact_Specification.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_10_PRD_Impact_Specification.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_11_Engineering_Guidebook_Playbook_Impact.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_12_Test_Business_Rule_Traceability.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_13_Cross_Document_Traceability_Reconciliation_Audit.docx`
+- `source-archive/materials/AEP2 impact (1)/AEP2_Impact_14_ADR_LE005_Canonicalization_Governance_Disposition.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Consolidation_Architecture_Review_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Controlled_Synchronization_Execution_Report_v1.0.md`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Final_Synchronization_Package_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_01_Governance_and_Current_Architecture_Impact_Analysis_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_02_Target_Title_Awarding_Domain_Architecture_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_03_ERD_Entity_Relationship_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_04_Schema_Database_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_05_API_Synchronization_Contract_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_06_RBAC_Permission_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_07_User_Flow_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_08_PRD_Product_Requirement_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_09_Engineering_Service_Boundary_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_Impact_10_Traceability_Acceptance_Test_Impact_Specification_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_OD01_Title_Identity_Version_Decision_v1.0.docx`
+- `source-archive/materials/AEP3 impact(1)/AEP3_OD06_Awarding_Authority_Model_Decision_v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-REVIEW-CONTINUITY-AND-CORRECTED-CURRENT-STATE-v1.0 (1).docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-REVIEW-CONTINUITY-AND-CORRECTED-CURRENT-STATE-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-01-GOVERNANCE-EVIDENCE-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-02-CORE-DECISION-SET-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-02-DECISION-LOG-OD01-OD15-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-03-DECISION-CONSOLIDATION-BOUNDARY-TRACEABILITY-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-04-LEARNING-SESSION-DOMAIN-ARCHITECTURE-IMPACT-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-04-OD16-DECISION-AND-STEP05-LOGICAL-ENTITY-IMPACT-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-05-OD17-ENROLLMENT-LIFECYCLE-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-06-ERD-LOGICAL-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-07-LOGICAL-SCHEMA-DATA-DICTIONARY-IMPACT-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-08-PROVIDER-ADAPTER-INTEGRATION-CONTRACT-IMPACT-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-09-API-IMPACT-SPECIFICATION-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-10-RBAC-PERMISSION-IMPACT-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-11-USER-FLOW-IMPACT-SPECIFICATION-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-12-PRD-PRODUCT-REQUIREMENT-IMPACT-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-13-ENGINEERING-GUIDEBOOK-PLAYBOOK-IMPACT-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-14-TEST-BUSINESS-RULE-TRACEABILITY-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-15-CROSS-DOCUMENT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/AEP4 impact/RUMAHAGEN-AEP4-STEP-16-FINAL-SYNCHRONIZATION-CONSOLIDATED-PACKAGE-v1.0.docx`
+- `source-archive/materials/Downloads/AEP_Learning_Economy_v1.0.md`
+- `source-archive/materials/Downloads/AEP_Monetization_Subscription_Promotion_Payment_Gateway_v1.0.md`
+- `source-archive/materials/Downloads/AEP_Title_Business_Rules_Baseline_v1.0.md`
+- `source-archive/materials/Downloads/Business_Rules_Learning_Economy_RumahAgen_v1.0.md`
+- `source-archive/materials/Downloads/Learning_Session_Architecture_Evolution_v2(1).pdf`
+- `source-archive/materials/Downloads/RUMAHAGEN_Architecture_Evolution_Monetization_Subscription_Promotion_v1.1.docx`
+- `source-archive/materials/Downloads/RUMAHAGEN_Business_Rules_Baseline_v1.0_FINAL.docx`
+- `source-archive/materials/Downloads/RUMAHAGEN_CURRENT_ARCHITECTURE_IMPACT_ANALYSIS_v1.0.md`
+- `source-archive/materials/Downloads/RUMAHAGEN_Learning_Session_AEP_and_Business_Rules_v1.0.md`
+- `source-archive/materials/Downloads/Title_Business_Rules_Baseline_v1.0_Consolidated.md`
+- `source-archive/materials/Master AEP dan BR update/ADR-BATCH-READINESS-MATRIX-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/ADR-INVENTORY-HYGIENE-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/ADR-MASTER-SEQUENCING-DRAFTING-PLAN-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/COMMERCIAL-AEP-RECONCILIATION-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/GOVERNANCE-PRE-ADR-RECONCILIATION-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/MADCR-DEPENDENCY-HYGIENE-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/MADCR-v1.1-CORRECTION-CANONICALIZATION.md`
+- `source-archive/materials/Master AEP dan BR update/MAEP-v1.0-VALIDATION-REPORT.md`
+- `source-archive/materials/Master AEP dan BR update/MAEP-v1.1-CHANGE-REGISTER.md`
+- `source-archive/materials/Master AEP dan BR update/MAEP-v1.1-CORRECTION-SYNCHRONIZATION.md`
+- `source-archive/materials/Master AEP dan BR update/MAEP-v1.1-DISCREPANCY-REGISTER.md`
+- `source-archive/materials/Master AEP dan BR update/MASTER-ARCHITECTURE-DECISION-CANDIDATE-REGISTER.md`
+- `source-archive/materials/Master AEP dan BR update/MASTER-ARCHITECTURE-EVOLUTION-PROPOSAL.md`
+- `source-archive/materials/Master AEP dan BR update/MASTER-ARCHITECTURE-EVOLUTION-PROPOSAL_v1.1_CORRECTION-PROPOSAL.md`
+- `source-archive/materials/Master AEP dan BR update/MBR-SOURCE-RECOVERY-REGISTER-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/PRE-ADR-DISCREPANCY-REGISTER-v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_COMMERCIAL_BR_RECONCILIATION_v1.1.md`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_COMMERCIAL_BUSINESS_RULES_BASELINE_v1.0_PROPOSED.md`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_CURRENT_ARCHITECTURE_IMPACT_ANALYSIS_v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_Learning_Session_AEP_and_Business_Rules_v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_MASTER_AEP_v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_MASTER_BR_FINAL_TRACEABILITY_GATE_v1.3.docx`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_MASTER_BR_TRACEABILITY_AUDIT_v1.0.md`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_MASTER_BUSINESS_RULES_v1.1_CONSOLIDATED.docx`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_MASTER_BUSINESS_RULES_v1.2_FINAL_CONSOLIDATION_CANDIDATE.docx`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_TITLE_BR_TRACEABILITY_AUDIT_v1.0.docx`
+- `source-archive/materials/Master AEP dan BR update/RUMAHAGEN_TITLE_TRACEABILITY_RECONCILIATION_v1.1.md`
+- `source-archive/materials/RUMAHAGEN-ARB-01-ACTIVE-CR06-v1.0/ARB-01-ACTIVE-STATUS.json`
+- `source-archive/materials/RUMAHAGEN-ARB-01-ACTIVE-CR06-v1.0/ARB-01-CR06-ACTIVE-GOVERNANCE-RECORD-v1.0.md`
+- `source-archive/materials/RUMAHAGEN-ARB-02-MADCR-036-ACTIVE-v1.0/ARB-02-MADCR-036-ACTIVE-STATUS.json`
+- `source-archive/materials/RUMAHAGEN-ARB-02-MADCR-036-ACTIVE-v1.0/ARB-02-MADCR-036-ACTIVE.md`
+- `source-archive/materials/RUMAHAGEN-ARB-02-MADCR-036-ACTIVE-v1.0/README.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0001_extensions_helpers__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0002_m10_rbac_foundation__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0003_m01_auth__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0004_region_reference__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0005_m02_agent_profile__3_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0006_m06_developer__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0007_m12_organization-FIXED.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0007_m12_organization__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0007_m12_organization__2_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0008_m03_listing-FIXED.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0008_m03_listing__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0008_m03_listing__2_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0009_m04_learning_center-FIXED.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0009_m04_learning_center__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0009_m04_learning_center__2_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0010_m05_events-FIXED.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0010_m05_events__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0010_m05_events__2_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0011_m07_dbr__2_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0012_m08_notifications__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0013_m09_admin__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0014_m11_seo__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/0015_m13_ai_assistant__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ADR-005-Search-Strategy-Review.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ADR-006-Job-Queue-Strategy-Review.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ADR-008-Maps-Provider-Review__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ADR-018-Caching-Strategy-Review.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ADR-047-Image-Duplicate-Detection.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ADR-Consolidation-Supporting-Deliverables.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/AI-CONTEXT-PACK-v1_1.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/AI-DEVELOPMENT-BLUEPRINT-v1_6-FINAL__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/API-Specification-RUMAHAGEN-v1_3-FINAL-FIXED.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/API-Specification-RUMAHAGEN-v1_3-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Architecture-Evolution-Proposal-Organization-Management-System-v0_9-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Authorization-Access-Control-Specification-v1_1-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CHANGELOG-v0_4_1.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CHANGELOG-v0_7_1.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CHANGELOG-v0_7_19-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CHANGELOG-v0_7_2.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CHANGELOG-v0_7_20-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CHANGELOG-v0_7_21-VERIFIED-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CURRENT-PROJECT-STATE-rev10-KONSOLIDASI-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CURRENT-PROJECT-STATE-updated-v5.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CURRENT-PROJECT-STATE-updated-v7.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CURRENT-PROJECT-STATE-updated-v8__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CURRENT-PROJECT-STATE-updated-v9.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/CURRENT-PROJECT-STATE-updated.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/DEVELOPMENT-ROADMAP.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Database-Dictionary-Migration-Ready-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Database-Migration-Full-v1_0__1_.sql`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ERD-Skema-Database-RUMAHAGEN-v1_4-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Engineering-Alignment-Framework-v1_0.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Entity-Mapping-RUMAHAGEN-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Functional-Specification-RUMAHAGEN-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ISSUE-REGISTER-Konsolidasi-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ISSUE-REGISTER-Konsolidasi-FINAL__3_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/ISSUE-REGISTER-Konsolidasi-v2_0-KONSOLIDASI-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Issue-Register-Resolution-Package-v1_0.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-01-Authentication-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-02-ProfilAgen-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-03-Listing-Module-Planning-v1_0-FINAL__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-04-LearningCenter-Module-Planning-v1_0-FINAL__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-05-KalenderEvent-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-06-DirektoriDeveloper-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-07-DBRScoring-Module-Planning-v1_0-FINAL__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-08-DashboardNotifikasi-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-09-AdminPanel-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-10-RBAC-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-11-SEOAnalytics-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-12-Organization-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/MP-13-AIAssistant-Module-Planning-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Module-Dependency-Matrix-RUMAHAGEN-v1_0-FINAL__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Module-Implementation-Strategy-RUMAHAGEN-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/P7-Hasil-UISpec-DuplicateModal-WarningBanner.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/PRD-RUMAHAGEN-v1_3-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/PROJECT-CONSTITUTION-v1_9-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Paket-Prompt-Konsolidasi-Riwayat-Versi-Dokumen.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Prompt-Drift-Detection-Audit-ADR.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/README-seed-superadmin.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/SEO-Analytics-Specification-RUMAHAGEN-v1_1-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/SYSTEM-ARCHITECTURE-Consolidation-Supporting-Deliverables.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/SYSTEM-ARCHITECTURE-v1_6-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/TASK-TEMPLATE-v1_1.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/Technical-Specification-RUMAHAGEN-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/UI-Specification-RUMAHAGEN-v1_0-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/User-Flow-RUMAHAGEN-v1_2-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/architecture-decision-records-FINAL-v1_1-plus-ADR029.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/architecture-decision-records-v1_1.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/decision-log-FINAL-v8Agustus2026.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/dependency-manifest-v1_6-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/document-governance-baseline-register-v1_11-KONSOLIDASI-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/document-governance-baseline-register-v1_4.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/document-governance-baseline-register-v1_6.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/document-governance-baseline-register-v1_7.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/document-governance-baseline-register-v1_8-FINAL__3_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/document-governance-baseline-register-v1_9-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/executive-architecture-review.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/foundation-validation-report.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/migrations-RENAME-ARCHIVE-MANIFEST.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest-v1_10.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest-v1_24-FINAL__1_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest-v1_25-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest-v1_26-KONSOLIDASI-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest-v1_28-KONSOLIDASI-FINAL.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest-v1_8.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest-v1_9.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/project-manifest__10_.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/seed-superadmin.ts`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/synchronization-report-adr-001.md`
+- `source-archive/materials/RUMAHAGEN-dokumen-updated (2)/technology-decisions-v1_6-FINAL.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-01-CANONICAL-CONSOLIDATION-MATRIX-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-02-ARCHITECTURE-DELTA-DEPENDENCY-SPECIFICATION-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-03-GLOBAL-SYNC-EXECUTION-PLAN-CHANGE-MAP-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-SYNCHRONIZED-PACKAGE-v1.0_unzipped/CURRENT-PROJECT-STATE-rev11-CROSS-AEP-D0-D1.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-SYNCHRONIZED-PACKAGE-v1.0_unzipped/PROJECT-CONSTITUTION-v1_10-CROSS-AEP-D0-D1.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-SYNCHRONIZED-PACKAGE-v1.0_unzipped/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-POST-EDIT-RECONCILIATION-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-SYNCHRONIZED-PACKAGE-v1.0_unzipped/SYSTEM-ARCHITECTURE-v1_7-CROSS-AEP-D0-D1.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-SYNCHRONIZED-PACKAGE-v1.0_unzipped/document-governance-baseline-register-v1_12-CROSS-AEP-D0-D1.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-04-D0-D1-SYNCHRONIZED-PACKAGE-v1.0_unzipped/project-manifest-v1_29-CROSS-AEP-D0-D1.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-05-D1-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/API-Specification-RUMAHAGEN-v1_5-CROSS-AEP-D2.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/Authorization-Access-Control-Specification-v1_3-CROSS-AEP-D2.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/D2-LEARNING-ECONOMY-BUSINESS-RULE-TRACEABILITY-ADDENDUM-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/Database-Dictionary-Migration-Ready-v1_2-CROSS-AEP-D2.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/ERD-Skema-Database-RUMAHAGEN-v1_6-CROSS-AEP-D2.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/PRD-RUMAHAGEN-v1_5-CROSS-AEP-D2.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-CROSS-AEP-STEP-06-D2-POST-EDIT-RECONCILIATION-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-LEARNING-ECONOMY-SYNCHRONIZATION-v1.0_unzipped/User-Flow-RUMAHAGEN-v1_4-CROSS-AEP-D2.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-06-D2-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/API-Specification-RUMAHAGEN-v1_6-CROSS-AEP-D3.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/Authorization-Access-Control-Specification-v1_4-CROSS-AEP-D3.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/D3-LEARNING-SESSION-BUSINESS-RULE-TRACEABILITY-ADDENDUM-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/Database-Dictionary-Migration-Ready-v1_3-CROSS-AEP-D3.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/ERD-Skema-Database-RUMAHAGEN-v1_7-CROSS-AEP-D3.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/LEARNING-SESSION-PROVIDER-ADAPTER-INTEGRATION-CONTRACT-D3-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/PRD-RUMAHAGEN-v1_6-CROSS-AEP-D3.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-CROSS-AEP-STEP-07-D3-POST-EDIT-RECONCILIATION-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-LEARNING-SESSION-SYNCHRONIZATION-v1.0_unzipped/User-Flow-RUMAHAGEN-v1_5-CROSS-AEP-D3.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-07-D3-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/API-Specification-RUMAHAGEN-v1_7-CROSS-AEP-D4.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/Authorization-Access-Control-Specification-v1_5-CROSS-AEP-D4.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/D4-TITLE-AWARDING-BUSINESS-RULE-TRACEABILITY-ADDENDUM-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/Database-Dictionary-Migration-Ready-v1_4-CROSS-AEP-D4.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/ERD-Skema-Database-RUMAHAGEN-v1_8-CROSS-AEP-D4.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/PRD-RUMAHAGEN-v1_7-CROSS-AEP-D4.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-CROSS-AEP-STEP-08-D4-POST-EDIT-RECONCILIATION-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-08-D4-TITLE-AWARDING-SYNCHRONIZATION-v1.0_unzipped/User-Flow-RUMAHAGEN-v1_6-CROSS-AEP-D4.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-09-D5-CROSS-DOMAIN-RECONCILIATION-v1.0_unzipped/D5-CONTROLLED-RESIDUAL-REGISTER-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-09-D5-CROSS-DOMAIN-RECONCILIATION-v1.0_unzipped/D5-CROSS-DOMAIN-RECONCILIATION-MATRIX-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-09-D5-CROSS-DOMAIN-RECONCILIATION-v1.0_unzipped/RUMAHAGEN-CROSS-AEP-STEP-09-D5-POST-EDIT-RECONCILIATION-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-09-D5-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/D6-CANONICAL-AEP-STATE-MATRIX-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/D6-CANONICAL-CROSS-AEP-HANDOFF-CONTRACTS-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/D6-GLOBAL-CONTROLLED-RESIDUAL-REGISTER-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/D6-IMPLEMENTATION-AUTHORIZATION-HOLD-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-ARCHITECTURE-DECISION-RECORDS-v1.1-D6-CROSS-AEP-CONTROL.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-CHANGELOG-v0.7.21-D6-GLOBAL-SYNCHRONIZED.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-CROSS-AEP-STEP-10-D6-POST-EDIT-RECONCILIATION-v1.0.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-CURRENT-PROJECT-STATE-rev11-D6-GLOBAL-SYNCHRONIZED.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-PROJECT-CONSTITUTION-v1.10-D6-GLOBAL-SYNCHRONIZED.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-SYSTEM-ARCHITECTURE-v1.7-D6-GLOBAL-SYNCHRONIZED.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-document-governance-baseline-register-v1.10-D6-GLOBAL-SYNCHRONIZED.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-GLOBAL-BASELINE-SYNCHRONIZATION-v1.0_unzipped/RUMAHAGEN-project-manifest-v1.29-D6-GLOBAL-SYNCHRONIZED.md`
+- `source-archive/materials/RumahAgen Cross/RUMAHAGEN-CROSS-AEP-STEP-10-D6-POST-EDIT-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/adr batch 1 source /00-FINAL-EXECUTIVE-SUMMARY.md`
+- `source-archive/materials/adr batch 1 source /01-BATCH-1-GOVERNANCE-AUDIT.md`
+- `source-archive/materials/adr batch 1 source /02-BATCH-1-SOURCE-RECONSTRUCTION.md`
+- `source-archive/materials/adr batch 1 source /03-BATCH-1-CANONICALITY-MATRIX.md`
+- `source-archive/materials/adr batch 1 source /04-BATCH-1-CONFLICT-REGISTER.md`
+- `source-archive/materials/adr batch 1 source /05-BATCH-1-EVIDENCE-GAP-REGISTER.md`
+- `source-archive/materials/adr batch 1 source /06-BATCH-1-ADR-READINESS-MATRIX.md`
+- `source-archive/materials/adr batch 1 source /07-BATCH-1-ADR-SEQUENCING-UPDATE.md`
+- `source-archive/materials/adr batch 1 source /08-BATCH-1-DOWNSTREAM-IMPACT.md`
+- `source-archive/materials/adr batch 1 source /09-BATCH-1-BOLT-READINESS.md`
+- `source-archive/materials/adr batch 1 source /10-BATCH-1-RECOMMENDATION.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-CROSS-CONFLICT-CHECK-v1.0.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-DEPENDENCY-MATRIX-v1.0.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-DRAFTING-CONTROL-v1.0.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-EVIDENCE-PACK-MADCR-010.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-EVIDENCE-PACK-MADCR-011.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-EVIDENCE-PACK-MADCR-036.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-EVIDENCE-PACK-MADCR-046.md`
+- `source-archive/materials/adr batch 1 source /ADR-BATCH-1-EVIDENCE-PACK-MADCR-049.md`
+- `source-archive/materials/adr batch 1 source /ADR-DRAFT-MADCR-010.md`
+- `source-archive/materials/adr batch 1 source /ADR-DRAFT-MADCR-011.md`
+- `source-archive/materials/adr batch 1 source /ADR-DRAFT-MADCR-036.md`
+- `source-archive/materials/adr batch 1 source /ADR-DRAFT-MADCR-046.md`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-ADR-002-MADCR-002-Payment-Provider-Adapter-Architecture-FINAL.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-ADR-003-MADCR-003-Payment-Verification-Idempotent-Fulfillment-FINAL.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-ADR-011-Payment-Module-Placement-FINAL.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-BATCH-0-GOVERNANCE-READINESS-CANONICALIZATION-AUDIT-v1.0.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-BATCH-1-DOWNSTREAM-IMPACT-ALIGNMENT-AUDIT-v1.0.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-BATCH-2-CANDIDATE-STATUS-VERIFICATION-v1.0.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-COMMERCIAL-PAYMENT-DOMAIN-MODEL-ALIGNMENT-BASELINE-v1.0.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-COMMERCIAL-PAYMENT-DOMAIN-MODEL-IMPACT-ALIGNMENT-REVIEW-v1.0.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-COMMERCIAL-PAYMENT-EVIDENCE-COMPLETION-PASS-v1.0.pdf`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-MAEDR-BATCH-1-POST-APPROVAL-RECONCILIATION-v1.3.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-MAEDR-BATCH-2-POST-APPROVAL-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-MAEDR-BATCH-2-POST-APPROVAL-RECONCILIATION-v1.1.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-MAEDR-BATCH-2-POST-APPROVAL-RECONCILIATION-v1.2.docx`
+- `source-archive/materials/batch 1 dan 2/RUMAHAGEN-MASTER-BATCH-MATRIX-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/files (1)/00-FINAL-EXECUTIVE-SUMMARY.md`
+- `source-archive/materials/files (1)/01-BATCH-1-GOVERNANCE-AUDIT.md`
+- `source-archive/materials/files (1)/02-BATCH-1-SOURCE-RECONSTRUCTION.md`
+- `source-archive/materials/files (1)/03-BATCH-1-CANONICALITY-MATRIX.md`
+- `source-archive/materials/files (1)/04-BATCH-1-CONFLICT-REGISTER.md`
+- `source-archive/materials/files (1)/05-BATCH-1-EVIDENCE-GAP-REGISTER.md`
+- `source-archive/materials/files (1)/06-BATCH-1-ADR-READINESS-MATRIX.md`
+- `source-archive/materials/files (1)/07-BATCH-1-ADR-SEQUENCING-UPDATE.md`
+- `source-archive/materials/files (1)/08-BATCH-1-DOWNSTREAM-IMPACT.md`
+- `source-archive/materials/files (1)/09-BATCH-1-BOLT-READINESS.md`
+- `source-archive/materials/files (1)/10-BATCH-1-RECOMMENDATION.md`
+- `source-archive/materials/files (1)/ADR-DRAFT-MADCR-010.md`
+- `source-archive/materials/files (1)/ADR-DRAFT-MADCR-011.md`
+- `source-archive/materials/files (1)/ADR-DRAFT-MADCR-036.md`
+- `source-archive/materials/files (1)/ADR-DRAFT-MADCR-046.md`
+- `source-archive/materials/marb batch 1 governance/01-ARB-BATCH-1-EXECUTIVE-SUMMARY.md`
+- `source-archive/materials/marb batch 1 governance/02-ARB-BATCH-1-DECISION-AGENDA.md`
+- `source-archive/materials/marb batch 1 governance/03-ARB-CR-06-ADR-NUMBERING-DECISION-BRIEF.md`
+- `source-archive/materials/marb batch 1 governance/04-ARB-CR-01-036-046-DEPENDENCY-DECISION-BRIEF.md`
+- `source-archive/materials/marb batch 1 governance/05-ARB-MADCR-036-TITLE-DECISION-BRIEF.md`
+- `source-archive/materials/marb batch 1 governance/06-ARB-MADCR-046-CERTIFICATE-TITLE-DECISION-BRIEF.md`
+- `source-archive/materials/marb batch 1 governance/07-ARB-CR-05-COMMERCIAL-AEP-DECISION-BRIEF.md`
+- `source-archive/materials/marb batch 1 governance/08-ARB-MADCR-010-ENTITLEMENT-QUOTA-DECISION-BRIEF.md`
+- `source-archive/materials/marb batch 1 governance/09-ARB-MADCR-011-PAYMENT-PLACEMENT-DECISION-BRIEF.md`
+- `source-archive/materials/marb batch 1 governance/10-ARB-MADCR-049-EVIDENCE-RECOVERY-REQUEST.md`
+- `source-archive/materials/marb batch 1 governance/11-ARB-BATCH-1-APPROVAL-MATRIX.md`
+- `source-archive/materials/marb batch 1 governance/12-ARB-BATCH-1-DECISION-RECORD-TEMPLATE.md`
+- `source-archive/materials/marb batch 1 governance/13-ARB-BATCH-1-DOWNSTREAM-CASCADE.md`
+- `source-archive/materials/marb batch 1 governance/14-ARB-BATCH-1-BOLT-IMPACT-STATEMENT.md`
+- `source-archive/materials/marb batch 1 governance/15-ARB-BATCH-1-DECISION-GRAPH.md`
+- `source-archive/materials/marb batch 1 governance/16-ARB-BATCH-1-PRE-READ.md`
+- `source-archive/materials/marb batch 1 governance/17-ARB-BATCH-1-CONSISTENCY-CHECK.md`
+- `source-archive/materials/rumah agen AEP and BR package/AEP_Learning_Economy_v1.0.md`
+- `source-archive/materials/rumah agen AEP and BR package/AEP_Monetization_Subscription_Promotion_Payment_Gateway_v1.0.md`
+- `source-archive/materials/rumah agen AEP and BR package/AEP_Title_Business_Rules_Baseline_v1.0.md`
+- `source-archive/materials/rumah agen AEP and BR package/Business_Rules_Learning_Economy_RumahAgen_v1.0.md`
+- `source-archive/materials/rumah agen AEP and BR package/Learning_Session_Architecture_Evolution_v2(1).pdf`
+- `source-archive/materials/rumah agen AEP and BR package/RUMAHAGEN_Architecture_Evolution_Monetization_Subscription_Promotion_v1.1.docx`
+- `source-archive/materials/rumah agen AEP and BR package/RUMAHAGEN_Business_Rules_Baseline_v1.0_FINAL.docx`
+- `source-archive/materials/rumah agen AEP and BR package/RUMAHAGEN_CURRENT_ARCHITECTURE_IMPACT_ANALYSIS_v1.0.md`
+- `source-archive/materials/rumah agen AEP and BR package/RUMAHAGEN_Learning_Session_AEP_and_Business_Rules_v1.0.md`
+- `source-archive/materials/rumah agen AEP and BR package/Title_Business_Rules_Baseline_v1.0_Consolidated.md`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-MADCR-049-FORMAL-DECISION-CLOSURE-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-MADCR-053-DECISION-BRIEF-CROSS-DOMAIN-PERMISSION-TAXONOMY-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-MADCR-053-FORMAL-DECISION-CLOSURE-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-MADCR-054-FORMAL-DECISION-CLOSURE-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-P1-CURRENT-TECHNICAL-BASELINE-VERIFICATION-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-P3-TECHNICAL-EXECUTION-AUTHORIZATION-GATE-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-POST-AEP-IMPLEMENTATION-READINESS-RESIDUAL-CLOSURE-GATE-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-R1-MADCR-049-EVIDENCE-RECOVERY-RE-EVALUATION-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-R2-MADCR-053-054-GOVERNANCE-READINESS-ASSESSMENT-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-R4-AEP3-OD02-05-PHYSICAL-READINESS-ASSESSMENT-v1.0.docx`
+- `source-archive/materials/rumahagen post AEP readyness/RUMAHAGEN-TECHNICAL-EXECUTION-AUTHORIZATION-PACKAGE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-PROJECT-KNOWLEDGE-REFRESH-CURRENT-STATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-01-INDEPENDENT-TECHNICAL-PRODUCT-RESIDUAL-CLOSURE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-02-VISIBILITY-AUTHORIZATION-SCOPE-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-03-AUTHORIZATION-RBAC-RECONCILIATION-READINESS-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-04-PERMISSION-CATALOGUE-SCOPE-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-05-AUTHORIZATION-SCOPE-RLS-DESIGN-READINESS-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-06-LEARNING-SESSION-RESOURCE-SCOPE-RELATIONSHIP-DESIGN-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-07-PHYSICAL-SESSION-SCOPE-SCHEMA-IMPACT-EVIDENCE-REVIEW-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-08-SESSION-PHYSICAL-RELATIONSHIP-DECISION-GATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-09-PHYSICAL-ERD-SCHEMA-DELTA-SPECIFICATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-10-PHYSICAL-DATABASE-MIGRATION-READINESS-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-11-MIGRATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-11-MIGRATION-SPECIFICATION-DRAFT-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-11-MIGRATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-11-MIGRATION-SPECIFICATION-VERIFICATION-PACKAGE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-11-MIGRATION-SPECIFICATION-DRAFT-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-11-MIGRATION-SPECIFICATION-VERIFICATION-PACKAGE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-12-MIGRATION-DRAFT-REMEDIATED-v1.1.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-12-MIGRATION-VERIFICATION-DRY-RUN-REVIEW-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-12-VERIFICATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-12-MIGRATION-DRAFT-REMEDIATED-v1.1.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-12-VERIFICATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-12-MIGRATION-VERIFICATION-DRY-RUN-REVIEW-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-AUTHORIZATION-GATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-AUTHORIZATION-GATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-14-STAGING-RUNTIME-VERIFICATION-READINESS-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-14-VERIFICATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-14-FROZEN-CANDIDATE-REFERENCE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-14-VERIFICATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-14-STAGING-RUNTIME-VERIFICATION-READINESS-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-15-PERMISSION-CATALOGUE-RECONCILIATION-STAGING-AUTHORIZATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-15-R1-AND-TECH-16-R1-CORRECTION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-15-R1-PERMISSION-CATALOGUE-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-15-R1-AND-TECH-16-R1-CORRECTION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-16-R1-PROVIDER-CAPABILITY-VERIFICATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-15-R1-PERMISSION-CATALOGUE-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-15-RECONCILIATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-13-FINAL-MIGRATION-CANDIDATE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-15-RECONCILIATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-15-PERMISSION-CATALOGUE-RECONCILIATION-STAGING-AUTHORIZATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-16-PROVIDER-CAPABILITY-VERIFICATION-PACKAGE-v1.0_unzipped/RUMAHAGEN-TECH-16-PROVIDER-CAPABILITY-VERIFICATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-16-PROVIDER-CAPABILITY-VERIFICATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-16-R1-PROVIDER-CAPABILITY-VERIFICATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-17-SESSION-TECHNICAL-RESIDUAL-CLOSURE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-18-TECHNICAL-EXECUTION-AUTHORIZATION-CONSOLIDATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-19-PHYSICAL-AUTHORIZATION-SCOPE-RLS-DESIGN-PACKAGE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-19-R1-PHYSICAL-AUTHORIZATION-SCOPE-RLS-DESIGN-PACKAGE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-20-PHYSICAL-AUTHORIZATION-CATALOGUE-CLOSURE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-21-SESSION-PERMISSION-CATALOGUE-ROLE-MAPPING-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-22-RESOURCE-LEVEL-SESSION-AUTHORIZATION-EVIDENCE-GATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-23-PHYSICAL-SESSION-ASSIGNMENT-SCHEMA-RLS-SPECIFICATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-24-SESSION-ASSIGNMENT-MIGRATION-RLS-CANDIDATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-24-SESSION-ASSIGNMENT-MIGRATION-RLS-CANDIDATE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-24-SESSION-ASSIGNMENT-STATIC-VERIFICATION-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-25-CONSOLIDATED-SESSION-MIGRATION-CANDIDATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-25-CONSOLIDATED-SESSION-MIGRATION-CANDIDATE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-25-STATIC-VERIFICATION-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-26-AUTHORIZATION-SEED-CANDIDATE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-26-AUTHORIZATION-SEED-RECONCILIATION-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-26-AUTHORIZATION-SEED-STATIC-VERIFICATION-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-27-AUTHORIZATION-SEED-DECISION-MATRIX-v1.0.csv`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-27-FINAL-AUTHORIZATION-SEED-GATE-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-28-AUTHORIZATION-SEED-FREEZE-RLS-MAPPING-v1.0.docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-28-FINAL-AUTHORIZATION-SEED-CANDIDATE-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-28-FINAL-AUTHORIZATION-STATIC-VERIFICATION-v1.0.sql`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-SYNC-KNOWLEDGE-REFRESH-ADDENDUM-v1.1 (1).docx`
+- `source-archive/materials/rumahagen tech synch 1-28/RUMAHAGEN-TECH-SYNC-KNOWLEDGE-REFRESH-ADDENDUM-v1.1.docx`
+- `supabase/candidates/authorization/TECH-26-AUTHORIZATION-SEED-CANDIDATE-v1.0.sql`
+- `supabase/candidates/authorization/TECH-26-AUTHORIZATION-SEED-STATIC-VERIFICATION-v1.0.sql`
+- `supabase/candidates/authorization/TECH-27-AUTHORIZATION-SEED-DECISION-MATRIX-v1.0.csv`
+- `supabase/candidates/authorization/TECH-28-FINAL-AUTHORIZATION-SEED-CANDIDATE-v1.0.sql`
+- `supabase/candidates/authorization/TECH-28-FINAL-AUTHORIZATION-STATIC-VERIFICATION-v1.0.sql`
+- `supabase/candidates/session/TECH-24-SESSION-ASSIGNMENT-MIGRATION-RLS-CANDIDATE-v1.0.sql`
+- `supabase/candidates/session/TECH-25-CONSOLIDATED-SESSION-MIGRATION-CANDIDATE-v1.0.sql`
+- `supabase/candidates/session/TECH-25-STATIC-VERIFICATION-v1.0.sql`
+- `supabase/migrations/0001_extensions_helpers.sql`
+- `supabase/migrations/0002_m10_rbac_foundation.sql`
+- `supabase/migrations/0003_m01_auth.sql`
+- `supabase/migrations/0004_region_reference.sql`
+- `supabase/migrations/0005_m02_agent_profile.sql`
+- `supabase/migrations/0006_m06_developer.sql`
+- `supabase/migrations/0007_m12_organization.sql`
+- `supabase/migrations/0008_m03_listing.sql`
+- `supabase/migrations/0009_m04_learning_center.sql`
+- `supabase/migrations/0010_m05_events.sql`
+- `supabase/migrations/0011_m07_dbr.sql`
+- `supabase/migrations/0012_m08_notifications.sql`
+- `supabase/migrations/0013_m09_admin.sql`
+- `supabase/migrations/0014_m11_seo.sql`
+- `supabase/migrations/0015_m13_ai_assistant.sql`
+- `supabase/reference/Database-Migration-Full-v1.0.sql`

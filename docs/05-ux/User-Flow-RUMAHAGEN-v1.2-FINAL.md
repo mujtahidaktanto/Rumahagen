@@ -15,7 +15,7 @@ Dokumen ini menjabarkan alur pengguna (user flow) langkah-demi-langkah untuk set
 
 ## MODUL 1 — Registrasi & Autentikasi Agen
 
-**Aktor:** Calon Agen, Admin  
+**Aktor:** Calon Agen, Admin
 **Requirement Terkait:** REQ-M01-001 s.d. 006
 
 ```
@@ -87,7 +87,7 @@ Klik link → Input password baru → Konfirmasi → Redirect ke Login
 
 ## MODUL 2 — Profil Agen
 
-**Aktor:** Agen (owner), Calon Pembeli (viewer publik), Admin  
+**Aktor:** Agen (owner), Calon Pembeli (viewer publik), Admin
 **Requirement Terkait:** REQ-M02-001 s.d. 007
 
 ```
@@ -161,7 +161,7 @@ Review berstatus "Approved" ──► Tampil di profil publik agen & masuk perhi
 
 ## MODUL 3 — Manajemen Listing Properti
 
-**Aktor:** Agen, Admin, Calon Pembeli (Guest)  
+**Aktor:** Agen, Admin, Calon Pembeli (Guest)
 **Requirement Terkait:** REQ-M03-001 s.d. 015
 
 ### 3.1 Alur Agen — Membuat Listing Baru
@@ -268,7 +268,7 @@ Sistem catat lead event (listing_id, timestamp) ──► Buka wa.me dengan pesa
 
 ## MODUL 4 — Learning Center (Pelatihan Agen)
 
-**Aktor:** Agen, Instruktur/Admin  
+**Aktor:** Agen, Instruktur/Admin
 **Requirement Terkait:** REQ-M04-001 s.d. 006
 
 ### 4.1 Alur Agen — Mengikuti Kursus
@@ -340,7 +340,7 @@ Publish kursus
 
 ## MODUL 5 — Kalender Event
 
-**Aktor:** Agen, Admin, Developer Partner  
+**Aktor:** Agen, Admin, Developer Partner
 **Requirement Terkait:** REQ-M05-001 s.d. 005
 
 ### 5.1 Alur Agen — RSVP Event
@@ -409,7 +409,7 @@ Event tayang di Kalender Event agen
 
 ## MODUL 6 — Direktori Kerjasama Developer
 
-**Aktor:** Admin, Agen, Developer Partner (opsional akses terbatas)  
+**Aktor:** Admin, Agen, Developer Partner (opsional akses terbatas)
 **Requirement Terkait:** REQ-M06-001 s.d. 006
 
 ### 6.1 Alur Admin — Menambahkan Proyek Developer
@@ -469,7 +469,7 @@ Agen cukup mengunduh materi marketing untuk promosi manual (mis. share ke medsos
 
 ## MODUL 7 — Sistem Scoring DBR (Kalkulator KPR)
 
-**Aktor:** Agen  
+**Aktor:** Agen
 **Requirement Terkait:** REQ-M07-001 s.d. 006
 
 ```
@@ -533,7 +533,7 @@ Klik salah satu → Lihat detail/edit ulang parameter → Update hasil (jika ada
 
 ## MODUL 8 — Dashboard & Notifikasi
 
-**Aktor:** Agen, Admin  
+**Aktor:** Agen, Admin
 **Requirement Terkait:** REQ-M08-001 s.d. 005
 
 ### 8.1 Alur Agen
@@ -576,7 +576,7 @@ Klik salah satu widget ──► Redirect ke halaman kelola terkait (mis. "Listi
 
 ## MODUL 9 — Admin Panel / CMS
 
-**Aktor:** Superadmin, Admin, Manager (sesuai izin)  
+**Aktor:** Superadmin, Admin, Manager (sesuai izin)
 **Requirement Terkait:** REQ-M09-001 s.d. 006
 
 ```
@@ -617,7 +617,7 @@ Sistem validasi ulang permission di backend sebelum eksekusi
 
 ## MODUL 10 — Manajemen Role & Hak Akses (RBAC)
 
-**Aktor:** Superadmin  
+**Aktor:** Superadmin
 **Requirement Terkait:** REQ-M10-001 s.d. 010
 
 ### 10.1 Alur Mengatur Permission Matrix
@@ -704,7 +704,7 @@ Cek matriks permission: apakah role ini punya izin utk Modul-X + Aksi-Y?
 
 ## MODUL 12 — Organization Management System *(baru, v1.2)*
 
-**Aktor:** Agen (calon Leader/Member), Leader Organization, Member Organization  
+**Aktor:** Agen (calon Leader/Member), Leader Organization, Member Organization
 **Requirement Terkait:** REQ-M12-001 s.d. 019
 
 ### 12.1 Alur Membuat Organization
@@ -798,7 +798,7 @@ Organization.status → "Closed" (soft-delete, data historis tetap tersimpan)
 
 ## MODUL 13 — AI Assistant Integration (BYOK) *(baru, v1.2)*
 
-**Aktor:** Seluruh role internal berakun (Superadmin, Manager, Admin, Instructor, Agen) **dan Developer Partner** (resolusi OD-21, 6 Agustus 2026)  
+**Aktor:** Seluruh role internal berakun (Superadmin, Manager, Admin, Instructor, Agen) **dan Developer Partner** (resolusi OD-21, 6 Agustus 2026)
 **Requirement Terkait:** REQ-M13-001 s.d. 012
 
 ### 13.1 Alur Menghubungkan Provider AI

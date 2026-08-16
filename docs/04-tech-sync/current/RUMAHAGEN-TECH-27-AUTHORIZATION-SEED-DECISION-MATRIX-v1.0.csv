@@ -1,0 +1,7 @@
+Role,Option A candidate mapping,Scope,Gate basis
+Manager,"Session management + Assign + Provider Manage + Visibility + learning read/evaluation",all,"Existing M04 pattern + conservative privileged assignment"
+Admin,"Session management + Assign + Provider Manage + Visibility + learning read/evaluation",all,"Existing operational admin pattern"
+Instructor,"Session learning permissions excluding Host assignment/Host capability",own/resource,"Requires user approval at TECH-27"
+Agent,"Own enrollment/evidence/artifact",own,"Existing M04 self-owned pattern"
+Developer Partner,"No default Session management",none,"AEP4 source; separately assigned authority only"
+Buyer,"No default Session management",none,"No source-backed Session authority"

@@ -1,0 +1,25 @@
+# Text files
+*.md text
+*.txt text
+*.sql text
+*.csv text
+*.json text
+*.yaml text
+*.yml text
+
+# Binary/document artifacts
+*.pdf binary
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+*.zip binary
+*.7z binary
+*.rar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
