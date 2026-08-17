@@ -37,6 +37,81 @@ Fase: Pra-Development — **Audit ulang MP-02 dengan standar verifikasi ketat pe
 
 # RELEASE HISTORY
 
+## 2026-08-16 — D6 Global AEP1–AEP4 Synchronization
+- Completed the locked AEP1 → AEP2 → AEP3 → AEP4 sequence at controlled semantic/downstream level.
+- Completed D5 cross-domain contradiction scan with no hard contradiction requiring reopening of an approved AEP.
+- Promoted the consolidated cross-AEP semantic state into the global baseline synchronization layer.
+- Preserved controlled residuals: OPEN-C01, MBR-COM evidence gap, MADCR-049, MADCR-053/054, AEP3-OD-02…05, AEP4-OD-08 and other downstream/provider/attendance/session residuals.
+- No physical schema/API/RBAC/provider implementation was silently authorized.
+- Historical documents are retained; stale wording is treated as controlled documentation delta and does not override canonical current state.
+
+# WAVE 1 CONTROLLED CANONICAL SYNCHRONIZATION APPEND
+## Baseline: CHANGELOG-v0.7.21-D6-GLOBAL-SYNCHRONIZED.md
+## Date: 2026-08-17
+
+> **Promotion instruction:** append this entry to the bottom of the existing D6 Changelog. Do not rename the D6 baseline to v0.7.22 and do not use the older VERIFIED-FINAL file as the base.
+
+## [Wave 1 / P08] — Governance / Project-Control Canonical Closure
+
+### Added
+- Project Constitution **v1.11** completed as a local canonical artifact.
+- Document Governance & Baseline Register **v1.13** completed as a local canonical artifact.
+- Project Manifest **v1.30** completed as a local canonical artifact.
+- Current Project State **rev.12** completed as a local canonical artifact.
+- Wave 1 Decision Log controlled append completed.
+- Canonical Source Register **v1.0-P08** completed.
+- Wave 1 Final Cross-Document Reconciliation **v1.1** completed.
+
+### Changed
+- Governance now explicitly separates **Document Version**, **Synchronization State**, **Baseline Status**, **Local Artifact Completion**, and **Repository Promotion State**.
+- GitHub write/update and post-write verification are treated as separate repository-promotion operations, not as document-completion gates for this controlled pass.
+- Historical governance artifacts remain preserved as provenance.
+- Current Project State now distinguishes semantic/design state, executed Development evidence, and runtime verification state.
+- Project Manifest now distinguishes repository existence from application/runtime completeness.
+- No new AEP, MADCR, ADR, TECH-29/T1–T4 numbering stream was created by Wave 1.
+
+### Fixed
+- Corrected governance synchronization ambiguity where D6/P08 could otherwise be mistaken for an automatic formal document-version replacement.
+- Corrected the project-control interpretation so local final artifacts can be completed without requiring GitHub write access.
+
+### Deprecated
+Tidak ada perubahan pada kategori ini di rilis ini.
+
+### Security
+Tidak ada perubahan keamanan aplikasi pada rilis ini.
+
+### Database Changes
+Tidak ada database migration atau schema change performed by this Wave 1 governance synchronization.
+
+### API Changes
+Tidak ada perubahan kontrak API pada rilis ini.
+
+### UI Changes
+Tidak ada perubahan UI pada rilis ini.
+
+### Bug Fixes
+Tidak ada bug aplikasi pada rilis ini.
+
+### Breaking Changes
+Tidak ada breaking change API/database pada rilis ini.
+
+### Controlled Residuals
+- OPEN-C01 / MADCR-012 provenance/relationship remains controlled.
+- MBR-COM-001–013 provenance/content remains controlled where not formally locked.
+- AEP3 physical residuals remain controlled.
+- AEP4 provider capability/failover residuals remain controlled.
+- Exact downstream permission IDs remain open where not approved.
+- Frontend runtime entry point/runtime verification remains a runtime gate.
+- Commercial/Payment physical synchronization and production authorization remain outside Wave 1.
+
+### Promotion Note
+This entry records the **actual completion of the Wave 1 local canonical document set**. GitHub promotion is a separate owner-managed operation and must not be inferred from this entry alone.
+
+---
+
+# END OF WAVE 1 CHANGELOG APPEND
+
+
 ## [Unreleased]
 **Tindakan manual diperlukan dari Owner:** 5 file sumber sudah diperbaiki dan siap menggantikan versi lama di project — belum dieksekusi otomatis: `0007_m12_organization.sql`, `0008_m03_listing.sql`, `0009_m04_learning_center.sql`, `0010_m05_events.sql`, `API-Specification-RUMAHAGEN-v1.3-FINAL.md` (lihat versi `-FIXED` masing-masing). Seluruh migration (15 file) **masih belum pernah dieksekusi ke database live** di seluruh proyek. Perubahan berikutnya di luar itu: implementasi kode saat Sprint S0/modul dimulai (endpoint yang kontraknya sudah didesain, registrasi `BR-XXX`/`API-XXX`, sinkronisasi `ERD-Diagram-...v1.1.mermaid`, high-fidelity mockup).
 
@@ -1880,77 +1955,3 @@ Versi lama (PRD v1.1, ERD v1.2, User Flow v1.1, API Spec v1.1) **tetap Deprecate
 *Dokumen ini adalah log perubahan resmi proyek, wajib dipelihara sepanjang siklus hidup proyek. Setiap sesi development — baik menghasilkan dokumen governance, kode, maupun perbaikan — wajib menambahkan entri baru di sini sebelum sesi ditutup. Tidak ada entri yang boleh dihapus atau ditulis ulang; koreksi selalu berupa entri baru.*
 
 ---
-
-## 2026-08-16 — D6 Global AEP1–AEP4 Synchronization
-- Completed the locked AEP1 → AEP2 → AEP3 → AEP4 sequence at controlled semantic/downstream level.
-- Completed D5 cross-domain contradiction scan with no hard contradiction requiring reopening of an approved AEP.
-- Promoted the consolidated cross-AEP semantic state into the global baseline synchronization layer.
-- Preserved controlled residuals: OPEN-C01, MBR-COM evidence gap, MADCR-049, MADCR-053/054, AEP3-OD-02…05, AEP4-OD-08 and other downstream/provider/attendance/session residuals.
-- No physical schema/API/RBAC/provider implementation was silently authorized.
-- Historical documents are retained; stale wording is treated as controlled documentation delta and does not override canonical current state.
-
-# WAVE 1 CONTROLLED CANONICAL SYNCHRONIZATION APPEND
-## Baseline: CHANGELOG-v0.7.21-D6-GLOBAL-SYNCHRONIZED.md
-## Date: 2026-08-17
-
-> **Promotion instruction:** append this entry to the bottom of the existing D6 Changelog. Do not rename the D6 baseline to v0.7.22 and do not use the older VERIFIED-FINAL file as the base.
-
-## [Wave 1 / P08] — Governance / Project-Control Canonical Closure
-
-### Added
-- Project Constitution **v1.11** completed as a local canonical artifact.
-- Document Governance & Baseline Register **v1.13** completed as a local canonical artifact.
-- Project Manifest **v1.30** completed as a local canonical artifact.
-- Current Project State **rev.12** completed as a local canonical artifact.
-- Wave 1 Decision Log controlled append completed.
-- Canonical Source Register **v1.0-P08** completed.
-- Wave 1 Final Cross-Document Reconciliation **v1.1** completed.
-
-### Changed
-- Governance now explicitly separates **Document Version**, **Synchronization State**, **Baseline Status**, **Local Artifact Completion**, and **Repository Promotion State**.
-- GitHub write/update and post-write verification are treated as separate repository-promotion operations, not as document-completion gates for this controlled pass.
-- Historical governance artifacts remain preserved as provenance.
-- Current Project State now distinguishes semantic/design state, executed Development evidence, and runtime verification state.
-- Project Manifest now distinguishes repository existence from application/runtime completeness.
-- No new AEP, MADCR, ADR, TECH-29/T1–T4 numbering stream was created by Wave 1.
-
-### Fixed
-- Corrected governance synchronization ambiguity where D6/P08 could otherwise be mistaken for an automatic formal document-version replacement.
-- Corrected the project-control interpretation so local final artifacts can be completed without requiring GitHub write access.
-
-### Deprecated
-Tidak ada perubahan pada kategori ini di rilis ini.
-
-### Security
-Tidak ada perubahan keamanan aplikasi pada rilis ini.
-
-### Database Changes
-Tidak ada database migration atau schema change performed by this Wave 1 governance synchronization.
-
-### API Changes
-Tidak ada perubahan kontrak API pada rilis ini.
-
-### UI Changes
-Tidak ada perubahan UI pada rilis ini.
-
-### Bug Fixes
-Tidak ada bug aplikasi pada rilis ini.
-
-### Breaking Changes
-Tidak ada breaking change API/database pada rilis ini.
-
-### Controlled Residuals
-- OPEN-C01 / MADCR-012 provenance/relationship remains controlled.
-- MBR-COM-001–013 provenance/content remains controlled where not formally locked.
-- AEP3 physical residuals remain controlled.
-- AEP4 provider capability/failover residuals remain controlled.
-- Exact downstream permission IDs remain open where not approved.
-- Frontend runtime entry point/runtime verification remains a runtime gate.
-- Commercial/Payment physical synchronization and production authorization remain outside Wave 1.
-
-### Promotion Note
-This entry records the **actual completion of the Wave 1 local canonical document set**. GitHub promotion is a separate owner-managed operation and must not be inferred from this entry alone.
-
----
-
-# END OF WAVE 1 CHANGELOG APPEND
