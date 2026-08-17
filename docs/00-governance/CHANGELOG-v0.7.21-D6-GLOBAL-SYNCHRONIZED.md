@@ -26,15 +26,6 @@ Format mengikuti prinsip [Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ---
 
 # CURRENT VERSION
-
-**`0.7.20`** — *Initial Development*
-Dirilis: 2026-08-10
-Fase: Pra-Development — **Audit ulang MP-02 dengan standar verifikasi ketat penuh selesai — item terbuka dari `0.7.19` ditutup.** Kedua klaim MP-02 (OD-23: UNIQUE constraint + RLS self-review; T4-03: Authorization Spec §2.3 Buyer own→none) diverifikasi langsung terhadap file sumber (`0005_m02_agent_profile.sql`, `Authorization-Access-Control-Specification-v1.1-FINAL.md`) — **tidak ada regresi ditemukan**. MP-02 bergabung dengan MP-01 sebagai modul yang sudah diaudit ulang dan dinyatakan bersih. Rasio regresi pola sistemik final turun ke **50% (6 dari 12 klaim)**.
-
-*(Riwayat: `0.7.19`, dirilis 2026-08-10 — konsolidasi riwayat versi 13 Module Planning + SYSTEM-ARCHITECTURE.md + AI Development Blueprint selesai penuh, 7 regresi ditemukan & diperbaiki, PATCH. `0.7.2`, dirilis 2026-08-07 — OD-24, gate M12 terbuka, PATCH. `0.7.1`, dirilis 2026-08-06 — T4-06 SSO Apple, penutup Issue Register 32/32 Closed, PATCH.)*
-
----
-
 # RELEASE HISTORY
 
 # WAVE 1 CONTROLLED CANONICAL SYNCHRONIZATION APPEND
@@ -103,7 +94,6 @@ This entry records the **actual completion of the Wave 1 local canonical documen
 
 # END OF WAVE 1 CHANGELOG APPEND
 
-
 ## 2026-08-16 — D6 Global AEP1–AEP4 Synchronization
 - Completed the locked AEP1 → AEP2 → AEP3 → AEP4 sequence at controlled semantic/downstream level.
 - Completed D5 cross-domain contradiction scan with no hard contradiction requiring reopening of an approved AEP.
@@ -114,6 +104,16 @@ This entry records the **actual completion of the Wave 1 local canonical documen
 
 ## [Unreleased]
 **Tindakan manual diperlukan dari Owner:** 5 file sumber sudah diperbaiki dan siap menggantikan versi lama di project — belum dieksekusi otomatis: `0007_m12_organization.sql`, `0008_m03_listing.sql`, `0009_m04_learning_center.sql`, `0010_m05_events.sql`, `API-Specification-RUMAHAGEN-v1.3-FINAL.md` (lihat versi `-FIXED` masing-masing). Seluruh migration (15 file) **masih belum pernah dieksekusi ke database live** di seluruh proyek. Perubahan berikutnya di luar itu: implementasi kode saat Sprint S0/modul dimulai (endpoint yang kontraknya sudah didesain, registrasi `BR-XXX`/`API-XXX`, sinkronisasi `ERD-Diagram-...v1.1.mermaid`, high-fidelity mockup).
+
+**`0.7.20`** — *Initial Development*
+Dirilis: 2026-08-10
+Fase: Pra-Development — **Audit ulang MP-02 dengan standar verifikasi ketat penuh selesai — item terbuka dari `0.7.19` ditutup.** Kedua klaim MP-02 (OD-23: UNIQUE constraint + RLS self-review; T4-03: Authorization Spec §2.3 Buyer own→none) diverifikasi langsung terhadap file sumber (`0005_m02_agent_profile.sql`, `Authorization-Access-Control-Specification-v1.1-FINAL.md`) — **tidak ada regresi ditemukan**. MP-02 bergabung dengan MP-01 sebagai modul yang sudah diaudit ulang dan dinyatakan bersih. Rasio regresi pola sistemik final turun ke **50% (6 dari 12 klaim)**.
+
+*(Riwayat: `0.7.19`, dirilis 2026-08-10 — konsolidasi riwayat versi 13 Module Planning + SYSTEM-ARCHITECTURE.md + AI Development Blueprint selesai penuh, 7 regresi ditemukan & diperbaiki, PATCH. `0.7.2`, dirilis 2026-08-07 — OD-24, gate M12 terbuka, PATCH. `0.7.1`, dirilis 2026-08-06 — T4-06 SSO Apple, penutup Issue Register 32/32 Closed, PATCH.)*
+
+---
+
+
 
 ## [0.7.20] - 2026-08-10 - Audit Ulang MP-02 (Item Terbuka Ditutup)
 
