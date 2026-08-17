@@ -28,13 +28,10 @@ Format mengikuti prinsip [Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 # CURRENT VERSION
 # RELEASE HISTORY
 
-# WAVE 1 CONTROLLED CANONICAL SYNCHRONIZATION APPEND
-## Baseline: CHANGELOG-v0.7.21-D6-GLOBAL-SYNCHRONIZED.md
-## Date: 2026-08-17
 
-> **Promotion instruction:** append this entry to the bottom of the existing D6 Changelog. Do not rename the D6 baseline to v0.7.22 and do not use the older VERIFIED-FINAL file as the base.
+## [Unreleased]
 
-## [Wave 1 / P08] — Governance / Project-Control Canonical Closure
+### 2026-08-17 — Wave 1 / P08 Governance Synchronization
 
 ### Added
 - Project Constitution **v1.11** completed as a local canonical artifact.
@@ -90,9 +87,10 @@ Tidak ada breaking change API/database pada rilis ini.
 ### Promotion Note
 This entry records the **actual completion of the Wave 1 local canonical document set**. GitHub promotion is a separate owner-managed operation and must not be inferred from this entry alone.
 
----
+### Existing Unreleased Items
 
-# END OF WAVE 1 CHANGELOG APPEND
+**Tindakan manual diperlukan dari Owner:** 5 file sumber sudah diperbaiki dan siap menggantikan versi lama di project — belum dieksekusi otomatis: `0007_m12_organization.sql`, `0008_m03_listing.sql`, `0009_m04_learning_center.sql`, `0010_m05_events.sql`, `API-Specification-RUMAHAGEN-v1.3-FINAL.md` (lihat versi `-FIXED` masing-masing). Seluruh migration (15 file) **masih belum pernah dieksekusi ke database live** di seluruh proyek. Perubahan berikutnya di luar itu: implementasi kode saat Sprint S0/modul dimulai (endpoint yang kontraknya sudah didesain, registrasi `BR-XXX`/`API-XXX`, sinkronisasi `ERD-Diagram-...v1.1.mermaid`, high-fidelity mockup).
+
 
 ## 2026-08-16 — D6 Global AEP1–AEP4 Synchronization
 - Completed the locked AEP1 → AEP2 → AEP3 → AEP4 sequence at controlled semantic/downstream level.
@@ -102,8 +100,6 @@ This entry records the **actual completion of the Wave 1 local canonical documen
 - No physical schema/API/RBAC/provider implementation was silently authorized.
 - Historical documents are retained; stale wording is treated as controlled documentation delta and does not override canonical current state.
 
-## [Unreleased]
-**Tindakan manual diperlukan dari Owner:** 5 file sumber sudah diperbaiki dan siap menggantikan versi lama di project — belum dieksekusi otomatis: `0007_m12_organization.sql`, `0008_m03_listing.sql`, `0009_m04_learning_center.sql`, `0010_m05_events.sql`, `API-Specification-RUMAHAGEN-v1.3-FINAL.md` (lihat versi `-FIXED` masing-masing). Seluruh migration (15 file) **masih belum pernah dieksekusi ke database live** di seluruh proyek. Perubahan berikutnya di luar itu: implementasi kode saat Sprint S0/modul dimulai (endpoint yang kontraknya sudah didesain, registrasi `BR-XXX`/`API-XXX`, sinkronisasi `ERD-Diagram-...v1.1.mermaid`, high-fidelity mockup).
 
 **`0.7.20`** — *Initial Development*
 Dirilis: 2026-08-10
