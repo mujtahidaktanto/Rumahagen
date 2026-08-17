@@ -37,14 +37,6 @@ Fase: Pra-Development — **Audit ulang MP-02 dengan standar verifikasi ketat pe
 
 # RELEASE HISTORY
 
-## 2026-08-16 — D6 Global AEP1–AEP4 Synchronization
-- Completed the locked AEP1 → AEP2 → AEP3 → AEP4 sequence at controlled semantic/downstream level.
-- Completed D5 cross-domain contradiction scan with no hard contradiction requiring reopening of an approved AEP.
-- Promoted the consolidated cross-AEP semantic state into the global baseline synchronization layer.
-- Preserved controlled residuals: OPEN-C01, MBR-COM evidence gap, MADCR-049, MADCR-053/054, AEP3-OD-02…05, AEP4-OD-08 and other downstream/provider/attendance/session residuals.
-- No physical schema/API/RBAC/provider implementation was silently authorized.
-- Historical documents are retained; stale wording is treated as controlled documentation delta and does not override canonical current state.
-
 # WAVE 1 CONTROLLED CANONICAL SYNCHRONIZATION APPEND
 ## Baseline: CHANGELOG-v0.7.21-D6-GLOBAL-SYNCHRONIZED.md
 ## Date: 2026-08-17
@@ -111,6 +103,14 @@ This entry records the **actual completion of the Wave 1 local canonical documen
 
 # END OF WAVE 1 CHANGELOG APPEND
 
+
+## 2026-08-16 — D6 Global AEP1–AEP4 Synchronization
+- Completed the locked AEP1 → AEP2 → AEP3 → AEP4 sequence at controlled semantic/downstream level.
+- Completed D5 cross-domain contradiction scan with no hard contradiction requiring reopening of an approved AEP.
+- Promoted the consolidated cross-AEP semantic state into the global baseline synchronization layer.
+- Preserved controlled residuals: OPEN-C01, MBR-COM evidence gap, MADCR-049, MADCR-053/054, AEP3-OD-02…05, AEP4-OD-08 and other downstream/provider/attendance/session residuals.
+- No physical schema/API/RBAC/provider implementation was silently authorized.
+- Historical documents are retained; stale wording is treated as controlled documentation delta and does not override canonical current state.
 
 ## [Unreleased]
 **Tindakan manual diperlukan dari Owner:** 5 file sumber sudah diperbaiki dan siap menggantikan versi lama di project — belum dieksekusi otomatis: `0007_m12_organization.sql`, `0008_m03_listing.sql`, `0009_m04_learning_center.sql`, `0010_m05_events.sql`, `API-Specification-RUMAHAGEN-v1.3-FINAL.md` (lihat versi `-FIXED` masing-masing). Seluruh migration (15 file) **masih belum pernah dieksekusi ke database live** di seluruh proyek. Perubahan berikutnya di luar itu: implementasi kode saat Sprint S0/modul dimulai (endpoint yang kontraknya sudah didesain, registrasi `BR-XXX`/`API-XXX`, sinkronisasi `ERD-Diagram-...v1.1.mermaid`, high-fidelity mockup).
