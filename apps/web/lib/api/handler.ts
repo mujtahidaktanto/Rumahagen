@@ -46,15 +46,18 @@ export function withApiHandler<T>(
 ) {
   return async function handler(
     request: Request,
-    routeContext?: { params: Promise<Record<string, string>> },
+    routeContext: { params: Promise<Record<string, string>> },
   ): Promise<NextResponse> {
     const traceId = crypto.randomUUID(); // D13-23
 
     try {
-      // ADD-NEW — Next.js 15 App Router mengirim dynamic segment ([id], dst.)
-      // sebagai Promise; route tanpa dynamic segment (mis. roles/route.ts)
-      // tidak mengirim routeContext sama sekali, jadi default ke {}.
-      const params = routeContext?.params ? await routeContext.params : {};
+      // ADD-NEW — Next.js 15 App Router selalu mengirim argumen kedua ini
+      // (params kosong {} untuk route tanpa dynamic segment, mis.
+      // roles/route.ts). Signature TIDAK boleh opsional (`routeContext?`) —
+      // Next.js men-generate .next/types per route yang memvalidasi bahwa
+      // parameter kedua exported handler PERSIS menerima bentuk ini, dan
+      // `| undefined` dari tanda opsional membuatnya gagal type-check.
+      const params = (await routeContext.params) ?? {};
 
       assertJsonContentType(request); // D13-22
 
