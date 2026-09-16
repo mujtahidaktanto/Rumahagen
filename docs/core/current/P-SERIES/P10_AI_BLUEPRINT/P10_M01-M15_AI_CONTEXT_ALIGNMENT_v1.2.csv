@@ -1,0 +1,16 @@
+﻿module,exact_locked_ai_context,status
+M01,"Identity/authentication; Conditional KTP Deferred Flow; successful OTP must not default to Pending Review/approval; KTP is eligibility/requirement, not RBAC permission; verification docs private.",COVERED
+M02,Profile/review; semantic field/profile visibility; KTP private lifecycle; profile visibility remains distinct from authorization/ownership.,COVERED
+M03,Listing/Refresh action authority; Direct Publish; field locks; Sold/Rented/Suspended states; refresh allowance consumed from M14; Listing lifecycle remains M03.,COVERED
+M04,Learning Economy free-to-learn/LP; Learning Path; Session; evidence production; Session remains Learning; LP transaction/provenance; M15 consumes evidence.,COVERED
+M05,Event/Registration; Event lifecycle remains M05; Event Registration distinct from Learning Session Enrollment.,COVERED
+M06,Developer/Project/Marketing Kit/Claim; company logo; free-text Tentang Developer; Project compatible source for Listing; Marketing Kit: Developer own-scope upload/edit/delete/view; Admin/Superadmin All; Agent/Buyer/Manager/Partner View.,COVERED
+M07,DBR authority; governed/configurable formula/band/bank parameters; historical outcomes preserved; do not hard-code configurable values.,COVERED
+M08,Dashboard/Notification projection only; source-domain mutation is prohibited; canonical source remains upstream.,COVERED
+M09,Admin/config/audit with bounded authority; Static Public Content and Announcement/Promotion lifecycle/configuration by M09 or applicable authoritative domain.,COVERED
+M10,Authorization/RBAC/RLS authority; Role = actor grouping; Role Permission = baseline/default permission matrix; Permission Preset = optional configurable authorization configuration targeted to an existing Role only; never a new role and never outside the established role baseline/governance.,COVERED
+M11,"SEO/discovery/analytics; mandatory public surfaces: Homepage, Listing, Agent, Organization, Developer/Project, Event, Learning, Learning Session, Static Public Content, Announcement/Promotion; measurement/discovery only.",COVERED
+M12,"Organization/membership/context; membership is distinct from permission, ownership, public visibility, commercial entitlement and Host authority.",COVERED
+M13,AI/BYOK/provider catalogue; Provider Catalogue Superadmin-only; BYOK Agent/User own; secrets server-side; provider adapter boundary.,COVERED
+M14,"Commercial/payment/entitlement/quota/promotion; Q01–Q64 all M14, including Q40/Q54/Q61/Q62; M03 consumes listing/refresh allowance; payment verification/fulfillment/reconciliation/idempotency.",COVERED
+M15,Qualification/evidence/Award; M04 evidence is consumed; Award remains M15; Q01–Q64 and specifically Q40/Q54/Q61/Q62 are not M15.,COVERED

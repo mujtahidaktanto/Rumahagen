@@ -1,0 +1,33 @@
+module,wp_id,wp_name,batch,core_rows,obligation_ids,atomic_execution,validation,evidence,handoff
+M08,M08-P4-WP01,Projection Core,B07,11,P3-OBL-030;P3-OBL-031,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M08,M08-P4-WP02,Notification/Communication,B07,5,P3-OBL-030;P3-OBL-031,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M08,M08-P4-WP03,Source Event Contracts,B07,2,P3-OBL-030;P3-OBL-031,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M08,M08-P4-WP04,Validation/No-Mutation,B07,0,P3-OBL-030;P3-OBL-031,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M09,M09-P4-WP01,Administrative Foundation,B03,2,P3-OBL-032;P3-OBL-033;P3-OBL-034;P3-OBL-035,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M09,M09-P4-WP02,Domain Administration/Configuration,B03,2,P3-OBL-032;P3-OBL-033;P3-OBL-034;P3-OBL-035,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M09,M09-P4-WP03,Static Content + Announcement/Promotion,B03,0,P3-OBL-032;P3-OBL-033;P3-OBL-034;P3-OBL-035,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M09,M09-P4-WP04,Audit/Reconciliation,B03,2,P3-OBL-032;P3-OBL-033;P3-OBL-034;P3-OBL-035,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M10,M10-P4-WP01,Authorization Core,B02,13,P3-OBL-036;P3-OBL-037;P3-OBL-038,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M10,M10-P4-WP02,Permission Preset Governance,B02,1,P3-OBL-036;P3-OBL-037;P3-OBL-038,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M10,M10-P4-WP03,Scope/Condition/Ownership/Organization,B02,2,P3-OBL-036;P3-OBL-037;P3-OBL-038,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M10,M10-P4-WP04,RLS Evidence/Handoff,B02,1,P3-OBL-036;P3-OBL-037;P3-OBL-038,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M11,M11-P4-WP01,Public Surface Registry,B07,8,P3-OBL-039;P3-OBL-040;P3-OBL-041;P3-OBL-042,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M11,M11-P4-WP02,SEO/Indexability/Structured Data,B07,2,P3-OBL-039;P3-OBL-040;P3-OBL-041;P3-OBL-042,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M11,M11-P4-WP03,Sitemap/Robots/Discovery,B07,0,P3-OBL-039;P3-OBL-040;P3-OBL-041;P3-OBL-042,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M11,M11-P4-WP04,Analytics/Measurement,B07,0,P3-OBL-039;P3-OBL-040;P3-OBL-041;P3-OBL-042,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M12,M12-P4-WP01,Organization Core,B03,5,P3-OBL-043;P3-OBL-044;P3-OBL-045,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M12,M12-P4-WP02,Membership/Invitation/Join Request,B03,1,P3-OBL-043;P3-OBL-044;P3-OBL-045,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M12,M12-P4-WP03,Context & Ownership Boundary,B03,3,P3-OBL-043;P3-OBL-044;P3-OBL-045,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M12,M12-P4-WP04,Lifecycle/Validation,B03,1,P3-OBL-043;P3-OBL-044;P3-OBL-045,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M13,M13-P4-WP01,Provider Catalogue,B03,3,P3-OBL-046;P3-OBL-047;P3-OBL-048;P3-OBL-049,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M13,M13-P4-WP02,BYOK Connection Lifecycle,B03,1,P3-OBL-046;P3-OBL-047;P3-OBL-048;P3-OBL-049,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M13,M13-P4-WP03,Protected Invocation/Security,B03,0,P3-OBL-046;P3-OBL-047;P3-OBL-048;P3-OBL-049,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M13,M13-P4-WP04,Transient Chat Frame/Validation,B03,0,P3-OBL-046;P3-OBL-047;P3-OBL-048;P3-OBL-049,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M14,M14-P4-WP01,Catalog/Offer,B03,9,P3-OBL-050;P3-OBL-051;P3-OBL-052;P3-OBL-053;P3-OBL-054,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M14,M14-P4-WP02,Order/Payment Core,B03,4,P3-OBL-050;P3-OBL-051;P3-OBL-052;P3-OBL-053;P3-OBL-054,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M14,M14-P4-WP03,Verification/Fulfillment,B03,3,P3-OBL-050;P3-OBL-051;P3-OBL-052;P3-OBL-053;P3-OBL-054,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M14,M14-P4-WP04,Promotion/Reconciliation/Quota,B03,4,P3-OBL-050;P3-OBL-051;P3-OBL-052;P3-OBL-053;P3-OBL-054,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M15,M15-P4-WP01,Title,B06,19,P3-OBL-055;P3-OBL-056;P3-OBL-057,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M15,M15-P4-WP02,Path/Rule,B06,0,P3-OBL-055;P3-OBL-056;P3-OBL-057,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M15,M15-P4-WP03,Qualification/Evidence,B06,1,P3-OBL-055;P3-OBL-056;P3-OBL-057,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08
+M15,M15-P4-WP04,Award/Presentation,B06,2,P3-OBL-055;P3-OBL-056;P3-OBL-057,EXPLICIT,Core+obligation+authority+evidence,evidence-gated,P7-09/B08

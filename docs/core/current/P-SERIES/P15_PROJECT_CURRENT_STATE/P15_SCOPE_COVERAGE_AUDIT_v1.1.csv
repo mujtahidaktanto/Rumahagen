@@ -1,0 +1,37 @@
+﻿ScopeID,ScopeType,Count,Result,Basis
+M01,MODULE,4,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M02,MODULE,4,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M03,MODULE,9,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M04,MODULE,3,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M05,MODULE,2,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M06,MODULE,5,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M07,MODULE,2,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M08,MODULE,2,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M09,MODULE,4,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M10,MODULE,3,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M11,MODULE,4,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M12,MODULE,3,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M13,MODULE,4,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M14,MODULE,5,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+M15,MODULE,3,PASS,Exact current artifact + P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage + locked semantic state
+IP-00,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-01,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-02,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-03,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-04,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-05,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-06,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-07,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-08,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-09,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-10,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-11,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-12,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-13,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-14,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-15,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+IP-16,CORE,1,PASS,Explicit Core IP state; Core remains immutable
+P13_DECISION_CHANGE_LOG,DECISION,64,PASS,64/64 decision universe consumed
+P13_DECISION_CHANGE_LOG,MATERIAL OBLIGATION,57,PASS,57/57 material obligations consumed
+P13_DECISION_CHANGE_LOG,LOCKED DECISION,7,PASS,D-LOCK-001..007 preserved
+P7,UPLOADED P-STEP SOURCE,1,PASS,Explicitly included in current 13-archive corpus

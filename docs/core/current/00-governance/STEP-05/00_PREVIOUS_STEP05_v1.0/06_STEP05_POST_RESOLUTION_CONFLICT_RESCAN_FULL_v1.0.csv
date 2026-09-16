@@ -1,0 +1,8 @@
+finding,result,verification
+M01-CI-009,PASS,Locked authority remains stronger than conflicting Core wording; no overturning evidence found.
+M02-CI-008,PASS,Locked M02 auto-approval/post-publication moderation decision corroborated by PRE-00-D.
+M02-CI-011,PASS,Locked deferred-KTP decision corroborated by PRE-00-C/D; Core conflict is explicit at CAM11-0034/0036.
+M03-CI-001,PASS,Locked direct Listing publish decision corroborated by PRE-00-E.
+M06-CI-007,PASS,Locked semantic photo/video boundary corroborated by M06 conflict register and PRE-00-H; physical extra enum remains controlled.
+M13-CI-001,PASS,Locked Superadmin-only catalogue mutation corroborated by PRE-00-O; historical broader admin wording is superseded.
+M13-CI-002,PASS,Locked own-BYOK ownership corroborated by PRE-00-O and owner-scoped API; no evidence overturns authority.

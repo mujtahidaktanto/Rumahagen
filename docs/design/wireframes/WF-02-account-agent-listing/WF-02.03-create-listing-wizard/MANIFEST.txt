@@ -1,0 +1,13 @@
+Desktop/AGT-005_ready.png
+Desktop/AGT-005_validation.png
+Desktop/AGT-006_ready.png
+Desktop/AGT-006_validation.png
+Desktop/AGT-007_ready.png
+Desktop/AGT-007_validation.png
+Mobile/AGT-005_ready.png
+Mobile/AGT-005_validation.png
+Mobile/AGT-006_ready.png
+Mobile/AGT-006_validation.png
+Mobile/AGT-007_ready.png
+Mobile/AGT-007_validation.png
+RumahAgen-logo-canonical.png

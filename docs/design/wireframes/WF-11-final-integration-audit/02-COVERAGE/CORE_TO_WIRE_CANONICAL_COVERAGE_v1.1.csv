@@ -1,0 +1,16 @@
+module,canonical_wire,result
+M01,WIRE-01,PASS
+M02,WIRE-01 + WIRE-02,PASS
+M03,WIRE-01 + WIRE-02; states WIRE-10,PASS
+M04,WIRE-04; qualification handoff WIRE-07,PASS
+M05,WIRE-05,PASS
+M06,WIRE-03; approved-claim Listing handoff WIRE-02,PASS
+M07,WIRE-02; Bank Master administration WIRE-08,PASS
+M08,WIRE-02; shared states WIRE-10,PASS
+M09,WIRE-08; public representation WIRE-01,PASS
+M10,WIRE-08; denial states WIRE-10,PASS
+M11,WIRE-01; authorized measurement/admin where applicable WIRE-08,PASS
+M12,WIRE-03,PASS
+M13,WIRE-09; authenticated shell AI entry where needed,PASS
+M14,WIRE-06,PASS
+M15,WIRE-07,PASS

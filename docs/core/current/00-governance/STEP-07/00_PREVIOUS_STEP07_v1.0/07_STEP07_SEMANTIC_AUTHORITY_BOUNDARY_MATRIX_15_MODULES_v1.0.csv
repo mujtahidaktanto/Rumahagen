@@ -1,0 +1,16 @@
+module,semantic_authority_domain,entity_domain,lifecycle_authority,authorization_authority,cross_module_relevance
+M01,Identity / Authentication / KTP lifecycle,Identity/account/authentication/KTP,M01 identity/authentication; deferred KTP,M10 authorization,M02/M10/M12/M14/M15
+M02,Profile / Review / Public Visibility / CTA,Profile/review/public visibility,M02 visibility,M10 authorization,M01/M03/M11/M12
+M03,Listing / Refresh action truth,Listing/media/search/refresh,Listing lifecycle; Refresh action,M10 authorization,M06/M11/M14
+M04,Learning / Learning Economy / evidence production,Learning/course/session/enrollment/evidence,Learning lifecycle,M10 authorization,M10/M14/M15
+M05,Event / Calendar / Event Registration,Event/calendar/registration,Event lifecycle/registration,M10 authorization,M04/M11
+M06,Developer / Project / Marketing Kit / Claim,Developer/project/media/marketing/claim,Project/claim/marketing lifecycle,M10 authorization,M03/M11/M14
+M07,DBR domain / configuration,DBR calculator/config,Configuration lifecycle,M10 authorization,M09/M10
+M08,Dashboard Projection / Notification State,Projection/notification,Projection state,M10 authorization,M01-M15 upstream sources
+M09,Administration / configuration / export / audit surface,Admin/report/export/audit,Administrative lifecycle,M10 authorization,M10 and domain owners
+M10,Authorization / RBAC / Permission / Scope / Condition / Ownership / Organization / RLS,RBAC/authorization,Authorization resolution,M10 itself,All modules
+M11,Public discovery / SEO / tracking / measurement,Public content/listing/agent/org/project/event/static/announcement,Discovery/indexing/measurement,M10 authorization,M02/M03/M05/M06/M09/M12/M14
+M12,Organization / Membership / lifecycle / context,Organization/membership,Membership lifecycle,M10 authorization,M03/M10/M11/M14
+M13,Provider catalogue / BYOK governance,AI provider/configuration,Provider/config lifecycle,M10 authorization,M10/M09
+M14,Commercial / Payment / Entitlement / Quota / Promotion / Reconciliation,Commercial/payment/entitlement/quota,Commercial lifecycle,M10 authorization,M03/M04/M06/M10/M11/M15
+M15,Title / Qualification / Evidence / Awarding,Qualification/evidence/title/award,Awarding lifecycle,M10 authorization,M04/M10/M14

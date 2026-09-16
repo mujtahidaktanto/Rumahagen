@@ -1,0 +1,23 @@
+state,audited_against_WF10,result
+Loading,XST-001,PASS
+Ready,XST-002,PASS
+Empty,XST-003,PASS
+No authorized resource,XST-004,PASS
+No configured benefit,XST-005,PASS
+No transaction,XST-006,PASS
+No eligible action,XST-007,PASS
+Validation,XST-008,PASS
+Error/Retry,XST-009,PASS
+Pending/Processing,XST-010,PASS
+Success/Confirmed,XST-011,PASS
+Rejected/Failed,XST-012,PASS
+Expired,XST-013,PASS
+Unavailable/Degraded,XST-014,PASS
+Denied/Restricted,XST-015,PASS
+Protected non-existence,XST-016,PASS
+Destructive confirmation/Dirty state,XST-017,PASS
+Offline/Interrupted/Recovery,XST-018,PASS
+Session expired/Re-auth,XST-019,PASS
+Duplicate/Replay,XST-020,PASS
+Long content/Pagination,XST-021,PASS
+Cross-module handoff/context,XST-022,PASS

@@ -1,0 +1,22 @@
+obligation_id,package,core_strategy_obligation,classification
+001,IP-00,Foundation readiness is separate from semantic product implementation; no runtime readiness claim.,PRESERVE
+002,IP-01,M01 identity/authentication and M10 authorization/RBAC/RLS remain distinct; physical bootstrap order cannot invert semantic ownership.,PRESERVE
+003,IP-02,M02 and M12 may proceed in parallel after IP-01 contract stability.,AUGMENT
+004,IP-03,M06 proceeds after IP-01; M09 dependency is conditional.,AUGMENT
+005,IP-04,M03 consumes M14 quota/entitlement but does not own quota; Core search strategy remains PostgreSQL FTS + pg_trgm.,PRESERVE
+006,IP-05,Event Registration remains distinct from Session Enrollment.,PRESERVE
+007,IP-06,M04 owns Learning Core/Economy/completion; Learning Activity completion != LP transaction; Certificate != Award.,PRESERVE
+008,IP-07,M14 sequence = catalog → order → payment core → provider adapter → verification → fulfillment → reconciliation.,AUGMENT
+009,IP-07,Payment is provider-independent; Midtrans remains behind Provider Adapter; trusted verification/idempotency precede canonical confirmation.,PRESERVE
+010,IP-08,M04 Session is an internal M04 work package; evidence flow is provider event → verification → normalization → idempotency → evidence → attendance → completion.,AUGMENT
+011,IP-08,Session completion may produce Learning evidence but not directly LP or Award.,PRESERVE
+012,IP-09,M15 consumes evidence and does not mutate Learning evidence; Completion/Certificate/LP/Presentation do not substitute for Award issuance.,PRESERVE
+013,IP-10,M07 remains relatively independent after identity/authorization/configuration prerequisites.,AUGMENT
+014,IP-11,M08 is projection/notification only and must not block source-domain implementation.,PRESERVE
+015,IP-12,M09 is split into administrative foundation and domain administration; it is not a universal blocker and does not own domain outcomes.,PRESERVE
+016,IP-13,M11 is observational/discovery/measurement; private/protected resources remain excluded from public indexing.,PRESERVE
+017,IP-14,M13 credential path is server-protected; API keys are not exposed client-side.,PRESERVE
+018,IP-15,"Cross-domain hardening covers authorization/RLS, quota/entitlement, Learning/Session evidence, Award qualification, org scope, notifications, SEO/analytics, idempotency and negative tests.",AUGMENT
+019,IP-16,W4-02 canonical build-from-zero baseline and downstream verification are handoff constraints only; P2 claims no execution/runtime PASS.,CONTROLLED
+020,META,Implementation package model includes scope/owner/dependencies/inputs/sequencing/parallelism/prohibited parallelism/API/RBAC/data/UI/SEO/test/negative tests/evidence/exit/downstream consumers.,AUGMENT
+021,META,R0–R4 readiness labels are governance states; P2 does not claim R3/R4 without downstream evidence.,CONTROLLED

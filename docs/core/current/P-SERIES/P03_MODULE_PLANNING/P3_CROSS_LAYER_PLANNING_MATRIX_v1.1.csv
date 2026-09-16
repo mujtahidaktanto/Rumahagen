@@ -1,0 +1,136 @@
+module,layer,action,boundary
+M01,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M01,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M10,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M02,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M12,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M06,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M03,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M05,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M04,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M14,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M15,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M07,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M08,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M09,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M11,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,Business Rules,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,Architecture/Dependency,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,Data,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,API,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,RBAC/RLS,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,Functional/User Flow,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,Technical,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,UI/UX,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.
+M13,SEO/Analytics,PLAN/RECONCILE,Exact implementation architecture deferred to P4; no runtime proof.

@@ -1,0 +1,10 @@
+module,lifecycle,canonical_transition,condition_exception,authority,downstream,resolution_or_source
+M01,Account activation,REGISTER → OTP VERIFIED → ACTIVE,KTP may be DEFERRED / ISI NANTI,M01,M02/M10,STEP05 M01-CI-009/M02-CI-011
+M02,Review publication,Buyer Submit → AUTO-APPROVED → Published/Viewable,"Admin moderation is post-publication, not approval gate",M02,M11,STEP05 M02-CI-008
+M03,Normal Listing publication,DRAFT → PUBLISH → PUBLISHED,No Pending Review gate for normal publication,M03,M10/M11/M14,STEP05 M03-CI-001
+M03,Listing enforcement,PUBLISHED/ACTIVE → SUSPENDED when violation/enforcement,"Suspended is enforcement state, not normal publication review",M03,M10/M11,STEP07 authority boundary
+M06,Claim,Claim → Approval Claim → approved initialization → agent-owned Listing path,Approval does not transfer Listing authority from M03,M06/M03,M10,STEP07A COV-014
+M13,Provider Catalogue,Catalogue governed by Superadmin-only mutation,Agent BYOK own connection remains user-owned,M13,M10,STEP05 M13-CI-001/M13-CI-002
+M14,Payment,Payment state separate from verification state; verified outcome → fulfillment,Payment success cannot directly grant permission,M14,M10,M14-CI-011/012 + COV-050
+M15,Award,Qualification evaluation → Award issuance → Award lifecycle,Evidence is input; completion/evidence does not automatically equal award,M15,M04,COV-034 / M15 guardrail
+M12,Agency,ACTIVE → CLOSING → CLOSED,CLOSING irreversible; CLOSED final,M12,M01/M03/M10/M14,BR-118–151

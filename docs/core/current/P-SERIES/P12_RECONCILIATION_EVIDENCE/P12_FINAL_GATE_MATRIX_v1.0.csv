@@ -1,0 +1,17 @@
+﻿step,activity,result,evidence
+P12_RECONCILIATION_EVIDENCE-00,Evidence Scope & Stage Gate,PASS,Pre-Physical / Pre-Runtime; documentary/design evidence only; physical/runtime/production out of scope; absence cannot HOLD.
+P12_RECONCILIATION_EVIDENCE-01,Evidence Authority Reconciliation,PASS,15 module authorities and Core authority chain reconciled.
+P12_RECONCILIATION_EVIDENCE-02,Requirement Evidence Reconciliation,PASS,57 planning obligations and 15 module requirement scopes trace to current artifacts.
+P12_RECONCILIATION_EVIDENCE-03,Obligation / Work Package Evidence,PASS,57 obligations; 62 WPs; documentary traceability preserved.
+P12_RECONCILIATION_EVIDENCE-04,Core v1.3 Evidence Reconciliation,PASS,223/223 findings routed; Core preserved; no Core modification.
+P12_RECONCILIATION_EVIDENCE-05,Dependency Evidence Reconciliation,PASS,65/65 dependency rows; no self-loop; documentary ownership retained.
+P12_RECONCILIATION_EVIDENCE-06,API / Contract Documentary Evidence,PASS,Contract/design state reconciled; runtime verification explicitly excluded.
+P12_RECONCILIATION_EVIDENCE-07,Schema / RLS / Authorization Documentary Evidence,PASS,Intent/design/authority reconciled; physical DB/RLS execution excluded.
+P12_RECONCILIATION_EVIDENCE-08,UI / Flow / State Documentary Evidence,PASS,Design/state boundaries reconciled; runtime behavior not claimed.
+P12_RECONCILIATION_EVIDENCE-09,Cross-Domain Evidence Reconciliation,PASS,9 critical cross-domain invariants reconciled.
+P12_RECONCILIATION_EVIDENCE-10,Locked Decision Evidence,PASS,"7 locked decision controls reconciled, including M14 Q01–Q64 and M10 Permission Preset."
+P12_RECONCILIATION_EVIDENCE-11,Negative / Boundary Evidence,PASS,Documentary boundaries preserved; no runtime negative-test claim.
+P12_RECONCILIATION_EVIDENCE-12,Claim Strength Reconciliation,PASS,E1 documentary claims supported; E2/E4/E5 explicitly N-A at current stage.
+P12_RECONCILIATION_EVIDENCE-13,Evidence Gap Classification,PASS,Only documentary gaps can be current P12_RECONCILIATION_EVIDENCE defects; future physical/runtime/production gaps are non-blocking.
+P12_RECONCILIATION_EVIDENCE-14,Controlled Residual Reconciliation,PASS,47/47 residuals carried; physical/runtime absence alone does not HOLD.
+P12_RECONCILIATION_EVIDENCE-15,Final Evidence Sufficiency Gate,PASS,Documentation is sufficiently traceable for downstream planning/implementation without requiring physical/runtime proof.

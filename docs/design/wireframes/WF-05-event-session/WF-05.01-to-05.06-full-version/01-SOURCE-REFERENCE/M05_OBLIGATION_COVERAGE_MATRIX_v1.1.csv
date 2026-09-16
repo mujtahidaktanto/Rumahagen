@@ -1,0 +1,17 @@
+source_obligation,requirement,authority,wireframe_target,result
+CI-001,Event authority / Event Calendar / Registration,M05,ADM-EVT-001..004; EVT-001..003,PASS
+CI-002,Event quota = max Registered; not entitlement/Session capacity,M05,EVT-002; ADM-EVT-002,PASS
+CI-003,Waitinglist no queue number/rank,M05,EVT-002/003; ADM-EVT-003,PASS
+CI-004,First successful registration captures available slot,M05,EVT-002/003; state rule,PASS
+CI-005,Registration closes start_at + 1 hour,M05,EVT-002; ADM-EVT-002,PASS
+CI-006,Pre-start cancellation returns one quota slot,M05,EVT-003; ADM-EVT-003,PASS
+CI-007,Attendance optional; no-show does not auto-cancel,M05,EVT-003; ADM-EVT-003,PASS
+CI-008,Event cancellation distinct from registration cancellation,M05,ADM-EVT-004,PASS
+CI-009,Event-start notification Registered + Waitinglist; M08 projection,M05/M08,EVT-002/003; ADM-EVT-003,PASS
+CI-010,Developer Partner event publication subject to approval,M05/M10,ADM-EVT-004,PASS
+Q11-14,"Event provider policy, ordering, timing, external Google Meet",M05,ADM-EVT-005; EVT-002,PASS
+Q15-18,Provider failover/runtime detection/binding residuals,M05,ADM-EVT-005; controlled evidence state,PASS / controlled
+Q19-22,Event fields + Event/Session boundary,M05/M04,EVENT_FIELD_SEMANTIC_UX_MATRIX; SES-001,PASS
+Q23-26,"Approval model, Event approval ≠ registration approval",M05,ADM-EVT-004; EVT-002,PASS
+Q27-30,Guest registration/email/link/identity boundary,M05,EVT-002/003; ADM-EVT-003,PASS
+Q31-36,Guest persistence/waitlist transaction/provider binding residuals,M05,controlled residual states; no invented implementation,PASS / controlled

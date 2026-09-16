@@ -1,0 +1,15 @@
+﻿check_id,requirement,status,evidence
+V13-01,All eight supplied inputs deep-scanned,PASS,See full report and input manifest.
+V13-02,Core v1.3 immutable,PASS,No Core artifact modified.
+V13-03,Core artifact map coverage,PASS 76/76,Core artifact map preserved from prior full rebuild.
+V13-04,Module coverage,PASS 15/15,All M01–M15 retained.
+V13-05,Prior STEP03 relationships preserved,PASS 881/881,All prior v1.3 relationship rows retained.
+V13-06,Corrected finding-level relationships,PASS 11 total,9 prior finding-level relationships retained + 2 deterministic M02-CI-011 relationships.
+V13-07,Finding linkage coverage,PASS 223/223 resolved,M02-CI-011 now deterministically linked.
+V13-08,Heuristic Core-target fallback,PASS 0,No keyword/layer fallback used.
+V13-09,Orphan relationship audit,PASS,No orphan relationship introduced.
+V13-10,Orphan finding audit,PASS 0 unresolved,No unresolved finding mapping remains.
+V13-11,Authority resolution,PASS 76/76,Authority register preserved.
+V13-12,Dependency handoff,PASS,Dependency handoff preserved.
+V13-13,Q01-Q64 M14 boundary,PASS,Boundary preserved.
+V13-14,STEP04 readiness,PASS — CLEARED,STEP03 is ready for STEP04 synchronization classification.

@@ -1,0 +1,19 @@
+gate,status,evidence
+INPUT_INTEGRITY,PASS,7/7 supplied ZIP inputs verified; ZIP integrity PASS
+CORE_IMMUTABILITY,PASS,Core v1.3 input not modified; no Integrated Core produced
+15_MODULE_COVERAGE,PASS,15/15 modules represented
+STEP03_CONSUMPTION,PASS,STEP03 v1.3 corrected is current mapping/evidence authority
+DETERMINISTIC_LINKAGE,PASS,223/223 finding linkages resolved deterministically
+HEURISTIC_TARGETING,PASS,0 heuristic Core-target fallback
+FINDING_COVERAGE,PASS,223/223 findings
+STEP03_RELATIONSHIP_COVERAGE,PASS,883/883 relationship evidence rows preserved
+AUTHORITY_PROVENANCE,PASS,Current Core/module authority fields sourced from corrected STEP03
+CLASSIFICATION,PASS,"{'PRESERVE': 114, 'AUGMENT': 46, 'CONTROLLED': 32, 'ADD-NEW': 20, 'RECONCILE': 7, 'NO-PROPAGATION': 4}"
+RECONCILE_SET,PASS,7 reconcile findings; prior 6 preserved + M02-CI-011
+M02-CI-011,PASS,Deterministic CAM11-0034 primary anchor + CAM11-0036 corroborating anchor; RECONCILE
+CONTROLLED_BOUNDARY,PASS,CONTROLLED remains separate from semantic proof
+M14_BOUNDARY,PASS,Q01–Q64 remain M14; Q40/Q54/Q61/Q62 remain M14
+NO_CORE_MERGE,PASS,STEP04 performs no Integrated Core merge
+STEP05_BOUNDARY,PASS,Semantic conflict resolution deferred to STEP05
+PRESERVATION,PASS,223 findings retained; no reduction/summarization of finding set
+RELATIONSHIP_PRESERVATION,PASS,883 STEP03 relationships retained; no relationship removal

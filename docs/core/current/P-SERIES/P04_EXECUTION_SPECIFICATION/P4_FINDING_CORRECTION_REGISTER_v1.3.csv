@@ -1,0 +1,6 @@
+finding_id,finding,status,correction
+P4-R01,Core 6.25 detailed execution boundaries were not individually traceable to current P4 routing.,CORRECTED,Added explicit M04/M10/M14/M15 Core 6.25 detailed execution decomposition traceability.
+P4-R02,Several P3 obligation rows were routed to semantically unrelated P4 work packages.,CORRECTED,Rebuilt the change-to-execution matrix with corrected work-package routing.
+P4-R03,Current STEP11-D controlled API/authorization/transport/traceability findings were not explicitly represented in P4.,CORRECTED,Added current controlled-finding execution routing register and expanded residual register.
+P4-R04,P4 v1.2 did not distinguish sufficiently between 'covered' and 'controlled residual' at endpoint-contract level.,CORRECTED,All current D13 findings are explicitly evidence-gated and non-inventive.
+P4-R05,Core v1.3 remained immutable but its P4 execution-detail preservation was under-explicit.,CORRECTED,Core remains read-only; only successor traceability was rebuilt.

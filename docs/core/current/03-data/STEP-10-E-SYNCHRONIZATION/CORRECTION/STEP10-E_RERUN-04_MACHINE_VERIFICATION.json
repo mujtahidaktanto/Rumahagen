@@ -1,0 +1,104 @@
+{
+  "checks": [
+    {
+      "check": "A1 attribute register row count",
+      "expected": 862,
+      "actual": 862,
+      "status": "PASS"
+    },
+    {
+      "check": "A1 unique entity count",
+      "expected": 94,
+      "actual": 94,
+      "status": "PASS"
+    },
+    {
+      "check": "D attribute reconciliation row count",
+      "expected": 862,
+      "actual": 862,
+      "status": "PASS"
+    },
+    {
+      "check": "D physical attribute YES",
+      "expected": 764,
+      "actual": 764,
+      "status": "PASS"
+    },
+    {
+      "check": "D physical attribute NO",
+      "expected": 98,
+      "actual": 98,
+      "status": "PASS"
+    },
+    {
+      "check": "D relationship row count",
+      "expected": 149,
+      "actual": 149,
+      "status": "PASS"
+    },
+    {
+      "check": "D relationship physical FK present",
+      "expected": 138,
+      "actual": 138,
+      "status": "PASS"
+    },
+    {
+      "check": "D relationship controlled no current FK",
+      "expected": 10,
+      "actual": 10,
+      "status": "PASS"
+    },
+    {
+      "check": "D relationship semantic reference",
+      "expected": 1,
+      "actual": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "D entity mapping rows",
+      "expected": 94,
+      "actual": 94,
+      "status": "PASS"
+    },
+    {
+      "check": "D physical tables present",
+      "expected": 86,
+      "actual": 86,
+      "status": "PASS"
+    },
+    {
+      "check": "D logical-only entities",
+      "expected": 8,
+      "actual": 8,
+      "status": "PASS"
+    },
+    {
+      "check": "D RLS-enabled tables",
+      "expected": 86,
+      "actual": 86,
+      "status": "PASS"
+    },
+    {
+      "check": "D policies",
+      "expected": 111,
+      "actual": 111,
+      "status": "PASS"
+    },
+    {
+      "check": "D physical FK references",
+      "expected": 144,
+      "actual": 144,
+      "status": "PASS"
+    },
+    {
+      "check": "Explicit indexes",
+      "expected": 68,
+      "actual": 68,
+      "status": "PASS"
+    }
+  ],
+  "arithmetic": {
+    "764+98": 862,
+    "138+10+1": 149
+  }
+}

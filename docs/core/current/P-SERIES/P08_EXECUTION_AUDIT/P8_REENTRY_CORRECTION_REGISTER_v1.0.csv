@@ -1,0 +1,3 @@
+affected_step,finding,action,result
+P6,Core findings had no explicit execution-WP field in v1.1,Full rebuild P6 v1.2 with 116/116 Core→WP routing; rerun P8,CLOSED
+P7,No material downstream defect caused by P6 correction,P7 v1.1 retained; P8 rerun against corrected P6,CLOSED

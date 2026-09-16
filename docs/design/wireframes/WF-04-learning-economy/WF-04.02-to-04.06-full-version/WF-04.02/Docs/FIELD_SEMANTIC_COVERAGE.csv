@@ -1,0 +1,13 @@
+screen_id,field,semantic_class,requiredness,section,ux_behavior
+ADM-LRN-002,COURSES.title,user input,required,Course identity,Dynamic wrap; vertical scroll
+ADM-LRN-002,COURSES.category,user input,conditional,Course identity,Explicit category control
+ADM-LRN-002,COURSES.description,user input,optional/conditional,Course identity,Long text; no invented character limit
+ADM-LRN-002,COURSES.prerequisite_course_id,context/configuration,conditional,Learning requirements,Selector/context; not free ID input
+ADM-LRN-002,COURSES.passing_grade,configuration,required,Learning requirements,Explicit field; no invented numeric range
+ADM-LRN-002,COURSES.status,lifecycle,authoritative,Lifecycle,Controlled state
+ADM-LRN-003,COURSE_LESSONS.title,user input,required,Lesson,Dynamic wrap
+ADM-LRN-003,COURSE_LESSONS.content_type,configuration,conditional,Lesson,Explicit content type
+ADM-LRN-003,COURSE_LESSONS.content_url,reference/input,conditional,Lesson,Explicit content/reference surface
+ADM-LRN-003,COURSE_LESSONS.sort_order,configuration,required,Ordering,Ordered lesson structure
+LRN-002,COURSES.prerequisite_course_id,authoritative read,conditional,Requirements,Show when governed
+LRN-002,ENROLLMENTS.status,authoritative read,conditional,Enrollment,Course Enrollment only

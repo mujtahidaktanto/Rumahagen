@@ -1,0 +1,10 @@
+Gap ID,Finding,Classification,Status
+GAP-D-01,M02 → M03 profile/contact context,AUGMENT,CLOSED
+GAP-D-02,M04 → M02 badge/progress/evidence projection,AUGMENT,CLOSED
+GAP-D-03,M03 → M12 listing organization reference,AUGMENT,CLOSED
+GAP-D-04,M04 → M12 nullable organization relation,AUGMENT,CLOSED
+GAP-D-05,M14 → M12 entitlement/allocation result,AUGMENT,CLOSED
+GAP-D-06,M04 → M05 event relation,AUGMENT,CLOSED
+GAP-D-07,M13 → M04 provider dependency,CONTROLLED/CONDITIONAL,CLOSED
+GAP-D-08,M13 → M05 provider dependency,CONTROLLED/CONDITIONAL,CLOSED
+GAP-D-09,M03 Maps optional/conditional boundary,RECONCILE,CLOSED

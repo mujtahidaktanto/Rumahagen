@@ -1,0 +1,23 @@
+Screen ID,Screen,Surface,Substep,Primary State,Coverage Rule,Desktop,Mobile
+XST-001,Global Loading & Skeleton,shared,WF-10.01,Loading,Skeleton preserves layout; no mutation success is implied.,YES,YES
+XST-002,Ready / Populated,shared,WF-10.01,Ready,Normal usable state with readable hierarchy and available actions.,YES,YES
+XST-003,Empty — No Resource,client,WF-10.02,Empty,No resource exists; explain reason and next valid action.,YES,YES
+XST-004,Empty — No Authorized Resource,shared,WF-10.02,Empty / Restricted,Do not disclose protected resource existence; provide safe next action.,YES,YES
+XST-005,Empty — No Configured Benefit,client,WF-10.02,Empty,Distinguish no configured benefit from no resource.,YES,YES
+XST-006,Empty — No Transaction,client,WF-10.02,Empty,Distinguish no transaction from no resource.,YES,YES
+XST-007,Empty — No Eligible Action,client,WF-10.02,Empty,Explain why the action is not currently eligible without inventing authority.,YES,YES
+XST-008,Validation & Inline Error,client,WF-10.03,Validation,Field-level guidance; no invented business character limits.,YES,YES
+XST-009,Domain Error & Retry,shared,WF-10.03,Error / Retry,Explain failure and provide retry/recovery where safe.,YES,YES
+XST-010,Pending / Processing,shared,WF-10.03,Pending / Processing,State is explicitly owned/qualified by its domain; no premature success.,YES,YES
+XST-011,Success / Confirmed,shared,WF-10.03,Success / Confirmed,Only after authoritative response; show resulting state clearly.,YES,YES
+XST-012,Rejected / Failed,shared,WF-10.03,Rejected / Failed,Show reason only when authorized; retry only when safe.,YES,YES
+XST-013,Expired,shared,WF-10.04,Expired,Explain that item/action is no longer active and provide valid next step.,YES,YES
+XST-014,Unavailable / Degraded,shared,WF-10.04,Unavailable / Degraded,Availability is distinct from revocation/ownership.,YES,YES
+XST-015,Unauthorized / Denied / Restricted,shared,WF-10.04,Unauthorized / Denied,UI visibility is not the security boundary; server authorization remains authoritative.,YES,YES
+XST-016,Protected Non-existence,shared,WF-10.04,Protected,Do not leak protected-resource existence or details.,YES,YES
+XST-017,Destructive Confirmation / Dirty State,shared,WF-10.05,Confirmation,Consequential destructive action requires explicit confirmation; protect unsaved changes.,YES,YES
+XST-018,Offline / Interrupted / Recovery,shared,WF-10.05,Offline / Interrupted,Never claim authoritative mutation success while disconnected; preserve safe recovery.,YES,YES
+XST-019,Session Expired / Re-authentication,client,WF-10.05,Session Expired,Return user to authentication without losing safe task context where possible.,YES,YES
+XST-020,Duplicate / Replay — Existing Authoritative Outcome,shared,WF-10.05,Duplicate / Replay,Replay preserves the existing authoritative outcome; avoid duplicate side effects.,YES,YES
+XST-021,Long Content / Pagination,shared,WF-10.06,Scalable Content,Real-world text wraps; dense operational lists use pagination; discovery may use infinite scroll when appropriate.,YES,YES
+XST-022,Cross-module Handoff & Context Preservation,shared,WF-10.06,Handoff,"Cross-module links preserve context without transferring ownership, permission, entitlement or authority.",YES,YES

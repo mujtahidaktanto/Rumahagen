@@ -1,0 +1,5 @@
+﻿Check,Evidence result,Status,Decision
+M14 Q universe,M14 current synchronized rebuild preserves Q01–Q66 in full,PASS,Q01–Q64 are within M14; M14 continues through Q65–Q66.
+M15 Q01–Q64,"M15 QIR v1.0 explicitly states Q01–Q64 are M14, not M15",PASS,Exclude Q01–Q64 from M15 question universe.
+M15 artificial Q register,M15 QIR states no artificial M15 Q01–Q64 register is created,PASS,Do not manufacture an M15 Q01–Q64 register.
+PRE-00 M15/M14 boundary,PRE-00-Q/PRE-00-B require Q01–Q64 to remain M14,PASS,Boundary preserved.

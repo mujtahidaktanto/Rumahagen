@@ -1,0 +1,115 @@
+// lib/api/handler.ts
+// Titik gabung SEMUA konvensi Tahap 0 (D13-16 s.d. D13-23). Setiap route di
+// Step 3 (STEP-11 API) HARUS dibungkus withApiHandler() ini, bukan
+// mendefinisikan Response sendiri — supaya error/status/pagination/rate-limit/
+// idempotency/content-type/traceId konsisten di seluruh API tanpa diulang.
+//
+// Contoh pemakaian (akan dipakai nanti di Step 3):
+//
+//   export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
+//     const body = await validateJsonBody(ctx.request, createListingSchema);
+//     ... has_permission dicek lewat RLS Supabase, bukan diulang manual di sini ...
+//     return { data: newListing, status: 201 };
+//   });
+
+import { NextResponse } from "next/server";
+import crypto from "node:crypto";
+import { ApiError, errorBody } from "./errors";
+import { assertJsonContentType } from "./content-type";
+import { checkRateLimit, rateLimitHeaders } from "./rate-limit";
+import { checkIdempotency, completeIdempotency } from "./idempotency";
+import { createClient } from "../supabase/server";
+import { jsonSuccess } from "./response";
+import type { PaginationMeta } from "./pagination";
+
+export interface ApiContext {
+  request: Request;
+  traceId: string;
+  userId: string | null;
+}
+
+export interface HandlerResult<T> {
+  data: T;
+  status?: number;
+  headers?: HeadersInit;
+  pagination?: PaginationMeta; // D13-19 — diikutkan ke meta response kalau endpoint bersifat list
+}
+
+export interface WithApiHandlerOptions {
+  requireIdempotencyKey?: boolean; // wajibkan header Idempotency-Key (D13-21)
+}
+
+export function withApiHandler<T>(
+  options: WithApiHandlerOptions,
+  fn: (ctx: ApiContext) => Promise<HandlerResult<T>>,
+) {
+  return async function handler(request: Request): Promise<NextResponse> {
+    const traceId = crypto.randomUUID(); // D13-23
+
+    try {
+      assertJsonContentType(request); // D13-22
+
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const userId = user?.id ?? null;
+
+      const rateLimitKey = userId ?? request.headers.get("x-forwarded-for") ?? "anonymous";
+      const rl = checkRateLimit(rateLimitKey); // D13-20, bisa throw RATE_LIMITED
+
+      const idempotencyKey = request.headers.get("idempotency-key");
+      if (options.requireIdempotencyKey && !idempotencyKey) {
+        throw new ApiError(
+          "VALIDATION_ERROR",
+          "Header Idempotency-Key wajib untuk endpoint ini.",
+        );
+      }
+
+      let bodyForHash: unknown = null;
+      if (idempotencyKey && ["POST", "PATCH", "PUT"].includes(request.method)) {
+        bodyForHash = await request.clone().json().catch(() => null);
+        const idem = await checkIdempotency(idempotencyKey, new URL(request.url).pathname, bodyForHash, userId);
+        if (idem?.isReplay) {
+          return NextResponse.json(idem.cachedBody, {
+            status: idem.cachedStatus ?? 200,
+            headers: { "Content-Type": "application/json; charset=utf-8", ...rateLimitHeaders(rl) },
+          });
+        }
+      }
+
+      const result = await fn({ request, traceId, userId });
+      const status = result.status ?? 200;
+
+      const response = jsonSuccess(result.data, {
+        status,
+        traceId,
+        pagination: result.pagination,
+        headers: { ...rateLimitHeaders(rl), ...(result.headers ?? {}) },
+      });
+
+      if (idempotencyKey) {
+        const responseBodyForCache = { data: result.data, meta: { traceId, ...(result.pagination ? { pagination: result.pagination } : {}) } };
+        await completeIdempotency(idempotencyKey, status, responseBodyForCache);
+      }
+
+      return response;
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const headers: HeadersInit = { "Content-Type": "application/json; charset=utf-8" };
+        if (err.code === "RATE_LIMITED" && err.details && typeof err.details === "object") {
+          const d = err.details as { retryAfterSeconds?: number };
+          if (d.retryAfterSeconds) headers["Retry-After"] = String(d.retryAfterSeconds);
+        }
+        return NextResponse.json({ ...errorBody(err), meta: { traceId } }, { status: err.status, headers });
+      }
+
+      // Error tak terduga — jangan bocorkan detail internal ke client (D13-17/18).
+      console.error(`[${traceId}] Unhandled API error:`, err);
+      return NextResponse.json(
+        { error: { code: "INTERNAL_ERROR", message: "Terjadi kesalahan pada server." }, meta: { traceId } },
+        { status: 500, headers: { "Content-Type": "application/json; charset=utf-8" } },
+      );
+    }
+  };
+}

@@ -1,0 +1,12 @@
+finding_id,area,prior_finding,resolution_status,correction,execution_boundary
+E04-01,Evidence packaging,RERUN-03 ZIP did not bundle the accepted A1→A2→B→C→D evidence chain.,CORRECTED,Bundle accepted chain unchanged under EVIDENCE/ and add SHA-256 manifest.,Evidence packaging only.
+E04-02,A1 stale narrative,A1 v2.2 narrative says attribute baseline 864.,QUARANTINED,Effective authority is the 862-row A1 register plus A1 validation gate; 864 is stale narrative residue.,No A1 rebuild.
+E04-03,B stale narrative/gate wording,B v2.2 contains inherited 864 wording despite 862-row reconciliation/closure evidence.,QUARANTINED,Effective authority is the 862-row B reconciliation and current A1 register; 864 prose is stale residue.,No B rebuild.
+E04-04,D stale narrative,D v1.2 contains 'Previous baseline: 864 rows.' while current D reconciliation has 862 rows.,QUARANTINED,Effective current baseline is 862; 864 is historical/stale wording only.,No D rebuild.
+E04-05,G-R02 sequence wording,RERUN-03 said 'STEP10 final physical reconciliation'.,CORRECTED,Final physical reconciliation is downstream of STEP11–14.,Governance wording only.
+E04-06,G-R12 granularity,FK/constraint/index delta was aggregated.,CORRECTED,"Split into FK, constraint and index downstream reconciliation items.",No schema execution.
+E04-07,Residual hierarchy,G-R01 overlaps conceptually with G-R08–G-R11.,CLARIFIED,G-R01 is aggregate; G-R08–G-R11 are child residual groups; no double counting.,No data change.
+E04-08,Guest registration dependency,Guest persistence/constraint dependency was not explicit enough for STEP11.,CORRECTED,STEP11 must treat guest registration persistence/constraint semantics as an API contract dependency.,No schema execution.
+E04-09,Baseline lock,864/862 ambiguity existed in inherited prose.,LOCKED,94 entities / 862 valid attributes / 149 relationships; 764+98=862.,No rebuild.
+E04-10,Runtime/RLS boundary,Physical RLS counts could be misread as runtime verification.,LOCKED,86 RLS-enabled / 111 policies is physical evidence only; runtime verification remains pending.,No runtime execution.
+E04-11,Final SQL boundary,STEP10 output could be mistaken for final migration.,LOCKED,Final integrated SQL remains deferred until after STEP11–14 and final physical reconciliation.,No SQL execution.

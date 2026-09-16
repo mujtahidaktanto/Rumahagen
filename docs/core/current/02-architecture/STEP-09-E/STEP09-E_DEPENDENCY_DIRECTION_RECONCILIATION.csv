@@ -1,0 +1,22 @@
+dependency_contract,present_in_current_manifest,status
+M02 → M03,True,PASS
+M04 → M02,True,PASS
+M03 → M12,True,PASS
+M04 → M12,True,PASS
+M14 → M12,True,PASS
+M04 → M05,True,PASS
+M13 → M04,True,PASS
+M13 → M05,True,PASS
+M03 location-pin → Maps stack,True,PASS
+M12 → M03,True,PASS
+M12 → M04,True,PASS
+M12 → M14,True,PASS
+M12 → M15,True,PASS
+M04 → M15,True,PASS
+M05 → M04,True,PASS
+M05 → M08/M11,True,PASS
+M06 → M03/M11,True,PASS
+M13 → external providers,True,PASS
+M14 → M04/M15,True,PASS
+M15 → M02/M08/M11,True,PASS
+M01/M10 → M13,True,PASS

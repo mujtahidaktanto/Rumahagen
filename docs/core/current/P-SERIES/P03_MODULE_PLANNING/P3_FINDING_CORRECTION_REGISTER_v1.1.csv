@@ -1,0 +1,11 @@
+finding_id,finding,status,correction
+F-P3-01,"P3 v1.0 final second-scan report says 15 file instances, while actual uploaded P3 v1.0 ZIP contains 17 files.",CORRECTED,Rebuilt package and final validation now use actual package inventory; self-referential control files are explicitly excluded only where stated.
+F-P3-02,"P3 v1.0 claims 17/17 Core packages covered, but mapping is too coarse to prove all source-impact obligations are represented.",CORRECTED,Added detailed Core scope-to-plan matrix with 17 IP rows plus module-level propagation obligations.
+F-P3-03,P3 v1.0 M01-M15 traceability has only four generic rows per module and does not enumerate important current change obligations.,CORRECTED,Added 60+ source-derived detailed change obligations spanning all M01-M15.
+F-P3-04,"M06-specific Core impacts (company_logo/Tentang Developer, Marketing Kit, media boundary, Claim initialization) were not explicit enough in P3 planning traceability.",CORRECTED,Explicit M06 obligations and Core propagation mappings added.
+F-P3-05,M03 Refresh and field-lock details were under-explicit in P3 traceability.,CORRECTED,Refresh temporal/order/District/allowance and four-field lock obligations added.
+F-P3-06,"M11 ten mandatory public surfaces, especially Static Public Content and Announcement/Promotion, were not explicitly enumerated in the Core-to-plan traceability.",CORRECTED,M11 public-surface obligation and M09→M11 lifecycle/discovery boundary added.
+F-P3-07,M13 Provider Catalogue/BYOK Core discrepancies were not explicit enough in P3 traceability.,CORRECTED,Superadmin-only Provider Catalogue and Agent/User OWN BYOK propagation obligations added.
+F-P3-08,M14 Core contract-update obligations and Refresh Allowance additive boundary were under-explicit in P3.,CORRECTED,Commercial contract propagation matrix and M14→M03 Refresh boundary added.
+F-P3-09,M09 system_configs physical RLS mismatch and conditional-blocking rule were not sufficiently visible as controlled residuals.,CORRECTED,Residual/control rows added; no physical correction claimed.
+F-P3-10,M12 ORG-ADMIN terminology and Organization Public Content ownership boundary were not explicit enough in P3 traceability.,CORRECTED,Controlled M12 reconciliation obligations added.

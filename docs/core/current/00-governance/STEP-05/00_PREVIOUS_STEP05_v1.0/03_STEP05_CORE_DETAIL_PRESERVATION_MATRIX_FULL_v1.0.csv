@@ -1,0 +1,8 @@
+finding,preservation,preserved_core_detail,scope_note
+M01-CI-009,KEEP,All non-activation registration/authentication/KTP privacy/compliance detail,Only contradictory activation gate is reconciled
+M02-CI-008,KEEP,"Review ownership, view scope, moderation capability, aggregate rating, public presentation",Only publication/moderation sequencing is reconciled
+M02-CI-011,KEEP,"Identity authority, protected KTP data, later completion, unrelated Pending Review states",Only KTP-at-activation contradiction is reconciled
+M03-CI-001,KEEP,"Listing data, ownership, organization context, search, media, leads, CTA, enforcement",Only normal publish gate is reconciled
+M06-CI-007,KEEP,Project/media entities and physical evidence; Marketing Kit semantics,Only semantic meaning of Project Media is reconciled; no physical deletion
+M13-CI-001,KEEP,"Provider catalogue, adapter, provider availability, M10 model, unrelated admin powers",Only Provider Catalogue mutation authority is reconciled
+M13-CI-002,KEEP,"API family, encryption, backend proxy, owner endpoints, rate limiting",Only ownership/self-management interpretation is reconciled

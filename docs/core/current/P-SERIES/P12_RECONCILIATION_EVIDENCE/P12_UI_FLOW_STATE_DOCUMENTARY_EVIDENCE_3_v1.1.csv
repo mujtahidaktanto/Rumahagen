@@ -1,0 +1,4 @@
+﻿evidence_id,scope,evidence_level,claim_boundary,disposition
+UI-01,UI/UX requirements and state/flow documentary alignment,DOCUMENTARY/DESIGN,No UI runtime claim,PASS
+UI-02,Lifecycle/state semantics are reconciled against module authority and dependencies,DOCUMENTARY/DESIGN,No browser/runtime execution,PASS
+UI-03,UI debounce is not treated as server idempotency,DOCUMENTARY/BOUNDARY,No runtime test claim,PASS

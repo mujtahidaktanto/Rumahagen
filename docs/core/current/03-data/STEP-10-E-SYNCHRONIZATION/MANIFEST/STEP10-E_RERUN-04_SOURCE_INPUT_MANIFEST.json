@@ -1,0 +1,37 @@
+{
+  "execution": "STEP10-E RERUN-04 FINAL CORRECTION",
+  "source_boundary": "uploaded files only",
+  "inputs": [
+    {
+      "filename": "STEP10-E_RERUN-03_FULL_VERSION.zip",
+      "sha256": "6fe25ccea0e34cc713f6ac586e606062ea330962b593c2e34bbc8436b128ef55",
+      "role": "RERUN-03 package"
+    },
+    {
+      "filename": "STEP SYNC CORE(4).zip",
+      "sha256": "6ff4f94994cbb3e9cf30b6a3d408c8f183c2dac862c2ddbc9ff9214a66e5caf1",
+      "role": "accepted chain container"
+    }
+  ],
+  "bundled_chain_sha256": "bab0021387905c8b5bb0b417fcce3f27808b2975391bd8f5bb4ba332e4401043",
+  "effective_baseline": {
+    "entities": 94,
+    "attributes": 862,
+    "relationships": 149,
+    "physical_corroborations": 764,
+    "controlled_or_logical_only_attributes": 98,
+    "physical_tables": 86,
+    "logical_only_entities": 8,
+    "physical_fk_relationships": 138,
+    "controlled_non_physical_fk": 10,
+    "semantic_reference": 1,
+    "physical_fk_references": 144,
+    "indexes": 68,
+    "rls_enabled_tables": 86,
+    "policies": 111
+  },
+  "rebuild_from_a1": false,
+  "sql_created": false,
+  "sql_executed": false,
+  "runtime_verified": false
+}

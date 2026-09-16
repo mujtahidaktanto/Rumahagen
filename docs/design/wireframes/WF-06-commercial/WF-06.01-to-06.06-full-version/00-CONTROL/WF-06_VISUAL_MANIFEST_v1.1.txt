@@ -1,0 +1,18 @@
+COM-001: Commercial Catalog | 06.01 | Client | desktop=COM-001.png | mobile=COM-001.png
+COM-002: Product / Offer Detail | 06.01 | Client | desktop=COM-002.png | mobile=COM-002.png
+COM-003: Subscription & Add-on Plans | 06.02 | Client | desktop=COM-003.png | mobile=COM-003.png
+COM-004: Promotion / Premium Boost Detail | 06.02 | Client | desktop=COM-004.png | mobile=COM-004.png
+COM-005: Order Review & Checkout | 06.03 | Client | desktop=COM-005.png | mobile=COM-005.png
+COM-006: My Commercial Orders | 06.03 | Client | desktop=COM-006.png | mobile=COM-006.png
+COM-007: Payment Status | 06.04 | Client | desktop=COM-007.png | mobile=COM-007.png
+COM-008: Payment History | 06.04 | Client | desktop=COM-008.png | mobile=COM-008.png
+COM-009: My Entitlements & Benefits | 06.05 | Client | desktop=COM-009.png | mobile=COM-009.png
+COM-010: Quota & Benefit Overview | 06.05 | Client | desktop=COM-010.png | mobile=COM-010.png
+COM-011: Quota Usage & Allocation Detail | 06.05 | Client/Admin | desktop=COM-011.png | mobile=COM-011.png
+ADM-COM-001: Commercial Catalog / Offer Management | 06.06 | Admin | desktop=ADM-COM-001.png | mobile=ADM-COM-001.png
+ADM-COM-002: Subscription / Add-on Management | 06.06 | Admin | desktop=ADM-COM-002.png | mobile=ADM-COM-002.png
+ADM-COM-003: Promotion Management | 06.06 | Admin | desktop=ADM-COM-003.png | mobile=ADM-COM-003.png
+ADM-COM-004: Orders & Payments Operations | 06.06 | Admin | desktop=ADM-COM-004.png | mobile=ADM-COM-004.png
+ADM-COM-005: Entitlement & Quota Management | 06.06 | Admin | desktop=ADM-COM-005.png | mobile=ADM-COM-005.png
+ADM-COM-006: Commercial Reconciliation Cases | 06.06 | Admin | desktop=ADM-COM-006.png | mobile=ADM-COM-006.png
+ADM-COM-007: Commercial Configuration | 06.06 | Admin | desktop=ADM-COM-007.png | mobile=ADM-COM-007.png

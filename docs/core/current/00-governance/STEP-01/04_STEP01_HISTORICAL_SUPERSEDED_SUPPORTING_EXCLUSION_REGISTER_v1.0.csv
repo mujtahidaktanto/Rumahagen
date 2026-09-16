@@ -1,0 +1,7 @@
+﻿Class,Material,Treatment,Reason
+Historical/superseded module versions,All predecessor M01–M15 rebuilds/QIR generations inside recursive corpus,PROVENANCE ONLY,Do not promote to current semantic authority.
+Supporting Core Impact Analysis packages,M01–M15 Core Impact Analysis archives,SUPPORTING,Evidence/traceability; not a replacement for module semantic authority.
+QIR resolution packages,M01–M15 QIR archives,SUPPORTING / DECISION EVIDENCE,Use to validate current decisions; current rebuild remains the frozen module artifact.
+Step 01 Owner Override baseline,WF03_STEP01_OWNER_OVERRIDE_AND_RETRACE_BASELINE_v1.0.md,GOVERNING SUPPORT,Controls semantic-vs-physical/runtime separation; not an M01–M15 module.
+Step 02 blocker/prerequisite re-trace,WF03_STEP02_FULL_M01-M15_BLOCKER_PREREQUISITE_RETRACE_v1.0.md,GOVERNING SUPPORT,Completed re-trace; not an M01–M15 module.
+M15 Q01–Q64 material,Any M15 occurrence referring to Q01–Q64,OUT OF M15 SCOPE / M14,M15 QIR explicitly confirms Q01–Q64 are M14 and excludes them from M15.

@@ -1,0 +1,17 @@
+{
+  "package": "RumahAgen_WF-02.02_My-Listings_Owner-View_v1.1_CORRECTED",
+  "logical_screens": [
+    "AGT-003",
+    "AGT-004"
+  ],
+  "source_boundary": "uploaded files only",
+  "desktop_png_count": 15,
+  "mobile_png_count": 15,
+  "nested_core_zip_members": 96,
+  "corrections": [
+    "F-0202-01",
+    "F-0202-02",
+    "F-0202-03"
+  ],
+  "physical_runtime_proof": "NON-BLOCKING"
+}

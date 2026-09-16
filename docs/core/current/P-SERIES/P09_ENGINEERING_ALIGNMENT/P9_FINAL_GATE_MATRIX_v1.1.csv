@@ -1,0 +1,11 @@
+check,result,evidence
+M01-M15,PASS,15/15
+Change obligations,PASS,57/57
+Execution work packages,PASS,62/62
+Core v1.3 findings,PASS,223/223 unique
+Core→P4 WP routing,PASS,223/223 valid
+Core 6.30 engineering guardrails,PASS,30/30
+Core 6.30 section coverage,PASS,30/30
+Core mutation,PASS,NO
+Unsupported physical/runtime proof,PASS,NONE INTRODUCED
+Controlled residual carry-forward,PASS,47/47

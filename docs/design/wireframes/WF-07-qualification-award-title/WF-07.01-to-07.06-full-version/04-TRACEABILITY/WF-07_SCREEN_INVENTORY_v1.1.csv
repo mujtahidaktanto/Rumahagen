@@ -1,0 +1,18 @@
+Screen ID,Screen,Substep,Actor,Scope,Desktop,Mobile
+QAL-001,Qualification Overview,WF-07.01,Agent / User,Qualification status; Next evidence; Evaluation history,YES,YES
+QAL-002,Qualification Evidence,WF-07.01,Agent / User / Authorized Evidence Source,Evidence type; Source type; Source reference; Evidence payload details; Captured at,YES,YES
+QAL-003,Qualification Evaluation Detail,WF-07.02,Agent / User / Authority,Result; Path version; Rule version; Evaluator type/reference; Evaluation time; Provenance,YES,YES
+AWD-001,My Awards,WF-07.03,Agent / User,Award list; Lifecycle status; Issued / expiry indicators,YES,YES
+AWD-002,Award Detail & Provenance,WF-07.03,Award Owner / Authority,Title; Qualifying path; Rule; Evaluation; Historical snapshot; Provenance,YES,YES
+AWD-003,Award Appeal,WF-07.04,Award Owner / Authorized Authority,Appeal submission; Decision state; Decision outcome,YES,YES
+AWD-004,Award Presentation,WF-07.04,Agent / User,Primary title; Featured titles; Visibility / display order,YES,YES
+TTL-001,Title Catalog & Detail,WF-07.01,Public / Scoped Viewer,Title code; Title name; Description; Status; Awarding paths,YES,YES
+ADM-M15-001,Title Definition Management,WF-07.05,Authorized Awarding Authority,Code; Name; Description; Status; Authority scope type/reference/status,YES,YES
+ADM-M15-002,Awarding Path Management,WF-07.05,Authorized Awarding Authority,Title; Path code; Path name; Status,YES,YES
+ADM-M15-003,Path Version Management,WF-07.05,Authorized Awarding Authority,Path; Version no; Status; Effective from/to; Definition snapshot,YES,YES
+ADM-M15-004,Rule Version Management,WF-07.05,Authorized Rule Authority,Rule code; Version no; Status; Effective from/to; Rule definition,YES,YES
+ADM-M15-005,Conditions & Prerequisites,WF-07.05,Authorized Rule Authority,Path version context; Rule version association; Condition groups; Condition type; Operator; Expected value; Sequence; Prerequisites,YES,YES
+ADM-M15-006,Qualification Evidence & Evaluation,WF-07.06,Authorized / System,Evidence intake; Evidence payload details; Evaluation creation; Result; Evaluator; Provenance,YES,YES
+ADM-M15-007,Award Issuance & Lifecycle,WF-07.06,Authorized Awarding Authority,Recipient; Title; Path version; Rule version; Status; Issued at; Expires at; Revoked at; Restored at,YES,YES
+ADM-M15-008,Appeal Review,WF-07.06,Authorized Appeal Authority,Appeal; Decision; Authority boundary; Restore handoff,YES,YES
+ADM-M15-009,Award Provenance & Audit,WF-07.06,Authorized / Scoped,Historical snapshot; Qualifying path provenance; Evaluation provenance; Lifecycle timeline,YES,YES

@@ -1,0 +1,9 @@
+Gate,Name,Result,Determination
+09-F.01,Completeness,PASS,Required current upstream evidence present and deep-scan inputs complete.
+09-F.02,Provenance & Preservation,PASS,Prior STEP09-F v1.2 HOLD retained as historical baseline; current A2/B/C/E and D evidence retained; no silent deletion/replacement.
+09-F.03,Core Immutability,PASS,Core v1.3 frozen SHA 7c491ce312a42f7d4debd77a4533a895dd35a71ad7464053c0bfe61639ba72e6; ZIP integrity=None; entries=49; no Integrated Core v1.4.
+09-F.04,Authority Integrity,PASS,M14 current authority is Q01–Q66; Q65/Q66 are not reassigned to M15; no authority inversion.
+09-F.05,Dependency Integrity,PASS,Dependency Manifest v1.9 and Cross-09 reconciliation preserve directional dependency/ownership separation; M09→M11 remains closed.
+09-F.06,Currentness,PASS,Current A2/B/C artifacts contain Q01–Q66 and no stale current Q01–Q64/Q65–Q66 assignment; predecessor references in frozen Core remain historical provenance only.
+09-F.07,Cross-09 Reconciliation,PASS,Current chain A2→B→C→D is reconciled through E; E residual is source-pack provenance only and does not reopen current artifacts.
+09-F.08,Downstream Handoff,PASS,STEP10 may consume the synchronized semantic chain; physical/runtime implementation remains outside STEP09 authorization.

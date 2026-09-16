@@ -1,0 +1,12 @@
+Permission ID,Capability,Action,Superadmin,Admin,Manager,Agent,Developer Partner,Buyer,Instructor,Condition
+M10-R01,Role Catalogue,View,ALL,ALL,ALL,NONE,NONE,NONE,NONE,Governed authorization infrastructure
+M10-R02,Permission Catalogue,View,ALL,ALL,ALL,NONE,NONE,NONE,NONE,Governed authorization infrastructure
+M10-R03,Role-Permission Matrix,View,ALL,ALL,ALL,NONE,NONE,NONE,NONE,Governed authorization infrastructure
+M10-R04,Role-Permission Matrix,Manage,ALL,NONE,NONE,NONE,NONE,NONE,NONE,Protected governance; Manager has separate Agent-row editability
+M10-R05,Agent Permission Rows,Modify,ALL,NONE,OWN,NONE,NONE,NONE,NONE,Manager may modify Agent rows only where editability allows
+M10-R06,Permission Preset,View,ALL,NONE,NONE,NONE,NONE,NONE,NONE,"Manager Agent-only preset visibility/governance is a condition, not a new scope enum"
+M10-R07,Permission Preset,Create,ALL,NONE,NONE,NONE,NONE,NONE,NONE,Manager Agent-only
+M10-R08,Permission Preset,Edit/Rename/Modify,ALL,NONE,NONE,NONE,NONE,NONE,NONE,Manager Agent-only
+M10-R09,Permission Preset,Delete,ALL,NONE,NONE,NONE,NONE,NONE,NONE,Manager Agent-only where lifecycle permits; used preset no normal delete
+M10-R10,Permission Preset Assignment,Assign/Replace,ALL,NONE,NONE,NONE,NONE,NONE,NONE,Manager Agent-only
+M10-R11,Role + Preset Change,Execute,ALL,NONE,NONE,NONE,NONE,NONE,NONE,Governed role/preset compatibility transaction

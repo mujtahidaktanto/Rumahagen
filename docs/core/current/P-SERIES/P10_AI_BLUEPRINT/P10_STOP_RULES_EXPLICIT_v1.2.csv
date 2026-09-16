@@ -1,0 +1,11 @@
+﻿stop_id,stop_condition,ai_action
+STOP-01,Missing business decision,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-02,Authority collision,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-03,Physical contradiction,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-04,Missing physical object,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-05,Missing API contract,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-06,Missing permission/scope,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-07,Provider ambiguity,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-08,Unsupported runtime claim,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-09,Scope expansion,STOP affected scope; do not infer; escalate to applicable authority.
+STOP-10,Historical resurrection,STOP affected scope; do not infer; escalate to applicable authority.

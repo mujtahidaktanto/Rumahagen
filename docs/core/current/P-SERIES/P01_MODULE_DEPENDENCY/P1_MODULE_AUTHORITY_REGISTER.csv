@@ -1,0 +1,16 @@
+module,scope,authority,reconciliation
+M01,Identity / User / Authentication,Identity authority,Preserve
+M02,Profile / Review,Profile/review authority,Preserve
+M03,Listing / Listing Lifecycle / Refresh,Listing + Refresh action/eligibility authority,Preserve + augment
+M04,Learning / Learning Economy / Session,Learning/session/evidence-production authority,Preserve + augment
+M05,Event / Registration,Event/registration authority,Preserve
+M06,Developer / Project / Marketing Kit / Claim,Developer/project/claim authority,Preserve + augment
+M07,DBR,DBR authority,Preserve
+M08,Dashboard / Notification Projection,Projection/notification authority,Preserve
+M09,Administration / Configuration / Audit,Administrative/configuration authority within underlying domain grants,Preserve + controlled augmentation
+M10,Authorization / RBAC / Permission / Scope / RLS,Authorization authority,Preserve + augment
+M11,SEO / Discovery / Analytics,Public discovery/SEO/measurement layer; not source-domain business authority,Preserve + augment
+M12,Organization / Membership / Context,Organization/membership/context authority,Preserve + current lifecycle
+M13,AI / BYOK / Provider Catalogue,AI/BYOK/provider domain authority,Preserve + controlled configuration
+M14,Commercial / Payment / Entitlement / Quota / Promotion,Commercial/payment/entitlement/quota/promotion authority,Preserve + current commercial decisions
+M15,Qualification / Evidence / Award,Qualification/Award authority; consumes governed upstream evidence,Preserve + augment

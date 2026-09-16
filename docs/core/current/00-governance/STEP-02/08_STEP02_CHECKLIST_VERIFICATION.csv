@@ -1,0 +1,11 @@
+﻿ID,Requirement,Status,Evidence/result
+STEP 02.1,Build Master Recon Inventory,PASS,"2,374 recursively extracted file artifacts inventoried."
+STEP 02.2,Register artifact/path/type/version/category/source/nested parent/hash/size/status,PASS,Full artifact inventory CSV.
+STEP 02.3,Current authority register,PASS,"One current semantic authority recorded for each M01–M15, based on STEP01 output."
+STEP 02.4,Historical/superseded/supporting classification,PASS WITH CONTROL,Non-authoritative artifacts retained as provenance/supporting; no silent deletion.
+STEP 02.5,Scope/capability/entity/lifecycle/permission/dependency/cross-module inventory,PASS WITH CONTROL,15-module scope inventory produced; unresolved physical/API details remain downstream.
+STEP 02.6,Provenance & lineage,PASS,Current source baseline is explicitly controlled as M01-M15 new recon(7).zip; legacy WF03permissionmatrix reference is superseded/historical only.
+STEP 02.7,Dependency inventory,PASS WITH CONTROL,Cross-module matrix distinguishes semantic/authority/data/API/permission/downstream/evidence; data/API edges marked for later trace where not explicit.
+STEP 02.8,Conflict/residual inventory,PASS,Residuals inventoried without resolving them in STEP02.
+STEP 02.9,Q01–Q64 = M14,PASS,M15 QIR + PRE-00 evidence preserve boundary.
+STEP 02.10,Integration readiness,PASS,"Inventory is directly usable for STEP03/04; S2-RES-001 is closed by current-source supersession control."

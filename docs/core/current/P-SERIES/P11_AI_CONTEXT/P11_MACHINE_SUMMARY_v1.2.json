@@ -1,0 +1,15 @@
+{
+  "step": "P11_AI_CONTEXT",
+  "version": "v1.2",
+  "result": "CLOSED / PASS WITH CONTROLLED RESIDUALS",
+  "p12": "READY WITH CONTROL",
+  "modules": 15,
+  "work_packages": 62,
+  "core_findings_routed": 223,
+  "dependencies": 65,
+  "p10_sections": 34,
+  "p10_controls": 14,
+  "residuals": 47,
+  "core_modified": false,
+  "second_deep_scan": "PASS"
+}

@@ -1,0 +1,9 @@
+gate_id,criterion,result_basis,status
+P6-01,7/7 modules,M01-M07 packs rebuilt,PASS
+P6-02,29/29 obligations,P5-aligned obligation traceability,PASS
+P6-03,30/30 WPs,P4 work packages retained/routed,PASS
+P6-04,116/116 Core findings,All have explicit P4 WP routing,PASS
+P6-05,19 controlled Core findings,All explicit controlled routing,PASS WITH CONTROLLED RESIDUALS
+P6-06,Core immutability,No Core modification,PASS
+P6-07,Second deep scan,No further P6 material finding,PASS
+P6-FINAL,Overall,Correction closed,PASS WITH CONTROLLED RESIDUALS

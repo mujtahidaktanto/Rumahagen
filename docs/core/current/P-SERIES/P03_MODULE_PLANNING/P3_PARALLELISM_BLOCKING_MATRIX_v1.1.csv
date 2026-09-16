@@ -1,0 +1,11 @@
+a,b,relationship,rule
+M02,M12,PARALLEL_AFTER_IP-01,Shared M01/M10 foundation only
+M06,M07,PARALLEL_AFTER_FOUNDATION,Separate authorities
+M13,M06,PARALLEL_AFTER_FOUNDATION,Independent protected provider/project planning
+M03,M14,CONTRACT-COUPLED,M14 allowance before M03 consumption
+M04,M14,CONTRACT-COUPLED,Paid learning/LP fulfillment
+M04,M15,SEQUENCED,M15 consumes M04 evidence
+M05,M04,CONDITIONAL,Event↔Session relation only where governed
+M08,ALL,DOWNSTREAM,Projection only
+M11,ALL_PUBLIC_DOMAINS,DOWNSTREAM,Discovery/measurement only
+M09,DOMAIN-SPECIFIC,CONDITIONAL,Never a universal blocker

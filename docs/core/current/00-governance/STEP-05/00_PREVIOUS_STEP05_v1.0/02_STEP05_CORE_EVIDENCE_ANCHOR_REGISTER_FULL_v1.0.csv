@@ -1,0 +1,13 @@
+finding,source_type,core_artifact,section_anchor,evidence,interpretation
+M01-CI-009,Core,14_FUNCTIONAL/W4-02A.6.18...,§6.1 FR-M01-001,OTP→create account→documents→PENDING_REVIEW→reviewer→ACTIVE,Contradicts locked immediate activation
+M01-CI-009,Core,16_UI_UX/W4-02A.6.20...,§9.3,PENDING REVIEW after submission; not Active,Corroborates activation conflict
+M02-CI-008,Core,14_FUNCTIONAL/W4-02A.6.18...,§7.4 FR-M02-004,Buyer→submit review→PENDING→moderation→APPROVED/REJECTED,Contradicts auto-approval
+M02-CI-008,Core,16_UI_UX/W4-02A.6.20...,§8.1,Pending Review included in global state vocabulary,Context only; not sufficient alone
+M02-CI-011,Core,14_FUNCTIONAL/W4-02A.6.18...,CAM11-0034 / §6.1 / lines 340–372,verification docs→PENDING_REVIEW→reviewer→ACTIVE,Primary deterministic conflict anchor
+M02-CI-011,Core,16_UI_UX/W4-02A.6.20...,CAM11-0036 / §9.3 / lines 666–680,PENDING REVIEW after submission,Corroborating deterministic anchor
+M03-CI-001,Core,14_FUNCTIONAL/W4-02A.6.18...,§8.3 FR-M03-003,DRAFT→PENDING_REVIEW→PUBLISHED,Direct publication conflict
+M06-CI-007,Core,11_DATABASE_SCHEMA/W4-02A.6.15...,§4.14 developer_project_media,"CHECK type IN ('photo','video','brochure','price_list')",Physical evidence; semantic boundary remains M06 authority
+M13-CI-001,Core,13_RBAC_RLS/W4-02A.6.17...,§7 legacy role compatibility,Provider management: Superadmin/Manager/Admin,Conflicts with Superadmin-only
+M13-CI-001,Core,15_TECHNICAL/W4-02A.6.19...,§22.4,Admin-curated providers,Conflicts with Superadmin-only mutation
+M13-CI-002,Core,12_API/W4-02A.6.16...,§19 M13 AI BYOK API,POST /ai-connections; Owner; DELETE /ai-connections/{id} Owner,Supports own-connection ownership
+M13-CI-002,Core,13_RBAC_RLS/W4-02A.6.17...,AUTH-012,Connection ownership clear; exact platform role mapping incomplete; separate catalogue admin from user credential CRUD,Shows why M13 must narrow ownership semantics

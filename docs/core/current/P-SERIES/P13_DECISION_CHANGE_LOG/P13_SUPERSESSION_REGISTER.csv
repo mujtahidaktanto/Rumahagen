@@ -1,0 +1,13 @@
+﻿ID,Historical Artifact,Current Successor,Status,Reason
+S-001,P1 v1.0,P1 v1.1,SUPERSEDED,Corrected dependency baseline
+S-002,P2 v1.1,P2 v1.2,SUPERSEDED,Explicit Core strategy coverage
+S-003,P3 v1.0,P3 v1.1,SUPERSEDED,Corrected scan/coverage planning
+S-004,P4 v1.2,P4 v1.3,SUPERSEDED,Corrected execution routing
+S-005,P5 v1.0,P5 v1.1,SUPERSEDED,Corrected batch traceability
+S-006,P6 v1.1,P6 v1.2,SUPERSEDED,P8 finding recovery
+S-007,P7 v1.0,P7 v1.1,SUPERSEDED,Deep-scan routing correction
+S-008,P9 v1.0,P9 v1.1,SUPERSEDED,Engineering alignment correction
+S-009,P10_AI_BLUEPRINT v1.1,P10_AI_BLUEPRINT v1.2,SUPERSEDED,STOP/Permission Preset correction
+S-010,P11_AI_CONTEXT v1.1,P11_AI_CONTEXT v1.2,SUPERSEDED,WP/Core 6.32 context correction
+S-011,P12_RECONCILIATION_EVIDENCE v1.0,P12_RECONCILIATION_EVIDENCE v1.1,SUPERSEDED,Documentary evidence reconciliation correction
+S-012,P13_DECISION_CHANGE_LOG v1.1,P13_DECISION_CHANGE_LOG v1.2,SUPERSEDED,P13_DECISION_CHANGE_LOG deep-scan completeness/traceability/provenance corrections

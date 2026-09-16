@@ -1,0 +1,66 @@
+consumer,producer,dependency_type,domain,authority_owner,condition_or_reason,critical_path,implementation_strategy
+M02,M01,HARD,Identity,M01,All authenticated profile actors,Yes,Producer contract is prerequisite to consumer implementation.
+M03,M01,HARD,Identity,M01,Listing actor/owner,Yes,Producer contract is prerequisite to consumer implementation.
+M04,M01,HARD,Identity,M01,Learning/session actor,Yes,Producer contract is prerequisite to consumer implementation.
+M05,M01,HARD,Identity,M01,Event registration actor,Yes,Producer contract is prerequisite to consumer implementation.
+M06,M01,HARD,Identity,M01,Developer/claim actor,Yes,Producer contract is prerequisite to consumer implementation.
+M07,M01,HARD,Identity,M01,DBR subject,Yes,Producer contract is prerequisite to consumer implementation.
+M08,M01,HARD,Identity,M01,Dashboard subject,Yes,Producer contract is prerequisite to consumer implementation.
+M09,M01,HARD,Identity,M01,Admin actor,Yes,Producer contract is prerequisite to consumer implementation.
+M10,M01,HARD,Identity,M01,Authorization subject,Yes,Producer contract is prerequisite to consumer implementation.
+M12,M01,HARD,Identity,M01,Organization member,Yes,Producer contract is prerequisite to consumer implementation.
+M13,M01,HARD,Identity,M01,BYOK owner,Yes,Producer contract is prerequisite to consumer implementation.
+M14,M01,HARD,Identity,M01,Commercial actor/order ownership,Yes,Producer contract is prerequisite to consumer implementation.
+M15,M01,HARD,Identity,M01,Award recipient,Yes,Producer contract is prerequisite to consumer implementation.
+M02,M10,HARD — AUTHORIZATION,Authorization,M10,Profile/review access,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M03,M10,HARD — AUTHORIZATION,Authorization,M10,Listing scope/mutation access,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M04,M10,HARD — AUTHORIZATION,Authorization,M10,Learning/session access,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M05,M10,HARD — AUTHORIZATION,Authorization,M10,Event permission,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M06,M10,HARD — AUTHORIZATION,Authorization,M10,Developer/project/claim access,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M07,M10,HARD — AUTHORIZATION,Authorization,M10,DBR access/configuration,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M08,M10,HARD — AUTHORIZATION,Authorization,M10,Protected dashboard access,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M09,M10,HARD — AUTHORIZATION,Authorization,M10,Admin boundary,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M12,M10,HARD — AUTHORIZATION,Authorization,M10,Organization scope,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M13,M10,HARD — AUTHORIZATION,Authorization,M10,BYOK security,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M14,M10,HARD — AUTHORIZATION,Authorization,M10,Commercial operations,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M15,M10,HARD — AUTHORIZATION,Authorization,M10,Award access/admin,Yes,Authorization gate precedes consumer action; producer M10 remains authorization authority.
+M02,M09,CONDITIONAL,Administration,M09,Review moderation,No,Activate dependency only when the stated business/context condition applies.
+M03,M09,CONDITIONAL,Administration,M09,Listing moderation/configuration,No,Activate dependency only when the stated business/context condition applies.
+M04,M09,CONDITIONAL,Administration,M09,Learning configuration,No,Activate dependency only when the stated business/context condition applies.
+M05,M09,CONDITIONAL,Administration,M09,Event moderation,No,Activate dependency only when the stated business/context condition applies.
+M06,M09,CONDITIONAL,Administration,M09,Developer moderation,No,Activate dependency only when the stated business/context condition applies.
+M07,M09,CONFIGURATION,Configuration,M09,Administrative configuration path; M07 remains DBR authority,No,Configuration is consumed only within the applicable administrative/domain grant.
+M12,M09,CONDITIONAL,Administration,M09,Organization administration,No,Activate dependency only when the stated business/context condition applies.
+M13,M09,CONFIGURATION,Configuration,M09,Provider catalogue administration,No,Configuration is consumed only within the applicable administrative/domain grant.
+M14,M09,CONDITIONAL,Administration,M09,Commercial operations/reconciliation support,No,Activate dependency only when the stated business/context condition applies.
+M15,M09,CONDITIONAL,Administration,M09,Award administration,No,Activate dependency only when the stated business/context condition applies.
+M11,M09,CONFIGURATION,Public discovery configuration,M09,M09/applicable authoritative domain owns administrative lifecycle/configuration for Static Public Content and Announcement/Promotion surfaces observed by M11,No,Configuration is consumed only within the applicable administrative/domain grant.
+M03,M12,HARD / CONTEXT,Organization context,M12,Organization listing context,Yes,Context must be resolved before consumer operation.
+M04,M12,CONDITIONAL,Organization context,M12,Organization Learning/Session context,No,Activate dependency only when the stated business/context condition applies.
+M14,M12,CONDITIONAL,Organization context,M12,Organization commercial context,No,Activate dependency only when the stated business/context condition applies.
+M15,M12,CONDITIONAL,Organization context,M12,Organization qualification context,No,Activate dependency only when the stated business/context condition applies.
+M03,M02,CONDITIONAL,Domain context,M02,Agent profile/contact context,No,Activate dependency only when the stated business/context condition applies.
+M03,M06,CONDITIONAL,Domain context,M06,Approved Project may seed/create Listing; M03 owns Listing lifecycle,No,Activate dependency only when the stated business/context condition applies.
+M05,M06,CONDITIONAL,Domain boundary,M06,Project relationship to Event; M05 owns Event lifecycle/registration,No,Activate dependency only when the stated business/context condition applies.
+M04,M05,CONDITIONAL,Domain boundary,M05,"Event ↔ Session relation; M05 owns Event, M04 owns Session",No,Activate dependency only when the stated business/context condition applies.
+M03,M14,HARD — QUOTA/ENTITLEMENT,Commercial,M14,Quota/entitlement/allowance consumed by Listing; M03 retains Listing/Refresh authority,Yes,Commercial entitlement/allowance must be resolved before consumer action; action authority stays with consumer.
+M04,M14,CONDITIONAL,Commercial,M14,Paid Learning/LP commercial fulfillment; M04 retains Learning truth,No,Activate dependency only when the stated business/context condition applies.
+M15,M04,HARD — EVIDENCE,Qualification evidence,M04,Learning/evidence production consumed by M15,Yes,Evidence must be produced/accepted upstream before qualification consumes it.
+M15,M14,CONDITIONAL,Commercial evidence,M14,Commercial evidence only where qualification rule explicitly permits; M15 decides qualification,No,Activate dependency only when the stated business/context condition applies.
+M11,M02,OBSERVATIONAL,Discovery,M02,Public profile representation,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M11,M03,OBSERVATIONAL,Discovery,M03,Public listing representation,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M11,M04,OBSERVATIONAL,Discovery,M04,Public learning/session representation,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M11,M05,OBSERVATIONAL,Discovery,M05,Public event representation,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M11,M06,OBSERVATIONAL,Discovery,M06,Public developer/project representation,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M11,M12,OBSERVATIONAL,Discovery,M12,Public organization representation,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M11,M15,OBSERVATIONAL,Discovery,M15,Public award/title representation,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M02,OBSERVATIONAL,Projection,M02,Profile projection,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M03,OBSERVATIONAL,Projection,M03,Listing/lead projection,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M04,OBSERVATIONAL,Projection,M04,Learning/session projection,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M05,OBSERVATIONAL,Projection,M05,Event notification,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M06,OBSERVATIONAL,Projection,M06,Developer/project notification,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M07,OBSERVATIONAL,Projection,M07,DBR dashboard/history,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M12,OBSERVATIONAL,Projection,M12,Organization notification,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M13,OBSERVATIONAL,Projection,M13,AI operational notification,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M14,OBSERVATIONAL,Projection,M14,Commercial/payment notification,No,Producer emits/maintains authoritative source state; consumer reads/projections only.
+M08,M15,OBSERVATIONAL,Projection,M15,Award notification,No,Producer emits/maintains authoritative source state; consumer reads/projections only.

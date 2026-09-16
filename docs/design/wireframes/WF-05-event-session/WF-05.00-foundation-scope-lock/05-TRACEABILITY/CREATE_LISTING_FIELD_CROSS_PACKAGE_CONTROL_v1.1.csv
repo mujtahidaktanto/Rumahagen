@@ -1,0 +1,14 @@
+Create Listing field,Core requiredness,Canonical WIRE,Semantic dependency,WF-05 treatment
+listing_context,required,WIRE-02 / AGT-005,Personal/Organization context; does not belong to WF-05,No duplication in Event/Session forms
+category,required,WIRE-02 / AGT-005,"Listing category, not Event category",WF-05 category is a different Event semantic
+transaction_type,required,WIRE-02 / AGT-005,Listing transaction purpose/type,Must not appear as Event authoring field
+title,required,WIRE-02 / AGT-005,Listing title,WF-05 title is Event title; same label does not imply same entity
+property_type,required,WIRE-02 / AGT-005,Listing property type,Not part of Event/Session scope
+price,required,WIRE-02 / AGT-007,Listing price,Not part of Event/Session scope
+is_negotiable,required,WIRE-02 / AGT-007,Listing negotiation/fixed state,Not part of Event/Session scope
+address,required,WIRE-02 / AGT-006,Listing property address,"WF-05 location is Event venue/context, distinct semantic"
+province_id,required,WIRE-02 / AGT-006,Listing canonical region,Not part of Event/Session scope
+city_id,required,WIRE-02 / AGT-006,Listing canonical region,Not part of Event/Session scope
+district_id,required,WIRE-02 / AGT-006,Listing canonical region,Not part of Event/Session scope
+dispute_free_declared,required,WIRE-02 / AGT-007,Listing legal declaration,Not part of Event/Session scope
+whatsapp_number,required,WIRE-02 / AGT-007,Listing contact,Not part of Event/Session scope

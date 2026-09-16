@@ -1,0 +1,8 @@
+finding,module,locked_authority,overturning_evidence_found,decision_changed,status,verification
+M01-CI-009,M01,M01 v1.1 + PRE-00-C v1.1,NO,NO,LOCKED_AUTHORITY_PRESERVED,No uploaded evidence in Recon/PRE-00/STEP01-04/STEP03/Core scan overturns the locked module decision.
+M02-CI-008,M02,M02 v1.1 + PRE-00-D v1.1,NO,NO,LOCKED_AUTHORITY_PRESERVED,No uploaded evidence in Recon/PRE-00/STEP01-04/STEP03/Core scan overturns the locked module decision.
+M02-CI-011,M02,M01 v1.1 + M02 v1.1 + PRE-00-C/D + STEP03-A v1.0,NO,NO,LOCKED_AUTHORITY_PRESERVED,No uploaded evidence in Recon/PRE-00/STEP01-04/STEP03/Core scan overturns the locked module decision.
+M03-CI-001,M03,M03 v1.3 + PRE-00-E v1.1,NO,NO,LOCKED_AUTHORITY_PRESERVED,No uploaded evidence in Recon/PRE-00/STEP01-04/STEP03/Core scan overturns the locked module decision.
+M06-CI-007,M06,M06 v1.5 + PRE-00-H v1.1,NO,NO,LOCKED_AUTHORITY_PRESERVED,No uploaded evidence in Recon/PRE-00/STEP01-04/STEP03/Core scan overturns the locked module decision.
+M13-CI-001,M13,M13 v1.0 + PRE-00-O v1.0 + M13 QIR,NO,NO,LOCKED_AUTHORITY_PRESERVED,No uploaded evidence in Recon/PRE-00/STEP01-04/STEP03/Core scan overturns the locked module decision.
+M13-CI-002,M13,M13 v1.0 + PRE-00-O v1.0 + Core API/RBAC evidence,NO,NO,LOCKED_AUTHORITY_PRESERVED,No uploaded evidence in Recon/PRE-00/STEP01-04/STEP03/Core scan overturns the locked module decision.

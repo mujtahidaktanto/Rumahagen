@@ -1,0 +1,16 @@
+module,semantic_domain,owner_count_for_domain,circular_semantic_authority,status
+M01,Identity/Auth,1,NO,PASS
+M02,Profile/Review/Public Visibility,1,NO,PASS
+M03,Listing/Refresh,1,NO,PASS
+M04,Learning/Evidence,1,NO,PASS
+M05,Event,1,NO,PASS
+M06,Developer/Project/Marketing/Claim,1,NO,PASS
+M07,DBR,1,NO,PASS
+M08,Dashboard/Notification Projection,1,NO,PASS
+M09,Administration Surface,1,NO,PASS
+M10,Authorization/RBAC/RLS,1,NO,PASS
+M11,Discovery/SEO/Measurement,1,NO,PASS
+M12,Organization/Membership,1,NO,PASS
+M13,Provider/BYOK,1,NO,PASS
+M14,Commercial/Payment/Entitlement/Quota,1,NO,PASS
+M15,Qualification/Title/Awarding,1,NO,PASS

@@ -1,0 +1,55 @@
+coverage_id,authority_domain,requirement,integration_subject,downstream_sync,orphan_status,required_next_action
+COV-001,M11/M09,Static Public Content administrative configuration,STATIC_PUBLIC_CONTENT,STEP08/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-002,M11/M09,Public Announcement/Promotion administrative configuration,ANNOUNCEMENT_PROMOTION,STEP08/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-003,M14,Promotion configurable parameters,PROMOTION_CONFIGURATION,STEP08/STEP09,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-004,M14,Subscription configurable parameters,SUBSCRIPTION_CONFIGURATION,STEP08/STEP09,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-005,M14,Add-on configurable parameters,ADDON_CONFIGURATION,STEP08/STEP09,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-006,M14/M03,Quota configurable parameters,QUOTA_CONFIGURATION,STEP08/STEP10/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-007,M14,Payment Gateway,PAYMENT_GATEWAY,STEP08/STEP09/STEP11,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-008,M14,Midtrans MVP,MIDTRANS_MVP,STEP08/STEP09/STEP11,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-009,M14,Payment Provider Adapter,PAYMENT_PROVIDER_ADAPTER,STEP09/STEP11,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-010,M03/M14/M10,Listing Refresh,LISTING_REFRESH,STEP08/STEP11/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-011,M14/M03,Refresh Allowance,REFRESH_ALLOWANCE,STEP08/STEP10/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-012,M14/M03,Agent Refresh quota,AGENT_REFRESH_QUOTA,STEP08/STEP10/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-013,M06/M03,Developer Project field compatibility with Listing,PROJECT_LISTING_FIELD_PARITY,STEP10/STEP11/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-014,M06/M03/M10,Claim → approval → Listing transfer safety,CLAIM_TRANSFER,STEP08/STEP10/STEP11/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-015,M06,Project Media semantic boundary,PROJECT_MEDIA,STEP08/STEP10/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-016,M06,Marketing Kit separation,MARKETING_KIT,STEP08/STEP10/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-017,M02,Indonesia Province profile field,PROFILE_REGION,STEP10/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-018,M02,Indonesia City/Regency profile field,PROFILE_REGION,STEP10/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-019,M02,Indonesia District profile field,PROFILE_REGION,STEP10/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-020,M02,Profile address detail,PROFILE_ADDRESS,STEP10/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-021,M10,Permission Preset,PERMISSION_PRESET,STEP08/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-022,M01,KTP optional/deferred,KTP_DEFERRED,STEP08/STEP12/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-023,M05,Live adapter choice,LIVE_ADAPTER,STEP09/STEP11/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-024,M05,LiveKit adapter,LIVEKIT,STEP09/STEP11,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-025,M05,Zoom adapter,ZOOM,STEP09/STEP11,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-026,M05,Google Meet adapter,GOOGLE_MEET,STEP09/STEP11,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-027,M07/M09,DBR configuration,DBR_CONFIGURATION,STEP08/STEP09/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-028,M03,Maps optional,MAPS_OPTIONAL,STEP08/STEP10/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-029,M11,Google ownership configurable,GOOGLE_OWNERSHIP,STEP09/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-030,M10/M14,Entitlement is not RBAC,ENTITLEMENT_VS_RBAC,STEP08/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-031,M14/ALL,Configurable values not silently hard-coded,CONFIGURABLE_VALUES,STEP08/STEP09,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-032,M14/M15,Q01–Q64 remain M14,M14_Q01_Q64,STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-033,M14/M15,Q40/Q54/Q61/Q62 remain M14,M14_Q40_Q54_Q61_Q62,STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-034,M04/M15,Evidence is not automatically award,EVIDENCE_VS_AWARD,STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-035,M08,Dashboard/notification is projection,DASHBOARD_PROJECTION,STEP08/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-036,M13/M10,Provider Catalogue mutation Superadmin-only,PROVIDER_CATALOGUE,STEP08/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-037,M13/M10,BYOK own-connection ownership,BYOK_OWNERSHIP,STEP08/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-038,M11/ALL,M11 discovery does not own source lifecycle,M11_BOUNDARY,STEP07/STEP08,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-039,M10/ALL,Authorization does not create ownership/entitlement,AUTHORIZATION_SEPARATION,STEP08/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-040,ALL,Lifecycle omission is not deletion,LIFECYCLE_PRESERVATION,STEP06/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-041,ALL,Duplicate semantic objects consolidate,DUPLICATE_CONSOLIDATION,STEP06/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-042,ALL,Core detail preservation,CORE_DETAIL_PRESERVATION,STEP06/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-043,ALL,Rule delta isolation,RULE_DELTA,STEP05/STEP06/STEP08,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-044,ALL,No silent replacement/deletion,NO_REPLACEMENT_DELETION,STEP06/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-045,ALL,Provenance completeness,PROVENANCE,STEP06/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-046,M03/M11,Listing discovery separation,LISTING_DISCOVERY,STEP07/STEP08/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-047,M06/M11,Project discovery separation,PROJECT_DISCOVERY,STEP07/STEP08/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-048,M09/M11,Announcement discovery separation,ANNOUNCEMENT_DISCOVERY,STEP07/STEP08/STEP13,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-049,M12/M10,Membership is not authorization,MEMBERSHIP_VS_AUTH,STEP08/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-050,M14/M10,Payment success is not permission grant,PAYMENT_VS_AUTH,STEP08/STEP11/STEP12,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-051,M03/M14,Expired Listing/quota semantics,EXPIRED_LISTING_QUOTA,STEP08/STEP10/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-052,M03,Normal Listing publication lifecycle,LISTING_PUBLICATION,STEP05/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-053,M02,Review publication lifecycle,REVIEW_PUBLICATION,STEP05/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.
+COV-054,M01,Identity activation lifecycle,IDENTITY_ACTIVATION,STEP05/STEP08/STEP14,NO_ORPHAN,Must be consumed by the designated downstream synchronization step; no silent omission.

@@ -1,0 +1,9 @@
+Screen ID,Surface,Specific IA,Excluded authority,CTA/entry
+PUB-04,Public Listing Detail,Gallery + title/location + price + property facts + description + contact,Admin/lifecycle/operation authority,Eligible public CTA
+PUB-06,Agent Public Profile,Agent identity + bio/specialties + reviews/outcomes + WhatsApp/contact,Admin/lifecycle/operation authority,Eligible public CTA
+PUB-08,Organization Public Profile,Organization identity + overview + public member/listing summary + CTA,Admin/lifecycle/operation authority,Eligible public CTA
+PUB-10,Developer / Project Detail,Developer identity + Project media + canonical fields + related Listings,Admin/lifecycle/operation authority,Eligible public CTA
+PUB-12,Event Detail,Event identity + schedule + venue/format + availability + registration entry,Admin/lifecycle/operation authority,Eligible public CTA
+PUB-14,Learning Session Public Detail,Session identity + schedule + Host + Instructor + eligibility + access/enroll,Admin/lifecycle/operation authority,Eligible public CTA
+PUB-15,Static Public Content,Breadcrumb + title + published body + media/links + share/SEO,Admin/lifecycle/operation authority,Eligible public CTA
+PUB-16,Announcement / Promotion Public Detail,Header + image + public copy + schedule + configured CTA + dismissible,Admin/lifecycle/operation authority,Eligible public CTA

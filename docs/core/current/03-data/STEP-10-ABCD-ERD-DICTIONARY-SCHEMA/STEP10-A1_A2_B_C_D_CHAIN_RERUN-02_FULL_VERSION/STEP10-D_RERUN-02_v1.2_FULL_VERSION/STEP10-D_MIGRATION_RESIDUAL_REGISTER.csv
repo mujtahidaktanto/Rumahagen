@@ -1,0 +1,9 @@
+residual_id,target,requirement,status,execution
+D-MR-001,8 new logical entities,No current physical table,CONTROLLED,NOT_EXECUTED
+D-MR-002,DEVELOPER_PROJECTS 24 augmentations,24 logical fields lack exact current physical columns,CONTROLLED,NOT_EXECUTED
+D-MR-003,DEVELOPER_PARTNERS company_logo / description,2 logical fields lack exact current physical columns,CONTROLLED,NOT_EXECUTED
+D-MR-004,AGENT_PROFILES 3 augmentations,3 logical fields lack exact current physical columns,CONTROLLED,NOT_EXECUTED
+D-MR-005,EVENT_REGISTRATIONS guest_email / participant_mode,Guest semantics not physically represented,CONTROLLED_RECONCILIATION,NOT_EXECUTED
+D-MR-006,QUOTA_CAPACITIES daily_refresh_allowance,No exact current physical column,CONTROLLED_RECONCILIATION,NOT_EXECUTED
+D-MR-007,LISTINGS last_refreshed_at,No exact current physical column,CONTROLLED_RECONCILIATION,NOT_EXECUTED
+D-MR-008,8 new logical entities physical realization,Controlled downstream authorization required,CONTROLLED,NOT_EXECUTED

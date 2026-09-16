@@ -1,0 +1,10 @@
+screen_id,field,semantic_class,requiredness,section,ux_behavior
+ADM-LRN-004,QUIZZES.title,user input,required,Quiz,Explicit quiz title
+ADM-LRN-004,QUIZ_QUESTIONS.question_text,user input,required,Question,Dynamic long text
+ADM-LRN-004,QUIZ_QUESTIONS.question_type,configuration,required,Question,Explicit type
+ADM-LRN-004,QUIZ_OPTIONS.option_text,user input,required,Options,Repeatable option
+ADM-LRN-004,QUIZ_OPTIONS.is_correct,authoring configuration,required,Correct answer,Admin-only; never learner-visible
+LRN-005,Learning Activity start,authoritative action,conditional,Start,API-065 concept explicit
+LRN-005,completion claim,user action,conditional,Completion,Claim only until validation
+LRN-006,answers,user input,required,Assessment,Accessible controls
+LRN-006,grade/pass,authoritative result,n/a,Result,Never client-mutated

@@ -1,0 +1,12 @@
+screen_id,field,semantic_class,requiredness,section,ux_behavior
+LP-002,transaction_type,authoritative ledger read,n/a,Ledger,Earned/Purchased/Redeemed/Used/Adjustment/Reversal
+LP-002,amount,authoritative ledger read,n/a,Ledger,Read-only
+LP-002,source_type,provenance,n/a,Ledger,Progressive disclosure
+LP-002,source_reference,provenance,n/a,Ledger,Progressive disclosure
+LP-002,occurred_at,history,n/a,Ledger,Localized date/time
+LP-004,eligible amount,user input,required,Redemption,Validate against authoritative balance
+LP-004,eligibility,authoritative read,conditional,Redemption,Fail closed
+ADM-LRN-007,economy configuration,configuration,conditional,Config,Read → Edit → Impact review → Save
+ADM-LRN-008,target learner/account,context/input,required,Adjustment,Authorized target
+ADM-LRN-008,adjustment amount,user input,required,Adjustment,Authoritative mutation
+ADM-LRN-008,reason,user input,required,Adjustment,Mandatory provenance

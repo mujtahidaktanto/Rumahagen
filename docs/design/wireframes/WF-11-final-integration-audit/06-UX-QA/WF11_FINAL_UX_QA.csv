@@ -1,0 +1,13 @@
+control,result,note
+Navigation hide/show/collapse,PASS,Not an authorization boundary
+Context continuity,PASS,Personal/Organization context preserved
+Dynamic text,PASS,Real-world wrapping; no invented business character limits
+Vertical scrolling,PASS,Allowed/expected for long content
+Responsive breakpoints,PASS,Content-driven desktop/tablet/mobile
+Touch targets,PASS,Actionable targets/spacing baseline
+Typography hierarchy,PASS,Semantic hierarchy retained
+Accessibility,PASS,Keyboard/focus/labels/errors/contrast/modal/reduced motion
+Pagination/infinite scroll,PASS,Dense ops paginated; discovery may use infinite scroll where appropriate
+Authoritative outcomes,PASS,No premature success claims
+Scope containment,PASS,No authority inversion
+Implementation proof,PASS,Non-blocking rule enforced

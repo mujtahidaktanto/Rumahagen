@@ -1,0 +1,23 @@
+module,core_execution_unit,core_scope,current_p4_routing,classification,treatment,p5_batch_id,p5_route,core_status
+M04,M04-A,Content,M04-P4-WP01,PRESERVE,Core 6.25 execution boundary retained.,B05,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M04,M04-B,Enrollment,M04-P4-WP02,PRESERVE,Core 6.25 execution boundary retained.,B05,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M04,M04-C,Activity,M04-P4-WP03,PRESERVE,Core 6.25 execution boundary retained.,B05,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M04,M04-D,Completion,M04-P4-WP03,PRESERVE,Core 6.25 execution boundary retained within Activity/Completion.,B05,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M04,M04-E,Learning Economy,M04-P4-WP04,PRESERVE,Core 6.25 execution boundary retained.,B05,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M04,M04-F,Learning Path,M04-P4-WP05,PRESERVE,Core 6.25 execution boundary retained.,B05,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M04,M04-S,Session,M04-P4-WP06,PRESERVE,Core 6.25 Session boundary retained.,B05,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M10,M10-A,Authorization,M10-P4-WP01/WP03,PRESERVE,Core 6.25 authorization boundary retained.,B02,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M10,M10-B,RLS Evidence,M10-P4-WP04,PRESERVE,Core 6.25 RLS evidence boundary retained.,B02,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M14,M14-A,Catalog,M14-P4-WP01,PRESERVE,Core 6.25 commercial decomposition explicitly routed.,B03,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M14,M14-B,Order,M14-P4-WP02,PRESERVE,Core 6.25 commercial decomposition explicitly routed.,B03,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M14,M14-C,Payment Core,M14-P4-WP02,PRESERVE,Core 6.25 commercial decomposition explicitly routed.,B03,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M14,M14-D,Verification / Adapter,M14-P4-WP03,PRESERVE,Core 6.25 commercial decomposition explicitly routed.,B03,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M14,M14-E,Fulfillment,M14-P4-WP03,PRESERVE,Core 6.25 commercial decomposition explicitly routed.,B03,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M14,M14-F,Promotion,M14-P4-WP04,PRESERVE,Core 6.25 commercial decomposition explicitly routed.,B03,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M14,M14-G,Reconciliation,M14-P4-WP04,PRESERVE,Core 6.25 commercial decomposition explicitly routed.,B03,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M15,M15-A,Title,M15-P4-WP01,PRESERVE,Core 6.25 awarding decomposition explicitly routed.,B06,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M15,M15-B,Path,M15-P4-WP02,PRESERVE,Core 6.25 awarding decomposition explicitly routed.,B06,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M15,M15-C,Rule,M15-P4-WP02,PRESERVE,Core 6.25 awarding decomposition explicitly routed.,B06,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M15,M15-D,Qualification,M15-P4-WP03,PRESERVE,Core 6.25 awarding decomposition explicitly routed.,B06,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M15,M15-E,Award,M15-P4-WP04,PRESERVE,Core 6.25 awarding decomposition explicitly routed.,B06,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY
+M15,M15-F,Presentation,M15-P4-WP04,PRESERVE,Core 6.25 awarding decomposition explicitly routed.,B06,SUCCESSOR_BATCH_PLAN_ONLY,IMMUTABLE_READ_ONLY

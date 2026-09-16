@@ -1,0 +1,59 @@
+entity,field,semantic_class,screen_family,UX_rule
+COURSES,title,user input,Course detail/admin,wrap; dynamic length
+COURSES,category,user input,Catalog/admin,source-defined selector
+COURSES,description,user input,Detail/admin,long text; vertical scroll
+COURSES,prerequisite_course_id,context/config,Course admin/detail,selector; not free ID input
+COURSES,passing_grade,configuration,Assessment/admin,numeric; no invented range
+COURSES,status,system/lifecycle,Catalog/admin,authoritative state
+COURSE_LESSONS,title,user input,Lesson manager/learning,wrap
+COURSE_LESSONS,content_type,user input,Lesson/learning,source-defined type
+COURSE_LESSONS,content_url,reference/input,Lesson/learning,provider semantics not invented
+COURSE_LESSONS,sort_order,configuration,Lesson manager,ordering control
+QUIZZES,title,user input,Quiz/admin,wrap
+QUIZ_QUESTIONS,question_text,user input,Quiz/admin,long text
+QUIZ_QUESTIONS,question_type,configuration,Quiz/admin,source-defined
+QUIZ_OPTIONS,option_text,user input,Quiz/admin,long text
+QUIZ_OPTIONS,is_correct,authoring configuration,Quiz/admin,authorized authoring only
+ENROLLMENTS,status,authoritative read-only,My Learning,state chip; not editable
+ENROLLMENTS,progress_percent,authoritative read-only,My Learning/Path,numeric emphasis
+ENROLLMENTS,enrolled_at,history,My Learning/History,localized date/time
+ENROLLMENTS,completed_at,history,My Learning/History,nullable
+QUIZ_ATTEMPTS,score,authoritative result,Assessment/History,read-only
+QUIZ_ATTEMPTS,passed,authoritative result,Assessment/History,not color-only
+QUIZ_ATTEMPTS,attempted_at,history,Assessment/History,localized date/time
+CERTIFICATES,certificate_url,credential presentation,Result/History,secure navigation
+CERTIFICATES,issued_at,credential history,Result/History,localized date/time
+LEARNING_PATHS,code,identifier,Path admin/detail,display; do not invent format
+LEARNING_PATHS,name,user input,Path/admin,wrap
+LEARNING_PATHS,description,user input,Path/admin,long text
+LEARNING_PATHS,status,lifecycle,Path,authoritative state
+LEARNING_PATH_VERSIONS,version_no,read-only configuration,Path,version label
+LEARNING_PATH_VERSIONS,status,lifecycle,Path,authoritative
+LEARNING_PATH_VERSIONS,effective_from,history/config,Path admin,nullable
+LEARNING_PATH_VERSIONS,effective_to,history/config,Path admin,nullable
+LEARNING_PATH_VERSIONS,definition_snapshot,provenance/config snapshot,Path admin/detail,progressive disclosure
+LEARNING_ACTIVITIES,code,identifier,Activity/admin,display only
+LEARNING_ACTIVITIES,activity_type,user/admin-facing,Activity,source-defined type
+LEARNING_ACTIVITIES,title,user input,Activity/admin,wrap
+LEARNING_ACTIVITIES,description,user input,Activity/admin,long text
+LEARNING_ACTIVITIES,sequence_no,configuration,Activity/path,ordering
+LEARNING_ACTIVITIES,completion_required,configuration,Activity,explicit required marker
+LEARNING_ACTIVITIES,reward_lp,reward configuration,Activity/LP,numeric emphasis; not learner mint control
+LEARNING_ACTIVITIES,status,lifecycle,Activity/admin,authoritative
+LEARNING_ACTIVITY_COMPLETIONS,completion_status,authoritative state,Activity/History,server-confirmed only
+LEARNING_ACTIVITY_COMPLETIONS,outcome,authoritative outcome,Activity/History,source-bound
+LEARNING_ACTIVITY_COMPLETIONS,evidence_reference,provenance,Activity/History/admin,progressive disclosure
+LEARNING_ACTIVITY_COMPLETIONS,attempt_no,read-only state,Activity/History,numeric
+LEARNING_ACTIVITY_COMPLETIONS,completed_at,history,Activity/History,nullable
+LEARNING_POINT_ACCOUNTS,balance_projection,authoritative LP balance projection,LP Overview,read-only; no optimistic mutation
+LEARNING_POINT_ACCOUNTS,status,authoritative account state,LP Overview,state chip
+LEARNING_POINT_TRANSACTIONS,transaction_type,ledger read-only,LP Transactions,earned/purchased/redeemed/used/adjustment/reversal
+LEARNING_POINT_TRANSACTIONS,amount,ledger read-only,LP Transactions,numeric emphasis
+LEARNING_POINT_TRANSACTIONS,source_type,provenance,LP Transactions,progressive disclosure
+LEARNING_POINT_TRANSACTIONS,source_reference,provenance,LP Transactions,progressive disclosure
+LEARNING_POINT_TRANSACTIONS,occurred_at,history,LP Transactions,localized date/time
+LEARNING_UNLOCK_PROGRESSIONS,state,authoritative progression,Path/Progression,locked/current/completed only where supported
+LEARNING_UNLOCK_PROGRESSIONS,source_type,provenance,Path/Progression,progressive disclosure
+LEARNING_UNLOCK_PROGRESSIONS,source_reference,provenance,Path/Progression,progressive disclosure
+LEARNING_UNLOCK_PROGRESSIONS,unlocked_at,history,Path/Progression,nullable
+LEARNING_UNLOCK_PROGRESSIONS,completed_at,history,Path/Progression,nullable

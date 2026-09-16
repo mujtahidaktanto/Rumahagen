@@ -1,0 +1,9 @@
+risk_id,risk,severity,classification,handling
+R-01,Foundation contract drift,HIGH,BLOCKING_IF_SEMANTIC,Recheck P1/P2/Core authority before downstream P4.
+R-02,Authority inversion,HIGH,BLOCKING_IF_SEMANTIC,M10 auth; M03 Listing/Refresh action; M14 allowance; M04 evidence; M15 Award; M11 discovery; M09 bounded admin.
+R-03,P3 overclaims Core completeness from coarse mapping,HIGH,CORRECTED,Detailed IP and module obligation matrices added.
+R-04,M03 Refresh allowance physical/API realization,MEDIUM,CONTROLLED,M14 owns allowance; M03 consumes; downstream contract/implementation proof required.
+R-05,"M06 physical gaps: Developer fields, Marketing Kit, Claim persistence",MEDIUM,CONTROLLED,P3 plans semantic propagation; physical design deferred.
+R-06,M09 system_configs RLS broader than semantic Superadmin-only view,MEDIUM,CONTROLLED,Downstream M10/RLS hardening; no P3 runtime claim.
+R-07,M13 Provider Catalogue/BYOK Core propagation,MEDIUM,CONTROLLED,P3 now explicit; physical/API/RLS remains downstream.
+R-08,M04 physical permission/RLS and Partnership Learning realization,MEDIUM,CONTROLLED,Evidence-gated downstream.

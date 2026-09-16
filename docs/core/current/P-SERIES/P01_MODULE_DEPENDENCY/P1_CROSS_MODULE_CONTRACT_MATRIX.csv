@@ -1,0 +1,19 @@
+producer,consumer,relationship,authority_owner,contract
+M09,M11,CONFIGURATION,M09,Administrative lifecycle/configuration for Static Public Content and Announcement/Promotion where M09 is the applicable owner
+M11,M09,OBSERVATIONAL/CONFIGURATION-CONSUMPTION,M09,M11 exposes discovery/measurement; it does not own the administrative lifecycle
+M14,M03,HARD — QUOTA/ENTITLEMENT,M14,Commercial quota/allowance; M03 owns Listing/Refresh action
+M03,M14,CONDITIONAL/CONTEXT,M03,Listing/resource context returned to commercial domain without transferring Listing authority
+M04,M15,HARD — EVIDENCE,M04,Learning completion/evidence production
+M15,M04,CONDITIONAL,M15,Qualification interpretation may consume governed evidence
+M14,M15,CONDITIONAL,M14,Commercial evidence only where qualification rules permit
+M05,M04,CONDITIONAL,M05/M04,Event ↔ Session context; separate ownership
+M12,M03,HARD / CONTEXT,M12/M03,Organization context consumed by Listing
+M12,M14,CONDITIONAL,M12/M14,Organization context for commercial scope
+M12,M04,CONDITIONAL,M12/M04,Organization context for Learning/Session
+M12,M15,CONDITIONAL,M12/M15,Organization context for qualification
+M06,M03,CONDITIONAL,M06/M03,Approved Project may seed/create Listing; M03 owns lifecycle
+M06,M05,CONDITIONAL,M06/M05,Project relationship to Event; M05 owns lifecycle
+M10,M02–M15,HARD — AUTHORIZATION,M10,Authorization boundary; domain modules retain business authority
+M01,M02–M15,HARD,M01,Identity foundation
+M11,M02/M03/M04/M05/M06/M12/M15,OBSERVATIONAL,Source domain,Public discovery/SEO/analytics; no business-state ownership
+M08,M02/M03/M04/M05/M06/M07/M12/M13/M14/M15,OBSERVATIONAL,Source domain,Projection/notification only

@@ -1,0 +1,63 @@
+﻿wp_id,module,batch_id,work_package,parent_authority,locked_scope_documented,dependencies_documented,p9_entry_scope_exit_documented,functional_technical_context_documented,api_rbac_schema_ui_context_documented,stop_conditions_documented,testing_evidence_expectation_documented,physical_runtime_proof_required_for_p12,documentary_evidence_status
+M01-P4-WP01,M01,B01,Identity/Auth Core,Identity authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M01-P4-WP02,M01,B01,Activation & Verification,Identity authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M01-P4-WP03,M01,B01,Session/Recovery,Identity authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M01-P4-WP04,M01,B01,Identity Handoff & Validation,Identity authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M02-P4-WP01,M02,B03,Profile Core,Profile/review authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M02-P4-WP02,M02,B03,Review Lifecycle,Profile/review authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M02-P4-WP03,M02,B03,Visibility & CTA,Profile/review authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M02-P4-WP04,M02,B03,Profile Presentation & Validation,Profile/review authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M03-P4-WP01,M03,B04,Listing Core/Lifecycle,Listing + Refresh action/eligibility authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M03-P4-WP02,M03,B04,Publish & Field Locks,Listing + Refresh action/eligibility authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M03-P4-WP03,M03,B04,Refresh Action & Allowance Contract,Listing + Refresh action/eligibility authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M03-P4-WP04,M03,B04,Search/Media/Validation,Listing + Refresh action/eligibility authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M04-P4-WP01,M04,B05,Content,Learning/session/evidence-production authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M04-P4-WP02,M04,B05,Enrollment,Learning/session/evidence-production authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M04-P4-WP03,M04,B05,Activity/Completion,Learning/session/evidence-production authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M04-P4-WP04,M04,B05,Learning Economy,Learning/session/evidence-production authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M04-P4-WP05,M04,B05,Learning Path,Learning/session/evidence-production authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M04-P4-WP06,M04,B05,Session/Evidence Handoff,Learning/session/evidence-production authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M05-P4-WP01,M05,B04,Event Core,Event/registration authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M05-P4-WP02,M05,B04,Registration/Waitlist/Attendance,Event/registration authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M05-P4-WP03,M05,B04,Calendar/Session Boundary,Event/registration authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M05-P4-WP04,M05,B04,Provider/Validation,Event/registration authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M06-P4-WP01,M06,B03,Developer/Project Core,Developer/project/claim authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M06-P4-WP02,M06,B03,Project Media & SEO,Developer/project/claim authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M06-P4-WP03,M06,B03,Marketing Kit,Developer/project/claim authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M06-P4-WP04,M06,B03,Claim → Listing Handoff,Developer/project/claim authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M07-P4-WP01,M07,B03,DBR Core,DBR authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M07-P4-WP02,M07,B03,DBR Configuration,DBR authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M07-P4-WP03,M07,B03,Decision Output/History,DBR authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M07-P4-WP04,M07,B03,Validation/Handoff,DBR authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M08-P4-WP01,M08,B07,Projection Core,Projection/notification authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M08-P4-WP02,M08,B07,Notification/Communication,Projection/notification authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M08-P4-WP03,M08,B07,Source Event Contracts,Projection/notification authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M08-P4-WP04,M08,B07,Validation/No-Mutation,Projection/notification authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M09-P4-WP01,M09,B03,Administrative Foundation,Administrative/configuration authority within underlying domain grants,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M09-P4-WP02,M09,B03,Domain Administration/Configuration,Administrative/configuration authority within underlying domain grants,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M09-P4-WP03,M09,B03,Static Content + Announcement/Promotion,Administrative/configuration authority within underlying domain grants,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M09-P4-WP04,M09,B03,Audit/Reconciliation,Administrative/configuration authority within underlying domain grants,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M10-P4-WP01,M10,B02,Authorization Core,Authorization authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M10-P4-WP02,M10,B02,Permission Preset Governance,Authorization authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M10-P4-WP03,M10,B02,Scope/Condition/Ownership/Organization,Authorization authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M10-P4-WP04,M10,B02,RLS Evidence/Handoff,Authorization authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M11-P4-WP01,M11,B07,Public Surface Registry,Public discovery/SEO/measurement layer; not source-domain business authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M11-P4-WP02,M11,B07,SEO/Indexability/Structured Data,Public discovery/SEO/measurement layer; not source-domain business authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M11-P4-WP03,M11,B07,Sitemap/Robots/Discovery,Public discovery/SEO/measurement layer; not source-domain business authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M11-P4-WP04,M11,B07,Analytics/Measurement,Public discovery/SEO/measurement layer; not source-domain business authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M12-P4-WP01,M12,B03,Organization Core,Organization/membership/context authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M12-P4-WP02,M12,B03,Membership/Invitation/Join Request,Organization/membership/context authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M12-P4-WP03,M12,B03,Context & Ownership Boundary,Organization/membership/context authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M12-P4-WP04,M12,B03,Lifecycle/Validation,Organization/membership/context authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M13-P4-WP01,M13,B03,Provider Catalogue,AI/BYOK/provider domain authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M13-P4-WP02,M13,B03,BYOK Connection Lifecycle,AI/BYOK/provider domain authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M13-P4-WP03,M13,B03,Protected Invocation/Security,AI/BYOK/provider domain authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M13-P4-WP04,M13,B03,Transient Chat Frame/Validation,AI/BYOK/provider domain authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M14-P4-WP01,M14,B03,Catalog/Offer,Commercial/payment/entitlement/quota/promotion authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M14-P4-WP02,M14,B03,Order/Payment Core,Commercial/payment/entitlement/quota/promotion authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M14-P4-WP03,M14,B03,Verification/Fulfillment,Commercial/payment/entitlement/quota/promotion authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M14-P4-WP04,M14,B03,Promotion/Reconciliation/Quota,Commercial/payment/entitlement/quota/promotion authority,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M15-P4-WP01,M15,B06,Title,Qualification/Award authority; consumes governed upstream evidence,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M15-P4-WP02,M15,B06,Path/Rule,Qualification/Award authority; consumes governed upstream evidence,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M15-P4-WP03,M15,B06,Qualification/Evidence,Qualification/Award authority; consumes governed upstream evidence,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED
+M15-P4-WP04,M15,B06,Award/Presentation,Qualification/Award authority; consumes governed upstream evidence,YES,YES,YES,YES,YES,YES,YES,NO,SUPPORTED

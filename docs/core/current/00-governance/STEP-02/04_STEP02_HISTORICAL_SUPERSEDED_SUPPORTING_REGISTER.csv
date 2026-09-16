@@ -1,0 +1,19 @@
+﻿Treatment,Module,Artifact/path pattern or item,Rule,Reason
+SUPPORTING / PROVENANCE,M01,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M02,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M03,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M04,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M05,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M06,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M07,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M08,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M09,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M10,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M11,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M12,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M13,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M14,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / PROVENANCE,M15,All non-authoritative predecessor/QIR/Core-Impact artifacts within frozen corpus,"Retain, do not promote","Provides lineage, QIR, impact, verification, or historical evidence."
+SUPPORTING / GOVERNANCE,WF03-CONTROL,WF03_STEP01_OWNER_OVERRIDE_AND_RETRACE_BASELINE_v1.0.md,Control artifact,Governs semantic/physical/runtime separation.
+SUPPORTING / GOVERNANCE,WF03-CONTROL,WF03_STEP02_FULL_M01-M15_BLOCKER_PREREQUISITE_RETRACE_v1.0.md,Control artifact,Completed re-trace; not a module authority.
+OUT-OF-SCOPE FOR M15,M15,Q01–Q64,Do not attribute to M15,M15 QIR and PRE-00 boundary evidence assign Q01–Q64 to M14.

@@ -1,0 +1,63 @@
+module,work_package_id,name,required_structure
+M01,M01-P4-WP01,Identity/Auth Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M01,M01-P4-WP02,Activation & Verification,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M01,M01-P4-WP03,Session/Recovery,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M01,M01-P4-WP04,Identity Handoff & Validation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M02,M02-P4-WP01,Profile Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M02,M02-P4-WP02,Review Lifecycle,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M02,M02-P4-WP03,Visibility & CTA,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M02,M02-P4-WP04,Profile Presentation & Validation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M03,M03-P4-WP01,Listing Core/Lifecycle,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M03,M03-P4-WP02,Publish & Field Locks,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M03,M03-P4-WP03,Refresh Action & Allowance Contract,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M03,M03-P4-WP04,Search/Media/Validation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M04,M04-P4-WP01,Content,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M04,M04-P4-WP02,Enrollment,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M04,M04-P4-WP03,Activity/Completion,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M04,M04-P4-WP04,Learning Economy,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M04,M04-P4-WP05,Learning Path,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M04,M04-P4-WP06,Session/Evidence Handoff,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M05,M05-P4-WP01,Event Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M05,M05-P4-WP02,Registration/Waitlist/Attendance,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M05,M05-P4-WP03,Calendar/Session Boundary,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M05,M05-P4-WP04,Provider/Validation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M06,M06-P4-WP01,Developer/Project Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M06,M06-P4-WP02,Project Media & SEO,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M06,M06-P4-WP03,Marketing Kit,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M06,M06-P4-WP04,Claim → Listing Handoff,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M07,M07-P4-WP01,DBR Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M07,M07-P4-WP02,DBR Configuration,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M07,M07-P4-WP03,Decision Output/History,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M07,M07-P4-WP04,Validation/Handoff,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M08,M08-P4-WP01,Projection Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M08,M08-P4-WP02,Notification/Communication,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M08,M08-P4-WP03,Source Event Contracts,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M08,M08-P4-WP04,Validation/No-Mutation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M09,M09-P4-WP01,Administrative Foundation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M09,M09-P4-WP02,Domain Administration/Configuration,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M09,M09-P4-WP03,Static Content + Announcement/Promotion,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M09,M09-P4-WP04,Audit/Reconciliation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M10,M10-P4-WP01,Authorization Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M10,M10-P4-WP02,Permission Preset Governance,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M10,M10-P4-WP03,Scope/Condition/Ownership/Organization,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M10,M10-P4-WP04,RLS Evidence/Handoff,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M11,M11-P4-WP01,Public Surface Registry,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M11,M11-P4-WP02,SEO/Indexability/Structured Data,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M11,M11-P4-WP03,Sitemap/Robots/Discovery,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M11,M11-P4-WP04,Analytics/Measurement,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M12,M12-P4-WP01,Organization Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M12,M12-P4-WP02,Membership/Invitation/Join Request,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M12,M12-P4-WP03,Context & Ownership Boundary,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M12,M12-P4-WP04,Lifecycle/Validation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M13,M13-P4-WP01,Provider Catalogue,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M13,M13-P4-WP02,BYOK Connection Lifecycle,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M13,M13-P4-WP03,Protected Invocation/Security,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M13,M13-P4-WP04,Transient Chat Frame/Validation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M14,M14-P4-WP01,Catalog/Offer,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M14,M14-P4-WP02,Order/Payment Core,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M14,M14-P4-WP03,Verification/Fulfillment,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M14,M14-P4-WP04,Promotion/Reconciliation/Quota,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M15,M15-P4-WP01,Title,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M15,M15-P4-WP02,Path/Rule,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M15,M15-P4-WP03,Qualification/Evidence,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff
+M15,M15-P4-WP04,Award/Presentation,Dependencies → contract → atomic tasks → validation → evidence → checkpoint → handoff

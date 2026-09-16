@@ -1,0 +1,4 @@
+source,residual_count,treatment,status
+P6 v1.2,16,Preserved as controlled evidence-gated residuals,PASS WITH CONTROLLED RESIDUALS
+P7 v1.1,31,Preserved as controlled evidence-gated residuals,PASS WITH CONTROLLED RESIDUALS
+Combined,47,No semantic blocker; physical/API/RLS/runtime proof remains evidence-gated,PASS WITH CONTROLLED RESIDUALS

@@ -1,0 +1,15 @@
+{
+  "package": "RumahAgen_WF-04.00",
+  "version": "v1.1",
+  "status": "CORRECTED / READY FOR G-W04",
+  "source_boundary": "uploaded files only",
+  "physical_runtime_proof_blocker": false,
+  "corrections": [
+    "F04-01 Partnership Learning client discovery/access",
+    "F04-02 full UX-relevant field semantic classification",
+    "F04-03 Activity\u2192authoritative Completion\u2192LP reward trace",
+    "F04-04 Skill vs Competency distinction",
+    "F04-05 M04\u2192M15 qualification/title handoff",
+    "F04-06 assessment authoritative-result boundary"
+  ]
+}

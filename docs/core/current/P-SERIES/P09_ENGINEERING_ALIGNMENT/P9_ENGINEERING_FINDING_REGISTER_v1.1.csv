@@ -1,0 +1,4 @@
+finding_id,severity,finding,correction,status
+P9-REV1-F-001,MATERIAL / CORRECTED,Core 6.30 engineering-playbook traceability was not explicit enough in v1.0,Full rebuild with 30 guardrail rows + section coverage,CLOSED
+P9-REV1-F-002,MATERIAL / CORRECTED,M01–M15 engineering changes were partly represented only generically,Full rebuild with explicit M01–M15 engineering change matrix,CLOSED
+P9-REV1-F-003,CONTROLLED,47 evidence-gated residual records remain,Preserve/carry forward; no unsupported closure,CONTROLLED

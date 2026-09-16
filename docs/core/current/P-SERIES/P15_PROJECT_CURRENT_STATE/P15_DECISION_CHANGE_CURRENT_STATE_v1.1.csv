@@ -1,0 +1,8 @@
+﻿Metric,CurrentState,Authority,P15Treatment
+P13_DECISION_CHANGE_LOG decisions,64,P13_DECISION_CHANGE_LOG Decision Register,P15_PROJECT_CURRENT_STATE consumes; no new decision
+Material obligations,57,P13_DECISION_CHANGE_LOG/P14_PROJECT_MANIFEST obligation coverage,57/57 mapped
+Locked decisions,7,P13_DECISION_CHANGE_LOG Decision Register,D-LOCK-001..007 preserved
+Change-log records,13,P13_DECISION_CHANGE_LOG Change Log,P15_PROJECT_CURRENT_STATE consumes change history
+Controlled residuals,47,P13_DECISION_CHANGE_LOG residual register,Carry forward without false resolution
+Core IP packages,17,P14_PROJECT_MANIFEST Core IP manifest,IP-00..IP-16 explicitly snapshotted
+Core documentary continuity,223,P12_RECONCILIATION_EVIDENCE/P14_PROJECT_MANIFEST continuity,223/223 preserved; Core immutable

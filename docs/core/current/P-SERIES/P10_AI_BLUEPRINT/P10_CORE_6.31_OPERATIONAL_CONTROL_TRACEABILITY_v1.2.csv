@@ -1,0 +1,15 @@
+﻿control_id,control,p10_status
+CTX-01,Minimum viable context,EXPLICIT
+CTX-02,Context exclusion,EXPLICIT
+CTX-03,Context priority,EXPLICIT
+EXE-01,AI execution loop,EXPLICIT
+PRE-01,Required AI pre-flight,EXPLICIT
+OUT-01,Required pre-implementation output,EXPLICIT
+REP-01,Repository inspection,EXPLICIT
+CHK-01,AI checkpoint format,EXPLICIT
+CHG-01,AI change-control protocol,EXPLICIT
+HIS-01,Historical blueprint rebase,EXPLICIT
+CF-01,Carry-forward audit,EXPLICIT
+DOD-01,Definition of Done,EXPLICIT
+EV-01,Evidence blueprint,EXPLICIT
+TEST-01,Static/unit/integration/negative/runtime test layers,EXPLICIT

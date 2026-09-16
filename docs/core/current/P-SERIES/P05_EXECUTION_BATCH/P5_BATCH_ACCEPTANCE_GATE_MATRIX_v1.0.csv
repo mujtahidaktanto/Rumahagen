@@ -1,0 +1,33 @@
+batch_id,gate_id,gate,acceptance,blocking
+B01,B01-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B01,B01-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B01,B01-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B01,B01-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES
+B02,B02-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B02,B02-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B02,B02-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B02,B02-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES
+B03,B03-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B03,B03-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B03,B03-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B03,B03-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES
+B04,B04-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B04,B04-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B04,B04-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B04,B04-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES
+B05,B05-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B05,B05-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B05,B05-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B05,B05-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES
+B06,B06-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B06,B06-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B06,B06-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B06,B06-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES
+B07,B07-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B07,B07-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B07,B07-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B07,B07-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES
+B08,B08-G01,Authority & dependency,Predecessor hard dependencies accepted; authority unchanged.,YES
+B08,B08-G02,WP completeness,Every P4 WP assigned and checkpointed.,YES
+B08,B08-G03,Controlled residual,Known residuals routed; no unsupported physical/API/RLS/runtime details invented.,YES
+B08,B08-G04,Evidence & checkpoint,Evidence classes and rollback path declared before execution.,YES

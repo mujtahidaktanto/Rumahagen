@@ -1,0 +1,16 @@
+delta_id,module,later_locked_requirement,p11_disposition,basis
+C32-D01,M01,Conditional KTP Deferred Flow and successful-OTP outcome semantics,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D02,M02,Semantic profile/field visibility and private KTP lifecycle,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D03,M03,"Direct Publish, field locks, Sold/Rented/Suspended, Refresh allowance consumed from M14",EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D04,M04,"Learning Economy/LP, Learning Path, Session, evidence production and provenance",EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D05,M05,Event/Registration distinct from Learning Session Enrollment,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D06,M06,"Company logo, Tentang Developer, Project→Listing source, Marketing Kit permission matrix",EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D07,M07,Configurable DBR formula/band/bank parameters and historical outcomes,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D08,M08,Projection-only boundary,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D09,M09,Static Public Content and Announcement/Promotion lifecycle/configuration,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D10,M10,Exact Role / Role Permission / Permission Preset model,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D11,M11,All 10 mandatory public surfaces incl. Static Public Content + Announcement/Promotion,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D12,M12,Membership distinct from permission/ownership/visibility/commercial/Host authority,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D13,M13,Provider Catalogue Superadmin-only; BYOK own; server-side secrets,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D14,M14,Q01–Q64 all M14 incl. Q40/Q54/Q61/Q62; payment verification/fulfillment/reconciliation/idempotency,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context
+C32-D15,M15,Qualification/Award authority; Q01–Q64 excluded from M15,EXPLICITLY ROUTED,P9/P10_AI_BLUEPRINT module scope is now mandatory WP context

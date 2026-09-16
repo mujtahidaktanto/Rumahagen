@@ -1,0 +1,5 @@
+﻿Check,Result,Finding,Correction/Disposition
+Core IP-00..IP-16 P13_DECISION_CHANGE_LOG scope,PASS,All 17 Core implementation packages represented in explicit P13_DECISION_CHANGE_LOG scope matrix.,Added explicit Core package-level ledger coverage; Core itself remains frozen.
+Core 223 findings,PASS WITH BOUNDARY,P12_RECONCILIATION_EVIDENCE established documentary disposition for 223/223; P13_DECISION_CHANGE_LOG is not a new Core semantic synchronization step.,Preserve as provenance/current evidence boundary; no Core mutation.
+Core mutation,PASS,No P13_DECISION_CHANGE_LOG output writes or claims to modify Core v1.3.,Immutable/read-only control retained.
+Core classification,PASS,Classifications are carried into the 57 obligation ledger and Core scope.,No silent replacement.

@@ -1,0 +1,238 @@
+canonical_id,record_type,rule_name,module_authority,normalized_semantic_key,duplicate_key_count,duplicate_status
+BR-001,CORE_CANONICAL_BR,Agency Ownership,M12,CORE_CANONICAL_BR|M12|agency ownership,1,UNIQUE_KEY
+BR-002,CORE_CANONICAL_BR,Agency Membership,M12,CORE_CANONICAL_BR|M12|agency membership,1,UNIQUE_KEY
+BR-003,CORE_CANONICAL_BR,Lead Role,M12,CORE_CANONICAL_BR|M12|lead role,1,UNIQUE_KEY
+BR-004,CORE_CANONICAL_BR,Member Role,M12,CORE_CANONICAL_BR|M12|member role,1,UNIQUE_KEY
+BR-005,CORE_CANONICAL_BR,Personal Context,M12,CORE_CANONICAL_BR|M12|personal context,1,UNIQUE_KEY
+BR-006,CORE_CANONICAL_BR,Agency Context,M12,CORE_CANONICAL_BR|M12|agency context,1,UNIQUE_KEY
+BR-007,CORE_CANONICAL_BR,Membership ≠ Ownership,M12,CORE_CANONICAL_BR|M12|membership ownership,1,UNIQUE_KEY
+BR-008,CORE_CANONICAL_BR,Membership ≠ Personal Entitlement,M12,CORE_CANONICAL_BR|M12|membership personal entitlement,1,UNIQUE_KEY
+BR-009,CORE_CANONICAL_BR,Agency Listing Ownership,M12,CORE_CANONICAL_BR|M12|agency listing ownership,1,UNIQUE_KEY
+BR-010,CORE_CANONICAL_BR,Personal Listing Ownership,M12,CORE_CANONICAL_BR|M12|personal listing ownership,1,UNIQUE_KEY
+BR-011,CORE_CANONICAL_BR,Listing Origin,M12,CORE_CANONICAL_BR|M12|listing origin,1,UNIQUE_KEY
+BR-012,CORE_CANONICAL_BR,Current Context,M12,CORE_CANONICAL_BR|M12|current context,1,UNIQUE_KEY
+BR-013,CORE_CANONICAL_BR,Agency Listing Visibility,M12,CORE_CANONICAL_BR|M12|agency listing visibility,1,UNIQUE_KEY
+BR-014,CORE_CANONICAL_BR,Agency Listing CRUD,M12,CORE_CANONICAL_BR|M12|agency listing crud,1,UNIQUE_KEY
+BR-015,CORE_CANONICAL_BR,Personal Listing Isolation,M12,CORE_CANONICAL_BR|M12|personal listing isolation,1,UNIQUE_KEY
+BR-016,CORE_CANONICAL_BR,Voluntary Member Leave,M12,CORE_CANONICAL_BR|M12|voluntary member leave,1,UNIQUE_KEY
+BR-017,CORE_CANONICAL_BR,Forced Removal,M12,CORE_CANONICAL_BR|M12|forced removal,1,UNIQUE_KEY
+BR-018,CORE_CANONICAL_BR,Forced Removal Notification,M12,CORE_CANONICAL_BR|M12|forced removal notification,1,UNIQUE_KEY
+BR-019,CORE_CANONICAL_BR,Leave and Forced Removal Equivalence,M12,CORE_CANONICAL_BR|M12|leave and forced removal equivalence,1,UNIQUE_KEY
+BR-020,CORE_CANONICAL_BR,Standard Member Exit Transfer,M12,CORE_CANONICAL_BR|M12|standard member exit transfer,1,UNIQUE_KEY
+BR-021,CORE_CANONICAL_BR,Published + Active Promo Exception,M12,CORE_CANONICAL_BR|M12|published active promo exception,1,UNIQUE_KEY
+BR-022,CORE_CANONICAL_BR,Promo Continuation,M12,CORE_CANONICAL_BR|M12|promo continuation,1,UNIQUE_KEY
+BR-023,CORE_CANONICAL_BR,Promo Expiry Transfer,M12,CORE_CANONICAL_BR|M12|promo expiry transfer,1,UNIQUE_KEY
+BR-024,CORE_CANONICAL_BR,Automatic Transfer Trigger,M12,CORE_CANONICAL_BR|M12|automatic transfer trigger,1,UNIQUE_KEY
+BR-025,CORE_CANONICAL_BR,Non-Exception Listing,M12,CORE_CANONICAL_BR|M12|non exception listing,1,UNIQUE_KEY
+BR-026,CORE_CANONICAL_BR,Member Exit Listing Ownership,M12,CORE_CANONICAL_BR|M12|member exit listing ownership,1,UNIQUE_KEY
+BR-027,CORE_CANONICAL_BR,Personal Context Detachment,M12,CORE_CANONICAL_BR|M12|personal context detachment,1,UNIQUE_KEY
+BR-028,CORE_CANONICAL_BR,Origin Preservation,M12,CORE_CANONICAL_BR|M12|origin preservation,1,UNIQUE_KEY
+BR-029,CORE_CANONICAL_BR,Listing Data Retention,M12,CORE_CANONICAL_BR|M12|listing data retention,1,UNIQUE_KEY
+BR-030,CORE_CANONICAL_BR,Agency-Specific Data,M12,CORE_CANONICAL_BR|M12|agency specific data,1,UNIQUE_KEY
+BR-031,CORE_CANONICAL_BR,Lead History Deletion,M12,CORE_CANONICAL_BR|M12|lead history deletion,1,UNIQUE_KEY
+BR-032,CORE_CANONICAL_BR,No Lead History Migration,M12,CORE_CANONICAL_BR|M12|no lead history migration,1,UNIQUE_KEY
+BR-033,CORE_CANONICAL_BR,Audit Boundary,M12,CORE_CANONICAL_BR|M12|audit boundary,1,UNIQUE_KEY
+BR-034,CORE_CANONICAL_BR,Historical Audit Retention,M12,CORE_CANONICAL_BR|M12|historical audit retention,1,UNIQUE_KEY
+BR-035,CORE_CANONICAL_BR,Promo Consumption,M12,CORE_CANONICAL_BR|M12|promo consumption,1,UNIQUE_KEY
+BR-036,CORE_CANONICAL_BR,Consumed Promo Non-Reversal,M12,CORE_CANONICAL_BR|M12|consumed promo non reversal,1,UNIQUE_KEY
+BR-037,CORE_CANONICAL_BR,Agency Promo During Member Exit,M12,CORE_CANONICAL_BR|M12|agency promo during member exit,1,UNIQUE_KEY
+BR-038,CORE_CANONICAL_BR,Agency Closure Promo,M12,CORE_CANONICAL_BR|M12|agency closure promo,1,UNIQUE_KEY
+BR-039,CORE_CANONICAL_BR,Closure Promo Exception,M12,CORE_CANONICAL_BR|M12|closure promo exception,1,UNIQUE_KEY
+BR-040,CORE_CANONICAL_BR,Unused Promo,M12,CORE_CANONICAL_BR|M12|unused promo,1,UNIQUE_KEY
+BR-041,CORE_CANONICAL_BR,Permanent Add-on,M12,CORE_CANONICAL_BR|M12|permanent add on,1,UNIQUE_KEY
+BR-042,CORE_CANONICAL_BR,Allocation Ownership,M12,CORE_CANONICAL_BR|M12|allocation ownership,1,UNIQUE_KEY
+BR-043,CORE_CANONICAL_BR,Unallocated Ownership,M12,CORE_CANONICAL_BR|M12|unallocated ownership,1,UNIQUE_KEY
+BR-044,CORE_CANONICAL_BR,Allocation Survives Member Exit,M12,CORE_CANONICAL_BR|M12|allocation survives member exit,1,UNIQUE_KEY
+BR-045,CORE_CANONICAL_BR,Allocation Survives Forced Removal,M12,CORE_CANONICAL_BR|M12|allocation survives forced removal,1,UNIQUE_KEY
+BR-046,CORE_CANONICAL_BR,No Automatic Reclaim,M12,CORE_CANONICAL_BR|M12|no automatic reclaim,1,UNIQUE_KEY
+BR-047,CORE_CANONICAL_BR,Permanent Add-on Consumption,M12,CORE_CANONICAL_BR|M12|permanent add on consumption,1,UNIQUE_KEY
+BR-048,CORE_CANONICAL_BR,Post-Closure Personal Use,M12,CORE_CANONICAL_BR|M12|post closure personal use,1,UNIQUE_KEY
+BR-049,CORE_CANONICAL_BR,Owner Unallocated Add-on,M12,CORE_CANONICAL_BR|M12|owner unallocated add on,1,UNIQUE_KEY
+BR-050,CORE_CANONICAL_BR,Permanent Add-on and New Agency,M12,CORE_CANONICAL_BR|M12|permanent add on and new agency,1,UNIQUE_KEY
+BR-051,CORE_CANONICAL_BR,Closure Initiator,M12,CORE_CANONICAL_BR|M12|closure initiator,1,UNIQUE_KEY
+BR-052,CORE_CANONICAL_BR,Closure Warning,M12,CORE_CANONICAL_BR|M12|closure warning,1,UNIQUE_KEY
+BR-053,CORE_CANONICAL_BR,Explicit Confirmation,M12,CORE_CANONICAL_BR|M12|explicit confirmation,1,UNIQUE_KEY
+BR-054,CORE_CANONICAL_BR,Cancellation Before OTP,M12,CORE_CANONICAL_BR|M12|cancellation before otp,1,UNIQUE_KEY
+BR-055,CORE_CANONICAL_BR,Email OTP Gate,M12,CORE_CANONICAL_BR|M12|email otp gate,1,UNIQUE_KEY
+BR-056,CORE_CANONICAL_BR,OTP Verification Requirement,M12,CORE_CANONICAL_BR|M12|otp verification requirement,1,UNIQUE_KEY
+BR-057,CORE_CANONICAL_BR,OTP Failure,M12,CORE_CANONICAL_BR|M12|otp failure,1,UNIQUE_KEY
+BR-058,CORE_CANONICAL_BR,OTP Request Limit,M12,CORE_CANONICAL_BR|M12|otp request limit,2,REVIEW_CONSOLIDATED_FAMILY
+BR-059,CORE_CANONICAL_BR,OTP Verification Attempt Limit,M12,CORE_CANONICAL_BR|M12|otp verification attempt limit,1,UNIQUE_KEY
+BR-060,CORE_CANONICAL_BR,OTP Three-Attempt Failure,M12,CORE_CANONICAL_BR|M12|otp three attempt failure,1,UNIQUE_KEY
+BR-061,CORE_CANONICAL_BR,OTP Reset,M12,CORE_CANONICAL_BR|M12|otp reset,1,UNIQUE_KEY
+BR-062,CORE_CANONICAL_BR,CLOSING Trigger,M12,CORE_CANONICAL_BR|M12|closing trigger,1,UNIQUE_KEY
+BR-063,CORE_CANONICAL_BR,Irreversible Closure,M12,CORE_CANONICAL_BR|M12|irreversible closure,1,UNIQUE_KEY
+BR-064,CORE_CANONICAL_BR,Lead During Closing,M12,CORE_CANONICAL_BR|M12|lead during closing,1,UNIQUE_KEY
+BR-065,CORE_CANONICAL_BR,Member During Closing,M12,CORE_CANONICAL_BR|M12|member during closing,1,UNIQUE_KEY
+BR-066,CORE_CANONICAL_BR,New Member Block,M12,CORE_CANONICAL_BR|M12|new member block,1,UNIQUE_KEY
+BR-067,CORE_CANONICAL_BR,Invitation Cancellation,M12,CORE_CANONICAL_BR|M12|invitation cancellation,1,UNIQUE_KEY
+BR-068,CORE_CANONICAL_BR,New Agency Listing Block,M12,CORE_CANONICAL_BR|M12|new agency listing block,1,UNIQUE_KEY
+BR-069,CORE_CANONICAL_BR,Agency Entitlement Purchase Block,M12,CORE_CANONICAL_BR|M12|agency entitlement purchase block,1,UNIQUE_KEY
+BR-070,CORE_CANONICAL_BR,Agency Operational Freeze,M12,CORE_CANONICAL_BR|M12|agency operational freeze,1,UNIQUE_KEY
+BR-071,CORE_CANONICAL_BR,Closure Management Access,M12,CORE_CANONICAL_BR|M12|closure management access,1,UNIQUE_KEY
+BR-072,CORE_CANONICAL_BR,Restricted Lead Operations,M12,CORE_CANONICAL_BR|M12|restricted lead operations,1,UNIQUE_KEY
+BR-073,CORE_CANONICAL_BR,Role vs Permission,M12,CORE_CANONICAL_BR|M12|role vs permission,1,UNIQUE_KEY
+BR-074,CORE_CANONICAL_BR,Closing Race Control,M12,CORE_CANONICAL_BR|M12|closing race control,1,UNIQUE_KEY
+BR-075,CORE_CANONICAL_BR,No Post-Closing Agency Creation,M12,CORE_CANONICAL_BR|M12|no post closing agency creation,1,UNIQUE_KEY
+BR-076,CORE_CANONICAL_BR,Owner Closure Listing Rule,M12,CORE_CANONICAL_BR|M12|owner closure listing rule,1,UNIQUE_KEY
+BR-077,CORE_CANONICAL_BR,No Promo Exception During Closure,M12,CORE_CANONICAL_BR|M12|no promo exception during closure,1,UNIQUE_KEY
+BR-078,CORE_CANONICAL_BR,Agency Draft Transfer,M12,CORE_CANONICAL_BR|M12|agency draft transfer,1,UNIQUE_KEY
+BR-079,CORE_CANONICAL_BR,Inactive Listing Transfer,M12,CORE_CANONICAL_BR|M12|inactive listing transfer,1,UNIQUE_KEY
+BR-080,CORE_CANONICAL_BR,Listing Ownership on Closure,M12,CORE_CANONICAL_BR|M12|listing ownership on closure,1,UNIQUE_KEY
+BR-081,CORE_CANONICAL_BR,Personal Listing Exclusion,M12,CORE_CANONICAL_BR|M12|personal listing exclusion,1,UNIQUE_KEY
+BR-082,CORE_CANONICAL_BR,Closure Processing,M12,CORE_CANONICAL_BR|M12|closure processing,1,UNIQUE_KEY
+BR-083,CORE_CANONICAL_BR,Closure Retry,M12,CORE_CANONICAL_BR|M12|closure retry,1,UNIQUE_KEY
+BR-084,CORE_CANONICAL_BR,Retry Failure,M12,CORE_CANONICAL_BR|M12|retry failure,1,UNIQUE_KEY
+BR-085,CORE_CANONICAL_BR,Exception Does Not Prevent Closure,M12,CORE_CANONICAL_BR|M12|exception does not prevent closure,1,UNIQUE_KEY
+BR-086,CORE_CANONICAL_BR,Exception Deletion on Closed,M12,CORE_CANONICAL_BR|M12|exception deletion on closed,1,UNIQUE_KEY
+BR-087,CORE_CANONICAL_BR,Member Completion Requirement,M12,CORE_CANONICAL_BR|M12|member completion requirement,1,UNIQUE_KEY
+BR-088,CORE_CANONICAL_BR,Lead Completion,M12,CORE_CANONICAL_BR|M12|lead completion,1,UNIQUE_KEY
+BR-089,CORE_CANONICAL_BR,Lead Title Termination,M12,CORE_CANONICAL_BR|M12|lead title termination,1,UNIQUE_KEY
+BR-090,CORE_CANONICAL_BR,Final Closure,M12,CORE_CANONICAL_BR|M12|final closure,1,UNIQUE_KEY
+BR-091,CORE_CANONICAL_BR,CLOSED Finality,M12,CORE_CANONICAL_BR|M12|closed finality,1,UNIQUE_KEY
+BR-092,CORE_CANONICAL_BR,No Reopen,M12,CORE_CANONICAL_BR|M12|no reopen,1,UNIQUE_KEY
+BR-093,CORE_CANONICAL_BR,New Agency Requirement,M12,CORE_CANONICAL_BR|M12|new agency requirement,1,UNIQUE_KEY
+BR-094,CORE_CANONICAL_BR,Closed Agency URL,M12,CORE_CANONICAL_BR|M12|closed agency url,1,UNIQUE_KEY
+BR-095,CORE_CANONICAL_BR,Historical Page,M12,CORE_CANONICAL_BR|M12|historical page,1,UNIQUE_KEY
+BR-096,CORE_CANONICAL_BR,Home Redirect,M12,CORE_CANONICAL_BR|M12|home redirect,1,UNIQUE_KEY
+BR-097,CORE_CANONICAL_BR,Historical Page Read Only,M12,CORE_CANONICAL_BR|M12|historical page read only,1,UNIQUE_KEY
+BR-098,CORE_CANONICAL_BR,Agency Name Reuse,M12,CORE_CANONICAL_BR|M12|agency name reuse,1,UNIQUE_KEY
+BR-099,CORE_CANONICAL_BR,Agency Analytics Retention,M12,CORE_CANONICAL_BR|M12|agency analytics retention,1,UNIQUE_KEY
+BR-100,CORE_CANONICAL_BR,Personal Analytics Separation,M12,CORE_CANONICAL_BR|M12|personal analytics separation,1,UNIQUE_KEY
+BR-101,CORE_CANONICAL_BR,No Analytics Migration,M12,CORE_CANONICAL_BR|M12|no analytics migration,1,UNIQUE_KEY
+BR-102,CORE_CANONICAL_BR,Agency Audit Retention,M12,CORE_CANONICAL_BR|M12|agency audit retention,1,UNIQUE_KEY
+BR-103,CORE_CANONICAL_BR,Historical Audit Access,M12,CORE_CANONICAL_BR|M12|historical audit access,1,UNIQUE_KEY
+BR-104,CORE_CANONICAL_BR,Audit Does Not Preserve Deleted Lead Content,M12,CORE_CANONICAL_BR|M12|audit does not preserve deleted lead content,1,UNIQUE_KEY
+BR-105,CORE_CANONICAL_BR,New Agency Membership,M12,CORE_CANONICAL_BR|M12|new agency membership,1,UNIQUE_KEY
+BR-106,CORE_CANONICAL_BR,Transferred Listing Remains Personal,M12,CORE_CANONICAL_BR|M12|transferred listing remains personal,1,UNIQUE_KEY
+BR-107,CORE_CANONICAL_BR,No Automatic Agency Reassignment,M12,CORE_CANONICAL_BR|M12|no automatic agency reassignment,1,UNIQUE_KEY
+BR-108,CORE_CANONICAL_BR,Personal Entitlement Preservation,M12,CORE_CANONICAL_BR|M12|personal entitlement preservation,1,UNIQUE_KEY
+BR-109,CORE_CANONICAL_BR,No Automatic Agency Conversion,M12,CORE_CANONICAL_BR|M12|no automatic agency conversion,1,UNIQUE_KEY
+BR-110,CORE_CANONICAL_BR,Expiry Transfer Failure,M12,CORE_CANONICAL_BR|M12|expiry transfer failure,1,UNIQUE_KEY
+BR-111,CORE_CANONICAL_BR,Transfer Exception,M12,CORE_CANONICAL_BR|M12|transfer exception,1,UNIQUE_KEY
+BR-112,CORE_CANONICAL_BR,Exception Lifecycle,M12,CORE_CANONICAL_BR|M12|exception lifecycle,1,UNIQUE_KEY
+BR-113,CORE_CANONICAL_BR,Exception After Agency Closed,M12,CORE_CANONICAL_BR|M12|exception after agency closed,1,UNIQUE_KEY
+BR-114,CORE_CANONICAL_BR,Origin Is Immutable Historical Context,M12,CORE_CANONICAL_BR|M12|origin is immutable historical context,1,UNIQUE_KEY
+BR-115,CORE_CANONICAL_BR,Current Context Is Mutable,M12,CORE_CANONICAL_BR|M12|current context is mutable,1,UNIQUE_KEY
+BR-116,CORE_CANONICAL_BR,Ownership and Context Are Separate,M12,CORE_CANONICAL_BR|M12|ownership and context are separate,1,UNIQUE_KEY
+BR-117,CORE_CANONICAL_BR,Transfer Does Not Create New Listing,M12,CORE_CANONICAL_BR|M12|transfer does not create new listing,1,UNIQUE_KEY
+BR-118,CORE_CANONICAL_BR,Agency State Model,M12,CORE_CANONICAL_BR|M12|agency state model,1,UNIQUE_KEY
+BR-119,CORE_CANONICAL_BR,ACTIVE,M12,CORE_CANONICAL_BR|M12|active,1,UNIQUE_KEY
+BR-120,CORE_CANONICAL_BR,CLOSING,M12,CORE_CANONICAL_BR|M12|closing,1,UNIQUE_KEY
+BR-121,CORE_CANONICAL_BR,CLOSED,M12,CORE_CANONICAL_BR|M12|closed,1,UNIQUE_KEY
+BR-122,CORE_CANONICAL_BR,State Is Server Authoritative,M12,CORE_CANONICAL_BR|M12|state is server authoritative,1,UNIQUE_KEY
+BR-123,CORE_CANONICAL_BR,Session Recovery,M12,CORE_CANONICAL_BR|M12|session recovery,1,UNIQUE_KEY
+BR-124,CORE_CANONICAL_BR,Ownership Survives Membership Termination,M12,CORE_CANONICAL_BR|M12|ownership survives membership termination,1,UNIQUE_KEY
+BR-125,CORE_CANONICAL_BR,Allocation Determines Add-on Ownership,M12,CORE_CANONICAL_BR|M12|allocation determines add on ownership,1,UNIQUE_KEY
+BR-126,CORE_CANONICAL_BR,Consumption Does Not Determine Ownership,M12,CORE_CANONICAL_BR|M12|consumption does not determine ownership,1,UNIQUE_KEY
+BR-127,CORE_CANONICAL_BR,Unallocated Agency Add-on,M12,CORE_CANONICAL_BR|M12|unallocated agency add on,1,UNIQUE_KEY
+BR-128,CORE_CANONICAL_BR,Allocated Agent Add-on,M12,CORE_CANONICAL_BR|M12|allocated agent add on,1,UNIQUE_KEY
+BR-129,CORE_CANONICAL_BR,Agency Historical Identity,M12,CORE_CANONICAL_BR|M12|agency historical identity,1,UNIQUE_KEY
+BR-130,CORE_CANONICAL_BR,Agency Operational Identity Ends,M12,CORE_CANONICAL_BR|M12|agency operational identity ends,1,UNIQUE_KEY
+BR-131,CORE_CANONICAL_BR,Historical Does Not Mean Active,M12,CORE_CANONICAL_BR|M12|historical does not mean active,1,UNIQUE_KEY
+BR-132,CORE_CANONICAL_BR,Historical URL Is Non-Operational,M12,CORE_CANONICAL_BR|M12|historical url is non operational,1,UNIQUE_KEY
+BR-133,CORE_CANONICAL_BR,Closure Is Idempotent,M12,CORE_CANONICAL_BR|M12|closure is idempotent,1,UNIQUE_KEY
+BR-134,CORE_CANONICAL_BR,Transfer Is Idempotent,M12,CORE_CANONICAL_BR|M12|transfer is idempotent,1,UNIQUE_KEY
+BR-135,CORE_CANONICAL_BR,Add-on Ownership Is Idempotent,M12,CORE_CANONICAL_BR|M12|add on ownership is idempotent,1,UNIQUE_KEY
+BR-136,CORE_CANONICAL_BR,Membership Termination Is Idempotent,M12,CORE_CANONICAL_BR|M12|membership termination is idempotent,1,UNIQUE_KEY
+BR-137,CORE_CANONICAL_BR,Closure State Cannot Regress,M12,CORE_CANONICAL_BR|M12|closure state cannot regress,1,UNIQUE_KEY
+BR-138,CORE_CANONICAL_BR,OTP Required for Final Closure,M12,CORE_CANONICAL_BR|M12|otp required for final closure,1,UNIQUE_KEY
+BR-139,CORE_CANONICAL_BR,OTP Attempt Reset,M12,CORE_CANONICAL_BR|M12|otp attempt reset,1,UNIQUE_KEY
+BR-140,CORE_CANONICAL_BR,OTP Request Limit,M12,CORE_CANONICAL_BR|M12|otp request limit,2,REVIEW_CONSOLIDATED_FAMILY
+BR-141,CORE_CANONICAL_BR,OTP Does Not Change Agency State,M12,CORE_CANONICAL_BR|M12|otp does not change agency state,1,UNIQUE_KEY
+BR-142,CORE_CANONICAL_BR,Successful OTP Changes State,M12,CORE_CANONICAL_BR|M12|successful otp changes state,1,UNIQUE_KEY
+BR-143,CORE_CANONICAL_BR,Closure Is Owner-Level Action,M12,CORE_CANONICAL_BR|M12|closure is owner level action,1,UNIQUE_KEY
+BR-144,CORE_CANONICAL_BR,Closure Affects All Agency Listings,M12,CORE_CANONICAL_BR|M12|closure affects all agency listings,1,UNIQUE_KEY
+BR-145,CORE_CANONICAL_BR,Closure Does Not Affect Personal Listings,M12,CORE_CANONICAL_BR|M12|closure does not affect personal listings,1,UNIQUE_KEY
+BR-146,CORE_CANONICAL_BR,Closure Does Not Reclaim Personal Entitlements,M12,CORE_CANONICAL_BR|M12|closure does not reclaim personal entitlements,1,UNIQUE_KEY
+BR-147,CORE_CANONICAL_BR,Closure Resolves Agency-Owned Unallocated Add-on,M12,CORE_CANONICAL_BR|M12|closure resolves agency owned unallocated add on,1,UNIQUE_KEY
+BR-148,CORE_CANONICAL_BR,Closure Resolves Allocated Add-on,M12,CORE_CANONICAL_BR|M12|closure resolves allocated add on,1,UNIQUE_KEY
+BR-149,CORE_CANONICAL_BR,Closure Ends Agency Membership,M12,CORE_CANONICAL_BR|M12|closure ends agency membership,1,UNIQUE_KEY
+BR-150,CORE_CANONICAL_BR,Closure Ends Lead Title,M12,CORE_CANONICAL_BR|M12|closure ends lead title,1,UNIQUE_KEY
+BR-151,CORE_CANONICAL_BR,Agency Closed Final State,M12,CORE_CANONICAL_BR|M12|agency closed final state,1,UNIQUE_KEY
+M01-CI-007,MXX_RULE_EXTENSION_OR_AMENDMENT,Conditional KTP eligibility,M01,MXX_RULE_EXTENSION_OR_AMENDMENT|M01|conditional ktp eligibility,1,UNIQUE_KEY
+M01-CI-009,MXX_RULE_EXTENSION_OR_AMENDMENT,Pending Review boundary,M01,MXX_RULE_EXTENSION_OR_AMENDMENT|M01|pending review boundary,1,UNIQUE_KEY
+M02-CI-008,MXX_RULE_EXTENSION_OR_AMENDMENT,Review Auto-Approve / post-publication moderation,M02,MXX_RULE_EXTENSION_OR_AMENDMENT|M02|review auto approve post publication moderation,1,UNIQUE_KEY
+M02-CI-009,MXX_RULE_EXTENSION_OR_AMENDMENT,Outcome Presentation — non-owning,M02,MXX_RULE_EXTENSION_OR_AMENDMENT|M02|outcome presentation non owning,1,UNIQUE_KEY
+M02-CI-011,MXX_RULE_EXTENSION_OR_AMENDMENT,KTP deferred semantics,M02,MXX_RULE_EXTENSION_OR_AMENDMENT|M02|ktp deferred semantics,1,UNIQUE_KEY
+M03-CI-001,MXX_RULE_EXTENSION_OR_AMENDMENT,Publication / no Pending Review,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|publication no pending review,1,UNIQUE_KEY
+M03-CI-006,MXX_RULE_EXTENSION_OR_AMENDMENT,Refresh daily quota default 5,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|refresh daily quota default 5,1,UNIQUE_KEY
+M03-CI-009,MXX_RULE_EXTENSION_OR_AMENDMENT,Refresh Asia/Jakarta reset,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|refresh asia jakarta reset,1,UNIQUE_KEY
+M03-CI-010,MXX_RULE_EXTENSION_OR_AMENDMENT,One successful Refresh per Listing/day,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|one successful refresh per listing day,1,UNIQUE_KEY
+M03-CI-011,MXX_RULE_EXTENSION_OR_AMENDMENT,District-local Refresh repositioning,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|district local refresh repositioning,1,UNIQUE_KEY
+M03-CI-012,MXX_RULE_EXTENSION_OR_AMENDMENT,Refresh tie-break first recorded,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|refresh tie break first recorded,1,UNIQUE_KEY
+M03-CI-014,MXX_RULE_EXTENSION_OR_AMENDMENT,Media derivative thumbnails,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|media derivative thumbnails,1,UNIQUE_KEY
+M03-CI-015,MXX_RULE_EXTENSION_OR_AMENDMENT,Media no stretching,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|media no stretching,1,UNIQUE_KEY
+M03-CI-016,MXX_RULE_EXTENSION_OR_AMENDMENT,Listing geographic binding,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|listing geographic binding,1,UNIQUE_KEY
+M03-CI-018,MXX_RULE_EXTENSION_OR_AMENDMENT,API Refresh,M03,MXX_RULE_EXTENSION_OR_AMENDMENT|M03|api refresh,1,UNIQUE_KEY
+M04-CI-010,MXX_RULE_EXTENSION_OR_AMENDMENT,Session permission family,M04,MXX_RULE_EXTENSION_OR_AMENDMENT|M04|session permission family,1,UNIQUE_KEY
+M06-CI-001,MXX_RULE_EXTENSION_OR_AMENDMENT,Project semantic schema expansion,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|project semantic schema expansion,1,UNIQUE_KEY
+M06-CI-006,MXX_RULE_EXTENSION_OR_AMENDMENT,Developer company_logo + Tentang Developer,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|developer company logo tentang developer,1,UNIQUE_KEY
+M06-CI-007,MXX_RULE_EXTENSION_OR_AMENDMENT,Project Media boundary,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|project media boundary,1,UNIQUE_KEY
+M06-CI-008,MXX_RULE_EXTENSION_OR_AMENDMENT,Marketing Kit resource,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|marketing kit resource,1,UNIQUE_KEY
+M06-CI-009,MXX_RULE_EXTENSION_OR_AMENDMENT,Marketing Kit CRUD authorization,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|marketing kit crud authorization,1,UNIQUE_KEY
+M06-CI-010,MXX_RULE_EXTENSION_OR_AMENDMENT,Claim lifecycle state representation,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|claim lifecycle state representation,1,UNIQUE_KEY
+M06-CI-011,MXX_RULE_EXTENSION_OR_AMENDMENT,Claim approval authority,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|claim approval authority,1,UNIQUE_KEY
+M06-CI-012,MXX_RULE_EXTENSION_OR_AMENDMENT,Approval Claim artifact,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|approval claim artifact,1,UNIQUE_KEY
+M06-CI-014,MXX_RULE_EXTENSION_OR_AMENDMENT,Approved Claim → Agent-owned Listing initialization,M06,MXX_RULE_EXTENSION_OR_AMENDMENT|M06|approved claim agent owned listing initialization,1,UNIQUE_KEY
+M10-CORE-02,MXX_RULE_EXTENSION_OR_AMENDMENT,Core Permission,M10,MXX_RULE_EXTENSION_OR_AMENDMENT|M10|core permission,1,UNIQUE_KEY
+M10-CORE-03,MXX_RULE_EXTENSION_OR_AMENDMENT,Core Scope,M10,MXX_RULE_EXTENSION_OR_AMENDMENT|M10|core scope,1,UNIQUE_KEY
+M10-CORE-04,MXX_RULE_EXTENSION_OR_AMENDMENT,Core RLS,M10,MXX_RULE_EXTENSION_OR_AMENDMENT|M10|core rls,1,UNIQUE_KEY
+M10-CORE-05,MXX_RULE_EXTENSION_OR_AMENDMENT,Core UI/UX,M10,MXX_RULE_EXTENSION_OR_AMENDMENT|M10|core ui ux,1,UNIQUE_KEY
+M10-CORE-06,MXX_RULE_EXTENSION_OR_AMENDMENT,Core API,M10,MXX_RULE_EXTENSION_OR_AMENDMENT|M10|core api,1,UNIQUE_KEY
+M10-CORE-07,MXX_RULE_EXTENSION_OR_AMENDMENT,Core ERD / DB,M10,MXX_RULE_EXTENSION_OR_AMENDMENT|M10|core erd db,1,UNIQUE_KEY
+M10-CORE-12,MXX_RULE_EXTENSION_OR_AMENDMENT,Core cross-module authorization,M10,MXX_RULE_EXTENSION_OR_AMENDMENT|M10|core cross module authorization,1,UNIQUE_KEY
+M05-CI-002,MXX_RULE_EXTENSION_OR_AMENDMENT,Event quota = maximum Registered participants; not commercial entitlement or Session capacity,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|event quota maximum registered participants not commercial entitlement or session capacity,1,UNIQUE_KEY
+M05-CI-003,MXX_RULE_EXTENSION_OR_AMENDMENT,Waitinglist has no queue number/rank; participants are equal,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|waitinglist has no queue number rank participants are equal,1,UNIQUE_KEY
+M05-CI-004,MXX_RULE_EXTENSION_OR_AMENDMENT,First successful registration captures an available slot,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|first successful registration captures an available slot,1,UNIQUE_KEY
+M05-CI-005,MXX_RULE_EXTENSION_OR_AMENDMENT,Registration window closes at start_at + 1 hour,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|registration window closes at start at 1 hour,1,UNIQUE_KEY
+M05-CI-006,MXX_RULE_EXTENSION_OR_AMENDMENT,Pre-start cancellation returns one quota slot,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|pre start cancellation returns one quota slot,1,UNIQUE_KEY
+M05-CI-007,MXX_RULE_EXTENSION_OR_AMENDMENT,Attendance optional; no-show does not auto-cancel registration,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|attendance optional no show does not auto cancel registration,1,UNIQUE_KEY
+M05-CI-008,MXX_RULE_EXTENSION_OR_AMENDMENT,Event cancellation is distinct from participant registration cancellation,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|event cancellation is distinct from participant registration cancellation,1,UNIQUE_KEY
+M05-CI-009,MXX_RULE_EXTENSION_OR_AMENDMENT,Event-start notification targets registered and waitinglist participants; M08 remains delivery/projection layer,M05,MXX_RULE_EXTENSION_OR_AMENDMENT|M05|event start notification targets registered and waitinglist participants m08 remains delivery projection layer,1,UNIQUE_KEY
+M11-CI-006,MXX_RULE_EXTENSION_OR_AMENDMENT,M09 Static Public Content → M11 discovery,M11,MXX_RULE_EXTENSION_OR_AMENDMENT|M11|m09 static public content m11 discovery,1,UNIQUE_KEY
+M11-CI-007,MXX_RULE_EXTENSION_OR_AMENDMENT,M09 Announcement/Promotion → M11 discovery/measurement,M11,MXX_RULE_EXTENSION_OR_AMENDMENT|M11|m09 announcement promotion m11 discovery measurement,1,UNIQUE_KEY
+M12-CI-004,MXX_RULE_EXTENSION_OR_AMENDMENT,ORG-ADMIN action/permission boundary,M12,MXX_RULE_EXTENSION_OR_AMENDMENT|M12|org admin action permission boundary,1,UNIQUE_KEY
+M13-CI-001,MXX_RULE_EXTENSION_OR_AMENDMENT,Provider Catalogue mutation authority is Superadmin-only,M13,MXX_RULE_EXTENSION_OR_AMENDMENT|M13|provider catalogue mutation authority is superadmin only,1,UNIQUE_KEY
+M13-CI-002,MXX_RULE_EXTENSION_OR_AMENDMENT,BYOK ownership is Agent/User OWN,M13,MXX_RULE_EXTENSION_OR_AMENDMENT|M13|byok ownership is agent user own,1,UNIQUE_KEY
+M14-CI-005,MXX_RULE_EXTENSION_OR_AMENDMENT,Eight approved commercial surfaces,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|eight approved commercial surfaces,1,UNIQUE_KEY
+M14-CI-006,MXX_RULE_EXTENSION_OR_AMENDMENT,Subscription lifecycle,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|subscription lifecycle,1,UNIQUE_KEY
+M14-CI-007,MXX_RULE_EXTENSION_OR_AMENDMENT,Add-on lifecycle/validity,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|add on lifecycle validity,1,UNIQUE_KEY
+M14-CI-008,MXX_RULE_EXTENSION_OR_AMENDMENT,Promotion lifecycle,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|promotion lifecycle,1,UNIQUE_KEY
+M14-CI-009,MXX_RULE_EXTENSION_OR_AMENDMENT,Immutable purchase snapshot,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|immutable purchase snapshot,1,UNIQUE_KEY
+M14-CI-010,MXX_RULE_EXTENSION_OR_AMENDMENT,Order confirmation invariant,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|order confirmation invariant,1,UNIQUE_KEY
+M14-CI-011,MXX_RULE_EXTENSION_OR_AMENDMENT,Trusted payment verification,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|trusted payment verification,1,UNIQUE_KEY
+M14-CI-012,MXX_RULE_EXTENSION_OR_AMENDMENT,Idempotent fulfillment,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|idempotent fulfillment,1,UNIQUE_KEY
+M14-CI-013,MXX_RULE_EXTENSION_OR_AMENDMENT,Entitlement lifecycle,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|entitlement lifecycle,1,UNIQUE_KEY
+M14-CI-014,MXX_RULE_EXTENSION_OR_AMENDMENT,Quota Capacity,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|quota capacity,1,UNIQUE_KEY
+M14-CI-015,MXX_RULE_EXTENSION_OR_AMENDMENT,Operational Pool,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|operational pool,1,UNIQUE_KEY
+M14-CI-016,MXX_RULE_EXTENSION_OR_AMENDMENT,Allocation,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|allocation,1,UNIQUE_KEY
+M14-CI-017,MXX_RULE_EXTENSION_OR_AMENDMENT,Usage,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|usage,1,UNIQUE_KEY
+M14-CI-018,MXX_RULE_EXTENSION_OR_AMENDMENT,Refund / chargeback,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|refund chargeback,1,UNIQUE_KEY
+M14-CI-019,MXX_RULE_EXTENSION_OR_AMENDMENT,Reconciliation,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|reconciliation,1,UNIQUE_KEY
+M14-CI-020,MXX_RULE_EXTENSION_OR_AMENDMENT,Refresh Allowance,M14,MXX_RULE_EXTENSION_OR_AMENDMENT|M14|refresh allowance,1,UNIQUE_KEY
+M15-IA-03,MXX_RULE_EXTENSION_OR_AMENDMENT,Qualification/evidence,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|qualification evidence,1,UNIQUE_KEY
+M15-IA-04,MXX_RULE_EXTENSION_OR_AMENDMENT,Partner Learning,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|partner learning,1,UNIQUE_KEY
+M15-IA-05,MXX_RULE_EXTENSION_OR_AMENDMENT,Developer Learning,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|developer learning,1,UNIQUE_KEY
+M15-IA-08,MXX_RULE_EXTENSION_OR_AMENDMENT,Permission,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|permission,1,UNIQUE_KEY
+M15-IA-10,MXX_RULE_EXTENSION_OR_AMENDMENT,Visibility/Presentation,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|visibility presentation,1,UNIQUE_KEY
+M15-IA-11,MXX_RULE_EXTENSION_OR_AMENDMENT,Approval,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|approval,1,UNIQUE_KEY
+M15-IA-12,MXX_RULE_EXTENSION_OR_AMENDMENT,API,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|api,1,UNIQUE_KEY
+M15-IA-15,MXX_RULE_EXTENSION_OR_AMENDMENT,RBAC/RLS,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|rbac rls,1,UNIQUE_KEY
+M15-IA-16,MXX_RULE_EXTENSION_OR_AMENDMENT,Functional,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|functional,1,UNIQUE_KEY
+M15-IA-17,MXX_RULE_EXTENSION_OR_AMENDMENT,Technical,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|technical,1,UNIQUE_KEY
+M15-IA-18,MXX_RULE_EXTENSION_OR_AMENDMENT,UI/UX,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|ui ux,1,UNIQUE_KEY
+M15-IA-19,MXX_RULE_EXTENSION_OR_AMENDMENT,Dependencies,M15,MXX_RULE_EXTENSION_OR_AMENDMENT|M15|dependencies,1,UNIQUE_KEY
+MBR-COM-001,COMMERCIAL_CLOSED_APPROVED,MBR-COM-001 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 001 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-002,COMMERCIAL_CLOSED_APPROVED,MBR-COM-002 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 002 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-003,COMMERCIAL_CLOSED_APPROVED,MBR-COM-003 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 003 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-004,COMMERCIAL_CLOSED_APPROVED,MBR-COM-004 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 004 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-005,COMMERCIAL_CLOSED_APPROVED,MBR-COM-005 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 005 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-006,COMMERCIAL_CLOSED_APPROVED,MBR-COM-006 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 006 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-007,COMMERCIAL_CLOSED_APPROVED,MBR-COM-007 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 007 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-008,COMMERCIAL_CLOSED_APPROVED,MBR-COM-008 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 008 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-009,COMMERCIAL_CLOSED_APPROVED,MBR-COM-009 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 009 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-010,COMMERCIAL_CLOSED_APPROVED,MBR-COM-010 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 010 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-011,COMMERCIAL_CLOSED_APPROVED,MBR-COM-011 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 011 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-012,COMMERCIAL_CLOSED_APPROVED,MBR-COM-012 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 012 approved commercial business rules family,1,UNIQUE_KEY
+MBR-COM-013,COMMERCIAL_CLOSED_APPROVED,MBR-COM-013 — Approved Commercial Business Rules Family,M14,COMMERCIAL_CLOSED_APPROVED|M14|mbr com 013 approved commercial business rules family,1,UNIQUE_KEY

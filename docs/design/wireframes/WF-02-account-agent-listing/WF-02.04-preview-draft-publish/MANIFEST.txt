@@ -1,0 +1,56 @@
+RumahAgen WIRE-02.04 v1.3 CORRECTED
+
+PNG count: 47
+Logical screens: 3
+Desktop and Mobile: separate folders
+F-0204-04 CLOSED
+Source-only: YES
+External/web assets: NONE
+
+02-Assets/RumahAgen-logo-canonical.png
+Desktop/AGT-008__empty.png
+Desktop/AGT-008__error-retry.png
+Desktop/AGT-008__loading.png
+Desktop/AGT-008__offline-interrupted.png
+Desktop/AGT-008__protected.png
+Desktop/AGT-008__ready.png
+Desktop/AGT-008__validation.png
+Desktop/AGT-009__dirty-state.png
+Desktop/AGT-009__empty.png
+Desktop/AGT-009__error-retry.png
+Desktop/AGT-009__offline-interrupted.png
+Desktop/AGT-009__protected.png
+Desktop/AGT-009__ready.png
+Desktop/AGT-009__saving.png
+Desktop/AGT-009__success.png
+Desktop/AGT-010__confirm.png
+Desktop/AGT-010__eligibility-checking.png
+Desktop/AGT-010__empty.png
+Desktop/AGT-010__error-retry.png
+Desktop/AGT-010__protected.png
+Desktop/AGT-010__publishing.png
+Desktop/AGT-010__success.png
+Desktop/AGT-010__validation-blocked.png
+Mobile/AGT-008__empty.png
+Mobile/AGT-008__error-retry.png
+Mobile/AGT-008__loading.png
+Mobile/AGT-008__offline-interrupted.png
+Mobile/AGT-008__protected.png
+Mobile/AGT-008__ready.png
+Mobile/AGT-008__validation.png
+Mobile/AGT-009__dirty-state.png
+Mobile/AGT-009__empty.png
+Mobile/AGT-009__error-retry.png
+Mobile/AGT-009__offline-interrupted.png
+Mobile/AGT-009__protected.png
+Mobile/AGT-009__ready.png
+Mobile/AGT-009__saving.png
+Mobile/AGT-009__success.png
+Mobile/AGT-010__confirm.png
+Mobile/AGT-010__eligibility-checking.png
+Mobile/AGT-010__empty.png
+Mobile/AGT-010__error-retry.png
+Mobile/AGT-010__protected.png
+Mobile/AGT-010__publishing.png
+Mobile/AGT-010__success.png
+Mobile/AGT-010__validation-blocked.png

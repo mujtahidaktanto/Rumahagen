@@ -1,0 +1,3 @@
+reentry_id,trigger,impact,required_parent,dependency_chain,decision,status
+D-RE-001,LEARNING_ACTIVITY_COMPLETIONS.OR,logical + dictionary + physical mapping; corrected by removal of phantom CHECK-expression token mapping,STEP10-A1,A1 v2.2 → A2 v2.2 → B v2.2 → C v1.1 → D v1.2,RESOLVED_IN_CHAIN_RERUN_02,RESOLVED_IN_CHAIN_RERUN_02
+D-RE-002,LEARNING_UNLOCK_PROGRESSIONS.OR,logical + dictionary + physical mapping; corrected by removal of phantom CHECK-expression token mapping,STEP10-A1,A1 v2.2 → A2 v2.2 → B v2.2 → C v1.1 → D v1.2,RESOLVED_IN_CHAIN_RERUN_02,RESOLVED_IN_CHAIN_RERUN_02

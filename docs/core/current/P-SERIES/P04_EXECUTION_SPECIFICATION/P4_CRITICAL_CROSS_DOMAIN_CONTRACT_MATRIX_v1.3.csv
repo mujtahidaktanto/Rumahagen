@@ -1,0 +1,5 @@
+upstream,downstream,contract,boundary
+M14,M03,Allowance/quota contract,M14 commercial truth; M03 action
+M04,M15,Evidence → qualification/Award,M04 evidence; M15 Award
+M09/applicable domain,M11,Lifecycle → discovery,M11 does not own lifecycle
+All source domains,M08,Outcome → projection/notification,M08 no source mutation

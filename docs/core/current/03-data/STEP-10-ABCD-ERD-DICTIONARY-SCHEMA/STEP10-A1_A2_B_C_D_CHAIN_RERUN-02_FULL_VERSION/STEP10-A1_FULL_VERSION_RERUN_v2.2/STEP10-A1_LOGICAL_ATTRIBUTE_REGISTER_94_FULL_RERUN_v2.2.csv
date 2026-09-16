@@ -1,0 +1,863 @@
+logical_entity,module,attribute,logical_or_physical_type,representation,constraint_or_semantic_note,entity_purpose
+AI_PROVIDERS,M13,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,code,VARCHAR(50),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,display_name,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,logo_url,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,billing_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,setup_instructions_url,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,usage_terms_note,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,requires_expiry_warning,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AI_PROVIDERS,M13,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AMENITIES,M03,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AMENITIES,M03,name,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+PERMISSIONS,M10,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+PERMISSIONS,M10,module_code,VARCHAR(50),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PERMISSIONS,M10,action_code,VARCHAR(50),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PERMISSIONS,M10,scope_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PERMISSIONS,M10,description,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+REF_PROVINCES,CORE,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+REF_PROVINCES,CORE,code,VARCHAR(10),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+REF_PROVINCES,CORE,name,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLES,M10,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+ROLES,M10,code,VARCHAR(50),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+ROLES,M10,name,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLES,M10,is_system_role,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLES,M10,is_protected,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLES,M10,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLES,M10,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,old_path,VARCHAR(300),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,new_path,VARCHAR(300),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,redirect_type,SMALLINT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,reason,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,entity_type,VARCHAR(50),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,entity_id,UUID,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+URL_REDIRECTS,M11,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+REF_CITIES,CORE,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+REF_CITIES,CORE,province_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ref_provinces.id,Preserve current Core logical entity; physical table is current baseline
+REF_CITIES,CORE,code,VARCHAR(10),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+REF_CITIES,CORE,name,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+REF_CITIES,CORE,type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLE_PERMISSIONS,M10,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+ROLE_PERMISSIONS,M10,role_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→roles.id,Preserve current Core logical entity; physical table is current baseline
+ROLE_PERMISSIONS,M10,permission_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→permissions.id,Preserve current Core logical entity; physical table is current baseline
+ROLE_PERMISSIONS,M10,granted_scope,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLE_PERMISSIONS,M10,editable_by_role_code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ROLE_PERMISSIONS,M10,updated_by,UUID,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ROLE_PERMISSIONS,M10,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,email,VARCHAR(255),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,phone,VARCHAR(20),PHYSICAL_CORROBORATION,UNIQUE,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,password_hash,VARCHAR(255),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,role_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→roles.id,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,email_verified_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,last_login_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+USERS,M01,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,provider_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ai_providers.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,encrypted_api_key,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,last_validated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,connected_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_AI_CONNECTIONS,M13,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; UNIQUE; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,full_name,VARCHAR(150),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,avatar_url,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,bio,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,specialization,TEXT[],PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,coverage_area,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,office_name,VARCHAR(150),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,license_number,VARCHAR(50),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,whatsapp_number,VARCHAR(20),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,contact_visibility,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,public_slug,VARCHAR(150),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,total_listings_sold,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,total_listings_rented,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,ktp_requirement_state,enum,LOGICAL_AUGMENTATION,DEFERRED / NOT_PROVIDED remains representable as outstanding KTP requirement | M01 logical augmentation,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,profile_visibility,enum,LOGICAL_AUGMENTATION,PUBLIC / PRIVATE; default PUBLIC | M02 logical semantic augmentation,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROFILES,M01,public_cta_enabled,boolean,LOGICAL_AUGMENTATION,Explicit Agent opt-in for public contact/WhatsApp CTA | M02 logical semantic augmentation,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,buyer_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,listing_lead_id,UUID,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,reviewer_name,VARCHAR(150),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,rating,SMALLINT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,comment,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,moderated_by,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,moderated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_REVIEWS,M02,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,doc_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,file_url,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,encrypted,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,review_status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,reviewed_by,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,rejection_reason,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_VERIFICATION_DOCUMENTS,M01,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,title,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,category,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,description,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,prerequisite_course_id,UUID,PHYSICAL_CORROBORATION,FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,passing_grade,SMALLINT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,created_by,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COURSES,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_CONFIG,M07,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+DBR_CONFIG,M07,dbr_threshold_percent,"DECIMAL(5,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_CONFIG,M07,default_interest_rate,"DECIMAL(5,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_CONFIG,M07,updated_by,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+DBR_CONFIG,M07,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,company_name,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,pic_name,VARCHAR(150),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,pic_contact,VARCHAR(50),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,user_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,company_logo,string,LOGICAL_AUGMENTATION,Company logo | M06 semantic locked; physical realization downstream,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PARTNERS,M06,description,text,LOGICAL_AUGMENTATION,Free-text “Tentang Developer” | M06 semantic locked; physical realization downstream,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,title,VARCHAR(200),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,message,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,related_entity_type,VARCHAR(50),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,related_entity_id,UUID,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,is_read,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+NOTIFICATIONS,M08,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,organization_name,VARCHAR(150),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,slug,VARCHAR(170),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,organization_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,logo_url,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,banner_url,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,description,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,website,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,social_media,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,address,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,contact_phone,VARCHAR(20),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,created_by,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATIONS,M12,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+REF_DISTRICTS,CORE,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+REF_DISTRICTS,CORE,city_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ref_cities.id,Preserve current Core logical entity; physical table is current baseline
+REF_DISTRICTS,CORE,code,VARCHAR(10),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+REF_DISTRICTS,CORE,name,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SYSTEM_CONFIGS,M09,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SYSTEM_CONFIGS,M09,config_key,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+SYSTEM_CONFIGS,M09,config_value,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SYSTEM_CONFIGS,M09,updated_by,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+SYSTEM_CONFIGS,M09,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,user_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,action,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,entity_type,VARCHAR(50),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,entity_id,UUID,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,old_value,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,new_value,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AUDIT_LOGS,M09,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+CERTIFICATES,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+CERTIFICATES,M04,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+CERTIFICATES,M04,course_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+CERTIFICATES,M04,certificate_url,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+CERTIFICATES,M04,issued_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COURSE_LESSONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+COURSE_LESSONS,M04,course_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+COURSE_LESSONS,M04,title,VARCHAR(200),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COURSE_LESSONS,M04,content_type,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COURSE_LESSONS,M04,content_url,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COURSE_LESSONS,M04,sort_order,SMALLINT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,developer_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→developer_partners.id,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,name,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,slug,VARCHAR(220),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,meta_title,VARCHAR(70),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,meta_description,VARCHAR(160),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,location,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,city_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ref_cities.id,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,property_type,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,price_min,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,price_max,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,unit_availability,INT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,commission_scheme,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,is_exclusive_by_region,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECTS,M06,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ENROLLMENTS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+ENROLLMENTS,M04,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+ENROLLMENTS,M04,course_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+ENROLLMENTS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ENROLLMENTS,M04,progress_percent,SMALLINT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ENROLLMENTS,M04,enrolled_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ENROLLMENTS,M04,completed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,organization_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,leader_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,initiated_by_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,responded_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,expires_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_INVITATIONS,M12,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_MEMBERS,M12,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_MEMBERS,M12,organization_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_MEMBERS,M12,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_MEMBERS,M12,role,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_MEMBERS,M12,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_MEMBERS,M12,joined_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ORGANIZATION_MEMBERS,M12,left_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUIZZES,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUIZZES,M04,course_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+QUIZZES,M04,title,VARCHAR(200),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+REF_VILLAGES,CORE,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+REF_VILLAGES,CORE,district_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ref_districts.id,Preserve current Core logical entity; physical table is current baseline
+REF_VILLAGES,CORE,code,VARCHAR(10),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+REF_VILLAGES,CORE,name,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+REF_VILLAGES,CORE,postal_code,VARCHAR(6),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROJECT_CLAIMS,M06,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROJECT_CLAIMS,M06,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROJECT_CLAIMS,M06,project_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→developer_projects.id,Preserve current Core logical entity; physical table is current baseline
+AGENT_PROJECT_CLAIMS,M06,claimed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECT_MEDIA,M06,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECT_MEDIA,M06,project_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→developer_projects.id,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECT_MEDIA,M06,type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DEVELOPER_PROJECT_MEDIA,M06,url,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,title,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,category,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,description,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,is_online,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,location,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,meeting_link,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,host,VARCHAR(150),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,quota,INT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,related_course_id,UUID,PHYSICAL_CORROBORATION,FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,related_project_id,UUID,PHYSICAL_CORROBORATION,FK→developer_projects.id,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,submitted_by,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,start_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,end_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENTS,M05,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,developer_project_id,UUID,PHYSICAL_CORROBORATION,FK→developer_projects.id,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,listing_context,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,category,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,transaction_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,title,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,slug,VARCHAR(220),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,meta_title,VARCHAR(70),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,meta_description,VARCHAR(160),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,description,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,property_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,price,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,price_unit,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,is_negotiable,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,address,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,province_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ref_provinces.id,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,city_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ref_cities.id,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,district_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→ref_districts.id,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,area_keyword,VARCHAR(20),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,latitude,"DECIMAL(10,7)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,longitude,"DECIMAL(10,7)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,land_area,"DECIMAL(10,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,building_area,"DECIMAL(10,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,bedrooms,SMALLINT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,bathrooms,SMALLINT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,floors,SMALLINT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,carport_capacity,SMALLINT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,electrical_power,INT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,water_source,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,furnishing,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,year_built,SMALLINT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,certificate_type,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,certificate_transferred,BOOLEAN,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,imb_status,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,dispute_free_declared,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,whatsapp_number,VARCHAR(20),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,rejection_reason,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,view_count,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,cta_click_count,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,published_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,expired_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,sold_or_rented_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTINGS,M03,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUIZ_ATTEMPTS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUIZ_ATTEMPTS,M04,enrollment_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→enrollments.id,Preserve current Core logical entity; physical table is current baseline
+QUIZ_ATTEMPTS,M04,quiz_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→quizzes.id,Preserve current Core logical entity; physical table is current baseline
+QUIZ_ATTEMPTS,M04,score,"DECIMAL(5,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUIZ_ATTEMPTS,M04,passed,BOOLEAN,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUIZ_ATTEMPTS,M04,attempted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUIZ_QUESTIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUIZ_QUESTIONS,M04,quiz_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→quizzes.id,Preserve current Core logical entity; physical table is current baseline
+QUIZ_QUESTIONS,M04,question_text,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUIZ_QUESTIONS,M04,question_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,listing_id,UUID,PHYSICAL_CORROBORATION,FK→listings.id,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,prospect_name,VARCHAR(150),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,prospect_phone,VARCHAR(20),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,net_income,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,existing_installments,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,property_price,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,down_payment,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,loan_amount,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,tenor_months,SMALLINT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,interest_rate_annual,"DECIMAL(5,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,monthly_installment,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,dbr_percent,"DECIMAL(5,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,eligibility_status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,pdf_export_url,VARCHAR(500),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+DBR_SIMULATIONS,M07,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENT_REGISTRATIONS,M05,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+EVENT_REGISTRATIONS,M05,event_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→events.id,Preserve current Core logical entity; physical table is current baseline
+EVENT_REGISTRATIONS,M05,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+EVENT_REGISTRATIONS,M05,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENT_REGISTRATIONS,M05,registered_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+EVENT_REGISTRATIONS,M05,guest_email,string,LOGICAL_AUGMENTATION,Guest notification/contact destination; not canonical user identity | M05 semantic augmentation,Preserve current Core logical entity; physical table is current baseline
+EVENT_REGISTRATIONS,M05,participant_mode,enum,LOGICAL_AUGMENTATION,REGISTERED USER / GUEST | M05 semantic augmentation; exact physical representation downstream,Preserve current Core logical entity; physical table is current baseline
+LISTING_AMENITIES,M03,listing_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→listings.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_AMENITIES,M03,amenity_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→amenities.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_LEADS,M03,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LISTING_LEADS,M03,listing_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→listings.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_LEADS,M03,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_LEADS,M03,source,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_LEADS,M03,ip_address,VARCHAR(45),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTING_LEADS,M03,user_agent,VARCHAR(255),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTING_LEADS,M03,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,listing_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→listings.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,url,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,alt_text,VARCHAR(150),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,is_cover,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,sort_order,SMALLINT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,file_hash,VARCHAR(64),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTING_PHOTOS,M03,photo_hash,VARCHAR(64),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTING_PRICE_HISTORY,M03,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LISTING_PRICE_HISTORY,M03,listing_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→listings.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_PRICE_HISTORY,M03,old_price,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTING_PRICE_HISTORY,M03,new_price,"DECIMAL(18,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LISTING_PRICE_HISTORY,M03,changed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_VIDEOS,M03,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LISTING_VIDEOS,M03,listing_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→listings.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_VIDEOS,M03,url,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_VIDEOS,M03,type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LISTING_VIEWS,M03,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LISTING_VIEWS,M03,listing_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→listings.id,Preserve current Core logical entity; physical table is current baseline
+LISTING_VIEWS,M03,viewed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUIZ_OPTIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUIZ_OPTIONS,M04,question_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→quiz_questions.id,Preserve current Core logical entity; physical table is current baseline
+QUIZ_OPTIONS,M04,option_text,VARCHAR(500),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUIZ_OPTIONS,M04,is_correct,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,owner_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,course_id,UUID,PHYSICAL_CORROBORATION,FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,event_id,UUID,PHYSICAL_CORROBORATION,FK→events.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,session_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,start_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,end_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,visibility,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSIONS,M04,deleted_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,session_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_sessions.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,actor_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,capability,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,created_by,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,revoked_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_SESSION_ASSIGNMENTS,M04,revoked_by,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,session_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_sessions.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,artifact_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,provider_key,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,source_url,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ARTIFACTS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,session_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_sessions.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,agent_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,activation_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,requested_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,activated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,completed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ENROLLMENTS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,session_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_sessions.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,provider_key,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,external_provider_session_id,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,binding_state,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,effective_from,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,effective_to,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_PROVIDER_BINDINGS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,binding_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→session_provider_bindings.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,session_enrollment_id,UUID,PHYSICAL_CORROBORATION,FK→session_enrollments.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,external_event_id,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,idempotency_key,TEXT,PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,observed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,received_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,processed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,payload_metadata,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SESSION_PARTICIPATION_EVIDENCE,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ATTENDANCE_EVALUATIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SESSION_ATTENDANCE_EVALUATIONS,M04,session_enrollment_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→session_enrollments.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_ATTENDANCE_EVALUATIONS,M04,evidence_id,UUID,PHYSICAL_CORROBORATION,FK→session_participation_evidence.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_ATTENDANCE_EVALUATIONS,M04,policy_version,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ATTENDANCE_EVALUATIONS,M04,result,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ATTENDANCE_EVALUATIONS,M04,evaluated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_ATTENDANCE_EVALUATIONS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_COMPLETION_OUTCOMES,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SESSION_COMPLETION_OUTCOMES,M04,session_enrollment_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→session_enrollments.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_COMPLETION_OUTCOMES,M04,attendance_evaluation_id,UUID,PHYSICAL_CORROBORATION,FK→session_attendance_evaluations.id,Preserve current Core logical entity; physical table is current baseline
+SESSION_COMPLETION_OUTCOMES,M04,completion_policy_version,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_COMPLETION_OUTCOMES,M04,result,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_COMPLETION_OUTCOMES,M04,completed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SESSION_COMPLETION_OUTCOMES,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,course_id,UUID,PHYSICAL_CORROBORATION,FK→courses.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,name,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,description,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATHS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,learning_path_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_paths.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,version_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,effective_from,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,effective_to,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,definition_snapshot,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_PATH_VERSIONS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,learning_path_version_id,UUID,PHYSICAL_CORROBORATION,FK→learning_path_versions.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,activity_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,title,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,description,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,sequence_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,completion_required,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,reward_lp,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITIES,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,learning_activity_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_activities.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,completion_status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,outcome,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,evidence_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,attempt_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,completed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_ACTIVITY_COMPLETIONS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_ACCOUNTS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_ACCOUNTS,M04,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; UNIQUE; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_ACCOUNTS,M04,balance_projection,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_ACCOUNTS,M04,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_ACCOUNTS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_ACCOUNTS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,account_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_point_accounts.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,transaction_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,amount,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,source_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,source_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,idempotency_key,VARCHAR(150),PHYSICAL_CORROBORATION,UNIQUE,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,occurred_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_POINT_TRANSACTIONS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,learning_path_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→learning_path_versions.id,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,state,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,source_type,VARCHAR(100),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,source_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,unlocked_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,completed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+LEARNING_UNLOCK_PROGRESSIONS,M04,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,user_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,product_code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,starts_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,ends_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,renews_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,historical_purchase_snapshot,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+SUBSCRIPTIONS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,name,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,rule_configuration,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,eligibility_configuration,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,benefit_configuration,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,valid_from,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,valid_to,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PROMOTIONS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,name,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,validity_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,validity_days,INT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,capacity_type,VARCHAR(100),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,capacity_value,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,promotion_id,UUID,PHYSICAL_CORROBORATION,FK→promotions.id,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,configuration,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+ADDONS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,order_number,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,user_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,subscription_id,UUID,PHYSICAL_CORROBORATION,FK→subscriptions.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,addon_id,UUID,PHYSICAL_CORROBORATION,FK→addons.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,promotion_id,UUID,PHYSICAL_CORROBORATION,FK→promotions.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,amount,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,currency,CHAR(3),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,commercial_snapshot,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,placed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,confirmed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ORDERS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,commercial_order_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→commercial_orders.id,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,payment_reference,VARCHAR(150),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,amount,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,currency,CHAR(3),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,payment_state,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,verification_state,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,provider_independent_reference,VARCHAR(150),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,idempotency_key,VARCHAR(150),PHYSICAL_CORROBORATION,UNIQUE,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,paid_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,verified_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_TRANSACTIONS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,payment_transaction_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→payment_transactions.id,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,provider_key,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,external_transaction_reference,VARCHAR(200),PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,provider_status,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,normalized_status,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,raw_payload,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,verification_evidence,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,received_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,processed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+PAYMENT_PROVIDER_RESULTS,M14,idempotency_key,VARCHAR(150),PHYSICAL_CORROBORATION,UNIQUE,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,payment_transaction_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→payment_transactions.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,commercial_order_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→commercial_orders.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,fulfillment_key,VARCHAR(150),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,fulfillment_status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,outcome_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,idempotency_key,VARCHAR(150),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,fulfilled_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,reversed_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_FULFILLMENTS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,user_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,entitlement_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,source_order_id,UUID,PHYSICAL_CORROBORATION,FK→commercial_orders.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,source_payment_transaction_id,UUID,PHYSICAL_CORROBORATION,FK→payment_transactions.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,source_fulfillment_id,UUID,PHYSICAL_CORROBORATION,FK→commercial_fulfillments.id,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,capacity_value,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,lifecycle_status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,starts_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,ends_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,historical_source,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+COMMERCIAL_ENTITLEMENTS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,entitlement_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→commercial_entitlements.id,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,capacity_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,granted_quantity,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,remaining_projection,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,valid_from,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,valid_to,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,configuration,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_CAPACITIES,M14,daily_refresh_allowance,integer,LOGICAL_AUGMENTATION,Configurable commercial daily Refresh allowance | M14 semantic entitlement/configuration; exact physical realization downstream,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,quota_capacity_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→quota_capacities.id,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,user_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,pool_status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,operational_quantity,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+OPERATIONAL_QUOTA_POOLS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,operational_quota_pool_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→operational_quota_pools.id,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,beneficiary_user_id,UUID,PHYSICAL_CORROBORATION,FK→users.id,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,beneficiary_organization_id,UUID,PHYSICAL_CORROBORATION,FK→organizations.id,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,allocated_quantity,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,effective_from,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,effective_to,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_ALLOCATIONS,M14,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,quota_allocation_id,UUID,PHYSICAL_CORROBORATION,FK→quota_allocations.id,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,operational_quota_pool_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→operational_quota_pools.id,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,consuming_resource_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,consuming_resource_reference,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,consumed_quantity,"NUMERIC(18,2)",PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,usage_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,idempotency_key,VARCHAR(150),PHYSICAL_CORROBORATION,UNIQUE,Preserve current Core logical entity; physical table is current baseline
+QUOTA_USAGE,M14,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,case_number,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,payment_transaction_id,UUID,PHYSICAL_CORROBORATION,FK→payment_transactions.id,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,commercial_order_id,UUID,PHYSICAL_CORROBORATION,FK→commercial_orders.id,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,fulfillment_id,UUID,PHYSICAL_CORROBORATION,FK→commercial_fulfillments.id,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,entitlement_id,UUID,PHYSICAL_CORROBORATION,FK→commercial_entitlements.id,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,mismatch_category,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,evidence,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,resolution_metadata,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,opened_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,resolved_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+RECONCILIATION_CASES,M09,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_DEFINITIONS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+TITLE_DEFINITIONS,M15,code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL; UNIQUE,Preserve current Core logical entity; physical table is current baseline
+TITLE_DEFINITIONS,M15,name,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_DEFINITIONS,M15,description,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+TITLE_DEFINITIONS,M15,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_DEFINITIONS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_DEFINITIONS,M15,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_AUTHORITY_SCOPES,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+TITLE_AUTHORITY_SCOPES,M15,title_definition_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→title_definitions.id,Preserve current Core logical entity; physical table is current baseline
+TITLE_AUTHORITY_SCOPES,M15,scope_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_AUTHORITY_SCOPES,M15,scope_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+TITLE_AUTHORITY_SCOPES,M15,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_AUTHORITY_SCOPES,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATHS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATHS,M15,title_definition_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→title_definitions.id,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATHS,M15,code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATHS,M15,name,VARCHAR(200),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATHS,M15,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATHS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATHS,M15,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,awarding_path_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_paths.id,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,version_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,effective_from,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,effective_to,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,definition_snapshot,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_VERSIONS,M15,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,rule_code,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,version_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,effective_from,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,effective_to,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,rule_definition,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_RULE_VERSIONS,M15,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_RULES,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_RULES,M15,awarding_path_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_path_versions.id,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_RULES,M15,awarding_rule_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_rule_versions.id,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PATH_RULES,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITION_GROUPS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITION_GROUPS,M15,awarding_rule_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_rule_versions.id,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITION_GROUPS,M15,group_operator,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITION_GROUPS,M15,sequence_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITION_GROUPS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITIONS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITIONS,M15,condition_group_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_condition_groups.id,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITIONS,M15,condition_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITIONS,M15,operator,VARCHAR(50),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITIONS,M15,expected_value,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITIONS,M15,sequence_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_CONDITIONS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PREREQUISITES,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PREREQUISITES,M15,awarding_path_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_path_versions.id,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PREREQUISITES,M15,prerequisite_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PREREQUISITES,M15,prerequisite_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PREREQUISITES,M15,requirement_definition,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PREREQUISITES,M15,sequence_no,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARDING_PREREQUISITES,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,qualification_evaluation_id,UUID,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,evidence_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,source_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,source_reference,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,evidence_payload,JSONB,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,captured_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVIDENCE,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,awarding_path_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_path_versions.id,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,awarding_rule_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_rule_versions.id,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,result,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,evaluation_time,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,evaluator_type,VARCHAR(100),PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,evaluator_reference,TEXT,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,provenance,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+QUALIFICATION_EVALUATIONS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,title_definition_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→title_definitions.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,awarding_path_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_path_versions.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,awarding_rule_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_rule_versions.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,qualification_evaluation_id,UUID,PHYSICAL_CORROBORATION,FK→qualification_evaluations.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,status,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,issued_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,expires_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,revoked_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,restored_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,historical_snapshot,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARD_INSTANCES,M15,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARD_QUALIFYING_PATHS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+AWARD_QUALIFYING_PATHS,M15,award_instance_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→award_instances.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_QUALIFYING_PATHS,M15,awarding_path_version_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→awarding_path_versions.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_QUALIFYING_PATHS,M15,qualification_evaluation_id,UUID,PHYSICAL_CORROBORATION,FK→qualification_evaluations.id,Preserve current Core logical entity; physical table is current baseline
+AWARD_QUALIFYING_PATHS,M15,provenance,JSONB,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+AWARD_QUALIFYING_PATHS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,id,UUID,PHYSICAL_CORROBORATION,PK,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,user_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→users.id,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,title_definition_id,UUID,PHYSICAL_CORROBORATION,NOT NULL; FK→title_definitions.id,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,presentation_type,TEXT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,active,BOOLEAN,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,display_order,INT,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,created_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+TITLE_PRESENTATIONS,M15,updated_at,TIMESTAMPTZ,PHYSICAL_CORROBORATION,NOT NULL,Preserve current Core logical entity; physical table is current baseline
+MARKETING_KIT,M06,id,uuid,LOGICAL_NEW_ENTITY,PK | logical identity,Project-scoped brochure/pricelist resource; separate from Project Media
+MARKETING_KIT,M06,project_id,uuid,LOGICAL_NEW_ENTITY,FK→DEVELOPER_PROJECTS.id | project owner,Project-scoped brochure/pricelist resource; separate from Project Media
+MARKETING_KIT,M06,file_id,identifier,LOGICAL_NEW_ENTITY,File identity | physical storage contract downstream,Project-scoped brochure/pricelist resource; separate from Project Media
+MARKETING_KIT,M06,file_type,enum,LOGICAL_NEW_ENTITY,PDF brochure / PDF pricelist,Project-scoped brochure/pricelist resource; separate from Project Media
+MARKETING_KIT,M06,file_name,string,LOGICAL_NEW_ENTITY,File name,Project-scoped brochure/pricelist resource; separate from Project Media
+MARKETING_KIT,M06,file_url,string,LOGICAL_NEW_ENTITY,Download link,Project-scoped brochure/pricelist resource; separate from Project Media
+PERMISSION_PRESET,M10,id,uuid,LOGICAL_NEW_ENTITY,PK,Optional configurable authorization preset targeted to an existing role
+PERMISSION_PRESET,M10,name,string,LOGICAL_NEW_ENTITY,Editable preset name,Optional configurable authorization preset targeted to an existing role
+PERMISSION_PRESET,M10,target_role_id,uuid,LOGICAL_NEW_ENTITY,FK→ROLES.id | exactly one target role,Optional configurable authorization preset targeted to an existing role
+PERMISSION_PRESET,M10,created_by,uuid,LOGICAL_NEW_ENTITY,Creator actor | users,Optional configurable authorization preset targeted to an existing role
+PERMISSION_PRESET,M10,updated_by,uuid,LOGICAL_NEW_ENTITY,Last editor | users,Optional configurable authorization preset targeted to an existing role
+PERMISSION_PRESET,M10,created_at,timestamp,LOGICAL_NEW_ENTITY,Creation timestamp,Optional configurable authorization preset targeted to an existing role
+PERMISSION_PRESET,M10,updated_at,timestamp,LOGICAL_NEW_ENTITY,Last update timestamp,Optional configurable authorization preset targeted to an existing role
+PERMISSION_PRESET_ITEM,M10,id,uuid,LOGICAL_NEW_ENTITY,PK,Preset-to-permission association
+PERMISSION_PRESET_ITEM,M10,preset_id,uuid,LOGICAL_NEW_ENTITY,FK→PERMISSION_PRESET.id,Preset-to-permission association
+PERMISSION_PRESET_ITEM,M10,permission_id,uuid,LOGICAL_NEW_ENTITY,FK→PERMISSIONS.id,Preset-to-permission association
+PERMISSION_PRESET_ITEM,M10,granted_scope,enum,LOGICAL_NEW_ENTITY,all / own / none,Preset-to-permission association
+PERMISSION_PRESET_ITEM,M10,created_at,timestamp,LOGICAL_NEW_ENTITY,Creation timestamp,Preset-to-permission association
+PERMISSION_PRESET_ITEM,M10,updated_at,timestamp,LOGICAL_NEW_ENTITY,Last update timestamp,Preset-to-permission association
+USER_PERMISSION_PRESET,M10,user_id,uuid,LOGICAL_NEW_ENTITY,FK→USERS.id | UNIQUE; zero or one current assignment,User assignment to a preset within the user's role baseline
+USER_PERMISSION_PRESET,M10,preset_id,uuid,LOGICAL_NEW_ENTITY,FK→PERMISSION_PRESET.id,User assignment to a preset within the user's role baseline
+USER_PERMISSION_PRESET,M10,assigned_by,uuid,LOGICAL_NEW_ENTITY,Assigning actor | users,User assignment to a preset within the user's role baseline
+USER_PERMISSION_PRESET,M10,assigned_at,timestamp,LOGICAL_NEW_ENTITY,Assignment timestamp,User assignment to a preset within the user's role baseline
+USER_PERMISSION_PRESET,M10,updated_at,timestamp,LOGICAL_NEW_ENTITY,Last update timestamp,User assignment to a preset within the user's role baseline
+STATIC_PUBLIC_CONTENT,M11,id,uuid,LOGICAL_NEW_ENTITY,Logical identity,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,title,string,LOGICAL_NEW_ENTITY,Public content title,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,slug,string,LOGICAL_NEW_ENTITY,Public URL/slug,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,content,text,LOGICAL_NEW_ENTITY,Simple public content,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,meta_title,string,LOGICAL_NEW_ENTITY,SEO metadata,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,meta_description,text,LOGICAL_NEW_ENTITY,SEO metadata,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,canonical_url,string,LOGICAL_NEW_ENTITY,Canonical public URL,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,indexability,enum,LOGICAL_NEW_ENTITY,Index / noindex policy,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,sitemap_participation,boolean,LOGICAL_NEW_ENTITY,Sitemap eligibility,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,status,enum,LOGICAL_NEW_ENTITY,Draft / Published / Unpublished / Archived,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,published_at,timestamp,LOGICAL_NEW_ENTITY,Publication timestamp where applicable,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,created_at,timestamp,LOGICAL_NEW_ENTITY,Creation timestamp,Persistent lightweight public content resource
+STATIC_PUBLIC_CONTENT,M11,updated_at,timestamp,LOGICAL_NEW_ENTITY,Last update timestamp,Persistent lightweight public content resource
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,id,uuid,LOGICAL_NEW_ENTITY,Logical identity,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,title,string,LOGICAL_NEW_ENTITY,Public communication title,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,content,text,LOGICAL_NEW_ENTITY,Public copy,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,image_reference,string,LOGICAL_NEW_ENTITY,Optional public image reference,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,cta_reference,string,LOGICAL_NEW_ENTITY,CTA configuration/reference,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,campaign_reference,string,LOGICAL_NEW_ENTITY,Optional campaign reference,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,priority,integer,LOGICAL_NEW_ENTITY,Configurable display priority,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,schedule_at,timestamp,LOGICAL_NEW_ENTITY,Configured activation schedule,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,expires_at,timestamp,LOGICAL_NEW_ENTITY,Configured expiration,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,status,enum,LOGICAL_NEW_ENTITY,Draft / Scheduled / Active / Expired / Archived,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,canonical_url,string,LOGICAL_NEW_ENTITY,Canonical public URL where applicable,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,created_at,timestamp,LOGICAL_NEW_ENTITY,Creation timestamp,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,updated_at,timestamp,LOGICAL_NEW_ENTITY,Last update timestamp,Persistent public scheduled announcement/promotion resource; distinct from M14 promotion
+ORGANIZATION_DOCUMENT,M12,id,uuid,LOGICAL_NEW_ENTITY,Logical identity,Organization-owned document resource
+ORGANIZATION_DOCUMENT,M12,organization_id,uuid,LOGICAL_NEW_ENTITY,FK→ORGANIZATIONS.id,Organization-owned document resource
+ORGANIZATION_DOCUMENT,M12,document_reference,string,LOGICAL_NEW_ENTITY,Organization-owned document/file reference,Organization-owned document resource
+ORGANIZATION_DOCUMENT,M12,document_type,string,LOGICAL_NEW_ENTITY,Document classification; exact vocabulary downstream,Organization-owned document resource
+ORGANIZATION_DOCUMENT,M12,visibility,enum,LOGICAL_NEW_ENTITY,Organization/member visibility according to M12,Organization-owned document resource
+ORGANIZATION_DOCUMENT,M12,created_at,timestamp,LOGICAL_NEW_ENTITY,Creation timestamp,Organization-owned document resource
+ORGANIZATION_DOCUMENT,M12,updated_at,timestamp,LOGICAL_NEW_ENTITY,Last update timestamp,Organization-owned document resource
+EVENT_PROVIDER_BINDING,M05,id,uuid,LOGICAL_NEW_ENTITY,Logical identity,"Event provider binding, including provider selection/fallback/history boundary"
+EVENT_PROVIDER_BINDING,M05,event_id,uuid,LOGICAL_NEW_ENTITY,FK→EVENTS.id,"Event provider binding, including provider selection/fallback/history boundary"
+EVENT_PROVIDER_BINDING,M05,provider_selection,string,LOGICAL_NEW_ENTITY,Selected provider; exact provider vocabulary downstream,"Event provider binding, including provider selection/fallback/history boundary"
+EVENT_PROVIDER_BINDING,M05,binding_state,string,LOGICAL_NEW_ENTITY,Binding/lifecycle state; exact vocabulary downstream,"Event provider binding, including provider selection/fallback/history boundary"
+EVENT_PROVIDER_BINDING,M05,fallback_position,integer,LOGICAL_NEW_ENTITY,Primary/fallback ordering where applicable,"Event provider binding, including provider selection/fallback/history boundary"
+EVENT_PROVIDER_BINDING,M05,effective_from,timestamp,LOGICAL_NEW_ENTITY,Binding effectiveness/history boundary,"Event provider binding, including provider selection/fallback/history boundary"
+EVENT_PROVIDER_BINDING,M05,effective_to,timestamp,LOGICAL_NEW_ENTITY,Binding end/history boundary,"Event provider binding, including provider selection/fallback/history boundary"
+EVENT_PROVIDER_BINDING,M05,credential_reference,string,LOGICAL_NEW_ENTITY,Provider credential/reference; exact persistence contract downstream,"Event provider binding, including provider selection/fallback/history boundary"
+DEVELOPER_PROJECTS,M06,province_id,UUID,LOGICAL_AUGMENTATION,FK wilayah province,M06 v1.5 Project field; Province; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,district_id,UUID,LOGICAL_AUGMENTATION,FK wilayah district,M06 v1.5 Project field; District; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,bedrooms,INTEGER,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Bedrooms; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,bathrooms,INTEGER,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Bathrooms; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,land_area,NUMERIC,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Land area; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,building_area,NUMERIC,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Building area; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,floors,INTEGER,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Floors; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,carport_capacity,INTEGER,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Carport capacity; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,electrical_power,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Electrical power; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,water_source,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Water source; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,furnishing,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Furnishing; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,year_built,INTEGER,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Year built; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,certificate_type,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; Certificate type; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,imb_status,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-compatible,M06 v1.5 Project field; IMB status; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,extra_commission,NUMERIC/TEXT,LOGICAL_AUGMENTATION,promo additional commission,M06 v1.5 Project field; Extra commission; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,category,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-required project/listing content,M06 v1.5 Project field; Listing category; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,transaction_type,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-required project/listing content,M06 v1.5 Project field; Transaction type; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,price_unit,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-required project/listing content,M06 v1.5 Project field; Price unit; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,is_negotiable,BOOLEAN,LOGICAL_AUGMENTATION,M03-required project/listing content,M06 v1.5 Project field; Negotiability; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,area_keyword,TEXT/VARCHAR,LOGICAL_AUGMENTATION,M03-required project/listing content,M06 v1.5 Project field; Area keyword; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,latitude,NUMERIC,LOGICAL_AUGMENTATION,Project input; RumahAgen default,M06 v1.5 Project field; Latitude; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,longitude,NUMERIC,LOGICAL_AUGMENTATION,Project input; RumahAgen default,M06 v1.5 Project field; Longitude; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,certificate_transferred,BOOLEAN,LOGICAL_AUGMENTATION,M03-required property declaration,M06 v1.5 Project field; Certificate transferred declaration; M03-compatible where specified.
+DEVELOPER_PROJECTS,M06,dispute_free_declared,BOOLEAN,LOGICAL_AUGMENTATION,M03-required property declaration,M06 v1.5 Project field; Dispute-free declaration; M03-compatible where specified.
+LISTINGS,M03,last_refreshed_at,TIMESTAMPTZ,LOGICAL_AUGMENTATION,NULLABLE; listing freshness field; updated by successful Refresh; exact physical execution remains downstream.,M03 v1.3 required Listing freshness field for Refresh semantics.

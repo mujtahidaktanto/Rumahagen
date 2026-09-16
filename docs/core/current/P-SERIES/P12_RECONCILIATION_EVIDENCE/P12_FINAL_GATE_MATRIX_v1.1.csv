@@ -1,0 +1,17 @@
+﻿step,activity,result,evidence
+P12_RECONCILIATION_EVIDENCE-00,Evidence Scope & Stage Gate,PASS,Pre-Physical/Pre-Runtime; documentary/design only; no physical/runtime/production gate.
+P12_RECONCILIATION_EVIDENCE-01,Evidence Authority Reconciliation,PASS,M01-M15 authority chain reconciled.
+P12_RECONCILIATION_EVIDENCE-02,Requirement Evidence Reconciliation,PASS,57 obligations traceable.
+P12_RECONCILIATION_EVIDENCE-03,Obligation / Work Package Evidence,PASS,62 WPs traceable.
+P12_RECONCILIATION_EVIDENCE-04,Core v1.3 Evidence Reconciliation,PASS,223/223 findings; Core immutable.
+P12_RECONCILIATION_EVIDENCE-05,Dependency Evidence Reconciliation,PASS,65/65 dependencies.
+P12_RECONCILIATION_EVIDENCE-06,API / Contract Documentary Evidence,PASS,Dedicated documentary matrix; runtime excluded.
+P12_RECONCILIATION_EVIDENCE-07,Schema / RLS / Authorization Documentary Evidence,PASS,Dedicated documentary matrix; physical execution excluded.
+P12_RECONCILIATION_EVIDENCE-08,UI / Flow / State Documentary Evidence,PASS,Dedicated documentary matrix; runtime excluded.
+P12_RECONCILIATION_EVIDENCE-09,Cross-Domain Evidence Reconciliation,PASS,9 critical invariants.
+P12_RECONCILIATION_EVIDENCE-10,Locked Decision Evidence,PASS,"M14 Q01-Q64, M10 Permission Preset, M15 boundary explicitly surfaced."
+P12_RECONCILIATION_EVIDENCE-11,Negative / Boundary Evidence,PASS,Documentary boundaries only.
+P12_RECONCILIATION_EVIDENCE-12,Claim Strength Reconciliation,PASS,E1 documentary applicable; E2/E4/E5 N/A current stage.
+P12_RECONCILIATION_EVIDENCE-13,Evidence Gap Classification,PASS,Only documentary gaps are current defects.
+P12_RECONCILIATION_EVIDENCE-14,Controlled Residual Reconciliation,PASS,47/47 carried; non-blocking.
+P12_RECONCILIATION_EVIDENCE-15,Final Evidence Sufficiency Gate,PASS,Sufficient for downstream implementation planning without physical/runtime proof.

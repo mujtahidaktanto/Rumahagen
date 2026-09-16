@@ -1,0 +1,28 @@
+module,source_impact_id,source_requirement,p2_strategy_mapping,classification
+M09,M09-CI-01,"M09 remains conditional, not a universal prerequisite",M09-P2-01/M09-P2-05,PRESERVE
+M09,M09-CI-02,System configuration resolves within applicable domain grants,M09-P2-02,AUGMENT
+M09,M09-CI-03,Static Public Content and Announcement/Promotion lifecycle/configuration remains M09/applicable domain; M11 discovers,M09-P2-03/M11-P2-02,PRESERVE
+M09,M09-CI-04,Provider Catalogue administration follows M13 Superadmin-only authority,M09-P2-04/M13-P2-01,RECONCILE
+M11,M11-CI-01,Ten public surfaces explicitly retained,M11-P2-01,PRESERVE
+M11,M11-CI-02,M11 has no business/CMS authority; analytics observational,M11-P2-04,PRESERVE
+M11,M11-CI-03,No parallel SEO/analytics API/database/RBAC authority,M11-P2-05,PRESERVE
+M11,M11-CI-04,Lifecycle-aware discovery/privacy follows canonical upstream state,M11-P2-06,AUGMENT
+M12,M12-CI-01,Organization/Membership/Context authority and action/state semantics remain M12,M12-P2-01,PRESERVE
+M12,M12-CI-02,Membership is not permission/ownership/visibility/entitlement/Host/Instructor,M12-P2-02,PRESERVE
+M12,M12-CI-03,Lead Exit → CLOSING → CLOSED; no successor/privilege inheritance,M12-P2-04,PRESERVE
+M12,M12-CI-04,Organization Public Content keeps M12/M09/M11 boundary,M12-P2-05,RECONCILE
+M12,M12-CI-05,ORG-ADMIN is not a new platform role,M12-P2-06,CONTROLLED
+M13,M13-CI-01,Provider Catalogue mutation = Superadmin-only,M13-P2-01,RECONCILE
+M13,M13-CI-02,BYOK ownership = Agent/User own,M13-P2-02,RECONCILE
+M13,M13-CI-03,Invocation requires feature permission + own VALID/ACTIVE connection,M13-P2-04,PRESERVE
+M13,M13-CI-04,Transient Chat Frame; no persistent server conversation history,M13-P2-05,PRESERVE
+M14,M14-CI-01,M14 owns commercial/payment/entitlement/quota/promotion/reconciliation,M14-P2-01,PRESERVE
+M14,M14-CI-02,Trusted payment verification and idempotent fulfillment,M14-P2-03/M14-P2-04,PRESERVE
+M14,M14-CI-03,Entitlement → Capacity → Pool → Allocation → Usage,M14-P2-05/M14-P2-06,PRESERVE
+M14,M14-CI-04,Refresh Allowance is additive M14 contract; M03 retains action/eligibility/consumption,M14-P2-07/M03-P2-06,RECONCILE
+M14,M14-CI-05,Q01–Q64 remain M14; Q40/Q54/Q61/Q62 are not M15,M14-P2-09,PRESERVE
+M15,M15-CI-01,M15 owns Title/Qualification/Award,M15-P2-01,PRESERVE
+M15,M15-CI-02,M04 produces evidence; M15 consumes/evaluates,M15-P2-02,PRESERVE
+M15,M15-CI-03,Partner Learning and Developer Learning are governed upstream evidence sources,M15-P2-03,AUGMENT
+M15,M15-CI-04,"M15 retains path/rule/version, qualification, award provenance/lifecycle, appeal/presentation",M15-P2-04,PRESERVE
+M15,M15-CI-05,M15 does not absorb M14 Q01–Q64 or redefine M04,M15-P2-05,PRESERVE

@@ -1,0 +1,8 @@
+Screen ID,Surface,Specific IA,Authority boundary,Downstream CTA
+PUB-02,Public Search / Discovery Results,Result type + title + summary + domain context,M11 discovery; source domain remains authority,Public detail / governed flow
+PUB-03,Listing Search Results,Listing media + title/location + price + property facts + public state,M11 discovery; source domain remains authority,Public detail / governed flow
+PUB-05,Agent Discovery,Agent identity + location/specialty + public reviews/outcomes + CTA,M11 discovery; source domain remains authority,Public detail / governed flow
+PUB-07,Organization Discovery,Organization identity + overview + public member/listing summary,M11 discovery; source domain remains authority,Public detail / governed flow
+PUB-09,Developer / Project Discovery,Developer identity + Project + approved media + project facts,M11 discovery; source domain remains authority,Public detail / governed flow
+PUB-11,Event Discovery,Event identity + date/time + format/location + availability + registration entry,M11 discovery; source domain remains authority,Public detail / governed flow
+PUB-13,Learning Catalog,Learning identity + path/type/level + eligibility/free-paid + session/detail entry,M11 discovery; source domain remains authority,Public detail / governed flow

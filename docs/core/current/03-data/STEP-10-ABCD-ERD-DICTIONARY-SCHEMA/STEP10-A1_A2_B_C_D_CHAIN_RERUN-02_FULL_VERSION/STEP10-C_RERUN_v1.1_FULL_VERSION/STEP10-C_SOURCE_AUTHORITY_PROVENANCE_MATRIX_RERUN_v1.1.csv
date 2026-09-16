@@ -1,0 +1,10 @@
+source_id,layer,artifact,purpose,evidence_summary,authority
+C-SRC-001,GOVERNANCE,RUMAHAGEN_M01-M15_RECON_TO_CORE_GOVERNANCE_CHECKLIST_v1.5_STEP10_RENUMBERED.docx,Current STEP10 numbering / C gate,A0/A0-R1→A1→A2→B→C→D→E; C=Dictionary reconciliation/gate,PRIMARY
+C-SRC-002,STEP10-00,STEP10-00_RERUN-01_INPUT_DEEP_SCAN_CURRENTNESS_AUTHORITY_GATE_v1.1(1).md,Entry/currentness gate,PASS; current authorities; 94 logical target; 86 physical baseline,PRIMARY
+C-SRC-003,A0-R1,STEP10-A0-R1_CONTROLLED_ENTITY_GAP_CLOSURE_v1.1(1).md,Entity baseline,94 logical entities; 8 confirmed new logical entities; 86 physical tables immutable,PRIMARY
+C-SRC-004,A0-R1 MATRIX,STEP10-A0-R1_ENTITY_MAPPING_FINAL_MATRIX_v1.1(1).csv,Entity mapping evidence,Controlled entity closure source,PRIMARY
+C-SRC-005,A1,STEP10-A1_FULL_LOGICAL_ERD_RERUN_v2.1_FULL_VERSION.zip,Accepted logical predecessor,94 entities / 862 attributes / 149 relationships,PRIMARY
+C-SRC-006,A2,STEP10-A2_RERUN_v2.1_FULL_VERSION.zip,Accepted ERD validation/gate,PASS; 94 / 862 / 149,PRIMARY
+C-SRC-007,B,STEP10-B_FULL_DATABASE_DICTIONARY_RERUN_v2.1_FULL_VERSION.zip,Direct C predecessor,PASS; 94 / 862 / 149; 764 physical corroborations; 33 augmentations; 65 new-entity attrs,PRIMARY
+C-SRC-008,CORE EVIDENCE,STEP SYNC CORE(1).zip,Physical corroboration only,Nested frozen Core payload verified at expected SHA; W4-01E 86 tables,PRIMARY_PHYSICAL_CORROBORATION
+C-SRC-009,SEMANTIC AUTHORITY,M01-M15 new recon(20260904-013253).zip,Current M01-M15 semantic authority,Latest current module package,PRIMARY

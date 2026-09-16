@@ -1,0 +1,12 @@
+screen_id,field,semantic_class,requiredness,section,ux_behavior
+ADM-LRN-006,LEARNING_ACTIVITIES.code,identifier,required,Activity identity,Governed identifier
+ADM-LRN-006,LEARNING_ACTIVITIES.title,user input,required,Activity identity,Dynamic wrap
+ADM-LRN-006,LEARNING_ACTIVITIES.activity_type,configuration,required,Activity identity,Source-defined taxonomy
+ADM-LRN-006,LEARNING_ACTIVITIES.description,user input,optional,Content,Long text
+ADM-LRN-006,LEARNING_ACTIVITIES.sequence_no,configuration,required,Sequence,Ordered
+ADM-LRN-006,LEARNING_ACTIVITIES.completion_required,configuration,required,Sequence,Explicit required marker
+ADM-LRN-006,LEARNING_ACTIVITIES.reward_lp,reward configuration,conditional,Reward,Governed reward consequence
+ADM-LRN-006,LEARNING_ACTIVITIES.status,lifecycle,authoritative,Lifecycle,Controlled state
+LRN-003,ENROLLMENTS.status,authoritative read,n/a,Enrollment,Course enrollment status
+LRN-003,LEARNING_ACTIVITY_COMPLETIONS.completion_status,authoritative read,n/a,Activity instance,Current/next activity status
+LRN-004,LEARNING_UNLOCK_PROGRESSIONS.state,authoritative read,n/a,Progression,Server-authoritative unlock state

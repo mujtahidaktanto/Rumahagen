@@ -1,0 +1,11 @@
+qa_id,finding,status,v1_1_action
+QA-001,v1.0 relationship register/report count said 43 while physical register has 46 rows,CORRECTED,v1.1 records actual physical row count.
+QA-002,v1.0 deep-scan coverage summary had empty data rows,CORRECTED,v1.1 populates the coverage summary.
+QA-003,"PRE-00 was package-level only, not 18-artifact explicit coverage",CORRECTED,18/18 artifacts registered.
+QA-004,M01-M15 source corpus was not sufficient to prove zero-loss integration coverage,CORRECTED,"2,374 recursive source files inventoried plus 54 explicit coverage controls."
+QA-005,Midtrans/payment gateway/provider adapter absent as explicit STEP07 coverage,CORRECTED,COV-007..009.
+QA-006,LiveKit/Zoom/Google Meet absent as explicit STEP07 coverage,CORRECTED,COV-023..026.
+QA-007,Developer Project/M03 parity and claim-transfer safety not explicit,CORRECTED,COV-013..014.
+QA-008,Indonesia region hierarchy and Maps optionality not explicit,CORRECTED,COV-017..020 and COV-028.
+QA-009,Commercial/DBR configuration semantics only authority-level in v1.0,CORRECTED,"COV-003..006, COV-027, COV-031."
+QA-010,Google ownership configurable and entitlement-vs-RBAC not explicit,CORRECTED,COV-029..030.

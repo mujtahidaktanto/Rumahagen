@@ -1,0 +1,10 @@
+﻿invariant_id,boundary,documentary_rule,status,stage_note
+X01,M03 ↔ M14,M03 owns Listing/Refresh action; M14 owns commercial allowance/entitlement.,DOCUMENTARY SUPPORTED,No physical/runtime proof required at P12_RECONCILIATION_EVIDENCE.
+X02,M04 ↔ M15,M04 produces Learning/Session evidence; M15 owns qualification/Award interpretation.,DOCUMENTARY SUPPORTED,No Award runtime claim.
+X03,M06 ↔ M03,Approved Developer Project may seed/create Listing; M03 owns Listing lifecycle.,DOCUMENTARY SUPPORTED,No implementation proof required at P12_RECONCILIATION_EVIDENCE.
+X04,M09 ↔ M11,M09/applicable authoritative domain owns lifecycle/configuration; M11 discovers/measures public surfaces.,DOCUMENTARY SUPPORTED,No public runtime proof required at P12_RECONCILIATION_EVIDENCE.
+X05,M10 ↔ M01-M15,M10 is authorization/RBAC/scope/RLS authority; module domains retain business authority.,DOCUMENTARY SUPPORTED,No physical RLS execution required at P12_RECONCILIATION_EVIDENCE.
+X06,M12 ↔ Authorization,"Membership/context is distinct from permission, ownership, visibility and entitlement.",DOCUMENTARY SUPPORTED,Documentary boundary only.
+X07,M13 ↔ Provider/BYOK,Provider Catalogue is Superadmin-only; BYOK is own scope; secrets remain server-side.,DOCUMENTARY SUPPORTED,No provider runtime proof required.
+X08,M08 ↔ Source,Dashboard/Notification is projection-only and does not become business mutation authority.,DOCUMENTARY SUPPORTED,No runtime projection proof required.
+X09,M11 ↔ Discovery,SEO/discovery/analytics measures public surfaces and does not become business mutation authority.,DOCUMENTARY SUPPORTED,No analytics runtime proof required.

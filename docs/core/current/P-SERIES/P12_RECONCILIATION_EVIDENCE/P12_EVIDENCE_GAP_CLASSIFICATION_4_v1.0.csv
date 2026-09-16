@@ -1,0 +1,5 @@
+﻿gap_id,classification,definition,scope,disposition
+EG-01,DOCUMENTARY GAP,Missing/contradictory/unsupported documentary authority or traceability.,CURRENT P12_RECONCILIATION_EVIDENCE DEFECT CLASS,Can require correction/rebuild.
+EG-02,PHYSICAL FUTURE GAP,Physical DB/schema/RLS implementation not yet present.,EXPECTED FUTURE STATE,NOT A P12_RECONCILIATION_EVIDENCE HOLD.
+EG-03,RUNTIME FUTURE GAP,Runtime execution/verification not yet performed.,EXPECTED FUTURE STATE,NOT A P12_RECONCILIATION_EVIDENCE HOLD.
+EG-04,PRODUCTION FUTURE GAP,Production deployment/authorization not yet applicable.,EXPECTED FUTURE STATE,NOT A P12_RECONCILIATION_EVIDENCE HOLD.

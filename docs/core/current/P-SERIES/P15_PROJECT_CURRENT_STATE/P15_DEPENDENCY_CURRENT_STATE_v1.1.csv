@@ -1,0 +1,5 @@
+﻿Area,CurrentState,RuleOrEvidence
+P1–P14_PROJECT_MANIFEST,PASS / COMPLETED WITH CONTROLLED RESIDUALS,No material upstream failure identified
+Upstream reopening,NOT REQUIRED,P15_PROJECT_CURRENT_STATE defects are local representation/corpus-scope defects
+Recovery rule,ACTIVE,STOP → reopen earliest affected P-step → rerun downstream if upstream material defect found
+P16_README_CURRENT_BASELINE gate,READY AFTER P15_PROJECT_CURRENT_STATE FINAL PASS,P16_README_CURRENT_BASELINE depends on P14_PROJECT_MANIFEST–P15_PROJECT_CURRENT_STATE PASS

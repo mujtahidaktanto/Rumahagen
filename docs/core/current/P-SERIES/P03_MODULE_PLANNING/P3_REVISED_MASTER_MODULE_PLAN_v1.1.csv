@@ -1,0 +1,16 @@
+module,domain,planning_group,core_package,authority,dependencies,status
+M01,Identity/Auth,FOUNDATION,IP-01,M01,M10,PLANNED
+M10,Authorization/RBAC/Scope/RLS,FOUNDATION,IP-01,M10,M01,PLANNED
+M02,Profile/Review,CONTEXT,IP-02,M02,M01/M10,PLANNED
+M12,Organization/Membership/Context,CONTEXT,IP-02,M12,M01/M10,PLANNED
+M06,Developer/Project/Marketing Kit/Claim,DOMAIN,IP-03,M06,M01/M10; conditional M09,PLANNED
+M03,Listing/Lifecycle/Refresh,DOMAIN,IP-04,M03,M01/M10/M12; M14 allowance,PLANNED
+M05,Event/Registration,DOMAIN,IP-05,M05,M01/M10; conditional M04/M06,PLANNED
+M04,Learning/Learning Economy/Session,DOMAIN,IP-06/IP-08,M04,M01/M10; conditional M12/M14/M05/M09,PLANNED
+M14,Commercial/Payment/Entitlement/Quota/Promotion,DOMAIN,IP-07,M14,M01/M10,PLANNED
+M15,Qualification/Evidence/Award,DOMAIN,IP-09,M15,M01/M10/M04 evidence; conditional M12/M14/M09,PLANNED
+M07,DBR,SERVICE,IP-10,M07,M01/M10/M09 config,PLANNED
+M08,Dashboard/Notification Projection,PROJECTION,IP-11,M08,source domains,PLANNED
+M09,Administration/Configuration/Audit,ADMIN,IP-12,M09,IP-01 + applicable domain grant,PLANNED
+M11,SEO/Discovery/Analytics,DISCOVERY,IP-13,M11,public-domain contracts,PLANNED
+M13,AI/BYOK/Provider Catalogue,SERVICE,IP-14,M13,M01/M10; conditional M09,PLANNED

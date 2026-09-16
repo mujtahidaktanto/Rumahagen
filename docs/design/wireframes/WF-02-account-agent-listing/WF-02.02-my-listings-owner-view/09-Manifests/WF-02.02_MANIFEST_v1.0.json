@@ -1,0 +1,112 @@
+{
+  "package": "RumahAgen_WF-02.02_My-Listings_Owner-View_v1.0",
+  "source_boundary": "uploaded conversation files only",
+  "logical_screens": [
+    "AGT-003",
+    "AGT-004"
+  ],
+  "render_count": 16,
+  "render_manifest": [
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-003_My-Listings__EMPTY__desktop.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "EMPTY",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-003_My-Listings__ERROR-DENIED__desktop.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "ERROR-DENIED",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-003_My-Listings__LOADING__desktop.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "LOADING",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-003_My-Listings__POPULATED__desktop.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "POPULATED",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-004_Listing-Detail-Owner__ERROR__desktop.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "ERROR",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-004_Listing-Detail-Owner__LOADING__desktop.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "LOADING",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-004_Listing-Detail-Owner__POPULATED__desktop.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "POPULATED",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Desktop/AGT-004_Listing-Detail-Owner__RESTRICTED__desktop.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "RESTRICTED",
+      "viewport": "Desktop"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-003_My-Listings__EMPTY__mobile.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "EMPTY",
+      "viewport": "Mobile"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-003_My-Listings__ERROR-DENIED__mobile.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "ERROR-DENIED",
+      "viewport": "Mobile"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-003_My-Listings__LOADING__mobile.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "LOADING",
+      "viewport": "Mobile"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-003_My-Listings__POPULATED__mobile.png",
+      "screen": "AGT-003_My-Listings",
+      "state": "POPULATED",
+      "viewport": "Mobile"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-004_Listing-Detail-Owner__ERROR__mobile.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "ERROR",
+      "viewport": "Mobile"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-004_Listing-Detail-Owner__LOADING__mobile.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "LOADING",
+      "viewport": "Mobile"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-004_Listing-Detail-Owner__POPULATED__mobile.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "POPULATED",
+      "viewport": "Mobile"
+    },
+    {
+      "file": "08-Visual-Wireframe/Mobile/AGT-004_Listing-Detail-Owner__RESTRICTED__mobile.png",
+      "screen": "AGT-004_Listing-Detail-Owner",
+      "state": "RESTRICTED",
+      "viewport": "Mobile"
+    }
+  ],
+  "canonical_logo_sha256": "32407de29c3c274b0f2bd2196ee3de47bd127eba426a6e5334eccdef798ab474",
+  "canonical_logo_dimensions": [
+    1156,
+    381
+  ]
+}

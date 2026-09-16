@@ -1,0 +1,18 @@
+package_id,package_name,scope,dependency_gate,status
+IP-00,Foundation / Execution Readiness,No semantic module; documentation/environment readiness,Independent documentation-level work,COVERED IN P2 v1.2
+IP-01,Identity + Authorization Foundation,M01 + M10,IP-00,COVERED IN P2 v1.2
+IP-02,Profile + Organization Context,M02 + M12,IP-01,COVERED IN P2 v1.2
+IP-03,Developer / Project,M06,IP-01; conditional M09,COVERED IN P2 v1.2
+IP-04,Listing,M03,M01/M10/M12; conditional M02/M06/M09/M14,COVERED IN P2 v1.2
+IP-05,Event / Calendar,M05,M01/M10; conditional M06/M04,COVERED IN P2 v1.2
+IP-06,Learning Core,M04 Learning Core + Economy,M01/M10; conditional M12/M14/M05/M09,COVERED IN P2 v1.2
+IP-07,Commercial / Payment,M14,M01/M10,COVERED IN P2 v1.2
+IP-08,Learning Session Extension,M04 Session,M01/M10/M04; conditional M12/M05/M09,COVERED IN P2 v1.2
+IP-09,Awarding,M15,M01/M10/M04 evidence; conditional M12/M14/M09,COVERED IN P2 v1.2
+IP-10,DBR,M07,M01/M10/M09 configuration,COVERED IN P2 v1.2
+IP-11,Dashboard / Notification,M08,Producing domain contracts; non-blocking,COVERED IN P2 v1.2
+IP-12,Admin / Configuration / Audit,M09,IP-01; domain-specific administration,COVERED IN P2 v1.2
+IP-13,SEO / Analytics,M11,Public-domain contracts,COVERED IN P2 v1.2
+IP-14,AI BYOK,M13,M01/M10; conditional M09,COVERED IN P2 v1.2
+IP-15,Cross-Domain Hardening,All canonical domains; not a new module,Critical cross-domain contracts stabilized,COVERED IN P2 v1.2
+IP-16,Physical / Verification Handoff,Downstream physical/runtime handoff,IP-15 + downstream execution gates,COVERED IN P2 v1.2

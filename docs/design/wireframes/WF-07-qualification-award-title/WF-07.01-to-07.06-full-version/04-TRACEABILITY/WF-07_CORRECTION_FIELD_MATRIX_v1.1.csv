@@ -1,0 +1,8 @@
+Finding,Core field/semantic,Corrected screen,UX representation,Requiredness/conditionality,Status
+WF07-F01,scope_type; scope_reference; status,ADM-M15-001,Authority Scope card,scope_type + status required by source; reference source-defined/nullable,CLOSED
+WF07-F02,awarding_path_version_id; awarding_rule_version_id,ADM-M15-005,Rule composition context,both required association context,CLOSED
+WF07-F03,condition_type,ADM-M15-005,Condition Type field,required; distinct from operator,CLOSED
+WF07-F04,evidence_payload,QAL-002;ADM-M15-006,Evidence Details expandable panel,optional payload; progressive disclosure,CLOSED
+WF07-F05,qualification_evaluations.provenance,QAL-003;ADM-M15-006;ADM-M15-009,Evaluation Provenance,required provenance representation,CLOSED
+WF07-F06,issued_at; expires_at; revoked_at; restored_at,ADM-M15-007;ADM-M15-009,Lifecycle timestamps/timeline,state-relevant conditional display,CLOSED
+WF07-F07,Developer Learning; Partner Learning evidence context,QAL-002;ADM-M15-006,Source context,context shown when source applies; no new authority,CLOSED

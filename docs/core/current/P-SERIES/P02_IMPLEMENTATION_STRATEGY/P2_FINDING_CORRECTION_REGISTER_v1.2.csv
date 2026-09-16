@@ -1,0 +1,5 @@
+finding_id,severity,finding,status
+P2-REV-11,MAJOR,P2 v1.1 did not explicitly one-to-one cover Core W4-02A.6.23 IP-00…IP-16 packages.,CORRECTED
+P2-REV-12,MAJOR,Core sequencing/parallelism/hardening/physical-handoff obligations were under-explicit in P2 v1.1.,CORRECTED
+P2-REV-13,MEDIUM,P2 v1.1 recursive inventory represented nesting depth incorrectly.,CORRECTED
+P2-REV-14,MEDIUM,High-value M09/M11/M12/M13/M14/M15 impact controls were only grouped at module level.,CORRECTED

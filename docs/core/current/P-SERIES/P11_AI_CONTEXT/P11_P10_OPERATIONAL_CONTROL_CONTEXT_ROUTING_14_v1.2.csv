@@ -1,0 +1,15 @@
+control_id,control,p10_status,p11_route
+CTX-01,Minimum viable context,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+CTX-02,Context exclusion,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+CTX-03,Context priority,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+EXE-01,AI execution loop,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+PRE-01,Required AI pre-flight,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+OUT-01,Required pre-implementation output,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+REP-01,Repository inspection,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+CHK-01,AI checkpoint format,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+CHG-01,AI change-control protocol,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+HIS-01,Historical blueprint rebase,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+CF-01,Carry-forward audit,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+DOD-01,Definition of Done,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+EV-01,Evidence blueprint,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.
+TEST-01,Static/unit/integration/negative/runtime test layers,EXPLICIT,Carry this operational control into context when applicable; do not drop safety/evidence semantics for compression.

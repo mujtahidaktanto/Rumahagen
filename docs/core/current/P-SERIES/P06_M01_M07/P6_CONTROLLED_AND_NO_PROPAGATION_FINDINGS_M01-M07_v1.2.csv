@@ -1,0 +1,20 @@
+finding_id,module,classification,p6_execution_wp,treatment
+M01-CI-013,M01,CONTROLLED,M01-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M01-CI-014,M01,NO-PROPAGATION,M01-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M02-CI-016,M02,CONTROLLED,M02-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M02-CI-017,M02,NO-PROPAGATION,M02-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M03-CI-020,M03,NO-PROPAGATION,M03-P4-WP03,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M03-CI-021,M03,CONTROLLED,M03-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M04-CI-013,M04,CONTROLLED,M04-P4-WP06,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M04-CI-014,M04,CONTROLLED,M04-P4-WP06,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M04-CI-015,M04,CONTROLLED,M04-P4-WP06,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M04-CI-016,M04,CONTROLLED,M04-P4-WP06,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M04-CI-017,M04,CONTROLLED,M04-P4-WP06,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M06-CI-013,M06,CONTROLLED,M06-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M06-CI-015,M06,CONTROLLED,M06-P4-WP02,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M06-CI-016,M06,CONTROLLED,M06-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M06-CI-017,M06,CONTROLLED,M06-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M07-IA-003,M07,CONTROLLED,M07-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M07-IA-004,M07,CONTROLLED,M07-P4-WP02,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M07-IA-005,M07,CONTROLLED,M07-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M07-IA-019,M07,CONTROLLED,M07-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.

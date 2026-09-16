@@ -1,0 +1,535 @@
+constraint_id,scope,module,entity_or_table,attribute_or_columns,constraint_type,constraint_definition,status,authority,downstream_action
+PHY-0001,PHYSICAL,CORE,ai_providers,id,PK+DEFAULT,id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0002,PHYSICAL,CORE,ai_providers,code,UNIQUE,code                      VARCHAR(50) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0003,PHYSICAL,CORE,ai_providers,billing_type,DEFAULT,billing_type              TEXT NOT NULL DEFAULT 'free_tier_ongoing',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0004,PHYSICAL,CORE,ai_providers,requires_expiry_warning,DEFAULT,requires_expiry_warning   BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0005,PHYSICAL,CORE,ai_providers,status,CHECK+DEFAULT,"status                    TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','inactive'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0006,PHYSICAL,CORE,amenities,id,PK+DEFAULT,id    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0007,PHYSICAL,CORE,amenities,name,UNIQUE,name  VARCHAR(100) NOT NULL UNIQUE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0008,PHYSICAL,CORE,permissions,id,PK+DEFAULT,id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0009,PHYSICAL,CORE,permissions,scope_type,CHECK+DEFAULT,"scope_type    TEXT NOT NULL DEFAULT 'own' CHECK (scope_type IN ('all','own','none'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0010,PHYSICAL,CORE,ref_provinces,id,PK+DEFAULT,id    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0011,PHYSICAL,CORE,ref_provinces,code,UNIQUE,code  VARCHAR(10) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0012,PHYSICAL,CORE,roles,id,PK+DEFAULT,id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0013,PHYSICAL,CORE,roles,code,UNIQUE,code              VARCHAR(50) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0014,PHYSICAL,CORE,roles,is_system_role,DEFAULT,is_system_role    BOOLEAN NOT NULL DEFAULT true,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0015,PHYSICAL,CORE,roles,is_protected,DEFAULT,is_protected      BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0016,PHYSICAL,CORE,roles,created_at,DEFAULT,created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0017,PHYSICAL,CORE,roles,updated_at,DEFAULT,updated_at        TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0018,PHYSICAL,CORE,url_redirects,id,PK+DEFAULT,id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0019,PHYSICAL,CORE,url_redirects,old_path,UNIQUE,old_path        VARCHAR(300) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0020,PHYSICAL,CORE,url_redirects,redirect_type,CHECK+DEFAULT,"redirect_type   SMALLINT NOT NULL DEFAULT 301 CHECK (redirect_type IN (301, 302))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0021,PHYSICAL,CORE,url_redirects,reason,CHECK,"reason          TEXT CHECK (reason IN ('slug_changed','listing_deleted','listing_merged','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0022,PHYSICAL,CORE,url_redirects,created_at,DEFAULT,created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0023,PHYSICAL,CORE,ref_cities,id,PK+DEFAULT,id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0024,PHYSICAL,CORE,ref_cities,province_id,FK,province_id  UUID NOT NULL REFERENCES ref_provinces(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0025,PHYSICAL,CORE,ref_cities,code,UNIQUE,code         VARCHAR(10) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0026,PHYSICAL,CORE,ref_cities,type,CHECK,"type         TEXT NOT NULL CHECK (type IN ('kota','kabupaten'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0027,PHYSICAL,CORE,role_permissions,id,PK+DEFAULT,id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0028,PHYSICAL,CORE,role_permissions,role_id,FK,role_id               UUID NOT NULL REFERENCES roles(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0029,PHYSICAL,CORE,role_permissions,permission_id,FK,permission_id         UUID NOT NULL REFERENCES permissions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0030,PHYSICAL,CORE,role_permissions,granted_scope,CHECK,"granted_scope         TEXT NOT NULL CHECK (granted_scope IN ('all','own','none'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0031,PHYSICAL,CORE,role_permissions,editable_by_role_code,DEFAULT,editable_by_role_code VARCHAR(100) NOT NULL DEFAULT 'superadmin',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0032,PHYSICAL,CORE,role_permissions,updated_at,DEFAULT,updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0033,PHYSICAL,CORE,users,id,PK+DEFAULT,"id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),  -- = auth.uid() (Supabase Auth)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0034,PHYSICAL,CORE,users,email,UNIQUE,email               VARCHAR(255) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0035,PHYSICAL,CORE,users,phone,UNIQUE,phone               VARCHAR(20) UNIQUE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0036,PHYSICAL,CORE,users,role_id,FK,role_id             UUID NOT NULL REFERENCES roles(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0037,PHYSICAL,CORE,users,status,DEFAULT,status              TEXT NOT NULL DEFAULT 'pending_review',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0038,PHYSICAL,CORE,users,created_at,DEFAULT,created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0039,PHYSICAL,CORE,users,updated_at,DEFAULT,updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0040,PHYSICAL,CORE,agent_ai_connections,id,PK+DEFAULT,id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0041,PHYSICAL,CORE,agent_ai_connections,user_id,FK,user_id               UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0042,PHYSICAL,CORE,agent_ai_connections,provider_id,FK,provider_id           UUID NOT NULL REFERENCES ai_providers(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0043,PHYSICAL,CORE,agent_ai_connections,status,CHECK+DEFAULT,"status                TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','disconnected','invalid'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0044,PHYSICAL,CORE,agent_ai_connections,connected_at,DEFAULT,connected_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0045,PHYSICAL,CORE,agent_ai_connections,created_at,DEFAULT,created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0046,PHYSICAL,CORE,agent_ai_connections,updated_at,DEFAULT,updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0047,PHYSICAL,CORE,agent_profiles,id,PK+DEFAULT,id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0048,PHYSICAL,CORE,agent_profiles,user_id,FK+UNIQUE,user_id                UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0049,PHYSICAL,CORE,agent_profiles,contact_visibility,CHECK+DEFAULT,"contact_visibility     TEXT NOT NULL DEFAULT 'public' CHECK (contact_visibility IN ('public','hidden'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0050,PHYSICAL,CORE,agent_profiles,public_slug,UNIQUE,public_slug            VARCHAR(150) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0051,PHYSICAL,CORE,agent_profiles,total_listings_sold,DEFAULT,"total_listings_sold    INT NOT NULL DEFAULT 0,   -- denormalized counter, ERD v1.3 Bagian 4 poin 2",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0052,PHYSICAL,CORE,agent_profiles,total_listings_rented,DEFAULT,total_listings_rented  INT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0053,PHYSICAL,CORE,agent_profiles,created_at,DEFAULT,created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0054,PHYSICAL,CORE,agent_profiles,updated_at,DEFAULT,updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0055,PHYSICAL,CORE,agent_reviews,id,PK+DEFAULT,id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0056,PHYSICAL,CORE,agent_reviews,agent_id,FK,agent_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0057,PHYSICAL,CORE,agent_reviews,buyer_id,FK,buyer_id         UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0058,PHYSICAL,CORE,agent_reviews,rating,CHECK,rating           SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0059,PHYSICAL,CORE,agent_reviews,status,CHECK+DEFAULT,"status           TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0060,PHYSICAL,CORE,agent_reviews,moderated_by,FK,moderated_by     UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0061,PHYSICAL,CORE,agent_reviews,created_at,DEFAULT,created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0062,PHYSICAL,CORE,agent_verification_documents,id,PK+DEFAULT,id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0063,PHYSICAL,CORE,agent_verification_documents,user_id,FK,user_id           UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0064,PHYSICAL,CORE,agent_verification_documents,doc_type,CHECK,"doc_type          TEXT NOT NULL CHECK (doc_type IN ('ktp','npwp','sertifikasi_rei','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0065,PHYSICAL,CORE,agent_verification_documents,encrypted,DEFAULT,encrypted         BOOLEAN NOT NULL DEFAULT true,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0066,PHYSICAL,CORE,agent_verification_documents,review_status,CHECK+DEFAULT,"review_status     TEXT NOT NULL DEFAULT 'pending' CHECK (review_status IN ('pending','approved','rejected'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0067,PHYSICAL,CORE,agent_verification_documents,reviewed_by,FK,reviewed_by       UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0068,PHYSICAL,CORE,agent_verification_documents,created_at,DEFAULT,created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0069,PHYSICAL,CORE,courses,id,PK+DEFAULT,id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0070,PHYSICAL,CORE,courses,category,CHECK,"category                TEXT CHECK (category IN ('sales_skill','legal_regulasi','produk_developer','financial_kpr','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0071,PHYSICAL,CORE,courses,prerequisite_course_id,FK,prerequisite_course_id  UUID REFERENCES courses(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0072,PHYSICAL,CORE,courses,passing_grade,DEFAULT,passing_grade           SMALLINT NOT NULL DEFAULT 70,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0073,PHYSICAL,CORE,courses,status,CHECK+DEFAULT,"status                  TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','published','archived'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0074,PHYSICAL,CORE,courses,created_by,FK,created_by              UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0075,PHYSICAL,CORE,courses,created_at,DEFAULT,created_at              TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0076,PHYSICAL,CORE,courses,updated_at,DEFAULT,updated_at              TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0077,PHYSICAL,CORE,dbr_config,id,PK+DEFAULT,id                       UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0078,PHYSICAL,CORE,dbr_config,dbr_threshold_percent,DEFAULT,"dbr_threshold_percent    DECIMAL(5,2) NOT NULL DEFAULT 35.00",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0079,PHYSICAL,CORE,dbr_config,default_interest_rate,DEFAULT,"default_interest_rate    DECIMAL(5,2) NOT NULL DEFAULT 8.50",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0080,PHYSICAL,CORE,dbr_config,updated_by,FK,updated_by               UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0081,PHYSICAL,CORE,dbr_config,updated_at,DEFAULT,updated_at               TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0082,PHYSICAL,CORE,developer_partners,id,PK+DEFAULT,id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0083,PHYSICAL,CORE,developer_partners,user_id,FK,user_id       UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0084,PHYSICAL,CORE,developer_partners,status,CHECK+DEFAULT,"status        TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','inactive'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0085,PHYSICAL,CORE,developer_partners,created_at,DEFAULT,created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0086,PHYSICAL,CORE,notifications,id,PK+DEFAULT,id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0087,PHYSICAL,CORE,notifications,user_id,FK,user_id              UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0088,PHYSICAL,CORE,notifications,type,CHECK,"type                 TEXT NOT NULL CHECK (type IN ('approval_status','event_reminder','listing_expiring','certificate_issued','lead_new','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0089,PHYSICAL,CORE,notifications,is_read,DEFAULT,is_read              BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0090,PHYSICAL,CORE,notifications,created_at,DEFAULT,created_at           TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0091,PHYSICAL,CORE,organizations,id,PK+DEFAULT,id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0092,PHYSICAL,CORE,organizations,slug,UNIQUE,slug               VARCHAR(170) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0093,PHYSICAL,CORE,organizations,organization_type,CHECK,"organization_type  TEXT NOT NULL CHECK (organization_type IN ('agency','kantor','tim','komunitas'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0094,PHYSICAL,CORE,organizations,created_by,FK,created_by         UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0095,PHYSICAL,CORE,organizations,status,CHECK+DEFAULT,"status             TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','closed'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0096,PHYSICAL,CORE,organizations,created_at,DEFAULT,created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0097,PHYSICAL,CORE,organizations,updated_at,DEFAULT,updated_at         TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0098,PHYSICAL,CORE,ref_districts,id,PK+DEFAULT,id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0099,PHYSICAL,CORE,ref_districts,city_id,FK,city_id  UUID NOT NULL REFERENCES ref_cities(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0100,PHYSICAL,CORE,ref_districts,code,UNIQUE,code     VARCHAR(10) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0101,PHYSICAL,CORE,system_configs,id,PK+DEFAULT,id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0102,PHYSICAL,CORE,system_configs,config_key,UNIQUE,config_key    VARCHAR(100) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0103,PHYSICAL,CORE,system_configs,updated_by,FK,updated_by    UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0104,PHYSICAL,CORE,system_configs,updated_at,DEFAULT,updated_at    TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0105,PHYSICAL,CORE,audit_logs,id,PK+DEFAULT,id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0106,PHYSICAL,CORE,audit_logs,user_id,FK,user_id           UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0107,PHYSICAL,CORE,audit_logs,organization_id,FK,"organization_id   UUID REFERENCES organizations(id) ON DELETE SET NULL,  -- v1.3",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0108,PHYSICAL,CORE,audit_logs,created_at,DEFAULT,created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0109,PHYSICAL,CORE,certificates,id,PK+DEFAULT,id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0110,PHYSICAL,CORE,certificates,agent_id,FK,agent_id          UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0111,PHYSICAL,CORE,certificates,course_id,FK,course_id         UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0112,PHYSICAL,CORE,certificates,issued_at,DEFAULT,issued_at         TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0113,PHYSICAL,CORE,course_lessons,id,PK+DEFAULT,id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0114,PHYSICAL,CORE,course_lessons,course_id,FK,course_id     UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0115,PHYSICAL,CORE,course_lessons,content_type,CHECK,"content_type  TEXT CHECK (content_type IN ('video','pdf','slide'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0116,PHYSICAL,CORE,course_lessons,sort_order,DEFAULT,sort_order    SMALLINT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0117,PHYSICAL,CORE,developer_projects,id,PK+DEFAULT,id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0118,PHYSICAL,CORE,developer_projects,developer_id,FK,developer_id          UUID NOT NULL REFERENCES developer_partners(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0119,PHYSICAL,CORE,developer_projects,slug,UNIQUE,slug                  VARCHAR(220) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0120,PHYSICAL,CORE,developer_projects,city_id,FK,city_id               UUID NOT NULL REFERENCES ref_cities(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0121,PHYSICAL,CORE,developer_projects,property_type,CHECK,"property_type         TEXT CHECK (property_type IN ('rumah','apartemen','ruko','tanah','gudang','kavling','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0122,PHYSICAL,CORE,developer_projects,is_exclusive_by_region,DEFAULT,is_exclusive_by_region BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0123,PHYSICAL,CORE,developer_projects,status,DEFAULT,status                TEXT NOT NULL DEFAULT 'coming_soon',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0124,PHYSICAL,CORE,developer_projects,created_at,DEFAULT,created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0125,PHYSICAL,CORE,developer_projects,updated_at,DEFAULT,updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0126,PHYSICAL,CORE,enrollments,id,PK+DEFAULT,id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0127,PHYSICAL,CORE,enrollments,agent_id,FK,agent_id          UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0128,PHYSICAL,CORE,enrollments,course_id,FK,course_id         UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0129,PHYSICAL,CORE,enrollments,status,CHECK+DEFAULT,"status            TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('in_progress','completed'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0130,PHYSICAL,CORE,enrollments,progress_percent,DEFAULT,progress_percent  SMALLINT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0131,PHYSICAL,CORE,enrollments,enrolled_at,DEFAULT,enrolled_at       TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0132,PHYSICAL,CORE,organization_invitations,id,PK+DEFAULT,id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0133,PHYSICAL,CORE,organization_invitations,organization_id,FK,organization_id     UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0134,PHYSICAL,CORE,organization_invitations,agent_id,FK,agent_id            UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0135,PHYSICAL,CORE,organization_invitations,leader_id,FK,leader_id           UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0136,PHYSICAL,CORE,organization_invitations,initiated_by_type,CHECK,"initiated_by_type   TEXT NOT NULL CHECK (initiated_by_type IN ('leader_invite','agent_request'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0137,PHYSICAL,CORE,organization_invitations,status,DEFAULT,status              TEXT NOT NULL DEFAULT 'pending',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0138,PHYSICAL,CORE,organization_invitations,created_at,DEFAULT,created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0139,PHYSICAL,CORE,organization_members,id,PK+DEFAULT,id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0140,PHYSICAL,CORE,organization_members,organization_id,FK,organization_id  UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0141,PHYSICAL,CORE,organization_members,agent_id,FK,agent_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0142,PHYSICAL,CORE,organization_members,role,CHECK,"role             TEXT NOT NULL CHECK (role IN ('leader','member'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0143,PHYSICAL,CORE,organization_members,status,CHECK+DEFAULT,"status           TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','left','removed'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0144,PHYSICAL,CORE,organization_members,joined_at,DEFAULT,joined_at        TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0145,PHYSICAL,CORE,quizzes,id,PK+DEFAULT,id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0146,PHYSICAL,CORE,quizzes,course_id,FK,course_id  UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0147,PHYSICAL,CORE,ref_villages,id,PK+DEFAULT,id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0148,PHYSICAL,CORE,ref_villages,district_id,FK,district_id  UUID NOT NULL REFERENCES ref_districts(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0149,PHYSICAL,CORE,ref_villages,code,UNIQUE,code         VARCHAR(10) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0150,PHYSICAL,CORE,agent_project_claims,id,PK+DEFAULT,id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0151,PHYSICAL,CORE,agent_project_claims,agent_id,FK,agent_id     UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0152,PHYSICAL,CORE,agent_project_claims,project_id,FK,project_id   UUID NOT NULL REFERENCES developer_projects(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0153,PHYSICAL,CORE,agent_project_claims,claimed_at,DEFAULT,claimed_at   TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0154,PHYSICAL,CORE,developer_project_media,id,PK+DEFAULT,id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0155,PHYSICAL,CORE,developer_project_media,project_id,FK,project_id  UUID NOT NULL REFERENCES developer_projects(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0156,PHYSICAL,CORE,developer_project_media,type,CHECK,"type        TEXT NOT NULL CHECK (type IN ('photo','video','brochure','price_list'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0157,PHYSICAL,CORE,events,id,PK+DEFAULT,id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0158,PHYSICAL,CORE,events,category,CHECK,"category            TEXT NOT NULL CHECK (category IN ('training','launching_proyek','open_house','gathering'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0159,PHYSICAL,CORE,events,is_online,DEFAULT,is_online           BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0160,PHYSICAL,CORE,events,related_course_id,FK,related_course_id   UUID REFERENCES courses(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0161,PHYSICAL,CORE,events,related_project_id,FK,related_project_id  UUID REFERENCES developer_projects(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0162,PHYSICAL,CORE,events,submitted_by,FK,submitted_by        UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0163,PHYSICAL,CORE,events,status,DEFAULT,status              TEXT NOT NULL DEFAULT 'pending_approval',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0164,PHYSICAL,CORE,events,created_at,DEFAULT,created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0165,PHYSICAL,CORE,events,updated_at,DEFAULT,updated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0166,PHYSICAL,CORE,listings,id,PK+DEFAULT,id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0167,PHYSICAL,CORE,listings,agent_id,FK,agent_id                  UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0168,PHYSICAL,CORE,listings,developer_project_id,FK,developer_project_id      UUID REFERENCES developer_projects(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0169,PHYSICAL,CORE,listings,organization_id,FK,"organization_id           UUID REFERENCES organizations(id) ON DELETE SET NULL,  -- v1.3",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0170,PHYSICAL,CORE,listings,listing_context,CHECK+DEFAULT,"listing_context           TEXT NOT NULL DEFAULT 'personal' CHECK (listing_context IN ('personal','organization'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0171,PHYSICAL,CORE,listings,category,CHECK,"category                  TEXT NOT NULL CHECK (category IN ('primary','secondary'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0172,PHYSICAL,CORE,listings,transaction_type,CHECK,"transaction_type          TEXT NOT NULL CHECK (transaction_type IN ('sale','rent'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0173,PHYSICAL,CORE,listings,slug,UNIQUE,slug                      VARCHAR(220) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0174,PHYSICAL,CORE,listings,property_type,CHECK,"property_type             TEXT NOT NULL CHECK (property_type IN ('rumah','apartemen','ruko','tanah','gudang','kavling','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0175,PHYSICAL,CORE,listings,price_unit,CHECK,"price_unit                TEXT CHECK (price_unit IN ('total','per_bulan','per_tahun'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0176,PHYSICAL,CORE,listings,is_negotiable,DEFAULT,is_negotiable             BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0177,PHYSICAL,CORE,listings,province_id,FK,province_id               UUID NOT NULL REFERENCES ref_provinces(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0178,PHYSICAL,CORE,listings,city_id,FK,city_id                   UUID NOT NULL REFERENCES ref_cities(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0179,PHYSICAL,CORE,listings,district_id,FK,district_id               UUID NOT NULL REFERENCES ref_districts(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0180,PHYSICAL,CORE,listings,water_source,CHECK,"water_source              TEXT CHECK (water_source IN ('pdam','sumur','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0181,PHYSICAL,CORE,listings,furnishing,CHECK,"furnishing                TEXT CHECK (furnishing IN ('unfurnished','semi_furnished','fully_furnished'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0182,PHYSICAL,CORE,listings,certificate_type,CHECK,"certificate_type          TEXT CHECK (certificate_type IN ('shm','hgb','girik','ppjb','strata_title','lainnya'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0183,PHYSICAL,CORE,listings,imb_status,CHECK,"imb_status                TEXT CHECK (imb_status IN ('ada','tidak_ada','dalam_proses'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0184,PHYSICAL,CORE,listings,dispute_free_declared,DEFAULT,dispute_free_declared     BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0185,PHYSICAL,CORE,listings,status,DEFAULT,status                    TEXT NOT NULL DEFAULT 'draft',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0186,PHYSICAL,CORE,listings,view_count,DEFAULT,view_count                INT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0187,PHYSICAL,CORE,listings,cta_click_count,DEFAULT,cta_click_count           INT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0188,PHYSICAL,CORE,listings,created_at,DEFAULT,created_at                TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0189,PHYSICAL,CORE,listings,updated_at,DEFAULT,updated_at                TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0190,PHYSICAL,CORE,quiz_attempts,id,PK+DEFAULT,id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0191,PHYSICAL,CORE,quiz_attempts,enrollment_id,FK,enrollment_id   UUID NOT NULL REFERENCES enrollments(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0192,PHYSICAL,CORE,quiz_attempts,quiz_id,FK,quiz_id         UUID NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0193,PHYSICAL,CORE,quiz_attempts,attempted_at,DEFAULT,attempted_at    TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0194,PHYSICAL,CORE,quiz_questions,id,PK+DEFAULT,id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0195,PHYSICAL,CORE,quiz_questions,quiz_id,FK,quiz_id        UUID NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0196,PHYSICAL,CORE,quiz_questions,question_type,CHECK,"question_type  TEXT NOT NULL CHECK (question_type IN ('single_choice','multi_choice'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0197,PHYSICAL,CORE,dbr_simulations,id,PK+DEFAULT,id                       UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0198,PHYSICAL,CORE,dbr_simulations,agent_id,FK,agent_id                 UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0199,PHYSICAL,CORE,dbr_simulations,listing_id,FK,listing_id               UUID REFERENCES listings(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0200,PHYSICAL,CORE,dbr_simulations,existing_installments,DEFAULT,"existing_installments    DECIMAL(18,2) NOT NULL DEFAULT 0, -- data sensitif",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0201,PHYSICAL,CORE,dbr_simulations,eligibility_status,CHECK,"eligibility_status       TEXT NOT NULL CHECK (eligibility_status IN ('layak','perlu_review','tidak_layak'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0202,PHYSICAL,CORE,dbr_simulations,created_at,DEFAULT,created_at               TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0203,PHYSICAL,CORE,event_registrations,id,PK+DEFAULT,id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0204,PHYSICAL,CORE,event_registrations,event_id,FK,event_id        UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0205,PHYSICAL,CORE,event_registrations,agent_id,FK,agent_id        UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0206,PHYSICAL,CORE,event_registrations,status,CHECK+DEFAULT,"status          TEXT NOT NULL DEFAULT 'registered' CHECK (status IN ('registered','waitlist','attended','cancelled'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0207,PHYSICAL,CORE,event_registrations,registered_at,DEFAULT,registered_at   TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0208,PHYSICAL,CORE,listing_amenities,listing_id,FK,listing_id  UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0209,PHYSICAL,CORE,listing_amenities,amenity_id,FK,amenity_id  UUID NOT NULL REFERENCES amenities(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0210,PHYSICAL,CORE,listing_leads,id,PK+DEFAULT,id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0211,PHYSICAL,CORE,listing_leads,listing_id,FK,listing_id  UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0212,PHYSICAL,CORE,listing_leads,agent_id,FK,agent_id    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0213,PHYSICAL,CORE,listing_leads,source,DEFAULT,source      TEXT NOT NULL DEFAULT 'whatsapp_cta',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0214,PHYSICAL,CORE,listing_leads,created_at,DEFAULT,created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0215,PHYSICAL,CORE,listing_photos,id,PK+DEFAULT,id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0216,PHYSICAL,CORE,listing_photos,listing_id,FK,listing_id  UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0217,PHYSICAL,CORE,listing_photos,is_cover,DEFAULT,is_cover    BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0218,PHYSICAL,CORE,listing_photos,sort_order,DEFAULT,sort_order  SMALLINT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0219,PHYSICAL,CORE,listing_price_history,id,PK+DEFAULT,id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0220,PHYSICAL,CORE,listing_price_history,listing_id,FK,listing_id  UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0221,PHYSICAL,CORE,listing_price_history,changed_at,DEFAULT,changed_at  TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0222,PHYSICAL,CORE,listing_videos,id,PK+DEFAULT,id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0223,PHYSICAL,CORE,listing_videos,listing_id,FK,listing_id  UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0224,PHYSICAL,CORE,listing_videos,type,CHECK,"type        TEXT NOT NULL CHECK (type IN ('video','virtual_tour'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0225,PHYSICAL,CORE,listing_views,id,PK+DEFAULT,id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0226,PHYSICAL,CORE,listing_views,listing_id,FK,listing_id  UUID NOT NULL REFERENCES listings(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0227,PHYSICAL,CORE,listing_views,viewed_at,DEFAULT,viewed_at   TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0228,PHYSICAL,CORE,quiz_options,id,PK+DEFAULT,id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0229,PHYSICAL,CORE,quiz_options,question_id,FK,question_id   UUID NOT NULL REFERENCES quiz_questions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0230,PHYSICAL,CORE,quiz_options,is_correct,DEFAULT,is_correct    BOOLEAN NOT NULL DEFAULT false,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0231,PHYSICAL,CORE,learning_sessions,id,PK+DEFAULT,id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0232,PHYSICAL,CORE,learning_sessions,owner_id,FK,owner_id           UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0233,PHYSICAL,CORE,learning_sessions,course_id,FK,course_id          UUID REFERENCES courses(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0234,PHYSICAL,CORE,learning_sessions,organization_id,FK,organization_id    UUID REFERENCES organizations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0235,PHYSICAL,CORE,learning_sessions,event_id,FK,event_id           UUID REFERENCES events(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0236,PHYSICAL,CORE,learning_sessions,session_type,CHECK,"session_type       TEXT NOT NULL CHECK (session_type IN ('broadcast','interactive','on_demand'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0237,PHYSICAL,CORE,learning_sessions,status,DEFAULT,status             TEXT NOT NULL DEFAULT 'draft',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0238,PHYSICAL,CORE,learning_sessions,created_at,DEFAULT,created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0239,PHYSICAL,CORE,learning_sessions,updated_at,DEFAULT,updated_at         TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0240,PHYSICAL,CORE,learning_session_assignments,id,PK+DEFAULT,id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0241,PHYSICAL,CORE,learning_session_assignments,session_id,FK,session_id  UUID NOT NULL REFERENCES learning_sessions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0242,PHYSICAL,CORE,learning_session_assignments,actor_id,FK,actor_id    UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0243,PHYSICAL,CORE,learning_session_assignments,capability,CHECK,"capability  TEXT NOT NULL CHECK (capability IN ('HOST','INSTRUCTOR'))",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0244,PHYSICAL,CORE,learning_session_assignments,status,DEFAULT,status      TEXT NOT NULL DEFAULT 'ACTIVE',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0245,PHYSICAL,CORE,learning_session_assignments,created_at,DEFAULT,created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0246,PHYSICAL,CORE,learning_session_assignments,created_by,FK,created_by  UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0247,PHYSICAL,CORE,learning_session_assignments,revoked_by,FK,revoked_by  UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0248,PHYSICAL,CORE,session_artifacts,id,PK+DEFAULT,id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0249,PHYSICAL,CORE,session_artifacts,session_id,FK,session_id    UUID NOT NULL REFERENCES learning_sessions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0250,PHYSICAL,CORE,session_artifacts,status,DEFAULT,status        TEXT NOT NULL DEFAULT 'available',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0251,PHYSICAL,CORE,session_artifacts,created_at,DEFAULT,created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0252,PHYSICAL,CORE,session_artifacts,updated_at,DEFAULT,updated_at    TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0253,PHYSICAL,CORE,session_enrollments,id,PK+DEFAULT,id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0254,PHYSICAL,CORE,session_enrollments,session_id,FK,session_id            UUID NOT NULL REFERENCES learning_sessions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0255,PHYSICAL,CORE,session_enrollments,agent_id,FK,agent_id              UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0256,PHYSICAL,CORE,session_enrollments,status,DEFAULT,status                TEXT NOT NULL DEFAULT 'pending',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0257,PHYSICAL,CORE,session_enrollments,requested_at,DEFAULT,requested_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0258,PHYSICAL,CORE,session_enrollments,created_at,DEFAULT,created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0259,PHYSICAL,CORE,session_enrollments,updated_at,DEFAULT,updated_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0260,PHYSICAL,CORE,session_provider_bindings,id,PK+DEFAULT,id                            UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0261,PHYSICAL,CORE,session_provider_bindings,session_id,FK,session_id                    UUID NOT NULL REFERENCES learning_sessions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0262,PHYSICAL,CORE,session_provider_bindings,binding_state,DEFAULT,binding_state                 TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0263,PHYSICAL,CORE,session_provider_bindings,effective_from,DEFAULT,effective_from                TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0264,PHYSICAL,CORE,session_provider_bindings,created_at,DEFAULT,created_at                    TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0265,PHYSICAL,CORE,session_provider_bindings,updated_at,DEFAULT,updated_at                    TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0266,PHYSICAL,CORE,session_participation_evidence,id,PK+DEFAULT,id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0267,PHYSICAL,CORE,session_participation_evidence,binding_id,FK,binding_id            UUID NOT NULL REFERENCES session_provider_bindings(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0268,PHYSICAL,CORE,session_participation_evidence,session_enrollment_id,FK,session_enrollment_id UUID REFERENCES session_enrollments(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0269,PHYSICAL,CORE,session_participation_evidence,idempotency_key,UNIQUE,idempotency_key       TEXT NOT NULL UNIQUE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0270,PHYSICAL,CORE,session_participation_evidence,received_at,DEFAULT,received_at           TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0271,PHYSICAL,CORE,session_participation_evidence,created_at,DEFAULT,created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0272,PHYSICAL,CORE,session_attendance_evaluations,id,PK+DEFAULT,id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0273,PHYSICAL,CORE,session_attendance_evaluations,session_enrollment_id,FK,session_enrollment_id UUID NOT NULL REFERENCES session_enrollments(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0274,PHYSICAL,CORE,session_attendance_evaluations,evidence_id,FK,evidence_id           UUID REFERENCES session_participation_evidence(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0275,PHYSICAL,CORE,session_attendance_evaluations,evaluated_at,DEFAULT,evaluated_at          TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0276,PHYSICAL,CORE,session_attendance_evaluations,created_at,DEFAULT,created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0277,PHYSICAL,CORE,session_completion_outcomes,id,PK+DEFAULT,id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0278,PHYSICAL,CORE,session_completion_outcomes,session_enrollment_id,FK,session_enrollment_id     UUID NOT NULL REFERENCES session_enrollments(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0279,PHYSICAL,CORE,session_completion_outcomes,attendance_evaluation_id,FK,attendance_evaluation_id  UUID REFERENCES session_attendance_evaluations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0280,PHYSICAL,CORE,session_completion_outcomes,completed_at,DEFAULT,completed_at              TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0281,PHYSICAL,CORE,session_completion_outcomes,created_at,DEFAULT,created_at                TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0282,PHYSICAL,CORE,learning_paths,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0283,PHYSICAL,CORE,learning_paths,course_id,FK,course_id UUID REFERENCES courses(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0284,PHYSICAL,CORE,learning_paths,code,UNIQUE,code VARCHAR(100) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0285,PHYSICAL,CORE,learning_paths,status,DEFAULT,status TEXT NOT NULL DEFAULT 'draft',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0286,PHYSICAL,CORE,learning_paths,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0287,PHYSICAL,CORE,learning_paths,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0288,PHYSICAL,CORE,learning_path_versions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0289,PHYSICAL,CORE,learning_path_versions,learning_path_id,FK,learning_path_id UUID NOT NULL REFERENCES learning_paths(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0290,PHYSICAL,CORE,learning_path_versions,status,DEFAULT,status TEXT NOT NULL DEFAULT 'draft',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0291,PHYSICAL,CORE,learning_path_versions,definition_snapshot,DEFAULT,definition_snapshot JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0292,PHYSICAL,CORE,learning_path_versions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0293,PHYSICAL,CORE,learning_path_versions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0294,PHYSICAL,CORE,learning_activities,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0295,PHYSICAL,CORE,learning_activities,learning_path_version_id,FK,learning_path_version_id UUID REFERENCES learning_path_versions(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0296,PHYSICAL,CORE,learning_activities,sequence_no,DEFAULT,sequence_no INT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0297,PHYSICAL,CORE,learning_activities,completion_required,DEFAULT,completion_required BOOLEAN NOT NULL DEFAULT true,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0298,PHYSICAL,CORE,learning_activities,reward_lp,CHECK+DEFAULT,"reward_lp NUMERIC(18,2) NOT NULL DEFAULT 0 CHECK (reward_lp >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0299,PHYSICAL,CORE,learning_activities,status,DEFAULT,status TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0300,PHYSICAL,CORE,learning_activities,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0301,PHYSICAL,CORE,learning_activities,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0302,PHYSICAL,CORE,learning_activity_completions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0303,PHYSICAL,CORE,learning_activity_completions,learning_activity_id,FK,learning_activity_id UUID NOT NULL REFERENCES learning_activities(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0304,PHYSICAL,CORE,learning_activity_completions,user_id,FK,user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0305,PHYSICAL,CORE,learning_activity_completions,attempt_no,CHECK+DEFAULT,attempt_no INT NOT NULL DEFAULT 1 CHECK (attempt_no > 0),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0306,PHYSICAL,CORE,learning_activity_completions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0307,PHYSICAL,CORE,learning_activity_completions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0308,PHYSICAL,CORE,learning_point_accounts,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0309,PHYSICAL,CORE,learning_point_accounts,user_id,FK+UNIQUE,user_id UUID UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0310,PHYSICAL,CORE,learning_point_accounts,balance_projection,CHECK+DEFAULT,"balance_projection NUMERIC(18,2) NOT NULL DEFAULT 0 CHECK (balance_projection >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0311,PHYSICAL,CORE,learning_point_accounts,status,DEFAULT,status TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0312,PHYSICAL,CORE,learning_point_accounts,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0313,PHYSICAL,CORE,learning_point_accounts,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0314,PHYSICAL,CORE,learning_point_transactions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0315,PHYSICAL,CORE,learning_point_transactions,account_id,FK,account_id UUID NOT NULL REFERENCES learning_point_accounts(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0316,PHYSICAL,CORE,learning_point_transactions,user_id,FK,user_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0317,PHYSICAL,CORE,learning_point_transactions,amount,CHECK,"amount NUMERIC(18,2) NOT NULL CHECK (amount <> 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0318,PHYSICAL,CORE,learning_point_transactions,idempotency_key,UNIQUE,idempotency_key VARCHAR(150) UNIQUE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0319,PHYSICAL,CORE,learning_point_transactions,occurred_at,DEFAULT,occurred_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0320,PHYSICAL,CORE,learning_point_transactions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0321,PHYSICAL,CORE,learning_unlock_progressions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0322,PHYSICAL,CORE,learning_unlock_progressions,user_id,FK,user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0323,PHYSICAL,CORE,learning_unlock_progressions,learning_path_version_id,FK,learning_path_version_id UUID NOT NULL REFERENCES learning_path_versions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0324,PHYSICAL,CORE,learning_unlock_progressions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0325,PHYSICAL,CORE,learning_unlock_progressions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0326,PHYSICAL,CORE,subscriptions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0327,PHYSICAL,CORE,subscriptions,user_id,FK,user_id UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0328,PHYSICAL,CORE,subscriptions,organization_id,FK,organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0329,PHYSICAL,CORE,subscriptions,historical_purchase_snapshot,DEFAULT,historical_purchase_snapshot JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0330,PHYSICAL,CORE,subscriptions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0331,PHYSICAL,CORE,subscriptions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0332,PHYSICAL,CORE,promotions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0333,PHYSICAL,CORE,promotions,code,UNIQUE,code VARCHAR(100) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0334,PHYSICAL,CORE,promotions,rule_configuration,DEFAULT,rule_configuration JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0335,PHYSICAL,CORE,promotions,eligibility_configuration,DEFAULT,eligibility_configuration JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0336,PHYSICAL,CORE,promotions,benefit_configuration,DEFAULT,benefit_configuration JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0337,PHYSICAL,CORE,promotions,status,DEFAULT,status TEXT NOT NULL DEFAULT 'draft',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0338,PHYSICAL,CORE,promotions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0339,PHYSICAL,CORE,promotions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0340,PHYSICAL,CORE,addons,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0341,PHYSICAL,CORE,addons,code,UNIQUE,code VARCHAR(100) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0342,PHYSICAL,CORE,addons,validity_days,CHECK,validity_days INT CHECK (validity_days IS NULL OR validity_days > 0),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0343,PHYSICAL,CORE,addons,promotion_id,FK,promotion_id UUID REFERENCES promotions(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0344,PHYSICAL,CORE,addons,status,DEFAULT,status TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0345,PHYSICAL,CORE,addons,configuration,DEFAULT,configuration JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0346,PHYSICAL,CORE,addons,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0347,PHYSICAL,CORE,addons,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0348,PHYSICAL,CORE,commercial_orders,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0349,PHYSICAL,CORE,commercial_orders,order_number,UNIQUE,order_number VARCHAR(100) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0350,PHYSICAL,CORE,commercial_orders,user_id,FK,user_id UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0351,PHYSICAL,CORE,commercial_orders,organization_id,FK,organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0352,PHYSICAL,CORE,commercial_orders,subscription_id,FK,subscription_id UUID REFERENCES subscriptions(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0353,PHYSICAL,CORE,commercial_orders,addon_id,FK,addon_id UUID REFERENCES addons(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0354,PHYSICAL,CORE,commercial_orders,promotion_id,FK,promotion_id UUID REFERENCES promotions(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0355,PHYSICAL,CORE,commercial_orders,amount,CHECK,"amount NUMERIC(18,2) NOT NULL CHECK (amount >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0356,PHYSICAL,CORE,commercial_orders,currency,DEFAULT,currency CHAR(3) NOT NULL DEFAULT 'IDR',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0357,PHYSICAL,CORE,commercial_orders,placed_at,DEFAULT,placed_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0358,PHYSICAL,CORE,commercial_orders,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0359,PHYSICAL,CORE,commercial_orders,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0360,PHYSICAL,CORE,payment_transactions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0361,PHYSICAL,CORE,payment_transactions,commercial_order_id,FK,commercial_order_id UUID NOT NULL REFERENCES commercial_orders(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0362,PHYSICAL,CORE,payment_transactions,payment_reference,UNIQUE,payment_reference VARCHAR(150) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0363,PHYSICAL,CORE,payment_transactions,amount,CHECK,"amount NUMERIC(18,2) NOT NULL CHECK (amount >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0364,PHYSICAL,CORE,payment_transactions,currency,DEFAULT,currency CHAR(3) NOT NULL DEFAULT 'IDR',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0365,PHYSICAL,CORE,payment_transactions,verification_state,DEFAULT,verification_state TEXT NOT NULL DEFAULT 'unverified',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0366,PHYSICAL,CORE,payment_transactions,idempotency_key,UNIQUE,idempotency_key VARCHAR(150) UNIQUE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0367,PHYSICAL,CORE,payment_transactions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0368,PHYSICAL,CORE,payment_transactions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0369,PHYSICAL,CORE,payment_provider_results,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0370,PHYSICAL,CORE,payment_provider_results,payment_transaction_id,FK,payment_transaction_id UUID NOT NULL REFERENCES payment_transactions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0371,PHYSICAL,CORE,payment_provider_results,received_at,DEFAULT,received_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0372,PHYSICAL,CORE,payment_provider_results,idempotency_key,UNIQUE,idempotency_key VARCHAR(150) UNIQUE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0373,PHYSICAL,CORE,commercial_fulfillments,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0374,PHYSICAL,CORE,commercial_fulfillments,payment_transaction_id,FK,payment_transaction_id UUID NOT NULL REFERENCES payment_transactions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0375,PHYSICAL,CORE,commercial_fulfillments,commercial_order_id,FK,commercial_order_id UUID NOT NULL REFERENCES commercial_orders(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0376,PHYSICAL,CORE,commercial_fulfillments,fulfillment_key,UNIQUE,fulfillment_key VARCHAR(150) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0377,PHYSICAL,CORE,commercial_fulfillments,idempotency_key,UNIQUE,idempotency_key VARCHAR(150) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0378,PHYSICAL,CORE,commercial_fulfillments,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0379,PHYSICAL,CORE,commercial_fulfillments,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0380,PHYSICAL,CORE,commercial_entitlements,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0381,PHYSICAL,CORE,commercial_entitlements,user_id,FK,user_id UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0382,PHYSICAL,CORE,commercial_entitlements,organization_id,FK,organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0383,PHYSICAL,CORE,commercial_entitlements,source_order_id,FK,source_order_id UUID REFERENCES commercial_orders(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0384,PHYSICAL,CORE,commercial_entitlements,source_payment_transaction_id,FK,source_payment_transaction_id UUID REFERENCES payment_transactions(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0385,PHYSICAL,CORE,commercial_entitlements,source_fulfillment_id,FK,source_fulfillment_id UUID REFERENCES commercial_fulfillments(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0386,PHYSICAL,CORE,commercial_entitlements,historical_source,DEFAULT,historical_source JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0387,PHYSICAL,CORE,commercial_entitlements,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0388,PHYSICAL,CORE,commercial_entitlements,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0389,PHYSICAL,CORE,quota_capacities,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0390,PHYSICAL,CORE,quota_capacities,entitlement_id,FK,entitlement_id UUID NOT NULL REFERENCES commercial_entitlements(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0391,PHYSICAL,CORE,quota_capacities,granted_quantity,CHECK,"granted_quantity NUMERIC(18,2) NOT NULL CHECK (granted_quantity >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0392,PHYSICAL,CORE,quota_capacities,remaining_projection,CHECK,"remaining_projection NUMERIC(18,2) CHECK (remaining_projection IS NULL OR remaining_projection >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0393,PHYSICAL,CORE,quota_capacities,configuration,DEFAULT,configuration JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0394,PHYSICAL,CORE,quota_capacities,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0395,PHYSICAL,CORE,quota_capacities,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0396,PHYSICAL,CORE,operational_quota_pools,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0397,PHYSICAL,CORE,operational_quota_pools,quota_capacity_id,FK,quota_capacity_id UUID NOT NULL REFERENCES quota_capacities(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0398,PHYSICAL,CORE,operational_quota_pools,user_id,FK,user_id UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0399,PHYSICAL,CORE,operational_quota_pools,organization_id,FK,organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0400,PHYSICAL,CORE,operational_quota_pools,operational_quantity,CHECK+DEFAULT,"operational_quantity NUMERIC(18,2) NOT NULL DEFAULT 0 CHECK (operational_quantity >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0401,PHYSICAL,CORE,operational_quota_pools,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0402,PHYSICAL,CORE,operational_quota_pools,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0403,PHYSICAL,CORE,quota_allocations,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0404,PHYSICAL,CORE,quota_allocations,operational_quota_pool_id,FK,operational_quota_pool_id UUID NOT NULL REFERENCES operational_quota_pools(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0405,PHYSICAL,CORE,quota_allocations,beneficiary_user_id,FK,beneficiary_user_id UUID REFERENCES users(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0406,PHYSICAL,CORE,quota_allocations,beneficiary_organization_id,FK,beneficiary_organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0407,PHYSICAL,CORE,quota_allocations,allocated_quantity,CHECK,"allocated_quantity NUMERIC(18,2) NOT NULL CHECK (allocated_quantity >= 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0408,PHYSICAL,CORE,quota_allocations,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0409,PHYSICAL,CORE,quota_allocations,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0410,PHYSICAL,CORE,quota_usage,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0411,PHYSICAL,CORE,quota_usage,quota_allocation_id,FK,quota_allocation_id UUID REFERENCES quota_allocations(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0412,PHYSICAL,CORE,quota_usage,operational_quota_pool_id,FK,operational_quota_pool_id UUID NOT NULL REFERENCES operational_quota_pools(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0413,PHYSICAL,CORE,quota_usage,consumed_quantity,CHECK,"consumed_quantity NUMERIC(18,2) NOT NULL CHECK (consumed_quantity > 0)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0414,PHYSICAL,CORE,quota_usage,usage_at,DEFAULT,usage_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0415,PHYSICAL,CORE,quota_usage,idempotency_key,UNIQUE,idempotency_key VARCHAR(150) UNIQUE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0416,PHYSICAL,CORE,quota_usage,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0417,PHYSICAL,CORE,reconciliation_cases,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0418,PHYSICAL,CORE,reconciliation_cases,case_number,UNIQUE,case_number VARCHAR(100) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0419,PHYSICAL,CORE,reconciliation_cases,payment_transaction_id,FK,payment_transaction_id UUID REFERENCES payment_transactions(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0420,PHYSICAL,CORE,reconciliation_cases,commercial_order_id,FK,commercial_order_id UUID REFERENCES commercial_orders(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0421,PHYSICAL,CORE,reconciliation_cases,fulfillment_id,FK,fulfillment_id UUID REFERENCES commercial_fulfillments(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0422,PHYSICAL,CORE,reconciliation_cases,entitlement_id,FK,entitlement_id UUID REFERENCES commercial_entitlements(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0423,PHYSICAL,CORE,reconciliation_cases,evidence,DEFAULT,evidence JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0424,PHYSICAL,CORE,reconciliation_cases,opened_at,DEFAULT,opened_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0425,PHYSICAL,CORE,reconciliation_cases,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0426,PHYSICAL,CORE,reconciliation_cases,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0427,PHYSICAL,CORE,title_definitions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0428,PHYSICAL,CORE,title_definitions,code,UNIQUE,code VARCHAR(100) UNIQUE NOT NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0429,PHYSICAL,CORE,title_definitions,status,DEFAULT,status TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0430,PHYSICAL,CORE,title_definitions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0431,PHYSICAL,CORE,title_definitions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0432,PHYSICAL,CORE,title_authority_scopes,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0433,PHYSICAL,CORE,title_authority_scopes,title_definition_id,FK,title_definition_id UUID NOT NULL REFERENCES title_definitions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0434,PHYSICAL,CORE,title_authority_scopes,status,DEFAULT,status TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0435,PHYSICAL,CORE,title_authority_scopes,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0436,PHYSICAL,CORE,awarding_paths,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0437,PHYSICAL,CORE,awarding_paths,title_definition_id,FK,title_definition_id UUID NOT NULL REFERENCES title_definitions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0438,PHYSICAL,CORE,awarding_paths,status,DEFAULT,status TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0439,PHYSICAL,CORE,awarding_paths,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0440,PHYSICAL,CORE,awarding_paths,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0441,PHYSICAL,CORE,awarding_path_versions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0442,PHYSICAL,CORE,awarding_path_versions,awarding_path_id,FK,awarding_path_id UUID NOT NULL REFERENCES awarding_paths(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0443,PHYSICAL,CORE,awarding_path_versions,status,DEFAULT,status TEXT NOT NULL DEFAULT 'draft',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0444,PHYSICAL,CORE,awarding_path_versions,definition_snapshot,DEFAULT,definition_snapshot JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0445,PHYSICAL,CORE,awarding_path_versions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0446,PHYSICAL,CORE,awarding_path_versions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0447,PHYSICAL,CORE,awarding_rule_versions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0448,PHYSICAL,CORE,awarding_rule_versions,status,DEFAULT,status TEXT NOT NULL DEFAULT 'draft',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0449,PHYSICAL,CORE,awarding_rule_versions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0450,PHYSICAL,CORE,awarding_rule_versions,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0451,PHYSICAL,CORE,awarding_path_rules,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0452,PHYSICAL,CORE,awarding_path_rules,awarding_path_version_id,FK,awarding_path_version_id UUID NOT NULL REFERENCES awarding_path_versions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0453,PHYSICAL,CORE,awarding_path_rules,awarding_rule_version_id,FK,awarding_rule_version_id UUID NOT NULL REFERENCES awarding_rule_versions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0454,PHYSICAL,CORE,awarding_path_rules,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0455,PHYSICAL,CORE,awarding_condition_groups,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0456,PHYSICAL,CORE,awarding_condition_groups,awarding_rule_version_id,FK,awarding_rule_version_id UUID NOT NULL REFERENCES awarding_rule_versions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0457,PHYSICAL,CORE,awarding_condition_groups,group_operator,DEFAULT,group_operator TEXT NOT NULL DEFAULT 'AND',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0458,PHYSICAL,CORE,awarding_condition_groups,sequence_no,CHECK+DEFAULT,sequence_no INT NOT NULL DEFAULT 0 CHECK (sequence_no >= 0),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0459,PHYSICAL,CORE,awarding_condition_groups,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0460,PHYSICAL,CORE,awarding_conditions,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0461,PHYSICAL,CORE,awarding_conditions,condition_group_id,FK,condition_group_id UUID NOT NULL REFERENCES awarding_condition_groups(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0462,PHYSICAL,CORE,awarding_conditions,sequence_no,CHECK+DEFAULT,sequence_no INT NOT NULL DEFAULT 0 CHECK (sequence_no >= 0),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0463,PHYSICAL,CORE,awarding_conditions,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0464,PHYSICAL,CORE,awarding_prerequisites,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0465,PHYSICAL,CORE,awarding_prerequisites,awarding_path_version_id,FK,awarding_path_version_id UUID NOT NULL REFERENCES awarding_path_versions(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0466,PHYSICAL,CORE,awarding_prerequisites,requirement_definition,DEFAULT,requirement_definition JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0467,PHYSICAL,CORE,awarding_prerequisites,sequence_no,CHECK+DEFAULT,sequence_no INT NOT NULL DEFAULT 0 CHECK (sequence_no >= 0),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0468,PHYSICAL,CORE,awarding_prerequisites,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0469,PHYSICAL,CORE,qualification_evidence,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0470,PHYSICAL,CORE,qualification_evidence,user_id,FK,user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0471,PHYSICAL,CORE,qualification_evidence,captured_at,DEFAULT,captured_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0472,PHYSICAL,CORE,qualification_evidence,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0473,PHYSICAL,CORE,qualification_evaluations,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0474,PHYSICAL,CORE,qualification_evaluations,user_id,FK,user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0475,PHYSICAL,CORE,qualification_evaluations,awarding_path_version_id,FK,awarding_path_version_id UUID NOT NULL REFERENCES awarding_path_versions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0476,PHYSICAL,CORE,qualification_evaluations,awarding_rule_version_id,FK,awarding_rule_version_id UUID NOT NULL REFERENCES awarding_rule_versions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0477,PHYSICAL,CORE,qualification_evaluations,evaluation_time,DEFAULT,evaluation_time TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0478,PHYSICAL,CORE,qualification_evaluations,provenance,DEFAULT,provenance JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0479,PHYSICAL,CORE,qualification_evaluations,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0480,PHYSICAL,CORE,award_instances,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0481,PHYSICAL,CORE,award_instances,user_id,FK,user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0482,PHYSICAL,CORE,award_instances,title_definition_id,FK,title_definition_id UUID NOT NULL REFERENCES title_definitions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0483,PHYSICAL,CORE,award_instances,awarding_path_version_id,FK,awarding_path_version_id UUID NOT NULL REFERENCES awarding_path_versions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0484,PHYSICAL,CORE,award_instances,awarding_rule_version_id,FK,awarding_rule_version_id UUID NOT NULL REFERENCES awarding_rule_versions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0485,PHYSICAL,CORE,award_instances,qualification_evaluation_id,FK,qualification_evaluation_id UUID REFERENCES qualification_evaluations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0486,PHYSICAL,CORE,award_instances,status,DEFAULT,status TEXT NOT NULL DEFAULT 'active',PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0487,PHYSICAL,CORE,award_instances,issued_at,DEFAULT,issued_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0488,PHYSICAL,CORE,award_instances,historical_snapshot,DEFAULT,historical_snapshot JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0489,PHYSICAL,CORE,award_instances,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0490,PHYSICAL,CORE,award_instances,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0491,PHYSICAL,CORE,award_qualifying_paths,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0492,PHYSICAL,CORE,award_qualifying_paths,award_instance_id,FK,award_instance_id UUID NOT NULL REFERENCES award_instances(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0493,PHYSICAL,CORE,award_qualifying_paths,awarding_path_version_id,FK,awarding_path_version_id UUID NOT NULL REFERENCES awarding_path_versions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0494,PHYSICAL,CORE,award_qualifying_paths,qualification_evaluation_id,FK,qualification_evaluation_id UUID REFERENCES qualification_evaluations(id) ON DELETE SET NULL,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0495,PHYSICAL,CORE,award_qualifying_paths,provenance,DEFAULT,provenance JSONB NOT NULL DEFAULT '{}'::jsonb,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0496,PHYSICAL,CORE,award_qualifying_paths,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0497,PHYSICAL,CORE,title_presentations,id,PK+DEFAULT,id UUID PRIMARY KEY DEFAULT gen_random_uuid(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0498,PHYSICAL,CORE,title_presentations,user_id,FK,user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0499,PHYSICAL,CORE,title_presentations,title_definition_id,FK,title_definition_id UUID NOT NULL REFERENCES title_definitions(id) ON DELETE RESTRICT,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0500,PHYSICAL,CORE,title_presentations,active,DEFAULT,active BOOLEAN NOT NULL DEFAULT true,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0501,PHYSICAL,CORE,title_presentations,display_order,DEFAULT,display_order INT NOT NULL DEFAULT 0,PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0502,PHYSICAL,CORE,title_presentations,created_at,DEFAULT,created_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0503,PHYSICAL,CORE,title_presentations,updated_at,DEFAULT,updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0504,PHYSICAL,CORE,permissions,"module_code, action_code",UNIQUE,"UNIQUE (module_code, action_code)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0505,PHYSICAL,CORE,role_permissions,"role_id, permission_id",UNIQUE,"UNIQUE (role_id, permission_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0506,PHYSICAL,CORE,certificates,"agent_id, course_id",UNIQUE,"UNIQUE (agent_id, course_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0507,PHYSICAL,CORE,enrollments,"agent_id, course_id",UNIQUE,"UNIQUE (agent_id, course_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0508,PHYSICAL,CORE,agent_project_claims,"agent_id, project_id",UNIQUE,"UNIQUE (agent_id, project_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0509,PHYSICAL,CORE,event_registrations,"event_id, agent_id",UNIQUE,"UNIQUE (event_id, agent_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0510,PHYSICAL,CORE,learning_path_versions,"learning_path_id, version_no",UNIQUE,"UNIQUE (learning_path_id, version_no)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0511,PHYSICAL,CORE,learning_activities,"learning_path_version_id, code",UNIQUE,"UNIQUE (learning_path_version_id, code)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0512,PHYSICAL,CORE,learning_activity_completions,"learning_activity_id, user_id, attempt_no",UNIQUE,"UNIQUE (learning_activity_id, user_id, attempt_no)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0513,PHYSICAL,CORE,learning_point_accounts,"id, user_id",UNIQUE,"UNIQUE (id, user_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0514,PHYSICAL,CORE,learning_unlock_progressions,"user_id, learning_path_version_id",UNIQUE,"UNIQUE (user_id, learning_path_version_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0515,PHYSICAL,CORE,payment_provider_results,"provider_key, external_transaction_reference",UNIQUE,"UNIQUE (provider_key, external_transaction_reference)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0516,PHYSICAL,CORE,title_authority_scopes,"title_definition_id, scope_type, scope_reference",UNIQUE,"UNIQUE (title_definition_id, scope_type, scope_reference)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0517,PHYSICAL,CORE,awarding_paths,"title_definition_id, code",UNIQUE,"UNIQUE (title_definition_id, code)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0518,PHYSICAL,CORE,awarding_path_versions,"awarding_path_id, version_no",UNIQUE,"UNIQUE (awarding_path_id, version_no)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0519,PHYSICAL,CORE,awarding_rule_versions,"rule_code, version_no",UNIQUE,"UNIQUE (rule_code, version_no)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0520,PHYSICAL,CORE,awarding_path_rules,"awarding_path_version_id, awarding_rule_version_id",UNIQUE,"UNIQUE (awarding_path_version_id, awarding_rule_version_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+PHY-0521,PHYSICAL,CORE,award_qualifying_paths,"award_instance_id, awarding_path_version_id",UNIQUE,"UNIQUE (award_instance_id, awarding_path_version_id)",PHYSICAL_PROVEN_CURRENT_SCHEMA,W4-01E canonical SQL,NONE
+M05-C01,LOGICAL/SEMANTIC,M05,EVENT_PROVIDER_BINDING,provider_selection / fallback_position,INVARIANT,Provider determined before Event start; primary/fallback semantics,NOT PHYSICALLY CLAIMED,M05 v1.3 + A1/A2,CONTROLLED DOWNSTREAM
+M05-C02,LOGICAL/SEMANTIC,M05,EVENT_REGISTRATIONS,agent_id / guest_email / participant_mode,INVARIANT,Guest may lack canonical identity; guest email is contact/notification destination,NOT PHYSICALLY CLAIMED,M05 v1.3 + A1/A2,CONTROLLED DOWNSTREAM
+M10-C01,LOGICAL/SEMANTIC,M10,PERMISSION_PRESET,target_role_id,INVARIANT,Exactly one target role per preset,NOT PHYSICALLY CLAIMED,M10 v1.1 + A1/A2,CONTROLLED DOWNSTREAM
+M10-C02,LOGICAL/SEMANTIC,M10,USER_PERMISSION_PRESET,user_id,INVARIANT,Zero or one current preset assignment per account,NOT PHYSICALLY CLAIMED,M10 v1.1 + A1/A2,CONTROLLED DOWNSTREAM
+M10-C03,LOGICAL/SEMANTIC,M10,PERMISSION_PRESET_ITEM,preset_id / permission_id,INVARIANT,Unique preset/permission pair,NOT PHYSICALLY CLAIMED,M10 v1.1 + A1/A2,CONTROLLED DOWNSTREAM
+M10-C04,LOGICAL/SEMANTIC,M10,PERMISSION_PRESET + USER_PERMISSION_PRESET,target_role_id / user role,INVARIANT,Preset target role must equal account role,NOT PHYSICALLY CLAIMED,M10 v1.1 + A1/A2,CONTROLLED DOWNSTREAM
+M10-C05,LOGICAL/SEMANTIC,M10,PERMISSION_PRESET_ITEM,granted_scope,INVARIANT,Preset cannot introduce permission outside role baseline,NOT PHYSICALLY CLAIMED,M10 v1.1 + A1/A2,CONTROLLED DOWNSTREAM
+M11-C01,LOGICAL/SEMANTIC,M11,STATIC_PUBLIC_CONTENT,status,INVARIANT,Draft → Publish → Unpublish → Archive,NOT PHYSICALLY CLAIMED,M11 v2.0 + A1/A2,CONTROLLED DOWNSTREAM
+M11-C02,LOGICAL/SEMANTIC,M11,PUBLIC_ANNOUNCEMENT_PROMOTION,status / schedule_at / expires_at,INVARIANT,Draft → Scheduled → Active → Expired → Archived,NOT PHYSICALLY CLAIMED,M11 v2.0 + A1/A2,CONTROLLED DOWNSTREAM
+M12-C01,LOGICAL/SEMANTIC,M12,ORGANIZATION_DOCUMENT,organization_id / visibility,INVARIANT,Organization-owned document and visibility,NOT PHYSICALLY CLAIMED,M12 v1.0 + A1/A2,CONTROLLED DOWNSTREAM
+M14-C01,LOGICAL/SEMANTIC,M14,QUOTA_CAPACITIES,daily_refresh_allowance,INVARIANT,Commercial entitlement/quota configuration; no carry-forward; successful refresh consumes one,NOT PHYSICALLY CLAIMED,M14 v2.2 + A1/A2,CONTROLLED DOWNSTREAM
+M14-C02,LOGICAL/SEMANTIC,M14,QUOTA_USAGE,consuming_resource_reference / idempotency_key,INVARIANT,Usage retains consuming-resource reference and idempotency,NOT PHYSICALLY CLAIMED,M14 v2.2 + A1/A2,CONTROLLED DOWNSTREAM
+M15-C01,LOGICAL/SEMANTIC,M15,M14 scope,Q01–Q66,INVARIANT,M14 Q01–Q66 remain M14; M15 does not absorb them,NOT PHYSICALLY CLAIMED,M15 v1.1 + A1/A2,CONTROLLED DOWNSTREAM

@@ -1,0 +1,14 @@
+field,authoritative_wire,requiredness,dependency_conditionality,ux_behavior,result
+listing_context,WIRE-02 / M03,required,Organization context is conditional by selected listing context,Context selector; does not mutate ownership,PASS
+category,WIRE-02 / M03,required,None beyond normal category selection,Selection control,PASS
+transaction_type,WIRE-02 / M03,required,Drives transaction-dependent semantics,Selection; downstream validation,PASS
+title,WIRE-02 / M03,required,May be initialized from approved Project/Claim flow; still Listing-owned,Long-text-safe input,PASS
+property_type,WIRE-02 / M03,required,None,Required selection; permanently locked after successful publication,PASS
+price,WIRE-02 / M03,required,None,Numeric input; validation state via WIRE-10,PASS
+is_negotiable,WIRE-02 / M03,required,None,Choice control,PASS
+address,WIRE-02 / M03,required,Optional map coordinates do not replace address,Long-text-safe input; locked after successful publication,PASS
+province,WIRE-02 / M03,required,Parent of city,Search/select; dependency state,PASS
+city,WIRE-02 / M03,required,Depends on province,Search/select; unavailable/loading dependency states,PASS
+district,WIRE-02 / M03,required,Depends on city/kabupaten,Search/select; unavailable/loading dependency states,PASS
+dispute_free_declared,WIRE-02 / M03,required,None,Explicit declaration + validation/error state,PASS
+whatsapp_number,WIRE-02 / M03,required,None,Explicit contact validation + error state,PASS

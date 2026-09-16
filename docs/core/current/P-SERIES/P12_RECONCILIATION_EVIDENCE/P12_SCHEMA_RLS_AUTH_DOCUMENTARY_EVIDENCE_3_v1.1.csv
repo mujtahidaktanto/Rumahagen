@@ -1,0 +1,4 @@
+﻿evidence_id,scope,evidence_level,claim_boundary,disposition
+SCH-01,Schema/data ownership requirements,DOCUMENTARY/DESIGN,No physical DB proof,PASS
+SCH-02,RLS/authorization intent and scope model,DOCUMENTARY/DESIGN,No migration/SELECT/runtime proof,PASS
+SCH-03,Physical DB absence at current stage,FUTURE STAGE,Not a defect; not a HOLD,CONTROLLED / NON-BLOCKING

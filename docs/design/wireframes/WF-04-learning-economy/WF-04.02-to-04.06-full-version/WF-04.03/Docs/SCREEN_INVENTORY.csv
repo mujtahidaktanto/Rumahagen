@@ -1,0 +1,4 @@
+screen_id,title,actor,scope,loading,empty,validation,success,error_retry,denied_restricted,offline_interrupted,collection_scale
+LRN-003,My Learning,client,Resume learning from authoritative Course Enrollment and Learning Activity status.,mapped,mapped,mapped,mapped,mapped,where applicable,where applicable,pagination/infinite scroll where collection scale warrants; mobile card/list transformation
+LRN-004,Learning Path Detail & Progression,client,"Understand path/version, prerequisites, current activity and eligible next action.",mapped,mapped,mapped,mapped,mapped,where applicable,where applicable,pagination/infinite scroll where collection scale warrants; mobile card/list transformation
+ADM-LRN-005,Learning Path Management,admin,Manage learning path definition and version-aware progression configuration.,mapped,mapped,mapped,mapped,mapped,where applicable,where applicable,pagination/infinite scroll where collection scale warrants; mobile card/list transformation

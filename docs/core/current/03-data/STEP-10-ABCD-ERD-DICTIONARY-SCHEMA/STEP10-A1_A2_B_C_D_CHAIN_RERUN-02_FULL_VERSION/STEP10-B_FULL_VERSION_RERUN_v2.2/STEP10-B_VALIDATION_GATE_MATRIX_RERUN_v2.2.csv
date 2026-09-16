@@ -1,0 +1,19 @@
+control_id,control,expected,evidence,result
+B-RERUN-01,A2 entry gate,94/862/149 current baseline accepted,94 entities; 864 attrs; 149 relationships; A2 PASS,PASS
+B-RERUN-02,A1 attribute closure,All current A1 attributes represented,862 unique logical attribute rows reconstructed,PASS
+B-RERUN-03,A1 relationship closure,All current A1 relationships represented,149 relationship records reconstructed,PASS
+B-RERUN-04,Entity mapping,94 logical entities mapped,86 physical correspondences + 8 logical-only entities,PASS
+B-RERUN-05,Physical table baseline,86 current Core tables preserved,W4-01E SQL parses to 86 CREATE TABLE statements,PASS
+B-RERUN-06,Physical attribute corroboration,764 exact logical→physical rows remain proven,Every PHYSICAL_CORROBORATION row resolves to a current W4-01E table/column,PASS
+B-RERUN-07,Logical augmentation closure,33 logical augmentations represented,8 prior augmentations + 25 new A1 RERUN additions,PASS
+B-RERUN-08,New logical entity closure,8 new logical entities retained,All 8 have no current physical table,PASS
+B-RERUN-09,M03 freshness,last_refreshed_at represented,Logical augmentation; physical realization downstream,PASS
+B-RERUN-10,M06 Project inventory,41 fields represented,DEVELOPER_PROJECTS = 41; 24 new augmentation rows reconciled,PASS
+B-RERUN-11,M06 geography,2 logical relationships represented,province_id and district_id relationships retained as logical NEW_LOGICAL,PASS
+B-RERUN-12,M05 guest conflict,Guest physical conflict explicit,agent_id NOT NULL / event_id+agent_id unique retained as controlled downstream,PASS
+B-RERUN-13,M06 media conflict,Project Media semantic boundary preserved,Physical type CHECK preserved; brochure/pricelist remain MARKETING_KIT logically,PASS
+B-RERUN-14,M10 invariants,Preset semantics remain non-role and baseline-bound,"Target-role invariant classified semantic, not DB-enforced claim",PASS
+B-RERUN-15,M14/M15 boundary,Q01–Q66 remain M14,No M15 absorption,PASS
+B-RERUN-16,Core immutability,No Core mutation,Dictionary is reconciliation only; no SQL/migration executed,PASS
+B-RERUN-17,Runtime boundary,No runtime/RLS/provider execution claim,Runtime remains downstream,PASS
+B-RERUN-18,Supersession,Old B v1.0 non-authoritative,Old 839/147 baseline excluded from current counts,PASS

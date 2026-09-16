@@ -1,0 +1,8 @@
+Screen family,Ready,Loading,Empty,Validation,Error/Retry,Success,Denied/Restricted,Conditional/lifecycle
+Qualification/Evidence,YES,YES,YES,YES,YES,YES,YES,Unavailable/expired evidence; payload expandable
+Evaluation,YES,YES,YES,YES,YES,YES,YES,Restricted subject/authority; provenance
+Awards,YES,YES,YES,YES,YES,YES,YES,Expired/Revoked/Restored; state-relevant timestamps
+Appeal,YES,YES,YES,YES,YES,YES,YES,Pending/Decided; authority decision boundary
+Presentation,YES,YES,YES,YES,YES,YES,YES,Primary max 1; Featured max 3
+Admin definitions/rules,YES,YES,YES,YES,YES,YES,YES,Draft/Active/Retired where source-defined; scope/version context
+Admin evidence/award ops,YES,YES,YES,YES,YES,YES,YES,Authoritative lifecycle outcomes

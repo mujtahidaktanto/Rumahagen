@@ -1,0 +1,12 @@
+finding_id,source,finding,severity,correction_or_basis,status,p9_disposition,p9_recheck
+P8-F-001,P6 v1.1,P6 Core rows lacked explicit Core-finding→P4-WP routing,MATERIAL / CORRECTED,Rebuilt P6 as v1.2; 116/116 now explicitly routed,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-002,P6 v1.2,M01-M07 module coverage,NO FINDING,7/7 modules present,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-003,P7 v1.1,M08-M15 module coverage,NO FINDING,8/8 modules present,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-004,P6+P7,M01-M15 change obligation coverage,NO FINDING,57/57 P5 obligations represented exactly once,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-005,P6+P7,Core v1.3 scope coverage,NO FINDING,223/223 STEP14 Core findings represented; union equals source register,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-006,P6 v1.2,Core→execution WP routing,NO FINDING,116/116 M01-M07 rows explicitly routed to existing P4 WPs,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-007,P7 v1.1,Core→execution WP routing,NO FINDING,107/107 M08-M15 rows explicitly routed; WP core-row sum=107,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-008,P6+P7,Core preservation,NO FINDING,223/223 retained; no replacement/deletion in source traceability,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-009,P6+P7,Authority integrity,NO FINDING,Locked M01-M15 authority boundaries preserved,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-010,P6+P7,Q01-Q64 classification,NO FINDING,Q01-Q64 remain M14; M15 does not absorb them,CLOSED,CLOSED_AND_CONSUMED,PASS
+P8-F-011,P6+P7,Physical/runtime claims,NO FINDING,Evidence-gated; no unsupported proof introduced,CLOSED,CLOSED_AND_CONSUMED,PASS

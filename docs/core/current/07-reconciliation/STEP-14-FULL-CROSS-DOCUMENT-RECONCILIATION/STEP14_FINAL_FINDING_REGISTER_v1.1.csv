@@ -1,0 +1,4 @@
+finding_id,type,status,description,disposition,physical_runtime
+STEP14-F-001,DOCUMENTARY/PROVENANCE,CLOSED,STEP14 v1.0 provenance did not exactly reflect the eight current-turn uploads and current step13 sync core(4) container.,Rebuilt source provenance from the eight explicit current-turn uploads; nested STEP13-I v1.1 is explicitly recorded as contained evidence.,NO SEMANTIC CHANGE
+STEP14-F-002,DOCUMENTARY/COVERAGE,CLOSED,STEP14 v1.0 consistency matrix was selective and did not itself provide exhaustive row-level revalidation of all 223 accepted M01–M15 findings.,Added complete 223-row successor traceability revalidation plus 21-artifact Core scope inventory.,NO SEMANTIC CHANGE
+STEP14-F-003,SEMANTIC,CLOSED,No new blocking semantic finding identified after correction and second deep scan.,No re-entry; existing successor semantic baseline remains accepted.,EVIDENCE-GATED / NOT VERIFIED WHERE APPLICABLE

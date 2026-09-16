@@ -1,0 +1,8 @@
+module,from_state,to_state,authority
+M01,OTP success,ACTIVE / deferred-KTP path as applicable,M01
+M03,Draft,Published,M03
+M03,Published,Sold/Rented,M03
+M03,Published,Suspended,M03
+M12,CLOSING,CLOSED,M12
+M14,Payment pending,Confirmed/Fulfilled,M14
+M15,Evaluated/eligible,Awarded,M15

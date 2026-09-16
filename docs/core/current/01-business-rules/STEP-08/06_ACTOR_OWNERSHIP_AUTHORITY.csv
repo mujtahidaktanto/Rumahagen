@@ -1,0 +1,16 @@
+module,actor,object,semantic_authority,authorization_boundary,rule_boundary
+M01,Agent/User,identity subject,M01,M10 consumes identity; does not own identity lifecycle,OTP success activates account; KTP deferred remains requirement
+M02,Agent,own profile/public visibility,M02,M10 authorizes,"PUBLIC is visibility, not RBAC scope"
+M02,Superadmin,administrative visibility/CTA override,M02,M10 authorization,Admin/Manager generic status does not imply override
+M03,Listing owner / authorized actor,Listing lifecycle and Refresh action,M03,M10 authorizes,M14 supplies allowance/quota only
+M04,Learner / learning actors,Learning lifecycle/evidence,M04,M10 authorization downstream,M15 consumes qualification evidence
+M06,Developer / Agent,Project / Marketing Kit / Claim within governed scope,M06,M03 owns Listing authority,Project ownership ≠ Listing authority
+M08,Dashboard/notification consumer,projection/communication,M08,source domain remains authoritative,No business mutation authority
+M09,Admin/Superadmin,configuration/audit/export per governed scope,M09,M10 authorization,Does not create cross-module mutation authority
+M10,Role/Permission/Preset actor model,authorization,M10,M10,Preset cannot create capabilities outside role baseline
+M11,Public consumer,discovery/measurement,M11,source domain owns lifecycle,Discovery does not own source lifecycle
+M12,Lead/Member,organization/membership lifecycle,M12,M10 authorization,Membership ≠ authorization
+M13,Superadmin,Provider Catalogue mutation,M13,M10 authorization,Catalogue mutation Superadmin-only
+M13,Agent/User,own BYOK connection,M13,M10 authorization,No cross-user sharing/transfer
+M14,Buyer/Admin/Superadmin per governed commercial scope,commercial entitlement/quota/payment,M14,M10 authorization,Entitlement ≠ RBAC
+M15,qualification actors,Title/Qualification/Award,M15,M10 authorization,M04 remains Learning authority

@@ -1,0 +1,2 @@
+screen_id,title,surface,substep,primary_scope,state_rule
+LRN-001,Learning Home & Catalog,client,WF-04.01,catalog + partner learning discovery,loading/empty/error/denied/offline

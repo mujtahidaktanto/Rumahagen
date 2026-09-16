@@ -1,0 +1,9 @@
+Artifact,Role,Authority/Status,STEP10 eligibility
+Project Constitution v1.17,Current STEP09 artifact,Current synchronized; M14 Q01–Q66,STEP10 ELIGIBLE
+System Architecture v1.9,Current STEP09 artifact,Current synchronized; authority boundaries preserved,STEP10 ELIGIBLE
+Technical Decisions v1.6,Current STEP09 artifact,Current synchronized; Q01–Q66 reflected; no authority inversion,STEP10 ELIGIBLE
+Dependency Manifest v1.9,Current STEP09 artifact,Current dependency contracts; no new M09→M11 finding,STEP10 ELIGIBLE
+STEP09-E Cross-09 v1.1,Cross-document reconciliation,PASS; frozen Core predecessor refs are provenance only,STEP10 ELIGIBLE
+M14 v2.2 + QIR,Current module semantic authority,Q01–Q66 / 66 of 66 resolved,AUTHORITATIVE INPUT
+Core v1.3,Immutable provenance,Frozen source pack; never modified,PROVENANCE ONLY
+STEP09-F v1.2 prior HOLD,Historical predecessor final-gate baseline,Re-run basis; prior HOLD disposition superseded by corrected upstream evidence,HISTORICAL ONLY

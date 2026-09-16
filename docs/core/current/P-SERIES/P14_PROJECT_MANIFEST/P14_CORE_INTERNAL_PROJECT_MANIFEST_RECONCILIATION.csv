@@ -1,0 +1,2 @@
+CoreArtifactID,CorePath,CoreSourceIndexStatus,P14Treatment,CurrentP14Authority,ConflictStatus,Reason
+SRC-040,29_FINAL_CONTROL/W4-02A.6.35_PROJECT_MANIFEST_FINAL_v1.32.docx,CURRENT,IMMUTABLE_CORE_INTERNAL_REFERENCE,P14_PROJECT_MANIFEST Project Manifest v1.2,RECONCILED,Core v1.3 cannot be mutated; SRC-040 remains current inside the frozen Core package but is not the authority for the current P-Step P14_PROJECT_MANIFEST manifest.

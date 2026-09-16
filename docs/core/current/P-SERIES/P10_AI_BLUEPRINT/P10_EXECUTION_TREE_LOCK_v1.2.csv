@@ -1,0 +1,20 @@
+﻿sub_step,focus,status
+P10_AI_BLUEPRINT-00,Input Deep Scan / Currentness / Authority Gate,LOCKED
+P10_AI_BLUEPRINT-A,AI Development Governance & Engineering Baseline,LOCKED
+P10_AI_BLUEPRINT-B,AI Development Architecture & Implementation Strategy,LOCKED
+P10_AI_BLUEPRINT-C,AI Agent / AI Coding Workflow & Execution Rules,LOCKED
+P10_AI_BLUEPRINT-D,AI ↔ API / Data / RBAC-RLS Engineering Boundaries,LOCKED
+P10_AI_BLUEPRINT-E,AI ↔ Module Authority & Cross-Module Contract,LOCKED
+P10_AI_BLUEPRINT-F,"AI Development Rules for UI/UX, Flow, State & Error Handling",LOCKED
+P10_AI_BLUEPRINT-G,AI Development Rules for Learning / LP / Evidence / Qualification,LOCKED
+P10_AI_BLUEPRINT-H,AI Development Rules for Commercial / Payment / Entitlement / Quota,LOCKED
+P10_AI_BLUEPRINT-I,AI Development Rules for SEO / Analytics / Discovery,LOCKED
+P10_AI_BLUEPRINT-J,"AI Safety, Security, Secret/BYOK & Provider Boundaries",LOCKED
+P10_AI_BLUEPRINT-K,AI Testing / Verification / Negative Testing / Idempotency / Recovery,LOCKED
+P10_AI_BLUEPRINT-L,AI Development Task Decomposition & Implementation Handoff,LOCKED
+P10_AI_BLUEPRINT-M,Controlled Residual / Evidence-Gated Implementation Handling,LOCKED
+P10_AI_BLUEPRINT-N,Full Cross-Artifact AI Development Reconciliation,LOCKED
+P10_AI_BLUEPRINT-O,First Full Deep Scan,LOCKED
+P10_AI_BLUEPRINT-P,Correction / Full Rebuild if material finding,LOCKED
+P10_AI_BLUEPRINT-Q,Second Full Deep Scan,LOCKED
+P10_AI_BLUEPRINT-R,Final P10_AI_BLUEPRINT Gate & P11_AI_CONTEXT Handoff,LOCKED

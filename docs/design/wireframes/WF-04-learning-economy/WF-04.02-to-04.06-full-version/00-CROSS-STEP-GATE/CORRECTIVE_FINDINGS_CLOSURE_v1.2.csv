@@ -1,0 +1,15 @@
+finding,severity,prior_issue,status,closure
+F04-02-01,HIGH,ADM-LRN-002 missing category/passing_grade/prerequisite_course_id,CLOSED,Full form rebuilt with Course identity + Learning requirements + Lifecycle sections.
+F04-02-02,HIGH,ADM-LRN-003 missing content_type/content_url,CLOSED,Lesson Manager rebuilt with explicit content type and content/reference surface.
+F04-04-01,HIGH,Quiz structure incomplete,CLOSED,"Quiz Manager rebuilt with title, question text/type, options and is_correct authoring control."
+F04-03-01,HIGH,Activity Management missing code/description/status,CLOSED,Activity Management rebuilt with full UX-relevant field surface.
+F04-03-02,MEDIUM,API-065 Start Activity not explicit,CLOSED,LRN-005 rebuilt around Start → Activity Instance → Consume → Completion Claim → Validation.
+F04-03-03,MEDIUM,API-068 own activity instances/status not explicit,CLOSED,"LRN-003 rebuilt with current/next activity, activity status and resume/continue."
+F04-05-01,MEDIUM,Titles trace missing / authority risk,CLOSED,LRN-007 uses controlled M04→M15 handoff and View Qualification Status.
+F04-05-02,MEDIUM,Credential distinction unclear,CLOSED,Credential Management explicitly separates Credential/Certificate from M15 Award/Title.
+F04-06-01,HIGH,LP transaction taxonomy incomplete,CLOSED,All six transaction types explicitly represented.
+F04-06-02,MEDIUM,LP provenance incomplete,CLOSED,"Type, Amount, Source/Reason, Date-Time and progressive source reference represented."
+F04-06-03,MEDIUM,Learning Economy Configuration too generic,CLOSED,Read → Edit → Impact Review → Save sequence explicitly represented.
+F04-06-04,MEDIUM,LP Redemption fail-closed UX weak,CLOSED,"Insufficient balance, pending/no-resubmit, authoritative success and retry states represented."
+F04-STATE,MEDIUM,Generic state pattern not sufficient per screen,CLOSED,Per-screen state matrix added; state mapping is explicit.
+F04-SCALE,MEDIUM,Collection scalability behavior insufficient,CLOSED,Pagination/infinite scroll mapped for specified collection screens; mobile list/card transformation defined.

@@ -1,0 +1,4 @@
+id,severity,type,finding,execution_resolution,treatment,blocker
+WF11-R01,MEDIUM,CHECKLIST TRACEABILITY,"Checklist Traceability still maps M13 to WIRE-10/WIRE-11 and M15 to WIRE-08/WIRE-09/WIRE-11, while WF-00 canonical allocation maps M13→WIRE-09 and M15→WIRE-07; M12 also conflicts.",RESOLVED FOR EXECUTION / DOCUMENTARY RESIDUAL,WF-00 canonical allocation governs wireframe execution. Checklist row is preserved as stale provenance and must be cleaned in governance source.,NON-BLOCKING
+WF11-R02,LOW,CHECKLIST STATUS,Master/Gate checklist WIRE-11 remains Not Started despite package evidence.,RESOLVED FOR EXECUTION / DOCUMENTARY RESIDUAL,Package gate is the execution result; checklist status is stale metadata.,NON-BLOCKING
+WF11-R03,LOW,WF10 VERSION LABEL,Uploaded WF-10 filename says v1.0 while internal corrected content is v1.1.,DOCUMENTARY RESIDUAL,Internal corrected content is used; filename mismatch does not alter semantic baseline.,NON-BLOCKING

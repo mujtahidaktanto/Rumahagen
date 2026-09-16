@@ -1,0 +1,4 @@
+scope,expected_wps,actual_wps,core_rows,core_rows_with_wp,status
+P6 M01-M07,30,30,116,116,PASS
+P7 M08-M15,32,32,107,107,PASS
+Combined,62,62,223,223,PASS

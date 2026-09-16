@@ -1,0 +1,13 @@
+﻿Step,Material Decision/Change Coverage,Primary Current Artifact,P13_DECISION_CHANGE_LOG Treatment,Status
+P1,COVERED,P1,Historical decision/change reconstructed; current successor preserved,PASS
+P2,COVERED,P2,Historical decision/change reconstructed; current successor preserved,PASS
+P3,COVERED,P3,Historical decision/change reconstructed; current successor preserved,PASS
+P4,COVERED,P4,Historical decision/change reconstructed; current successor preserved,PASS
+P5,COVERED,P5,Historical decision/change reconstructed; current successor preserved,PASS
+P6,COVERED,P6,Historical decision/change reconstructed; current successor preserved,PASS
+P7,COVERED,P7,Historical decision/change reconstructed; current successor preserved,PASS
+P8,COVERED,P8,Historical decision/change reconstructed; current successor preserved,PASS
+P9,COVERED,P9,Historical decision/change reconstructed; current successor preserved,PASS
+P10_AI_BLUEPRINT,COVERED,P10_AI_BLUEPRINT,Historical decision/change reconstructed; current successor preserved,PASS
+P11_AI_CONTEXT,COVERED,P11_AI_CONTEXT,Historical decision/change reconstructed; current successor preserved,PASS
+P12_RECONCILIATION_EVIDENCE,COVERED,P12_RECONCILIATION_EVIDENCE,Historical decision/change reconstructed; current successor preserved,PASS

@@ -1,0 +1,18 @@
+ID,Target,Status,Next Step,Rule
+G-R01,8 logical-only entities,GOVERNED_DOWNSTREAM,STEP11-14 + FINAL PHYSICAL RECONCILIATION,Aggregate group; do not drop; no physical implementation claim
+G-R02,DEVELOPER_PROJECTS 24 augmentations,GOVERNED_DOWNSTREAM,STEP11-14 + FINAL PHYSICAL RECONCILIATION,No exact current physical columns; final physical reconciliation is downstream
+G-R03,DEVELOPER_PARTNERS company_logo / description,GOVERNED_DOWNSTREAM,STEP11-14 + FINAL PHYSICAL RECONCILIATION,No exact current physical columns
+G-R04,AGENT_PROFILES 3 augmentations,GOVERNED_DOWNSTREAM,STEP11-14 + FINAL PHYSICAL RECONCILIATION,No exact current physical columns
+G-R05,EVENT_REGISTRATIONS guest semantics,MANDATORY_STEP11_DEPENDENCY,STEP11 API + downstream physical reconciliation,Preserve guest semantics and current physical constraint; no persistence claim
+G-R06,QUOTA_CAPACITIES daily_refresh_allowance,GOVERNED_DOWNSTREAM,STEP11-14 + FINAL PHYSICAL RECONCILIATION,Commercial entitlement/quota augmentation
+G-R07,LISTINGS last_refreshed_at,GOVERNED_DOWNSTREAM,STEP11-14 + FINAL PHYSICAL RECONCILIATION,Refresh authority remains M03
+G-R08,EVENT_PROVIDER_BINDING,GOVERNED_DOWNSTREAM_CHILD,STEP11-14 + FINAL PHYSICAL RECONCILIATION,Child of aggregate G-R01
+G-R09,Permission Preset family,GOVERNED_DOWNSTREAM_CHILD,STEP12 + FINAL PHYSICAL RECONCILIATION,M10 authoritative; not a new role
+G-R10,STATIC_PUBLIC_CONTENT / PUBLIC_ANNOUNCEMENT_PROMOTION,GOVERNED_DOWNSTREAM_CHILD,STEP11-14 + FINAL PHYSICAL RECONCILIATION,Public discovery resources; M11 discovery authority remains
+G-R11,ORGANIZATION_DOCUMENT,GOVERNED_DOWNSTREAM_CHILD,STEP11-14 + FINAL PHYSICAL RECONCILIATION,Child of aggregate G-R01
+G-R12A,FK delta,GOVERNED_DOWNSTREAM,FINAL PHYSICAL RECONCILIATION,Separate FK reconciliation
+G-R12B,Constraint delta,GOVERNED_DOWNSTREAM,FINAL PHYSICAL RECONCILIATION,Separate constraint reconciliation
+G-R12C,Index delta,GOVERNED_DOWNSTREAM,FINAL PHYSICAL RECONCILIATION,Separate index reconciliation
+G-R13,API dependency,STEP11_READY,STEP11,Consume accepted 94/862/149 baseline
+G-R14,RBAC / Permission dependency,STEP12_READY,STEP12,M10 remains authoritative
+G-R15,RLS / runtime dependency,STEP13_14_READY,STEP13-14,Physical RLS baseline only; runtime proof pending

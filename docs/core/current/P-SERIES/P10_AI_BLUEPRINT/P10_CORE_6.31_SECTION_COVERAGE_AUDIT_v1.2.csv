@@ -1,0 +1,35 @@
+﻿section_id,core_section,p10_rule,status
+6.31-01,STEP ACTIVE,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-02,PURPOSE,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-03,AI AUTHORITY MODEL,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-04,CURRENT W4 CONTEXT MODEL,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-05,PHYSICAL DATABASE CONTEXT,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-06,AI CONTEXT ROUTING MODEL,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-07,AI EXECUTION LOOP,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-08,REQUIRED AI PRE-FLIGHT,"13-point pre-flight: module, WP, authority, hard/conditional dependencies, schema, API, permission/scope/RLS, UI/UX, SEO/Analytics, OOS, historical material, STOP trigger.",COVERED
+6.31-09,REQUIRED AI OUTPUT BEFORE IMPLEMENTATION,"Before non-trivial implementation: TARGET, MODULE, WORK PACKAGE, CURRENT AUTHORITY, HARD DEPENDENCIES, CONDITIONAL DEPENDENCIES, IN SCOPE, OUT OF SCOPE, AFFECTED CONTRACTS, AFFECTED FILES, TEST PLAN, NEGATIVE/SECURITY PLAN, STOP CONDITIONS.",COVERED
+6.31-10,STOP RULES,STOP-01 missing business decision; STOP-02 authority collision; STOP-03 physical contradiction; STOP-04 missing physical object; STOP-05 missing API contract; STOP-06 missing permission/scope; STOP-07 provider ambiguity; STOP-08 unsupported runtime claim; STOP-09 scope expansion; STOP-10 historical resurrection.,COVERED
+6.31-11,NO-INVENTION POLICY,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-12,REPOSITORY INSPECTION RULE,Inspect repository/current artifact state before implementation; do not infer implementation state from document existence alone.,COVERED
+6.31-13,MODULE CONTEXT ROUTING,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-14,CROSS-DOMAIN INVARIANTS,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-15,MUTATION SAFETY BLUEPRINT,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-16,PAYMENT-SPECIFIC AI GUARDRAILS,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-17,LEARNING-ECONOMY AI GUARDRAILS,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-18,SESSION AI GUARDRAILS,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-19,AUTHORIZATION AI GUARDRAILS,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-20,UI AI GUARDRAILS,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-21,PUBLIC PAGE / SEO AI GUARDRAILS,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-22,TESTING BLUEPRINT,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-23,EVIDENCE BLUEPRINT,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-24,AI CHECKPOINT FORMAT,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-25,AI CHANGE-CONTROL PROTOCOL,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-26,AI FORBIDDEN BEHAVIOR,"Forbidden: inventing authority/contracts, replaying historical baseline as current, bypassing authorization, treating client state as canonical, claiming runtime/production success without evidence, silently expanding scope.",COVERED
+6.31-27,AI SELF-REVIEW CHECKLIST,Self-review: module/WP/authority/dependencies/history/no-new-rule/entity/API/permission/provider/schema change/ownership/authorization/RLS/idempotency/UI/SEO/tests/evidence/residuals.,COVERED
+6.31-28,AI DEFINITION OF DONE,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-29,HISTORICAL BLUEPRINT REBASE,Historical AI blueprint material is provenance only and must be rebased against current authority.,COVERED
+6.31-30,CARRY-FORWARD AUDIT,"Carry-forward audit classifies items as carried forward, rebased, superseded, new owner decisions, new semantic/API/entity/permission/provider authorities, and runtime/production authorization.",COVERED
+6.31-31,INTERNAL RECONCILIATION,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-32,GREEN GATE,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-33,CURRENT CHECKPOINT,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED
+6.31-34,AUTHORITY / SCOPE STATEMENT,Explicitly translated into P10_AI_BLUEPRINT AI-development execution rules and traceability; no new authority is created.,COVERED

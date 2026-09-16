@@ -1,0 +1,326 @@
+[
+  {
+    "file": "02-DESKTOP/ADM-COM-001.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/ADM-COM-002.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/ADM-COM-003.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/ADM-COM-004.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/ADM-COM-005.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/ADM-COM-006.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/ADM-COM-007.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-001.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-002.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-003.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-004.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-005.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-006.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-007.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-008.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-009.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-010.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "02-DESKTOP/COM-011.png",
+    "size": [
+      1440,
+      1024
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/ADM-COM-001.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/ADM-COM-002.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/ADM-COM-003.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/ADM-COM-004.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/ADM-COM-005.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/ADM-COM-006.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/ADM-COM-007.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-001.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-002.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-003.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-004.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-005.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-006.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-007.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-008.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-009.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-010.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  },
+  {
+    "file": "03-MOBILE/COM-011.png",
+    "size": [
+      390,
+      844
+    ],
+    "dimension_pass": true,
+    "mode": "RGB"
+  }
+]

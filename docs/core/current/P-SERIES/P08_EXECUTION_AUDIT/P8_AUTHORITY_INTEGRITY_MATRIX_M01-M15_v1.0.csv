@@ -1,0 +1,16 @@
+module,authority,audit_result,key_boundary
+M01,Identity/Auth,PASS,Does not own ordinary RBAC/RLS
+M02,Profile/Review/Visibility,PASS,Visibility is not RBAC scope
+M03,Listing/Lifecycle/Refresh,PASS,M14 owns allowance; M03 owns action
+M04,Learning/Session/Evidence Production,PASS,M15 consumes evidence; does not own Learning
+M05,Event/Registration,PASS,Registration distinct from Session Enrollment
+M06,Developer/Project/Marketing Kit/Claim,PASS,Approved Claim may seed M03 Listing; M03 owns lifecycle
+M07,DBR,PASS,M09 config does not become DBR authority
+M08,Projection/Notification,PASS,Projection-only; no business mutation
+M09,Administration/Configuration/Audit,PASS,Admin/config distinct from authorization
+M10,Authorization/RBAC/Scope/RLS,PASS,Authorization authority remains M10
+M11,SEO/Discovery/Analytics,PASS,Discovery does not own lifecycle/config
+M12,Organization/Membership/Context,PASS,Membership/context does not create permission/ownership/entitlement
+M13,AI/BYOK/Provider Catalogue,PASS,Provider domain does not bypass M10
+M14,Commercial/Payment/Entitlement/Quota/Promotion,PASS,Q01-Q64 remain M14
+M15,Qualification/Evidence/Award,PASS,Consumes M04 evidence; no Q01-Q64 absorption

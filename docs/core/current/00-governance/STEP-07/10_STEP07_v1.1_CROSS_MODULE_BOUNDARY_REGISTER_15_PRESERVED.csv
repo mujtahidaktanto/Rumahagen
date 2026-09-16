@@ -1,0 +1,16 @@
+collision_id,boundary,subject,status,resolution,guardrail
+C-001,M01 ↔ M02,Identity vs Profile/Public Visibility,NON-CONFLICT — BOUNDARY CONFIRMED,M01 owns identity/authentication; M02 owns profile/visibility and consumes identity.,No authority transfer.
+C-002,M01 ↔ M15,Identity vs Qualification,NON-CONFLICT — BOUNDARY CONFIRMED,M01 supplies identity subject; M15 owns qualification/awarding.,No authority transfer.
+C-003,M03 ↔ M11,Listing lifecycle vs Discovery/SEO,NON-CONFLICT — BOUNDARY CONFIRMED,M03 owns Listing/Refresh truth; M11 consumes public Listing state for discovery/measurement.,M11 is projection/discovery layer.
+C-004,M04 ↔ M15,Learning/evidence vs Qualification/Awarding,NON-CONFLICT — BOUNDARY CONFIRMED,M04 produces/owns learning evidence; M15 evaluates qualification/awards.,Evidence is not award.
+C-005,M06 ↔ M03,Project → Listing,NON-CONFLICT — BOUNDARY CONFIRMED,M06 owns Project association semantics; M03 retains Listing lifecycle authority.,No Listing ownership transfer.
+C-006,M09 ↔ domain modules,Admin surface vs domain mutation,NON-CONFLICT — BOUNDARY CONFIRMED,M09 is administrative control surface; underlying domain owns business semantics and approval.,No generic M09 approval authority.
+C-007,M09 ↔ M10,Administration vs Authorization,NON-CONFLICT — BOUNDARY CONFIRMED,M09 exposes admin capability; M10 authorizes.,UI/admin surface is not authorization.
+C-008,M10 ↔ all modules,Authorization vs Business Ownership,NON-CONFLICT — ORTHOGONAL AUTHORITY,M10 owns authorization/RBAC/RLS; domain modules retain business ownership.,Authorization does not create domain entitlement/ownership.
+C-009,M12 ↔ M14,Organization context vs Commercial entitlement/quota,NON-CONFLICT — LOCKED,M12 supplies organization context; M14 owns commercial entitlement/quota.,Older conflicting M12 quota wording is superseded by M14.
+C-010,M13 ↔ M10,BYOK/provider vs Authorization,NON-CONFLICT — LOCKED,M13 owns provider/BYOK semantics; M10 authorizes access/mutation.,M13 is not platform authorization authority.
+C-011,M13 ↔ M09,Provider catalogue vs Admin surface,NON-CONFLICT — LOCKED,Provider catalogue mutation is Superadmin-only; M09 cannot transfer provider-domain authority.,Admin surface ≠ provider authority.
+C-012,M14 ↔ M03 ↔ M10,Refresh allowance vs Refresh action vs authorization,NON-CONFLICT — LOCKED,M14 entitlement → M03 consumption/action → M10 authorization.,Three-layer separation; no ownership inversion.
+C-013,M14 ↔ M15,Commercial vs Qualification,NON-CONFLICT — LOCKED,M14 owns commercial/payment; M15 owns qualification/awarding.,M15 does not absorb M14 Q01–Q64.
+C-014,M09 ↔ M11,Public content admin vs Discovery/measurement,CLARIFICATION — NOT A CONFLICT,M09 owns administrative mutation of lightweight public content/configuration; M11 owns discovery/SEO/measurement.,M09 export/reporting wording does not transfer M11 measurement authority.
+C-015,Core README / STEP03,Core baseline metadata authority,RESOLVED AT STEP07 — CONTROL ARTIFACT CLASSIFICATION,README_CURRENT_BASELINE is Core baseline/control metadata; governance/freeze controls govern it. This resolves STEP03's unresolved owner classification without modifying Core content.,Control classification only; no semantic domain authority transfer.

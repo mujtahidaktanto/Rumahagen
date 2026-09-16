@@ -1,0 +1,15 @@
+Physical table,Fields,Primary UI coverage,Correction note
+title_definitions,7,TTL-001;ADM-M15-001,code/name/description/status explicit
+title_authority_scopes,6,ADM-M15-001,scope_type/reference/status explicit; id/parent/timestamps contextual/audit
+awarding_paths,7,TTL-001;ADM-M15-002,path identity/lifecycle explicit
+awarding_path_versions,9,ADM-M15-003;ADM-M15-005,version/effective/snapshot + association context
+awarding_rule_versions,9,ADM-M15-004;ADM-M15-005,rule version + composition context
+awarding_path_rules,4,ADM-M15-005,path-version ↔ rule-version explicit
+awarding_condition_groups,5,ADM-M15-005,group operator/sequence explicit
+awarding_conditions,7,ADM-M15-005,condition_type/operator/expected/sequence explicit
+awarding_prerequisites,7,ADM-M15-005,type/reference/definition/sequence explicit
+qualification_evidence,9,QAL-002;ADM-M15-006,payload/source context explicit
+qualification_evaluations,10,QAL-003;ADM-M15-006,provenance/evaluator/version references explicit
+award_instances,14,AWD-001;AWD-002;ADM-M15-007,lifecycle timestamps and snapshot explicit
+award_qualifying_paths,6,AWD-002;ADM-M15-009,provenance explicit
+title_presentations,8,AWD-004,presentation controls explicit

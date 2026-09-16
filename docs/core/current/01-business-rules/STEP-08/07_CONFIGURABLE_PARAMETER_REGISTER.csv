@@ -1,0 +1,10 @@
+authority,parameter_family,semantic,treatment,owner,source_control
+M14,Promotion,eligibility/benefit/validity/parameters,CONFIGURABLE,M14,COV-003
+M14,Subscription,commercial parameters,CONFIGURABLE,M14,COV-004
+M14,Add-on,commercial parameters/validity,CONFIGURABLE,M14,COV-005
+M14/M03,Quota/Refresh,allowance/quota/default/reset parameters,CONFIGURABLE,M14 commercial allowance; M03 action,COV-006/COV-011/COV-012
+M07/M09,DBR,threshold/interpretation configuration,CONFIGURABLE,M07 semantic; M09 administration,COV-027
+M11/M09,Static Public Content,administrative content/configuration,CONFIGURABLE,M09 lifecycle/config; M11 discovery,COV-001
+M11/M09,Announcement/Promotion,publication/configuration,CONFIGURABLE,M09 lifecycle/config; M11 discovery,COV-002
+M13,Provider Catalogue,catalogue entries,CONTROLLED_CONFIG,M13; Superadmin-only mutation,COV-036
+M10,Permission Preset,optional preset values within role baseline,CONFIGURABLE_WITH_BASELINE,M10,COV-021

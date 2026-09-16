@@ -1,0 +1,36 @@
+ScopeID,ScopeType,Count,P16Treatment,Result
+M01,MODULE,4,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M02,MODULE,4,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M03,MODULE,9,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M04,MODULE,3,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M05,MODULE,2,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M06,MODULE,5,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M07,MODULE,2,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M08,MODULE,2,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M09,MODULE,4,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M10,MODULE,3,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M11,MODULE,4,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M12,MODULE,3,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M13,MODULE,4,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M14,MODULE,5,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+M15,MODULE,3,P16_README_CURRENT_BASELINE current-state materialization + authority/dependency/change/residual boundary,PASS
+IP-00,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-01,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-02,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-03,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-04,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-05,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-06,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-07,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-08,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-09,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-10,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-11,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-12,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-13,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-14,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-15,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+IP-16,CORE,1,P16_README_CURRENT_BASELINE explicit Core IP current-state/immutability/successor handoff register,PASS
+P13_DECISION_CHANGE_LOG,DECISION,64,Decision/Change baseline navigation,PASS
+P13_DECISION_CHANGE_LOG,MATERIAL OBLIGATION,57,All M01-M15 material obligations represented through P15_PROJECT_CURRENT_STATE current state,PASS
+P13_DECISION_CHANGE_LOG,LOCKED DECISION,7,Locked decision preservation,PASS

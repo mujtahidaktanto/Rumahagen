@@ -1,0 +1,45 @@
+{
+  "step": "P12_RECONCILIATION_EVIDENCE",
+  "version": "v1.0",
+  "result": "CLOSED / PASS WITH CONTROLLED RESIDUALS",
+  "p13": "READY WITH CONTROL",
+  "stage": "PRE-PHYSICAL / PRE-RUNTIME",
+  "evidence_scope": "DOCUMENTARY/DESIGN ONLY",
+  "physical_proof": "OUT OF SCOPE",
+  "runtime_proof": "OUT OF SCOPE",
+  "production_proof": "OUT OF SCOPE",
+  "hold_on_absent_physical_runtime": false,
+  "do_not_build_on_absent_physical_runtime": false,
+  "coverage": {
+    "modules": 15,
+    "obligations": 57,
+    "work_packages": 62,
+    "core_findings": 223,
+    "dependencies": 65,
+    "p10_sections": 34,
+    "p10_controls": 14,
+    "controlled_residuals": 47,
+    "cross_domain_invariants": 9,
+    "locked_decisions": 7
+  },
+  "deep_scan": {
+    "top_level_uploads": 10,
+    "recursive_files": 3507,
+    "unique_sha256_groups": 1754,
+    "duplicate_files_beyond_first": 1753
+  },
+  "checks": {
+    "core_routing_invalid": 0,
+    "dependency_duplicates": 0,
+    "dependency_self_loops": 0,
+    "core_preserved_yes": 223,
+    "core_modified_no": 223,
+    "p9_wp_runtime_not_verified": 62,
+    "p9_core_runtime_evidence_gated": 223,
+    "p11_core_runtime_evidence_gated": 223
+  },
+  "findings": {
+    "material": 0,
+    "controlled": 3
+  }
+}

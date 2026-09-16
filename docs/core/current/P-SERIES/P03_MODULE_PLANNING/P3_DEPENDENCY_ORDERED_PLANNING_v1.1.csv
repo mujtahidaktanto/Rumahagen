@@ -1,0 +1,7 @@
+wave,name,modules,intent
+0,Foundation Contracts,M01;M10,Identity/auth + authorization contract
+1,Context & Platform Foundations,M02;M12;M13,Profile/org context + protected AI foundation
+2,Primary Source Domains,M06;M03;M05;M04;M14;M07,Primary business domains after foundation
+3,Qualification & Administration,M15;M09,Awarding + bounded admin/configuration
+4,Projection & Discovery,M08;M11,Downstream projection/discovery
+5,Cross-Domain Hardening,ALL,Integrated planning hardening

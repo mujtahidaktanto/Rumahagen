@@ -1,0 +1,1 @@
+P4 v1.3 is a full-version rebuild based only on the six uploaded ZIPs. It rebases the detailed uploaded Core 6.25 execution-architecture precedent to current P1/P2/P3 obligations. Core v1.3 remains immutable; P4 performs no implementation or runtime verification.

@@ -1,0 +1,91 @@
+permission_code,source_module,source_resource,source_action,source_condition,source_file
+m02.profile_photo.upload,M02,Profile Photo,Upload,Own profile for non-Superadmin roles,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m02.profile_photo.edit,M02,Profile Photo,Edit,Own profile for non-Superadmin roles,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m02.profile_photo.delete,M02,Profile Photo,Delete,Own profile for non-Superadmin roles,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m03.listing.create,M03,Listing,Create,Lifecycle/ownership guards,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m03.listing.update,M03,Listing,Update,Ordinary owner edit; moderation separate,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m03.listing.delete,M03,Listing,Delete,Lifecycle/ownership guards,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m03.listing.publish,M03,Listing,Publish,Publication rules,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m03.listing.refresh,M03,Listing,Refresh,PUBLISHED + owner/authority + daily entitlement + operational day + once/listing/day,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.learning_session.create,M04,Learning Session,Create,"Instructor resource/assignment constrained; Host is capability, not Role",STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.learning_session.view,M04,Learning Session,View,Visibility + resource/eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.learning_session.update,M04,Learning Session,Update,Resource/assignment/lifecycle,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.learning_session.delete,M04,Learning Session,Delete,Lifecycle constraints,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.learning_session.manage,M04,Learning Session,Manage,Instructor constrained to assigned resource,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.session_enrollment.create,M04,Session Enrollment,Create,Own enrollment/access eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.session_enrollment.view,M04,Session Enrollment,View,Own enrollment/access eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.session_assignment.assign,M04,Session Assignment,Assign,Privileged assignment mutation,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.session_evidence.view,M04,Session Evidence,View,Own/resource/assignment constraints,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.session_evidence.manage,M04,Session Evidence,Manage,Own/resource/assignment constraints,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.attendance.manage,M04,Attendance,Manage,Assigned resource,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.completion.manage,M04,Completion,Manage,Learner cannot authoritatively mutate completion outcome,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.artifact.view,M04,Artifact,View,Resource/participant context,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.artifact.manage,M04,Artifact,Manage,Resource/participant context,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m04.learning_provider.manage,M04,Learning Provider,Manage,Privileged provider management,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event.create,M05,Event,Create,Submission does not imply publish,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event.update,M05,Event,Update,Submission does not imply publish,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event.publish,M05,Event,Publish,Submission does not imply publish,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event.lifecycle,M05,Event,Lifecycle,Submission does not imply publish,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event.visibility,M05,Event,Visibility,Submission does not imply publish,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event_registration.create,M05,Event Registration,Create,Own registration + eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event_registration.view,M05,Event Registration,View,Own registration + eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event_registration.update,M05,Event Registration,Update,Own registration + eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.event.cancellation,M05,Event,Cancellation,Separate M05 lifecycle authority,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.guest_registration.create,M05,Guest Registration,Create,Distinct from M04 Session Enrollment,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.guest_registration.view,M05,Guest Registration,View,Distinct from M04 Session Enrollment,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m05.guest_registration.manage,M05,Guest Registration,Manage,Distinct from M04 Session Enrollment,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.marketing_kit.create,M06,Marketing Kit,Create,Developer Partner own developer/project scope,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.marketing_kit.upload,M06,Marketing Kit,Upload,Developer Partner own developer/project scope,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.marketing_kit.edit,M06,Marketing Kit,Edit,Developer Partner own developer/project scope,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.marketing_kit.delete,M06,Marketing Kit,Delete,Developer Partner own developer/project scope,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.marketing_kit.view,M06,Marketing Kit,View,Manager/Agent view+download; Developer Partner own,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.marketing_kit.download,M06,Marketing Kit,Download,Manager/Agent view+download; Developer Partner own,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.claim.review,M06,Claim,Review,Claim/project moderation rules,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.claim.approve,M06,Claim,Approve,Claim/project moderation rules,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.claim.reject,M06,Claim,Reject,Claim/project moderation rules,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m06.claim.revoke,M06,Claim,Revoke,Claim/project moderation rules,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m07.dbr.domain_operations,M07,DBR,Domain operations,Bank Selection is not a standalone permission,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m08.dashboard_projection.project,M08,Dashboard Projection,Project,Projection only,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m08.dashboard_projection.read,M08,Dashboard Projection,Read,Projection only,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m08.notification_state.read,M08,Notification State,Read,State/communication only,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m08.notification_state.update_state,M08,Notification State,Update State,State/communication only,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m09.system_configuration.view,M09,System Configuration,View,System configuration boundary,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m09.system_configuration.manage,M09,System Configuration,Manage,System configuration boundary,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m09.administrative_audit_log.view,M09,Administrative Audit Log,View,Administrative audit boundary,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m09.notification_template_content.configure,M09,Notification Template/Content,Configure,Presentation/content config; source event remains domain-owned,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m09.administrative_export.export,M09,Administrative Export,Export,Global administrative export,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m09.provider_catalogue.mutation,M09,Provider Catalogue,Mutation,M13 domain authority; Superadmin-only mutation,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m10.role_catalogue.view,M10,Role Catalogue,View,Authorization infrastructure,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m10.permission_catalogue.view,M10,Permission Catalogue,View,Authorization infrastructure,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m10.role_permission_matrix.view,M10,Role-Permission Matrix,View,Authorization infrastructure,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m10.role_permission_matrix.manage,M10,Role-Permission Matrix,Manage,Protected governance,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m10.agent_permission_rows.modify,M10,Agent Permission Rows,Modify,Manager may modify Agent rows only where editability allows,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m11.static_public_content.publish,M11,Static Public Content,Publish,Publisher capability separate from discovery,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m11.announcement_promotion.publish,M11,Announcement / Promotion,Publish,Discovery/measurement separate from authoring,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m12.organization.manage_within_authorized_context,M12,Organization,Manage within authorized context,Organization context does not create Role/scope enum,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.provider_catalogue.create,M13,Provider Catalogue,Create,Superadmin-only mutation,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.provider_catalogue.edit,M13,Provider Catalogue,Edit,Superadmin-only mutation,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.provider_catalogue.enable,M13,Provider Catalogue,Enable,Superadmin-only mutation,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.provider_catalogue.disable,M13,Provider Catalogue,Disable,Superadmin-only mutation,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.provider_catalogue.retire,M13,Provider Catalogue,Retire,Superadmin-only mutation,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.create,M13,Own BYOK Connection,Create,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.view,M13,Own BYOK Connection,View,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.update,M13,Own BYOK Connection,Update,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.rotate,M13,Own BYOK Connection,Rotate,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.test,M13,Own BYOK Connection,Test,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.enable,M13,Own BYOK Connection,Enable,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.disable,M13,Own BYOK Connection,Disable,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.own_byok_connection.disconnect,M13,Own BYOK Connection,Disconnect,Own connection; credentials remain infrastructure-controlled,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m13.administrative_force_revoke_disable.execute,M13,Administrative Force Revoke/Disable,Execute,Privileged administrative intervention,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m14.commercial_administration.configure,M14,Commercial Administration,Configure,Exact operation-level authority remains M14; entitlement is not RBAC,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m14.commercial_administration.manage_commercial_resources,M14,Commercial Administration,manage commercial resources,Exact operation-level authority remains M14; entitlement is not RBAC,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m14.commercial_purchase_access.own_purchase,M14,Commercial Purchase/Access,Own purchase,Purchase success does not grant RBAC; entitlement may affect eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m14.commercial_purchase_access.access,M14,Commercial Purchase/Access,access,Purchase success does not grant RBAC; entitlement may affect eligibility,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m14.refresh_allowance_entitlement.configure,M14,Refresh Allowance/Entitlement,Configure,M14 allowance/quota; M03 owns Refresh action,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m14.refresh_allowance_entitlement.consume,M14,Refresh Allowance/Entitlement,consume,M14 allowance/quota; M03 owns Refresh action,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m15.qualification.administer,M15,Qualification,Administer,Qualification is not authorization,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m15.qualification.evaluate,M15,Qualification,evaluate,Qualification is not authorization,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m15.award.award,M15,Award,Award,Requires applicable Authority/Scope Binding; no Issuer Role,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m15.award.revoke,M15,Award,revoke,Requires applicable Authority/Scope Binding; no Issuer Role,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m15.award.manage,M15,Award,manage,Requires applicable Authority/Scope Binding; no Issuer Role,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv
+m15.title_authority_scope_binding.configure,M15,Title Authority / Scope Binding,Configure,Separate from operational permission; no Issuer Role,STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv

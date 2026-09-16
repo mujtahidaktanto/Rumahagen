@@ -1,0 +1,14 @@
+gate_id,criterion,evidence,result
+G01,Core BR preservation,151/151 Core BR identifiers and definitions carried forward,PASS
+G02,M01-M15 delta coverage,73/73 STEP08 actionable semantic delta units represented,PASS
+G03,Commercial closure,MBR-COM-001-013 represented as CLOSED / OWNER APPROVED,PASS
+G04,STEP05 conflict application,7/7 locked conflict resolutions represented,PASS
+G05,Core detail loss,No Core BR removed or silently replaced,PASS
+G06,Lifecycle preservation,Core lifecycle state machines retained; conflict changes scoped to affected lifecycle portion,PASS
+G07,Authority preservation,Module authority remains domain-scoped; no whole-artifact takeover,PASS
+G08,Rule delta isolation,Mxx amendments are delta units; unrelated Core detail remains preserved,PASS
+G09,Duplicate consolidation,Canonical IDs are not duplicated; semantic-family collisions remain provenance-linked,PASS
+G10,Fabrication control,No unsupported historical MBR-COM per-ID wording fabricated,PASS
+G11,Physical boundary,No SQL/API/RLS/runtime authorization claimed by this baseline,PASS
+G12,Provenance,Every canonical unit has source/provenance fields,PASS
+G13,Downstream readiness,Baseline is suitable as STEP09 Business Rules semantic input,PASS

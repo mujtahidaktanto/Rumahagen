@@ -1,0 +1,95 @@
+logical_entity,module,authority_version,mapping_status,physical_table,physical_table_present,downstream_action,note
+ADDONS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,addons,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AGENT_AI_CONNECTIONS,M13,v1.0,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,agent_ai_connections,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AGENT_PROFILES,M01,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,agent_profiles,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AGENT_PROJECT_CLAIMS,M06,v1.5,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,agent_project_claims,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AGENT_REVIEWS,M02,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,agent_reviews,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AGENT_VERIFICATION_DOCUMENTS,M01,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,agent_verification_documents,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AI_PROVIDERS,M13,v1.0,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,ai_providers,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AMENITIES,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,amenities,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AUDIT_LOGS,M09,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,audit_logs,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARDING_CONDITIONS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,awarding_conditions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARDING_CONDITION_GROUPS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,awarding_condition_groups,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARDING_PATHS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,awarding_paths,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARDING_PATH_RULES,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,awarding_path_rules,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARDING_PATH_VERSIONS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,awarding_path_versions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARDING_PREREQUISITES,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,awarding_prerequisites,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARDING_RULE_VERSIONS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,awarding_rule_versions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARD_INSTANCES,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,award_instances,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+AWARD_QUALIFYING_PATHS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,award_qualifying_paths,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+CERTIFICATES,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,certificates,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+COMMERCIAL_ENTITLEMENTS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,commercial_entitlements,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+COMMERCIAL_FULFILLMENTS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,commercial_fulfillments,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+COMMERCIAL_ORDERS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,commercial_orders,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+COURSES,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,courses,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+COURSE_LESSONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,course_lessons,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+DBR_CONFIG,M07,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,dbr_config,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+DBR_SIMULATIONS,M07,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,dbr_simulations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+DEVELOPER_PARTNERS,M06,v1.5,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,developer_partners,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+DEVELOPER_PROJECTS,M06,v1.5,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,developer_projects,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+DEVELOPER_PROJECT_MEDIA,M06,v1.5,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,developer_project_media,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+ENROLLMENTS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,enrollments,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+EVENTS,M05,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,events,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+EVENT_PROVIDER_BINDING,M05,v1.3,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'event_provider_binding' is absent from current 86-table baseline.
+EVENT_REGISTRATIONS,M05,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,event_registrations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_ACTIVITIES,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_activities,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_ACTIVITY_COMPLETIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_activity_completions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_PATHS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_paths,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_PATH_VERSIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_path_versions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_POINT_ACCOUNTS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_point_accounts,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_POINT_TRANSACTIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_point_transactions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_SESSIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_sessions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_SESSION_ASSIGNMENTS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_session_assignments,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LEARNING_UNLOCK_PROGRESSIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,learning_unlock_progressions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LISTINGS,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,listings,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LISTING_AMENITIES,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,listing_amenities,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LISTING_LEADS,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,listing_leads,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LISTING_PHOTOS,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,listing_photos,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LISTING_PRICE_HISTORY,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,listing_price_history,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LISTING_VIDEOS,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,listing_videos,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+LISTING_VIEWS,M03,v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,listing_views,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+MARKETING_KIT,M06,v1.5,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'marketing_kit' is absent from current 86-table baseline.
+NOTIFICATIONS,M08,v1.0,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,notifications,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+OPERATIONAL_QUOTA_POOLS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,operational_quota_pools,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+ORGANIZATIONS,M12,v1.0,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,organizations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+ORGANIZATION_DOCUMENT,M12,v1.0,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'organization_document' is absent from current 86-table baseline.
+ORGANIZATION_INVITATIONS,M12,v1.0,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,organization_invitations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+ORGANIZATION_MEMBERS,M12,v1.0,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,organization_members,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+PAYMENT_PROVIDER_RESULTS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,payment_provider_results,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+PAYMENT_TRANSACTIONS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,payment_transactions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+PERMISSIONS,M10,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,permissions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+PERMISSION_PRESET,M10,v1.1,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'permission_preset' is absent from current 86-table baseline.
+PERMISSION_PRESET_ITEM,M10,v1.1,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'permission_preset_item' is absent from current 86-table baseline.
+PROMOTIONS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,promotions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+PUBLIC_ANNOUNCEMENT_PROMOTION,M11,v2.0,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'public_announcement_promotion' is absent from current 86-table baseline.
+QUALIFICATION_EVALUATIONS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,qualification_evaluations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUALIFICATION_EVIDENCE,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,qualification_evidence,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUIZZES,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,quizzes,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUIZ_ATTEMPTS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,quiz_attempts,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUIZ_OPTIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,quiz_options,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUIZ_QUESTIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,quiz_questions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUOTA_ALLOCATIONS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,quota_allocations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUOTA_CAPACITIES,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,quota_capacities,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+QUOTA_USAGE,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,quota_usage,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+RECONCILIATION_CASES,M09,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,reconciliation_cases,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+REF_CITIES,CORE,Core v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,ref_cities,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+REF_DISTRICTS,CORE,Core v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,ref_districts,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+REF_PROVINCES,CORE,Core v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,ref_provinces,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+REF_VILLAGES,CORE,Core v1.3,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,ref_villages,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+ROLES,M10,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,roles,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+ROLE_PERMISSIONS,M10,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,role_permissions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+SESSION_ARTIFACTS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,session_artifacts,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+SESSION_ATTENDANCE_EVALUATIONS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,session_attendance_evaluations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+SESSION_COMPLETION_OUTCOMES,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,session_completion_outcomes,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+SESSION_ENROLLMENTS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,session_enrollments,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+SESSION_PARTICIPATION_EVIDENCE,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,session_participation_evidence,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+SESSION_PROVIDER_BINDINGS,M04,v1.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,session_provider_bindings,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+STATIC_PUBLIC_CONTENT,M11,v2.0,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'static_public_content' is absent from current 86-table baseline.
+SUBSCRIPTIONS,M14,v2.2,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,subscriptions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+SYSTEM_CONFIGS,M09,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,system_configs,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+TITLE_AUTHORITY_SCOPES,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,title_authority_scopes,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+TITLE_DEFINITIONS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,title_definitions,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+TITLE_PRESENTATIONS,M15,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,title_presentations,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+URL_REDIRECTS,M11,v2.0,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,url_redirects,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+USERS,M01,v1.1,EXISTING_CORE_LOGICAL_TO_EXISTING_PHYSICAL,users,YES,PRESERVE,Exact logical entity ↔ current W4-01E physical table correspondence; physical evidence only.
+USER_PERMISSION_PRESET,M10,v1.1,NEW_LOGICAL_NO_CURRENT_PHYSICAL_TABLE,,NO,CONTROLLED_DOWNSTREAM_CANDIDATE,Logical entity confirmed by A1 RERUN v2.2; candidate physical name 'user_permission_preset' is absent from current 86-table baseline.

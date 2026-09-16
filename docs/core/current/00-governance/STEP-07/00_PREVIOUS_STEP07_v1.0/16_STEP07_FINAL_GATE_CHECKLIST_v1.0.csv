@@ -1,0 +1,18 @@
+gate_id,check,evidence,status
+G01,STEP06 entry,STEP06 v1.1 PASS / ready for STEP07,PASS
+G02,Core immutability,Core v1.3 current and predecessor byte-identical; no Core mutation,PASS
+G03,Current authority freeze,15/15 current module authorities identified,PASS
+G04,Authority object inventory,15 domain authorities + 223 finding-level authority impacts inventoried,PASS
+G05,Cross-module boundary scan,15 explicit boundary/collision controls recorded,PASS
+G06,Ownership inversion audit,No authority takeover detected,PASS
+G07,Circular semantic authority,No circular ownership authority; 73 dependency edges remain dependency-only,PASS
+G08,M10 authorization boundary,M10 remains authorization/RBAC/RLS authority; domain modules retain business ownership,PASS
+G09,M14/M15 boundary,Q01–Q64 remain M14; M15 qualification/awarding remains separate,PASS
+G10,M11 boundary,M11 discovery/SEO/measurement; underlying domain lifecycle remains domain-owned,PASS
+G11,M08 boundary,M08 projection/notification only; no business mutation authority,PASS
+G12,M09 boundary,M09 administrative surface; no generic domain approval authority,PASS
+G13,M13 boundary,Superadmin-only provider catalogue mutation; Agent/User BYOK ownership; M10 auth,PASS
+G14,Core unresolved control item,README_CURRENT_BASELINE classified as Core control/governance metadata at STEP07; Core unchanged,PASS
+G15,Provenance,223/223 finding-level records linked to Core + Mxx authority + STEP04/STEP06 provenance,PASS
+G16,Downstream boundary,No Business Rules/Architecture/ERD/API/RLS/UI synchronization performed in STEP07,PASS
+G17,Integrated Core boundary,Integrated Core v1.4 not generated,PASS

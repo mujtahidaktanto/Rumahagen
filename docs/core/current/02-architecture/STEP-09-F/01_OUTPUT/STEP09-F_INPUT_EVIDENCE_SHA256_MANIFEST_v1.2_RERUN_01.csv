@@ -1,0 +1,9 @@
+Input,SHA256,Bytes,Role
+STEP09-A2 Constitution v1.17,c6bee627ffbf6d1b2054ec6138bccb60a58a066c9a864aa5eab7d129ce45f721,55875,Current STEP09-A2 authority package
+STEP09-B Architecture v1.9,5dea71e59a93d42b0325cd3eb9bc1cc4171f68b398d019c6699cd6ad7e753cc8,98322,Current STEP09-B authority package
+STEP09-C Technical Decisions v1.6,6b1b09431cac1425b6a4499553a0cbef724142f21f4e9bda96c2c5da5f1ab043,53289,Current STEP09-C authority package
+STEP09-E Cross-09 v1.1,ddbca436b2a78c33a9cca6b5dc4c88d4265c729cd1554ec2630c82ac20e4e01a,1726925,Current STEP09-E reconciliation package
+STEP09-D Dependency Manifest v1.9,259d7baff83bf8673cc2a84b1f1034bdb7031eca9e85c646d37367b1722ee3f6,51843,Current STEP09-D authority artifact
+Core v1.3 frozen source pack,7c491ce312a42f7d4debd77a4533a895dd35a71ad7464053c0bfe61639ba72e6,1471646,Immutable source/provenance
+M01-M15 recon(10),91354375da7c57257a7c4ef7da0aae3e26fc832f424d55d78dde8956dc7a54d7,12682315,Module reconciliation evidence
+STEP09-F v1.2 prior HOLD,a75cfaf0c6a4ea6e624a5708869394689b7f9107f9d1ffed3abeb270874e505b,50412405,Historical predecessor/final-gate baseline

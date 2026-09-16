@@ -1,0 +1,61 @@
+module,work_package_id,work_package,status
+M01,M01-P3-WP01,Identity lifecycle,P3 PLAN
+M01,M01-P3-WP02,Activation/KTP semantics,P3 PLAN
+M01,M01-P3-WP03,Authentication + verification boundary,P3 PLAN
+M01,M01-P3-WP04,Identity contract handoff,P3 PLAN
+M10,M10-P3-WP01,Role/Role Permission baseline,P3 PLAN
+M10,M10-P3-WP02,Permission Preset governance,P3 PLAN
+M10,M10-P3-WP03,Capability/Scope/Condition/Ownership/Organization graph,P3 PLAN
+M10,M10-P3-WP04,Authorization/RLS logical handoff,P3 PLAN
+M02,M02-P3-WP01,Profile visibility,P3 PLAN
+M02,M02-P3-WP02,Verification/review state,P3 PLAN
+M02,M02-P3-WP03,Public/private boundary,P3 PLAN
+M02,M02-P3-WP04,Authorization contract,P3 PLAN
+M12,M12-P3-WP01,Organization lifecycle,P3 PLAN
+M12,M12-P3-WP02,Membership/invitation/Join Request,P3 PLAN
+M12,M12-P3-WP03,Personal vs Organization context,P3 PLAN
+M12,M12-P3-WP04,Context enforcement,P3 PLAN
+M06,M06-P3-WP01,Developer/Project model,P3 PLAN
+M06,M06-P3-WP02,Project→Listing source contract,P3 PLAN
+M06,M06-P3-WP03,Marketing Kit,P3 PLAN
+M06,M06-P3-WP04,Approved Claim→Agent Listing initialization,P3 PLAN
+M03,M03-P3-WP01,Listing lifecycle,P3 PLAN
+M03,M03-P3-WP02,Publish/edit locks,P3 PLAN
+M03,M03-P3-WP03,Refresh action/eligibility/consumption,P3 PLAN
+M03,M03-P3-WP04,M14 allowance contract,P3 PLAN
+M05,M05-P3-WP01,Event lifecycle,P3 PLAN
+M05,M05-P3-WP02,Registration/waitlist/attendance,P3 PLAN
+M05,M05-P3-WP03,Event↔Session boundary,P3 PLAN
+M05,M05-P3-WP04,Guest/late/provider configuration,P3 PLAN
+M04,M04-P3-WP01,Learning Core,P3 PLAN
+M04,M04-P3-WP02,Learning Economy/LP,P3 PLAN
+M04,M04-P3-WP03,Session/evidence production,P3 PLAN
+M04,M04-P3-WP04,Partnership Learning boundary,P3 PLAN
+M14,M14-P3-WP01,Commercial catalog/order,P3 PLAN
+M14,M14-P3-WP02,Payment verification/fulfillment,P3 PLAN
+M14,M14-P3-WP03,Entitlement/quota/promotion,P3 PLAN
+M14,M14-P3-WP04,Refresh allowance/reconciliation,P3 PLAN
+M15,M15-P3-WP01,Qualification path/rule,P3 PLAN
+M15,M15-P3-WP02,Evidence evaluation,P3 PLAN
+M15,M15-P3-WP03,Award provenance/lifecycle,P3 PLAN
+M15,M15-P3-WP04,Appeal/presentation,P3 PLAN
+M07,M07-P3-WP01,DBR scoring,P3 PLAN
+M07,M07-P3-WP02,DBR configuration,P3 PLAN
+M07,M07-P3-WP03,Decision output,P3 PLAN
+M07,M07-P3-WP04,M09 configuration boundary,P3 PLAN
+M08,M08-P3-WP01,Projection model,P3 PLAN
+M08,M08-P3-WP02,Notification/communication,P3 PLAN
+M08,M08-P3-WP03,Source event contracts,P3 PLAN
+M08,M08-P3-WP04,No-mutation guardrail,P3 PLAN
+M09,M09-P3-WP01,Admin foundation,P3 PLAN
+M09,M09-P3-WP02,System/domain configuration,P3 PLAN
+M09,M09-P3-WP03,Static Content + Announcement lifecycle boundary,P3 PLAN
+M09,M09-P3-WP04,Audit/admin action boundary,P3 PLAN
+M11,M11-P3-WP01,Public surface registry (10 mandatory surfaces),P3 PLAN
+M11,M11-P3-WP02,SEO/indexability/structured data,P3 PLAN
+M11,M11-P3-WP03,Sitemap/robots,P3 PLAN
+M11,M11-P3-WP04,Analytics/measurement,P3 PLAN
+M13,M13-P3-WP01,Provider Catalogue,P3 PLAN
+M13,M13-P3-WP02,BYOK lifecycle,P3 PLAN
+M13,M13-P3-WP03,Protected invocation,P3 PLAN
+M13,M13-P3-WP04,Transient Chat Frame,P3 PLAN

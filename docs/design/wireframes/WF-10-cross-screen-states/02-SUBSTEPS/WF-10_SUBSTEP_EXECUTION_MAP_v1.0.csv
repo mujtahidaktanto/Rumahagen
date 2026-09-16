@@ -1,0 +1,7 @@
+Substep,Scope,Screens,Boundary
+WF-10.01,Global State Presentation,XST-001..002,Shared loading/ready presentation without domain mutation.
+WF-10.02,Empty & Protected States,"XST-003..007, XST-016",Distinguish empty causes and protected non-existence.
+WF-10.03,Action & Mutation States,XST-008..012,"Validation, error, pending, authoritative success, rejection/failure."
+WF-10.04,Authorization & Availability States,XST-013..016,"Expired, unavailable/degraded, denied/restricted, protected non-existence."
+WF-10.05,Recovery & Safety States,XST-017..020,"Destructive confirmation, dirty state, offline/recovery, session expiry, duplicate/replay."
+WF-10.06,Scalability & Cross-module Continuity,XST-021..022,Long content/pagination and safe cross-module state handoff.

@@ -1,0 +1,16 @@
+module,authority,engineering_guardrail,p4_wp_count,p5_batch_ids,change_obligation_count,core_finding_count,engineering_status,implementation_proof
+M01,Identity authority,Identity/authentication; authentication ≠ authorization; verification/KTP remains eligibility/private boundary.,4,B01,57,14,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M02,Profile/review authority,Profile/review/public visibility; ownership and visibility remain distinct.,4,B03,57,17,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M03,Listing + Refresh action/eligibility authority,Listing/Refresh lifecycle/action authority; consumes M14 allowance without becoming commercial authority.,4,B04,57,21,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M04,Learning/session/evidence-production authority,Learning/Learning Economy/Session/evidence; completion/evidence cannot directly create Award.,6,B05,57,17,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M05,Event/registration authority,Event/Registration; Event remains distinct from Learning Session.,4,B04,57,10,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M06,Developer/project/claim authority,Developer/Project/Marketing Kit/Claim; ownership and claim boundaries preserved.,4,B03,57,18,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M07,DBR authority,DBR authority; configurable parameters remain governed and historical outcomes preserved.,4,B03,57,19,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M08,Projection/notification authority,Projection/notification only; no source-domain mutation.,4,B07,57,18,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M09,Administrative/configuration authority within underlying domain grants,Bounded admin/config/audit; not universal business authority.,4,B03,57,6,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M10,Authorization authority,RBAC/RLS/authorization; Permission Preset targets existing Role and cannot expand baseline.,4,B02,57,17,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M11,Public discovery/SEO/measurement layer; not source-domain business authority,SEO/discovery/measurement only; lifecycle remains with M09/applicable domain.,4,B07,57,10,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M12,Organization/membership/context authority,Organization/membership/context; membership ≠ permission/ownership/entitlement.,4,B03,57,10,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M13,AI/BYOK/provider domain authority,AI/BYOK/provider catalogue; provider secrets remain server-side and provider-specific details behind adapter boundary.,4,B03,57,4,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M14,Commercial/payment/entitlement/quota/promotion authority,Commercial/payment/entitlement/quota/promotion; payment ≠ entitlement ≠ RBAC; fulfillment idempotency/evidence gated.,4,B03,57,20,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED
+M15,Qualification/Award authority; consumes governed upstream evidence,Qualification/evidence/Award; M04 supplies evidence; M15 owns qualification/Award.,4,B06,57,22,ALIGNED_WITH_CONTROLLED_RESIDUALS,NOT_CLAIMED

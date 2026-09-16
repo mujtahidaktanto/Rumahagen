@@ -1,0 +1,12 @@
+ScopeCheck,Coverage,Result,EvidenceTreatment
+M01-M15 primary artifacts,15/15,PASS,All current primary module artifacts are present and SHA-verified.
+M01-M15 material obligations,57/57,PASS,All P3/P13_DECISION_CHANGE_LOG material obligation rows are mapped.
+P13_DECISION_CHANGE_LOG decision ledger,64/64,PASS,57 material obligations plus 7 locked decisions are explicitly represented.
+Locked decisions,7/7,PASS,D-LOCK-001..007 explicitly preserved in P14_PROJECT_MANIFEST.
+Core source index,45/45,PASS,All Core v1.3 current SOURCE_INDEX entries are represented with exact path/SHA.
+Core implementation packages,17/17,PASS,IP-00..IP-16 explicitly manifested from P13_DECISION_CHANGE_LOG Core preservation ledger.
+Core documentary continuity,223/223,PASS,All P12_RECONCILIATION_EVIDENCE Core continuity rows remain preserved; no Core mutation.
+Module dependency edges,65/65,PASS,All P1 dependency edges remain represented.
+Controlled residuals,47/47,PASS,Carried forward without false resolution.
+Uploaded source corpus,12/12,PASS,All 12 files uploaded in this turn are included in the recursive deep scan.
+Physical/runtime boundary,N/A,PASS,P14_PROJECT_MANIFEST makes no physical/runtime/API/RLS/production verification claim.

@@ -1,0 +1,16 @@
+module,engineering_scope_change,authority,p9_contract_treatment,implementation_proof
+M01,"Identity/authentication; Conditional KTP Deferred Flow; successful OTP must not default to Pending Review/approval; KTP is eligibility/requirement, not RBAC permission; verification docs private.",Identity authority,EXPLICIT,NOT_CLAIMED
+M02,Profile/review; semantic field/profile visibility; KTP private lifecycle; profile visibility remains distinct from authorization/ownership.,Profile/review authority,EXPLICIT,NOT_CLAIMED
+M03,Listing/Refresh action authority; Direct Publish; field locks; Sold/Rented/Suspended states; refresh allowance consumed from M14; Listing lifecycle remains M03.,Listing + Refresh action/eligibility authority,EXPLICIT,NOT_CLAIMED
+M04,Learning Economy free-to-learn/LP; Learning Path; Session; evidence production; Session remains Learning; LP transaction/provenance; M15 consumes evidence.,Learning/session/evidence-production authority,EXPLICIT,NOT_CLAIMED
+M05,Event/Registration; Event lifecycle remains M05; Event Registration distinct from Learning Session Enrollment.,Event/registration authority,EXPLICIT,NOT_CLAIMED
+M06,"Developer/Project/Marketing Kit/Claim; company logo; free-text Tentang Developer; Project compatible source for Listing; Marketing Kit Developer own-scope upload/edit/delete/view, Admin/Superadmin All, Agent/Buyer/Manager/Partner View.",Developer/project/claim authority,EXPLICIT,NOT_CLAIMED
+M07,DBR authority; governed/configurable formula/band/bank parameters; historical outcomes preserved.,DBR authority,EXPLICIT,NOT_CLAIMED
+M08,Dashboard/Notification projection only; no source-domain mutation.,Projection/notification authority,EXPLICIT,NOT_CLAIMED
+M09,Admin/config/audit; bounded authority; Static Public Content and Announcement/Promotion lifecycle/configuration by M09 or applicable authoritative domain.,Administrative/configuration authority within underlying domain grants,EXPLICIT,NOT_CLAIMED
+M10,"RBAC/RLS/authorization; Role = actor grouping; Role Permission = baseline; Permission Preset = optional configuration for existing Role only, never a new role/capability outside baseline.",Authorization authority,EXPLICIT,NOT_CLAIMED
+M11,"SEO/discovery/analytics; mandatory public surfaces including Homepage, Listing, Agent, Organization, Developer/Project, Event, Learning, Learning Session, Static Public Content, Announcement/Promotion; measurement only.",Public discovery/SEO/measurement layer; not source-domain business authority,EXPLICIT,NOT_CLAIMED
+M12,Organization/membership/context; membership != permission/ownership/public visibility/commercial entitlement/Host authority.,Organization/membership/context authority,EXPLICIT,NOT_CLAIMED
+M13,AI/BYOK/provider catalogue; Provider Catalogue Superadmin-only; BYOK Agent/User own; secrets server-side/provider adapter boundary.,AI/BYOK/provider domain authority,EXPLICIT,NOT_CLAIMED
+M14,Commercial/payment/entitlement/quota/promotion; Q01–Q64 all M14; M03 consumes listing/refresh allowance; payment verification/fulfillment/reconciliation/idempotency.,Commercial/payment/entitlement/quota/promotion authority,EXPLICIT,NOT_CLAIMED
+M15,Qualification/evidence/Award; M04 evidence is consumed; Award remains M15; Q01–Q64 and Q40/Q54/Q61/Q62 are not M15.,Qualification/Award authority; consumes governed upstream evidence,EXPLICIT,NOT_CLAIMED

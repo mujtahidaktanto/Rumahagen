@@ -1,0 +1,10 @@
+boundary,result,audit
+M08↔source domains,PASS,Projection only; source domains retain business truth
+M09↔M10,PASS,Configuration/admin is not authorization
+M11↔M09/applicable domain,PASS,Discovery/measurement does not take lifecycle authority
+M12↔M10,PASS,Membership/context does not silently expand permission
+M13↔M10,PASS,AI/provider semantics remain separate from authorization
+M14↔M03,PASS,Commercial allowance/quota separate from Refresh action
+M14↔M04,PASS,Commercial fulfillment separate from Learning truth
+M04↔M15,PASS,M04 produces evidence; M15 qualifies/Awards
+M14↔M15,PASS,Q01-Q64 remain M14

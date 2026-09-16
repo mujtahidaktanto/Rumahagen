@@ -1,0 +1,7 @@
+Substep,Scope,Screen IDs
+WF-07.01,Title discovery; qualification overview; evidence,QAL-001;QAL-002;TTL-001
+WF-07.02,Qualification evaluation,QAL-003
+WF-07.03,Award recipient experience; award detail,AWD-001;AWD-002
+WF-07.04,Appeal and presentation,AWD-003;AWD-004
+WF-07.05,Title/path/version/rule/condition administration,ADM-M15-001;ADM-M15-002;ADM-M15-003;ADM-M15-004;ADM-M15-005
+WF-07.06,Evidence/evaluation operations; award lifecycle; appeal review; provenance,ADM-M15-006;ADM-M15-007;ADM-M15-008;ADM-M15-009

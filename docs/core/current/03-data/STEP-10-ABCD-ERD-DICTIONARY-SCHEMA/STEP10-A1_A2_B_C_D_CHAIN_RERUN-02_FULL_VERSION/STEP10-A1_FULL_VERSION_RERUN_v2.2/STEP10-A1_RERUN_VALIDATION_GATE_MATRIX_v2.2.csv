@@ -1,0 +1,13 @@
+control_id,control,result,evidence
+A1-RR-V01,Logical entity closure,PASS — 94/94,Existing A1 v2.0 entity set preserved; no new entity required by rerun findings.
+A1-RR-V02,Relationship closure,PASS — 149/149,147 prior relationships + 2 M06 logical geography references.
+A1-RR-V03,Attribute closure,PASS — 862,839 prior reconstructed attributes − 2 invalid CHECK-expression token mappings + 24 M06 Project fields + 1 M03 Listing freshness field = 862 valid attributes.
+A1-RR-V04,M03 freshness field,PASS,LISTINGS.last_refreshed_at represented as logical augmentation.
+A1-RR-V05,M06 Project field parity,PASS,All 41 v1.5 Project inventory fields represented in DEVELOPER_PROJECTS.
+A1-RR-V06,M06 geography relationships,PASS,province_id and district_id represented as logical relationships to reference entities.
+A1-RR-V07,M06 Project Media semantic boundary,PASS / downstream physical residual,Logical truth photo/video only; physical Core CHECK preserved and flagged for downstream reconciliation.
+A1-RR-V08,Core table preservation,PASS — 86/86,No Core physical table removed or replaced.
+A1-RR-V09,Core v1.3 immutability,PASS,No physical Core mutation performed.
+A1-RR-V10,M01-M15 source currentness,PASS,Latest uploaded M01-M15 package 20260904-013253 used.
+A1-RR-V11,Logical/physical/runtime separation,PASS,"No migration, RLS, runtime, provider execution, or storage deployment claim."
+A1-RR-V12,M14/M15 boundary,PASS,M14 Q01-Q66 remain M14; M15 does not absorb them.

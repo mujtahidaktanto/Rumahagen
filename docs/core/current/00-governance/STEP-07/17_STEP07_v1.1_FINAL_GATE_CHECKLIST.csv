@@ -1,0 +1,27 @@
+gate_id,gate,status
+G01,Input SHA-256 verified,PASS
+G02,STEP SYNC CORE(2).rar contains STEP01–STEP06,PASS
+G03,"M01–M15 recursive source inventory 2,374/2,374",PASS
+G04,PRE-00 explicit coverage 18/18,PASS
+G05,Core v1.3 frozen artifact coverage 76/76,PASS
+G06,15/15 authority register preserved,PASS
+G07,223/223 finding authority records preserved,PASS
+G08,54 explicit Complete Integration Coverage controls added,PASS
+G09,Static Public Content + Announcement/Promotion configuration covered,PASS
+G10,Promotion/Subscription/Add-on/Quota configuration covered,PASS
+G11,Payment Gateway + Midtrans + Provider Adapter covered,PASS
+G12,Refresh + Refresh Allowance + Agent quota covered,PASS
+G13,Developer Project/M03 field parity + claim-transfer safety covered,PASS
+G14,Project Media vs Marketing Kit covered,PASS
+G15,Indonesia Province/City-Regency/District/address covered,PASS
+G16,Permission Preset covered,PASS
+G17,KTP optional/deferred covered,PASS
+G18,LiveKit/Zoom/Google Meet adapter choices covered,PASS
+G19,DBR configuration covered,PASS
+G20,Maps optional covered,PASS
+G21,Google ownership configurable covered,PASS
+G22,Entitlement ≠ RBAC covered,PASS
+G23,Lifecycle preservation / duplicate consolidation / no replacement-deletion / provenance covered,PASS
+G24,No new STEP05 conflict,PASS
+G25,Core v1.3 not modified,PASS
+G26,Integrated Core v1.4 not generated,PASS

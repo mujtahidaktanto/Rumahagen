@@ -1,0 +1,16 @@
+module,scope,authority,strategy
+M01,Identity / User / Authentication,Identity authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M02,Profile / Review,Profile/review authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M03,Listing / Listing Lifecycle / Refresh,Listing + Refresh action/eligibility authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M04,Learning / Learning Economy / Session,Learning/session/evidence-production authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M05,Event / Registration,Event/registration authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M06,Developer / Project / Marketing Kit / Claim,Developer/project/claim authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M07,DBR,DBR authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M08,Dashboard / Notification Projection,Projection/notification authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M09,Administration / Configuration / Audit,Administrative/configuration authority within underlying domain grants,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M10,Authorization / RBAC / Permission / Scope / RLS,Authorization authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M11,SEO / Discovery / Analytics,Public discovery/SEO/measurement layer; not source-domain business authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M12,Organization / Membership / Context,Organization/membership/context authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M13,AI / BYOK / Provider Catalogue,AI/BYOK/provider domain authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M14,Commercial / Payment / Entitlement / Quota / Promotion,Commercial/payment/entitlement/quota/promotion authority,Dependencies supply prerequisite/input/context; authority remains with canonical module.
+M15,Qualification / Evidence / Award,Qualification/Award authority; consumes governed upstream evidence,Dependencies supply prerequisite/input/context; authority remains with canonical module.

@@ -1,0 +1,6 @@
+metric,expected,observed,status,basis
+Core artifact count,76,76,PASS,Independent recursive inventory of frozen Core package
+Core detail loss,0,0,PASS,Non-destructive synchronization rule
+Canonical BR rows,151,151,PASS,Existing Business Rules document
+STEP05 blocking conflicts,7,7 resolved,PASS,Locked resolution register
+Core mutation at STEP08,0,0,PASS,STEP08 writes only derived synchronization artifacts

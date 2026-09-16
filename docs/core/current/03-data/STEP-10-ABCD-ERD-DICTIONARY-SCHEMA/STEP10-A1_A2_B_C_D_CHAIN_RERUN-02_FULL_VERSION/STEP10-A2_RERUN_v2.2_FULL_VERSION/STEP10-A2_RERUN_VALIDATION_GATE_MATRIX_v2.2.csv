@@ -1,0 +1,17 @@
+control_id,control,expected,result,status
+A2-RR-V01,Entity closure,94 logical entities expected,94 unique entities in attribute register; MMD entities parsed=94; set_equal=True,PASS
+A2-RR-V02,Attribute closure,862 logical attribute rows expected,862 rows; 94 entities; duplicate entity/attribute pairs=0,PASS
+A2-RR-V03,Relationship closure,149 unique relationship records expected,149 rows; unique IDs=149,PASS
+A2-RR-V04,Relationship endpoints,All endpoints within 94 entity baseline,missing/unknown endpoints=0,PASS
+A2-RR-V05,Relationship type closure,138 CORE_PRESERVED_FK + 10 NEW_LOGICAL + 1 SEMANTIC_REFERENCE,"{'CORE_PRESERVED_FK': 138, 'NEW_LOGICAL': 10, 'SEMANTIC_REFERENCE': 1}",PASS
+A2-RR-V06,Cardinality closure,145 1:N + 2 1:1 + 1 0..1 + 1 N:1*,"{'1:N': 145, '1:1': 2, '0..1': 1, 'N:1*': 1}",PASS
+A2-RR-V07,M03 finding closure,LISTINGS.last_refreshed_at represented,attribute exists exactly once as LOGICAL_AUGMENTATION,PASS
+A2-RR-V08,M06 Project field parity,41 M06 v1.5 Project fields represented,DEVELOPER_PROJECTS has 41 fields,PASS
+A2-RR-V09,M06 geography relationship closure,province_id + district_id logical references,R-148 and R-149 present,PASS
+A2-RR-V10,M06 Project Media semantic boundary,photo/video logical truth; brochure/pricelist routed to Marketing Kit,physical Core detail retained; conflict controlled downstream,PASS
+A2-RR-V11,Core preservation,86 Core physical tables preserved,A1 rerun declares 86/86 preserved,PASS
+A2-RR-V12,Core immutability,No Core v1.3 mutation,No SQL/ALTER/migration executed,PASS
+A2-RR-V13,M01-M15 currentness,Latest package 20260904-013253 used,A1 rerun source manifest/report confirms latest package,PASS
+A2-RR-V14,M14/M15 boundary,M14 Q01-Q66 remain M14,No M15 absorption,PASS
+A2-RR-V15,Physical/runtime boundary,No physical/runtime claims,Logical ERD only; downstream items retained,PASS
+A2-RR-V16,A1 supersession,A1 v2.2 current baseline,A1 v2.0 superseded; A1 rerun v2.2 is current,PASS

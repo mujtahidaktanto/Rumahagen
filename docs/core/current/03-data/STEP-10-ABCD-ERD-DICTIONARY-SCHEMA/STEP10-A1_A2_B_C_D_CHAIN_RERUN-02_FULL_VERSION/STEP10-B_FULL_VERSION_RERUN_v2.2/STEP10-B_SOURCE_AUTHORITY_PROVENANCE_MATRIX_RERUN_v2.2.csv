@@ -1,0 +1,7 @@
+source_id,layer,artifact,purpose,evidence_summary,authority_layer
+SRC-BR-001,STEP10-A2 RERUN,STEP10-A2_LOGICAL_ERD_VALIDATION_RECONCILIATION_RERUN_v2.2.md,Entry gate / current logical baseline,PASS; 94 entities / 864 attributes / 149 relationships; ready for B RERUN,PRIMARY
+SRC-BR-002,STEP10-A1 RERUN,STEP10-A1_FULL_LOGICAL_ERD_RERUN_v2.2_FULL_VERSION.zip,"Logical ERD, attribute and relationship authority",Current A1 RERUN v2.2; 94 / 862 / 149,PRIMARY
+SRC-BR-003,MODULE AUTHORITY,M01-M15 new recon(20260904-013253).zip,Current M01-M15 semantic authority,Latest uploaded current module reconstruction package,PRIMARY
+SRC-BR-004,CORE,Utama core RUMAHAGEN_WIREFRAME_CORE_FINAL_SOURCE_PACK_v1.3...20260904-005822.zip,Immutable Core / physical corroboration,Core v1.3 immutable; W4-01E physical baseline = 86 tables,PRIMARY_PHYSICAL_CORROBORATION
+SRC-BR-005,PRE-00,pre-00 gate(20260904-005822).zip,Governance/currentness gate,PRE-00 governance source; no physical execution authorization,GOVERNANCE
+SRC-BR-006,SUPERSEDED,STEP10-B_FULL_DATABASE_DICTIONARY_RECONSTRUCTION_v1.0.zip,Historical corroboration only,Superseded; not authoritative for current counts,NON_AUTHORITY

@@ -1,0 +1,5 @@
+ID,Previous status,Current disposition,Reason,Next action
+F-01,Previous OPEN MATERIAL,SUPERSEDED / CORRECTED,M14 v2.2/QIR establishes Q01–Q66 current resolved authority; current A2/B/C reflect Q01–Q66.,No further re-entry for Q65/Q66 classification.
+F-02,Previous OPEN CONTROLLED,CLOSED,M09↔M11 is already closed; current E/D preserve that closure.,No new dependency re-entry.
+F-03,PACKAGE CONTROL,CLOSED,External package SHA policy retained.,Use external SHA record for final package.
+F-04,Previous OPEN CURRENTNESS,CLOSED BY CONTROLLED RE-ENTRY,Current A2/B/C were re-entered and verified; stale current Q01–Q64/Q65–Q66 wording is absent.,Proceed to STEP10.

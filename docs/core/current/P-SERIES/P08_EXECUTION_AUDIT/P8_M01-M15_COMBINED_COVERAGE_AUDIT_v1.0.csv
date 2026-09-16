@@ -1,0 +1,9 @@
+area,expected,actual,status,notes
+Modules,15,15,PASS,M01-M15 represented by P6/P7
+P3/P5 change obligations,57,57,PASS,Exact obligation-id set match
+P4 WPs,62,62,PASS,P6 30 + P7 32
+Core v1.3 scope,223,223,PASS,Exact finding-id set match to STEP14 register
+Core→WP routing,223,223,PASS,P6 116 + P7 107
+Core detail retained,223,223,PASS,Source traceability says retained
+Controlled Core findings,36,36,PASS,P6 19 + P7 17
+Prior controlled residuals,47,47,PASS,P6 16 + P7 31; preserved

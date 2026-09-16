@@ -1,0 +1,12 @@
+﻿finding_id,source,action,result,downstream_status
+STEP04-v1.1-10-residuals,STEP04 v1.1 audit feedback,Reopened STEP03 and performed finding-level deterministic linkage rebuild,9 resolved explicitly; 1 remains unresolved without inference,STEP04 v1.1 must be rerun after STEP03 mapping decision
+M01-CI-001,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M01-CI-002,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M01-CI-003,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M01-CI-012,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M02-CI-006,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M02-CI-010,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M02-CI-015,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M03-CI-019,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M07-IA-006,STEP04 v1.1,Created explicit STEP03 finding-level relationship,RESOLVED,Eligible for STEP04 rerun
+M02-CI-011,STEP04 v1.1,Created explicit deterministic STEP03 finding-level relationships SR-F-0010 and SR-F-0011 from STEP03-A evidence resolution,RESOLVED — contradictory current Core evidence explicitly anchored; semantic conflict candidate retained for STEP04/STEP05,Eligible for STEP04 rerun

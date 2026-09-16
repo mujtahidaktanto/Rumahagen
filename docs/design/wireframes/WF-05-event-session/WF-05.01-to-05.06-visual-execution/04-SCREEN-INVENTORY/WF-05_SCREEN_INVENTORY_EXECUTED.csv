@@ -1,0 +1,17 @@
+screen_id,title,substep,surface,desktop,mobile
+EVT-001,Event Calendar & Discovery,WF-05.01,client,05-DESKTOP/EVT-001.png,06-MOBILE/EVT-001.png
+EVT-002,Event Detail & Registration,WF-05.02,client,05-DESKTOP/EVT-002.png,06-MOBILE/EVT-002.png
+EVT-003,My Event Registration & Participant State,WF-05.02,client,05-DESKTOP/EVT-003.png,06-MOBILE/EVT-003.png
+ADM-EVT-001,Event Management,WF-05.03,admin,05-DESKTOP/ADM-EVT-001.png,06-MOBILE/ADM-EVT-001.png
+ADM-EVT-002,Create/Edit Event Wizard,WF-05.03,admin,05-DESKTOP/ADM-EVT-002.png,06-MOBILE/ADM-EVT-002.png
+ADM-EVT-003,Event Registration & Attendee Management,WF-05.03,admin,05-DESKTOP/ADM-EVT-003.png,06-MOBILE/ADM-EVT-003.png
+ADM-EVT-004,"Event Review, Publish & Cancellation",WF-05.03,admin,05-DESKTOP/ADM-EVT-004.png,06-MOBILE/ADM-EVT-004.png
+ADM-EVT-005,Event Provider Configuration & Binding,WF-05.03,admin,05-DESKTOP/ADM-EVT-005.png,06-MOBILE/ADM-EVT-005.png
+SES-001,Session Detail & Access,WF-05.04,client,05-DESKTOP/SES-001.png,06-MOBILE/SES-001.png
+SES-002,Session Enrollment & Access State,WF-05.04,client,05-DESKTOP/SES-002.png,06-MOBILE/SES-002.png
+SES-003,Session Participation & Outcome,WF-05.04,client,05-DESKTOP/SES-003.png,06-MOBILE/SES-003.png
+ADM-SES-001,Session Management,WF-05.05,admin,05-DESKTOP/ADM-SES-001.png,06-MOBILE/ADM-SES-001.png
+ADM-SES-002,Create/Edit Session Wizard,WF-05.05,admin,05-DESKTOP/ADM-SES-002.png,06-MOBILE/ADM-SES-002.png
+ADM-SES-003,Host & Instructor Assignment,WF-05.05,admin,05-DESKTOP/ADM-SES-003.png,06-MOBILE/ADM-SES-003.png
+ADM-SES-004,Session Provider Binding,WF-05.06,admin,05-DESKTOP/ADM-SES-004.png,06-MOBILE/ADM-SES-004.png
+ADM-SES-005,"Session Attendance, Evidence, Completion & Artifacts",WF-05.06,admin,05-DESKTOP/ADM-SES-005.png,06-MOBILE/ADM-SES-005.png

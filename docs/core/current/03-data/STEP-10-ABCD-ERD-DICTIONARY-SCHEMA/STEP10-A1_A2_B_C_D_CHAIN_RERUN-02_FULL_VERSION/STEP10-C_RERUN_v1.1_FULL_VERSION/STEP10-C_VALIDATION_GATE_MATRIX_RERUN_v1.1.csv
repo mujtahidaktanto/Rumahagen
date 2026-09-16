@@ -1,0 +1,17 @@
+control_id,control,expected,result,evidence
+C-01,Current governance numbering lock,C = Dictionary Reconciliation / Gate,PASS,v1.5 checklist
+C-02,STEP10-00 entry gate,PASS and STEP10 authorized,PASS,STEP10-00 RERUN-01
+C-03,A2 accepted ERD baseline,94 entities / 862 attributes / 149 relationships,PASS,A2 v2.1
+C-04,B Dictionary baseline,94 entities / 862 attributes / 149 relationships,PASS,B v2.1 manifest
+C-05,Entity coverage,94/94 entities represented; every entity has fields,PASS,Entity-field coverage matrix
+C-06,Attribute closure,862/862 A1↔B exact entity/attribute keys,PASS,Programmatic cross-check
+C-07,Relationship closure,149/149 A1↔B relationship records,PASS,Programmatic cross-check
+C-08,Relationship/reference consistency,4 field-reference labels reconciled; R147 preserved as semantic reference,PASS,Relationship consistency matrix
+C-09,Physical mapping boundary,86 physical mappings match W4-01E 86-table register; 8 logical-only entities,PASS,B mapping + nested W4-01E register
+C-10,Lifecycle/historical/provenance,No blocking contradiction found; controlled semantic invariants preserved,PASS,B dictionary + constraint matrix + exception register
+C-11,Semantic authority boundaries,M01–M15 authority versions and boundaries preserved,PASS,B provenance + current recon
+C-12,Unsupported physical implementation claims,No implementation/migration/runtime claim promoted; logical-only rows explicitly bounded,PASS,B report + textual claim scan
+C-13,B inherited controlled residuals,12 controlled downstream items remain explicitly carried,PASS / CONTROLLED,B exception register
+C-14,Blocking Dictionary contradiction,None after reconciliation,NONE,All C checks
+C-15,Provenance completeness,All direct C inputs hashed/identified,PASS,Source hash manifest
+C-16,Core immutability,Core v1.3 preserved; no physical mutation,PASS,Governance + physical evidence

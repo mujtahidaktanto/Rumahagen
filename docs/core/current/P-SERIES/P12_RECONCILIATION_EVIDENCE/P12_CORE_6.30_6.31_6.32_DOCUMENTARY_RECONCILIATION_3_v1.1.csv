@@ -1,0 +1,4 @@
+﻿core_section,artifact,downstream_source,p12_reconciliation,disposition
+6.30,Engineering Alignment Guidebook/Playbook,P9 engineering guardrails,P12_RECONCILIATION_EVIDENCE verifies documentary provenance and alignment,PRESERVE / RECONCILE
+6.31,AI Development Blueprint,P10_AI_BLUEPRINT AI blueprint,P12_RECONCILIATION_EVIDENCE verifies section-level documentary evidence and stage applicability,PRESERVE / RECONCILE
+6.32,AI Context Pack,P11_AI_CONTEXT AI context,"P12_RECONCILIATION_EVIDENCE verifies context provenance, current successor routing and documentary sufficiency",PRESERVE / RECONCILE

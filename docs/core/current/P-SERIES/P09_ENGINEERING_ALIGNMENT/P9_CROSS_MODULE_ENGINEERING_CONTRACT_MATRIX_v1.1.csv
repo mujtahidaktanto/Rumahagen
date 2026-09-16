@@ -1,0 +1,7 @@
+contract_id,upstream,downstream,contract,authority_boundary,batch_route,p9_alignment,engineering_rule,physical_runtime
+C01,M14,M03,Allowance/quota/refresh allowance,M14 commercial truth; M03 Listing/Refresh action,B03→B04,ALIGNED,Consumer may consume upstream truth; consumer does not become upstream authority.,EVIDENCE_GATED
+C02,M14,M04,Paid Learning/LP fulfillment,M14 commercial truth; M04 Learning truth,B03→B05,ALIGNED,Consumer may consume upstream truth; consumer does not become upstream authority.,EVIDENCE_GATED
+C03,M04,M15,Learning/session/evidence → qualification/Award,M04 evidence production; M15 qualification/Award,B05→B06,ALIGNED,Consumer may consume upstream truth; consumer does not become upstream authority.,EVIDENCE_GATED
+C04,M09/applicable domain,M11,Lifecycle/configuration → public discovery,M09/applicable domain lifecycle; M11 discovery/measurement,B03→B07,ALIGNED,Consumer may consume upstream truth; consumer does not become upstream authority.,EVIDENCE_GATED
+C05,All source domains,M08,Outcome/event → projection/notification,Source module truth; M08 projection-only,B03-B06→B07,ALIGNED,Consumer may consume upstream truth; consumer does not become upstream authority.,EVIDENCE_GATED
+C06,M10,All modules,Authorization/RBAC/scope/RLS logical boundary,M10 authorization authority,B02→all,ALIGNED,Consumer may consume upstream truth; consumer does not become upstream authority.,EVIDENCE_GATED

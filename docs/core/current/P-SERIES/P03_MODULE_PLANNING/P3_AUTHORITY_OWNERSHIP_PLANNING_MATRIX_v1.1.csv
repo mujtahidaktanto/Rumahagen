@@ -1,0 +1,16 @@
+module,domain,authority,key_dependencies,boundary
+M01,Identity/Auth,M01,M10,"Identity, registration, OTP, activation, verification intake"
+M10,Authorization/RBAC/Scope/RLS,M10,M01 + all protected modules,"Role, Role Permission, Permission Preset, capability/scope/condition, RLS"
+M02,Profile/Review,M02,M01/M10/M12,Profile visibility/review/presentation
+M12,Organization/Membership/Context,M12,M01/M10,"Organization, membership, invitation, context"
+M06,Developer/Project/Marketing Kit/Claim,M06,M01/M10/M03,Developer/project/kit/claim source; no Listing lifecycle authority
+M03,Listing/Lifecycle/Refresh,M03,M01/M10/M12/M14,Listing lifecycle and Refresh action/eligibility/consumption
+M05,Event/Registration,M05,M01/M10/M04/M06,Event and Registration; Session Enrollment remains M04
+M04,Learning/Learning Economy/Session,M04,M01/M10/M12/M14/M05/M09,Learning/session evidence production
+M14,Commercial/Payment/Entitlement/Quota/Promotion,M14,M01/M10/M03/M04/M12/M09,"Commercial truth, allowance, entitlement, quota, promotion"
+M15,Qualification/Evidence/Award,M15,M01/M10/M04/M12/M14/M09,Qualification/evaluation/Award
+M07,DBR,M07,M01/M10/M09,DBR calculation/output
+M08,Dashboard/Notification Projection,M08,source domains,Projection only; no domain mutation
+M09,Administration/Configuration/Audit,M09,M01/M10 + applicable domain,Bounded configuration/moderation/audit; no business authority transfer
+M11,SEO/Discovery/Analytics,M11,public source domains + M09 lifecycle where applicable,Discovery/measurement only
+M13,AI/BYOK/Provider Catalogue,M13,M01/M10/M09,Provider catalogue/BYOK/AI invocation; no auth authority

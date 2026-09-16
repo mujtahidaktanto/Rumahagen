@@ -1,0 +1,47 @@
+edge_id,source_module,target_module,semantic_object,relationship_type,authority_basis,authority_transfer
+AUTH-001,M01,M02,identity_subject,CONSUMER,M01 identity authority; M02 consumes identity subject.,NO
+AUTH-002,M01,M10,identity_subject,AUTH_INPUT,M10 evaluates authorization; M01 does not create independent RBAC.,NO
+AUTH-003,M01,M12,identity_subject,CONTEXT_INPUT,M12 uses identity for membership/context.,NO
+AUTH-004,M01,M14,identity_subject,CONTEXT_INPUT,M14 uses account identity for commercial subject.,NO
+AUTH-005,M01,M15,identity_subject,CONTEXT_INPUT,M15 uses identity subject for qualification.,NO
+AUTH-006,M02,M03,profile_public_context,CONSUMER,M03 may consume profile/review context; M03 remains Listing authority.,NO
+AUTH-007,M02,M11,profile_public_visibility,PROJECTION_INPUT,M11 consumes approved public profile/visibility.,NO
+AUTH-008,M03,M10,listing_refresh_action,AUTH_INPUT,M10 authorizes; M03 owns Listing/Refresh action truth.,NO
+AUTH-009,M03,M11,listing,DISCOVERY_INPUT,M11 discovers/measures; M03 owns lifecycle.,NO
+AUTH-010,M03,M14,refresh_quota,COMMERCIAL_INPUT,M14 owns allowance; M03 consumes/enforces configured allowance.,NO
+AUTH-011,M04,M10,learning_capability,AUTH_INPUT,M10 authorizes; M04 owns Learning semantics.,NO
+AUTH-012,M04,M14,paid_learning_outcome,COMMERCIAL_INPUT,M14 owns payment/entitlement; M04 owns Learning.,NO
+AUTH-013,M04,M15,learning_evidence,QUALIFICATION_INPUT,M04 owns learning/evidence; M15 owns qualification/awarding.,NO
+AUTH-014,M05,M11,event,DISCOVERY_INPUT,M11 consumes Event public surface.,NO
+AUTH-015,M06,M03,project_to_listing,EXECUTION_INPUT,M06 owns Project association semantics; M03 owns Listing lifecycle.,NO
+AUTH-016,M06,M11,project_marketing,DISCOVERY_INPUT,M11 consumes public project/marketing semantics.,NO
+AUTH-017,M06,M14,commercial_context,COMMERCIAL_INPUT,M14 remains commercial authority.,NO
+AUTH-018,M07,M09,dbr_configuration,ADMIN_SURFACE,M09 can configure where permitted; M07 remains DBR semantic authority.,NO
+AUTH-019,M07,M10,dbr_capability,AUTH_INPUT,M10 authorizes; M07 remains DBR domain authority.,NO
+AUTH-020,M08,M01,identity_projection,PROJECTION,M08 projects source outcome; no identity authority.,NO
+AUTH-021,M08,M03,listing_projection,PROJECTION,M08 projects Listing state; M03 remains source.,NO
+AUTH-022,M08,M11,measurement_projection,PROJECTION,M11 measurement authority remains separate.,NO
+AUTH-023,M09,M10,admin_action,AUTH_INPUT,M10 authorizes administrative actions.,NO
+AUTH-024,M09,M11,public_content_configuration,ADMIN_TO_DISCOVERY,M09 owns administrative mutation for lightweight public content; M11 owns discovery semantics.,NO
+AUTH-025,M11,M02,public_profile,DISCOVERY_CONSUMER,M11 consumes M02 public profile semantics; no M02 authority transfer.,NO
+AUTH-026,M11,M03,public_listing,DISCOVERY_CONSUMER,M11 consumes M03 Listing truth.,NO
+AUTH-027,M11,M05,public_event,DISCOVERY_CONSUMER,M11 consumes M05 Event truth.,NO
+AUTH-028,M11,M06,public_project_marketing,DISCOVERY_CONSUMER,M11 consumes M06 public surfaces.,NO
+AUTH-029,M11,M09,public_content_config,DISCOVERY_CONSUMER,M11 consumes M09 administrative configuration.,NO
+AUTH-030,M11,M12,public_organization,DISCOVERY_CONSUMER,M11 consumes M12 organization public surface.,NO
+AUTH-031,M11,M14,public_promotion,DISCOVERY_CONSUMER,M11 consumes approved public commercial/promotion truth.,NO
+AUTH-032,M12,M03,organization_context,CONTEXT_INPUT,M12 owns organization context; M03 executes Listing semantics.,NO
+AUTH-033,M12,M10,organization_context,AUTH_INPUT,M10 owns authorization; M12 owns organization/membership.,NO
+AUTH-034,M12,M11,organization_public_surface,DISCOVERY_INPUT,M11 consumes approved organization public surface.,NO
+AUTH-035,M12,M14,organization_context,COMMERCIAL_CONTEXT,M14 commercial semantics remain M14.,NO
+AUTH-036,M13,M10,byok_connection,AUTH_INPUT,M10 authorizes; M13 owns provider/BYOK semantics.,NO
+AUTH-037,M13,M09,provider_catalogue_admin,ADMIN_SURFACE,M09 admin surface cannot transfer M13 provider authority.,NO
+AUTH-038,M14,M03,entitlement_quota,COMMERCIAL_INPUT,M14 owns entitlement/quota; M03 consumes allowance.,NO
+AUTH-039,M14,M04,commercial_entitlement,COMMERCIAL_INPUT,M14 owns payment/entitlement; M04 owns Learning.,NO
+AUTH-040,M14,M06,commercial_context,COMMERCIAL_INPUT,M14 remains commercial authority.,NO
+AUTH-041,M14,M10,entitlement_condition,AUTH_INPUT,M10 evaluates authorization; it does not create entitlement.,NO
+AUTH-042,M14,M11,commercial_public_promotion,DISCOVERY_INPUT,M11 consumes public commercial truth.,NO
+AUTH-043,M14,M15,commercial_context,CONTEXT_INPUT,M15 qualification authority remains M15.,NO
+AUTH-044,M15,M04,qualification_evidence,EVIDENCE_INPUT,M04 evidence remains source; M15 evaluates/awards.,NO
+AUTH-045,M15,M10,awarding_action,AUTH_INPUT,M10 authorizes; M15 owns awarding.,NO
+AUTH-046,M15,M14,qualification_commercial_context,CONTEXT_INPUT,M15 does not absorb M14 commercial authority.,NO

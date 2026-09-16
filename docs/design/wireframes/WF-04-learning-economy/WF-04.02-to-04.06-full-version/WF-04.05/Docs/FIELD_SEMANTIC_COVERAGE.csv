@@ -1,0 +1,9 @@
+screen_id,field,semantic_class,requiredness,section,ux_behavior
+LRN-007,completion outcome,authoritative read,n/a,Learning result,M04 authority
+LRN-007,certificate,authoritative read,conditional,Certificate,Certificate ≠ Award
+LRN-007,qualification handoff,cross-module projection,conditional,Boundary,View Qualification Status → WIRE-07/M15
+ADM-LRN-011,credential definition,configuration,required,Credential,M04 credential authority
+ADM-LRN-011,evidence,authoritative read,conditional,Evidence,Source-bound
+ADM-LRN-011,certificate outcome,authoritative outcome,conditional,Outcome,Not M15 Award Instance
+ADM-LRN-013,partner provenance,provenance,required,Partner result,Retain source identity/reference
+ADM-LRN-012,reconciliation case,system/context,n/a,Reconciliation,Controlled operational case

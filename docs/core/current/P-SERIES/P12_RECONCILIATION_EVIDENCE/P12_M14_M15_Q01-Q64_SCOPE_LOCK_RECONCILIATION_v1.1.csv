@@ -1,0 +1,4 @@
+﻿control_id,statement,status,boundary
+M14-Q,"Q01–Q64, including Q40/Q54/Q61/Q62, belong to M14.",LOCKED / RECONCILED,M15 does not absorb these questions.
+M15-Q,M15 owns qualification/evidence/Award and consumes upstream evidence.,LOCKED / RECONCILED,Not M14 Q01–Q64.
+M10-PP,Permission Preset is optional configuration for an existing role and cannot exceed baseline.,LOCKED / RECONCILED,Not a new role.

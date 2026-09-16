@@ -1,0 +1,7 @@
+finding_id,finding,status,correction,p5_resolution_claim
+P5-R01,P5 v1.0 did not provide a dedicated 57-row M01-M15 change-obligation → batch traceability matrix; 57/57 was asserted only as a coverage count.,CORRECTED,"Created explicit 57-row obligation-to-batch traceability retaining module, finding, classification, P3 WP, Core package and P5 batch.",CORRECTED
+P5-R02,"P5 v1.0 routed all 31 controlled residuals to B08, obscuring module-specific execution ownership.",CORRECTED,Rebuilt residual routing with primary module batch plus mandatory B08 final reconciliation.,CORRECTED
+P5-R03,P5 v1.0 did not explicitly route each Core v1.3 IP-00..IP-16 row to a P5 batch.,CORRECTED,Added explicit Core scope-to-batch routing for all 17 Core packages.,CORRECTED
+P5-R04,P5 v1.0 Core 6.25 routing was present but lacked an explicit module-derived batch field.,CORRECTED,Rebuilt Core 6.25 traceability with explicit module-derived P5 batch ID for all 22 units.,CORRECTED
+P5-R05,P5 v1.0 did not separately expose D13-01..D13-23 as a batch-routed controlled-finding register.,CORRECTED,Added dedicated D13 controlled-finding batch routing; findings remain controlled/evidence-gated.,CORRECTED
+P5-R06,P5 v1.0 critical-path output was module-level only and did not expose the batch implication clearly enough for execution orchestration.,CORRECTED,Rebuilt critical-path matrix with batch ID and predecessor chain retained from P4 hard dependencies.,CORRECTED

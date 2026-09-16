@@ -1,0 +1,18 @@
+core_package,scope,p3_mapping,status,required_treatment,p4_treatment
+IP-00,Foundation / Execution Readiness,P3-00/P3-H/P3-J,COVERED,Input/currentness/physical-handoff evidence gate; no runtime claim.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-01,Identity + Authorization,M01/M10 + all protected-domain WPs,COVERED + CONTROLLED,"Authorization boundary, Permission Preset, exact-ID evidence gate.",Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-02,Profile + Organization,M02/M12,COVERED,Visibility/context and organization boundary.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-03,Developer / Project,M06,COVERED + AUGMENTED,"Company logo/Tentang Developer, media, Marketing Kit, Claim initialization.",Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-04,Listing,M03,COVERED + AUGMENTED,"Publish/edit locks, Refresh action and M14 allowance contract, media derivatives.",Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-05,Event / Calendar,M05,COVERED,Registration/waitlist/late/provider boundary.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-06,Learning Core,M04,COVERED + CONTROLLED,"Learning Economy, Partnership Learning, evidence production.",Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-07,Commercial / Payment,M14,COVERED + AUGMENTED,"Snapshot, payment verification, fulfillment, quota, Refresh Allowance, reconciliation.",Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-08,Learning Session,M04/M05,COVERED,Session boundary and evidence sequencing.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-09,Awarding,M15,COVERED,"Qualification, rule-version provenance, Award lifecycle/presentation.",Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-10,DBR,M07,COVERED,DBR scoring/configuration with M09 bounded config.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-11,Dashboard / Notification,M08,COVERED,Projection-only/source-event contract.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-12,Admin / Configuration / Audit,M09,COVERED + AUGMENTED,Static Public Content/Announcement lifecycle boundary; no universal blocker.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-13,SEO / Analytics,M11,COVERED + AUGMENTED,Ten mandatory public surfaces; discovery/measurement only.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-14,AI BYOK,M13,COVERED + AUGMENTED,Superadmin Provider Catalogue; Agent/User BYOK; lifecycle/security.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-15,Cross-Domain Hardening,WP-15,COVERED + AUGMENTED,"Authorization, org scope, quota, payment, learning, session, award, projection, discovery.",Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.
+IP-16,Physical / Verification Handoff,P3-H/P3-J,COVERED + CONTROLLED,Planning handoff only; physical/runtime proof deferred downstream.,Execution architecture contract; valid Core detail preserved; current P3 deltas routed by module.

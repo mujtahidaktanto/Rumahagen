@@ -1,0 +1,18 @@
+finding_id,module,classification,p7_execution_wp,treatment
+M08-IA-18,M08,CONTROLLED,M08-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+PROP-M09-01,M09,CONTROLLED,M09-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+PROP-M09-02,M09,CONTROLLED,M09-P4-WP04,Controlled/evidence-gated; no unsupported physical/runtime claim.
+PROP-M09-03,M09,CONTROLLED,M09-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+PROP-M09-04,M09,CONTROLLED,M09-P4-WP02,Controlled/evidence-gated; no unsupported physical/runtime claim.
+PROP-M09-05,M09,CONTROLLED,M09-P4-WP02,Controlled/evidence-gated; no unsupported physical/runtime claim.
+PROP-M09-06,M09,CONTROLLED,M09-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M10-CORE-13,M10,CONTROLLED,M10-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M10-CORE-17,M10,CONTROLLED,M10-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M11-CI-010,M11,CONTROLLED,M11-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M12-CI-003,M12,CONTROLLED,M12-P4-WP03,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M12-CI-009,M12,CONTROLLED,M12-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M12-CI-010,M12,CONTROLLED,M12-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M13-CI-004,M13,CONTROLLED,M13-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M15-IA-20,M15,CONTROLLED,M15-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M15-IA-21,M15,CONTROLLED,M15-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.
+M15-IA-22,M15,NO-PROPAGATION,M15-P4-WP01,Controlled/evidence-gated; no unsupported physical/runtime claim.

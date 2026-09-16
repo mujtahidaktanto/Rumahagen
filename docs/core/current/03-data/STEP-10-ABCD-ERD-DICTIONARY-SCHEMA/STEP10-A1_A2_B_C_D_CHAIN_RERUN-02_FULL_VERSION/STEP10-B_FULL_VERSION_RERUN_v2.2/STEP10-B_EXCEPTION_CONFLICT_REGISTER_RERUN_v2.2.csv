@@ -1,0 +1,18 @@
+exception_id,module_or_area,target,exception_type,finding,status,downstream_action
+B-RR-001,GOVERNANCE,STEP10-B v1.0,SUPERSEDED_BASELINE,Old B was built on A1 v2.0 / 839 attrs / 147 rels.,CLOSED,Rebuild from A1/A2 RERUN v2.2 94/862/149.
+B-RR-002,SOURCE,M01-M15 recon,SOURCE_CURRENTNESS,Current authority package is M01-M15 new recon(20260904-013253).,CLOSED,Use current package SHA256 91354375...54d7.
+B-RR-003,M03,LISTINGS.last_refreshed_at,LOGICAL_AUGMENTATION,Current A1 adds freshness field; no exact physical column proven.,CONTROLLED_DOWNSTREAM,Resolve in STEP10-C.
+B-RR-004,M06,DEVELOPER_PROJECTS,LOGICAL_AUGMENTATION,24 newly represented M06 project fields are logical augmentations with no exact current physical corroboration.,CONTROLLED_DOWNSTREAM,Resolve physical realization in STEP10-C.
+B-RR-005,M06,REF_PROVINCES/REF_DISTRICTS → DEVELOPER_PROJECTS,NEW_LOGICAL_RELATIONSHIP,Two logical geography relationships are present in A1 RERUN; not physical FK execution claims.,CONTROLLED_DOWNSTREAM,Reconcile physical FK realization in STEP10-C.
+B-RR-006,M06,DEVELOPER_PROJECTS.company_logo / description,PHYSICAL_GAP,No exact current physical columns.,CONTROLLED_DOWNSTREAM,Resolve physical columns in STEP10-C.
+B-RR-007,M06,DEVELOPER_PROJECT_MEDIA.type,SEMANTIC_PHYSICAL_CONFLICT,Physical CHECK allows brochure/pricelist while M06 logical Project Media is photo/video only; brochure/pricelist belong to MARKETING_KIT.,CONTROLLED_DOWNSTREAM,Preserve Core detail; reconcile physical semantics downstream.
+B-RR-008,M05,EVENT_REGISTRATIONS.agent_id,PHYSICAL_CONSTRAINT_CONFLICT,Current physical agent_id is NOT NULL and event_id+agent_id is UNIQUE; logical Guest registration permits no canonical user identity.,CONTROLLED_DOWNSTREAM,Resolve guest persistence/uniqueness in STEP10-C.
+B-RR-009,M05,EVENT_PROVIDER_BINDING,NO_CURRENT_PHYSICAL_TABLE,Logical entity confirmed; no current physical table.,CONTROLLED_DOWNSTREAM,Resolve provider/credential/history/multiplicity physically downstream.
+B-RR-010,M10,PERMISSION_PRESET family,NO_CURRENT_PHYSICAL_TABLE,Three logical preset entities have no current physical tables.,CONTROLLED_DOWNSTREAM,Resolve physical realization in STEP10-C.
+B-RR-011,M11,STATIC_PUBLIC_CONTENT / PUBLIC_ANNOUNCEMENT_PROMOTION,NO_CURRENT_PHYSICAL_TABLE,Two distinct logical public-resource entities have no current physical tables.,CONTROLLED_DOWNSTREAM,Resolve physical realization in STEP10-C.
+B-RR-012,M12,ORGANIZATION_DOCUMENT,NO_CURRENT_PHYSICAL_TABLE,Logical entity confirmed; no current physical table.,CONTROLLED_DOWNSTREAM,Resolve physical realization in STEP10-C.
+B-RR-013,M12,Organization Settings,AUGMENTATION,Settings remains augmentation of ORGANIZATIONS; dedicated physical table not proven.,CONTROLLED_DOWNSTREAM,Determine physical realization in STEP10-C.
+B-RR-014,M14,daily_refresh_allowance,LOGICAL_AUGMENTATION,Allowance is commercial entitlement/quota semantics; no exact current physical column.,CONTROLLED_DOWNSTREAM,Map to existing quota/entitlement structures in STEP10-C.
+B-RR-015,M14,QUOTA_USAGE → LISTINGS,SEMANTIC_REFERENCE,"Polymorphic/semantic reference, not a physical FK.",CLOSED_AS_SEMANTIC,Preserve distinction; no FK claim.
+B-RR-016,M10,preset target role = account role,SEMANTIC_INVARIANT,"Business/authorization invariant, not claimed as DB-enforced at B.",CLOSED_AS_SEMANTIC,Carry invariant to schema/runtime authorization design.
+B-RR-017,M15,Q01–Q66 / Q01–Q64,SCOPE_GUARD,M14 Q01–Q66 remain M14; M15 does not absorb them.,CLOSED,Preserve module authority boundary.

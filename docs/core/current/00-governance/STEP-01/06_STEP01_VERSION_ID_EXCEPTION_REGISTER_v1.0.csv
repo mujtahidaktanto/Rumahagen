@@ -1,0 +1,3 @@
+﻿M01,Filename v1.1 vs internal header v1.0,CONTROLLED VERSION-ID EXCEPTION,Artifact is the current full semantic M01 rebuild; do not treat internal header alone as a different historical artifact. Correct packaging metadata in a later controlled documentation action.,NOT BLOCKING SEMANTIC AUTHORITY
+M02,Filename v1.1 vs internal header v1.0,CONTROLLED VERSION-ID EXCEPTION,Same treatment as M01.,NOT BLOCKING SEMANTIC AUTHORITY
+M14,Filename v2.2 vs internal document title v2.1,CONTROLLED VERSION-ID EXCEPTION,Artifact is explicitly marked current full synchronized version and preserves Q01–Q66. Do not silently rename/relabel during Step 01.,NOT BLOCKING SEMANTIC AUTHORITY

@@ -1,0 +1,21 @@
+field,actor,requiredness,semantic,UX behavior,screen coverage
+id,system,N/A,system identity,not user-entered,detail/admin context only
+title,user,required in physical baseline,Event title; source-evidenced VARCHAR(200),editable during authorized authoring; dynamic wrap; source limit only,ADM-EVT-002 / EVT-002
+category,user,required in physical baseline,Event category,canonical selection; no invented values,ADM-EVT-002 / EVT-001/002
+description,user,optional in physical baseline,Event description,long-text safe; vertical growth,ADM-EVT-002 / EVT-002
+is_online,user,required in physical baseline,Online/offline mode,controls location/meeting presentation conditionally,ADM-EVT-002 / EVT-002
+location,conditional,optional in physical baseline,Physical location,show when offline context applies; long text safe,ADM-EVT-002 / EVT-002
+meeting_link,conditional,optional in physical baseline,Meeting destination,show only when governed/available; never fabricate,ADM-EVT-005 / EVT-002
+host,contextual,optional in physical baseline,Event host representation,do not equate to Session Instructor; authorization governs assignment,ADM-EVT-002/005
+quota,user,optional in physical baseline; semantic meaning locked,Maximum Registered participants,distinct from commercial entitlement and Session capacity; waitinglist when full,ADM-EVT-002 / EVT-002
+related_course_id,conditional,FK in physical baseline,Related course context,progressive selection; not Course Enrollment,ADM-EVT-002 / EVT-002
+related_project_id,conditional,FK in physical baseline,Related Developer Project context,progressive selection; no Listing authority transfer,ADM-EVT-002 / EVT-002
+submitted_by,system,FK in physical baseline,Submitting actor provenance,read-only provenance,ADM-EVT-004
+status,system,required in physical baseline,Event lifecycle status,server-authoritative; pending_approval/published/rejected/cancelled where applicable,ADM-EVT-001/004
+start_at,user,required in physical baseline,Event start date/time,drives registration cutoff/notification timing; timezone-aware presentation,ADM-EVT-002 / EVT-002
+end_at,user,optional in physical baseline,Event end date/time,validate temporal coherence without inventing business rule,ADM-EVT-002 / EVT-002
+deleted_at,system,optional in physical baseline,Deletion/soft-state provenance,not user-entered business field,ADM-EVT-001
+created_at,system,required in physical baseline,Creation timestamp,read-only,ADM-EVT-001/004
+updated_at,system,required in physical baseline,Last update timestamp,read-only,ADM-EVT-001/004
+guest_email,conditional,logical augmentation,Guest contact/notification destination,only in Guest path; not canonical identity,EVT-002/003; ADM-EVT-003
+participant_mode,conditional,logical augmentation,REGISTERED USER / GUEST,"descriptive participation mode, not role/auth",EVT-002/003; ADM-EVT-002/003

@@ -1,0 +1,15 @@
+gate,criterion,status
+P8-00,Input/currentness/authority,PASS
+P8-01,P6 audit after v1.2 correction,PASS WITH CONTROLLED RESIDUALS
+P8-02,P7 audit,PASS WITH CONTROLLED RESIDUALS
+P8-03,Combined M01-M15 coverage,PASS
+P8-04,Core v1.3 preservation, PASS
+P8-05,Authority integrity,PASS
+P8-06,Cross-module contracts,PASS
+P8-07,API/Data/RBAC/Flow/UI/SEO,PASS
+P8-08,Physical/runtime evidence discipline,PASS WITH CONTROLLED RESIDUALS
+P8-09,Residual reconciliation,PASS WITH CONTROLLED RESIDUALS
+P8-10,Completeness/orphan/duplicate/conflict scan,PASS
+P8-11,First deep scan + re-entry,PASS
+P8-12,Second deep scan,PASS
+P8-FINAL,Overall,PASS WITH CONTROLLED RESIDUALS

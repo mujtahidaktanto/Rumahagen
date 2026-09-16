@@ -1,0 +1,4 @@
+﻿evidence_id,scope,evidence_level,claim_boundary,disposition
+API-01,API/contract definitions present in documentary sources,DOCUMENTARY/DESIGN,No runtime claim,PRESERVE / FUTURE IMPLEMENTATION
+API-02,Known endpoint gaps/residuals are tracked as documentary/future implementation items where sourced,DOCUMENTARY/DESIGN,No endpoint-exists/runtime claim is permitted,CONTROLLED / NON-BLOCKING
+API-03,API authority follows module ownership; no invented endpoint identifier is introduced,DOCUMENTARY/DESIGN,No physical verification,PASS

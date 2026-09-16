@@ -1,0 +1,8 @@
+﻿decision_id,authority,decision,status,boundary
+LD-01,M14,"Q01–Q64, including Q40/Q54/Q61/Q62, remain M14.",SUPPORTED,No M15 reassignment.
+LD-02,M10,Permission Preset is optional configuration targeted to an existing role; never a new role; cannot exceed Role Permission baseline.,SUPPORTED,No new role authority.
+LD-03,M15,M15 owns qualification/evidence/Award; consumes upstream evidence; does not absorb M14 Q01–Q64.,SUPPORTED,Learning completion ≠ Award.
+LD-04,M03,M03 owns Listing/Refresh action semantics; M14 supplies commercial allowance.,SUPPORTED,No authority inversion.
+LD-05,M04,"M04 owns Learning Economy/LP, Learning Path, Session and evidence production.",SUPPORTED,M15 consumes evidence.
+LD-06,M11,"Homepage, Listing, Agent, Organization, Developer/Project, Event, Learning, Learning Session, Static Public Content, Announcement/Promotion are mandatory public discovery surfaces.",SUPPORTED,M11 remains discovery/measurement layer.
+LD-07,Core,Core v1.3 remains immutable/read-only.,SUPPORTED,No P12_RECONCILIATION_EVIDENCE modification.

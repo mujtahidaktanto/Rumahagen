@@ -1,0 +1,6 @@
+exception_id,module,status,area,finding,disposition
+A2-RR-E01,M06,CONTROLLED DOWNSTREAM,Constraint / semantic-vs-physical,developer_project_media.type physically permits brochure/price_list while M06 semantic truth restricts Project Media to photo/video.,Preserve Core physical detail; downstream Dictionary/Schema must reconcile semantic scope without premature deletion.
+A2-RR-E02,M05,CONTROLLED DOWNSTREAM,Physical persistence,Guest registration requires physical nullable identity/contact/uniqueness handling; A1 is logical only.,Resolve in Dictionary/Schema; no Guest entity invented.
+A2-RR-E03,M05,CONTROLLED DOWNSTREAM,Provider runtime/persistence,"Event Provider Binding exact provider vocabulary, credentials, failover history and runtime mechanics remain downstream.",Preserve EVENT_PROVIDER_BINDING logical entity; no runtime claim.
+A2-RR-E04,M06,CONTROLLED DOWNSTREAM,Physical realization,24 Project semantic augmentations lack exact current physical columns.,Carry as logical augmentations; physical realization downstream.
+A2-RR-E05,M03,CONTROLLED DOWNSTREAM,Physical realization,LISTINGS.last_refreshed_at is logical augmentation and not yet physically executed.,Carry as logical augmentation; physical realization downstream.

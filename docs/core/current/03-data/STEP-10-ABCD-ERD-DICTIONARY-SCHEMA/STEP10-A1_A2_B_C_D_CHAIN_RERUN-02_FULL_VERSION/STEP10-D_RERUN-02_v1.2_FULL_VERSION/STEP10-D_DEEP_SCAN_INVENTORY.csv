@@ -1,0 +1,14 @@
+layer,artifact,finding,status
+INPUT,STEP SYNC CORE(2).zip,Recursive inventory located accepted A1/A2/B/C and prior STEP10/STEP09 evidence,PASS
+INPUT,Core v1.3 source pack,W4-01E/W4-02 physical schema authority and 6.15 reference inspected,PASS
+INPUT,pre-00 gate,18 artifacts recursively inventoried,PASS
+INPUT,M01-M15 new recon,42 top-level artifacts recursively inventoried,PASS
+PHYSICAL,W4-01E/W4-02 SQL,86 tables / 764 physical columns / 144 FK references / 68 explicit indexes / 86 RLS enabled / 111 policies,PASS
+CROSSCHECK,C attribute mapping vs exact SQL,766 claimed physical mappings vs 764 actual SQL columns; 2 phantom OR mappings,BLOCKING
+CROSSCHECK,6.15 reference vs exact SQL,14 table column inventories differ; W4-02 remains physical authority,RESIDUAL
+RERUN,Prior STEP10-D attribute reconciliation,Removed exactly 2 invalid OR attribute mappings; all other 862 attribute rows preserved,PASS
+RERUN,Controlled physical delta register,B-RR-003 through B-RR-014 preserved without deletion or execution,PASS
+RERUN,Relationship/FK baseline,149 relationships preserved: 138 physical + 10 controlled new + 1 semantic reference,PASS
+RERUN,Physical schema authority,W4-01E/W4-02 baseline unchanged: 86 tables / 764 columns / 144 FK / 68 indexes / 86 RLS / 111 policies,PASS
+RERUN,Schema reference drift,14-table W4-02A.6.15 documentation drift retained as non-blocking; W4-02 remains SQL authority,PASS
+RERUN,Core immutability/runtime boundary,"No live migration, ALTER, table creation, FK creation, or runtime claim executed",PASS

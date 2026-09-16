@@ -1,0 +1,21 @@
+Screen,Title,Substep,Authority,Core scope,Desktop,Mobile,State coverage
+ADM-001,Admin Dashboard,WF-08.01,M09/M10,Governed admin entry point; aggregates without becoming business-domain authority.,YES,YES,Loading; Ready; Empty; Denied
+ADM-002,User Directory,WF-08.01,M09/M10,Searchable administrative user directory with role and organization context.,YES,YES,Loading; Empty; Error / retry; Denied
+ADM-003,User Access Detail,WF-08.01,M10,"Effective authorization is resolved from role, baseline, preset, capability, permission and governed context.",YES,YES,Loading; Protected non-existence; Denied; Success
+ADM-004,Organization Administration,WF-08.01,M09/M10,Organization administration and contextual authorization; membership is not ownership.,YES,YES,Loading; Empty; Denied; Error / retry
+ADM-005,Content & Public Communication,WF-08.02,M09,Static public content and Announcement/Promotion lifecycle/configuration where M09/applicable domain owns administration; discovery remains M11.,YES,YES,Loading; Empty; Validation; Denied
+ADM-006,Moderation Operations,WF-08.02,M09/M10,"Administrative moderation surface. Review, Escalate and Manual Correction remain distinct; source domain keeps business truth.",YES,YES,Loading; Empty; Validation; Denied; Success
+ADM-007,Learning Administration,WF-08.03,M04/M09/M10,Governed Learning administration; M04 remains Learning authority.,YES,YES,Loading; Empty; Denied; Error / retry
+ADM-008,Commercial Administration,WF-08.03,M14/M09/M10,Governed commercial administration; M14 remains commercial authority.,YES,YES,Loading; Empty; Denied; Error / retry
+ADM-009,Bank Master Administration,WF-08.03,M07/M09/M10,Bank Master administrative surface. M07 remains DBR/KPR business authority; WIRE-08 governs administration/authorization boundary.,YES,YES,Loading; Empty; Validation; Denied
+ADM-010,System Configuration,WF-08.03,M09/M10,M09 System Configuration; current Core API evidence is GET /admin/config/system and PUT /admin/config/system. Authorization is M10.,YES,YES,Loading; Empty; Validation; Error / retry; Denied; Success
+ADM-011,Role Catalogue,WF-08.04,M10,"Role is actor grouping, not a permission/capability.",YES,YES,Loading; Empty; Denied
+ADM-012,Permission Catalogue,WF-08.04,M10,"Permission identity is (module_code, action_code); full catalogue is searchable/paginated rather than squeezed into one screen.",YES,YES,Loading; Empty; Error / retry; Denied
+ADM-013,Role Permission Matrix,WF-08.04,M10,"Complete governed M10 baseline is represented through a scalable matrix; all 11 canonical rows are available, with scope and editability.",YES,YES,Loading; Empty; Validation; Denied
+ADM-014,Permission Preset Management,WF-08.05,M10,Optional role-targeted preset; never a new role and never outside target-role baseline.,YES,YES,Loading; Empty; Validation; Denied; Error / retry
+ADM-015,Permission Preset Assignment,WF-08.05,M10,Optional zero-or-one active preset; target-role compatibility; mismatch fails closed; assignment does not change role.,YES,YES,Loading; Empty; Validation; Denied; Success
+ADM-016,Effective Authorization Review,WF-08.05,M10,Explicit authorization resolution chain with progressive disclosure.,YES,YES,Loading; Protected non-existence; Denied; Error / retry
+ADM-017,Administrative Review & Correction,WF-08.06,M09/M10,"Operational review, escalation and manual correction with provenance; domain authority remains source-owned.",YES,YES,Loading; Empty; Validation; Denied; Success
+ADM-018,Audit Log & Administrative Export,WF-08.06,M09/M10,Audit/provenance view and governed Administrative Export. Export is Superadmin-only where source evidence requires it.,YES,YES,Loading; Empty; Denied; Error / retry
+ADM-019,Notification Template / Content Configuration,WF-08.06,M09/M10,Controlled M09 semantic surface for Notification Template/Content Configuration; exact current endpoint/storage contract is not invented.,YES,YES,Loading; Empty; Validation; Denied
+ADM-020,Admin Action Authorization Review,WF-08.06,M10,Cross-module action review: authorization only; business-domain mutation stays with the owning module.,YES,YES,Loading; Protected non-existence; Denied; Error / retry

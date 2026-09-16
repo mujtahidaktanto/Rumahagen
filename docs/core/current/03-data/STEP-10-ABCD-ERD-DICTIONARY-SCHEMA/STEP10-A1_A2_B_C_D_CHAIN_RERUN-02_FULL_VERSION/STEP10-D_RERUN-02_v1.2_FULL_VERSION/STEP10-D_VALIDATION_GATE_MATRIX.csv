@@ -1,0 +1,14 @@
+control_id,control,expected,result,evidence
+D-01,Input & authority gate,Current A2/C + W4-01E/W4-02,PASS,Uploaded packages recursively scanned
+D-02,Physical table baseline,86 current physical tables,PASS,W4-01E/W4-02
+D-03,W4-01E ↔ W4-02 parity,86/86 CREATE TABLE sets equal,PASS,Exact SQL comparison
+D-04,Physical column inventory,Current executable schema reconciled,PASS,764 physical columns
+D-05,94 entity disposition,94/94 dispositions,PASS WITH CONTROLLED,86 PRESERVE + 8 CONTROLLED ADD-NEW
+D-06,862 attribute reconciliation,All 862 attributes validly mapped/classified,PASS,764 physical corroborations + 98 logical-only; no phantom OR mapping
+D-07,149 relationships,FK/reference status reconciled,PASS WITH CONTROLLED,138 physical FK-present + 10 controlled new + 1 semantic reference
+D-08,Constraints/indexes/FKs,Full physical inventory,PASS,86 tables / 144 FK / 68 indexes
+D-09,RLS boundary,Physical evidence only; no runtime claim,PASS,86 enabled / 111 policies
+D-10,Controlled deltas,Tracked without execution,PASS,B-RR-003…014 + D findings
+D-11,Dynamic re-entry,Upstream contradiction corrected and downstream rerun completed,PASS,D-RE-001/D-RE-002 resolved in RERUN-02
+D-12,Core immutability,Core v1.3 unchanged,PASS,No live/SQL migration executed
+D-13,STEP10-D final gate,No unresolved contradiction requiring A2/C reopen,PASS WITH CONTROLLED,Two phantom OR mappings removed; controlled physical deltas remain downstream

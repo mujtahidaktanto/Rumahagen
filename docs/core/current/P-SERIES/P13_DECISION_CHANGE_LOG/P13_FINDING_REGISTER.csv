@@ -1,0 +1,8 @@
+﻿Finding ID,Finding,Status,Correction/Disposition
+P13_DECISION_CHANGE_LOG-F-001,P13_DECISION_CHANGE_LOG v1.1 had 41 material decision records while P3 defines 57 M01-M15 material change obligations.,CORRECTED,Rebuilt one decision record per 57 obligation; 57/57 coverage.
+P13_DECISION_CHANGE_LOG-F-002,P13_DECISION_CHANGE_LOG v1.1 Decision→Change traceability was positionally misaligned and then collapsed many decisions onto C-012.,CORRECTED,Rebuilt explicit decision→change linkage by source class.
+P13_DECISION_CHANGE_LOG-F-003,"P13_DECISION_CHANGE_LOG v1.1 provenance referenced Governance Checklist v2.6, which was not among the current uploaded source set.",CORRECTED,Current v1.2 provenance is restricted to the 11 uploaded files in this turn; prior P13_DECISION_CHANGE_LOG v1.1 is treated as candidate/history.
+P13_DECISION_CHANGE_LOG-F-004,P13_DECISION_CHANGE_LOG v1.1 Core preservation had only generic controls and did not explicitly cover Core IP-00..IP-16 scope.,CORRECTED,Added Core IP-00..IP-16 package coverage and dedicated Core P13_DECISION_CHANGE_LOG scope-gap check.
+P13_DECISION_CHANGE_LOG-F-005,P13_DECISION_CHANGE_LOG v1.1 did not expose an explicit 57-row obligation coverage matrix.,CORRECTED,Added P13_M01-M15_OBLIGATION_DECISION_COVERAGE.csv.
+P13_DECISION_CHANGE_LOG-F-006,Historical STEP13 material can appear inside recursive source archives.,CONTROLLED,Explicitly classified as historical/provenance; not current P-Step P13_DECISION_CHANGE_LOG.
+P13_DECISION_CHANGE_LOG-F-007,Physical/runtime/API/RLS residuals remain evidence-gated at P12_RECONCILIATION_EVIDENCE stage.,CONTROLLED,No semantic closure or runtime claim introduced.

@@ -1,0 +1,863 @@
+logical_entity,logical_attribute,representation,authority_version,logical_data_meaning,note,physical_table,physical_column,lifecycle_or_history_indicator,meaning_evidence_status,provenance_status,physical_status_boundary
+AI_PROVIDERS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,ai_providers,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AI_PROVIDERS,code,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,ai_providers,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AI_PROVIDERS,display_name,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,ai_providers,display_name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AI_PROVIDERS,logo_url,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,ai_providers,logo_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AI_PROVIDERS,billing_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,ai_providers,billing_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AI_PROVIDERS,setup_instructions_url,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,ai_providers,setup_instructions_url,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AI_PROVIDERS,usage_terms_note,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,ai_providers,usage_terms_note,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AI_PROVIDERS,requires_expiry_warning,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,ai_providers,requires_expiry_warning,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AI_PROVIDERS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,ai_providers,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AMENITIES,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,amenities,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AMENITIES,name,PHYSICAL_CORROBORATION,v1.3,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,amenities,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PERMISSIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,permissions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PERMISSIONS,module_code,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,permissions,module_code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PERMISSIONS,action_code,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,permissions,action_code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PERMISSIONS,scope_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,permissions,scope_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PERMISSIONS,description,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,permissions,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+REF_PROVINCES,id,PHYSICAL_CORROBORATION,Core v1.3,PK,Exact logical attribute ↔ physical column.,ref_provinces,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_PROVINCES,code,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,ref_provinces,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_PROVINCES,name,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL,Exact logical attribute ↔ physical column.,ref_provinces,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLES,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,roles,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLES,code,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,roles,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLES,name,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,roles,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLES,is_system_role,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,roles,is_system_role,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLES,is_protected,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,roles,is_protected,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLES,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,roles,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ROLES,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,roles,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+URL_REDIRECTS,id,PHYSICAL_CORROBORATION,v2.0,PK,Exact logical attribute ↔ physical column.,url_redirects,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+URL_REDIRECTS,old_path,PHYSICAL_CORROBORATION,v2.0,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,url_redirects,old_path,NO,EXPLICIT,PASS,CORROBORATION ONLY
+URL_REDIRECTS,new_path,PHYSICAL_CORROBORATION,v2.0,NOT NULL,Exact logical attribute ↔ physical column.,url_redirects,new_path,NO,EXPLICIT,PASS,CORROBORATION ONLY
+URL_REDIRECTS,redirect_type,PHYSICAL_CORROBORATION,v2.0,NOT NULL,Exact logical attribute ↔ physical column.,url_redirects,redirect_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+URL_REDIRECTS,reason,PHYSICAL_CORROBORATION,v2.0,,Exact logical attribute ↔ physical column.,url_redirects,reason,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+URL_REDIRECTS,entity_type,PHYSICAL_CORROBORATION,v2.0,,Exact logical attribute ↔ physical column.,url_redirects,entity_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+URL_REDIRECTS,entity_id,PHYSICAL_CORROBORATION,v2.0,,Exact logical attribute ↔ physical column.,url_redirects,entity_id,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+URL_REDIRECTS,created_at,PHYSICAL_CORROBORATION,v2.0,NOT NULL,Exact logical attribute ↔ physical column.,url_redirects,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+REF_CITIES,id,PHYSICAL_CORROBORATION,Core v1.3,PK,Exact logical attribute ↔ physical column.,ref_cities,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_CITIES,province_id,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL; FK→ref_provinces.id,Exact logical attribute ↔ physical column.,ref_cities,province_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_CITIES,code,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,ref_cities,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_CITIES,name,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL,Exact logical attribute ↔ physical column.,ref_cities,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_CITIES,type,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL,Exact logical attribute ↔ physical column.,ref_cities,type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLE_PERMISSIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,role_permissions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLE_PERMISSIONS,role_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→roles.id,Exact logical attribute ↔ physical column.,role_permissions,role_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLE_PERMISSIONS,permission_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→permissions.id,Exact logical attribute ↔ physical column.,role_permissions,permission_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLE_PERMISSIONS,granted_scope,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,role_permissions,granted_scope,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLE_PERMISSIONS,editable_by_role_code,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,role_permissions,editable_by_role_code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ROLE_PERMISSIONS,updated_by,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,role_permissions,updated_by,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ROLE_PERMISSIONS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,role_permissions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,users,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,email,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,users,email,NO,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,phone,PHYSICAL_CORROBORATION,v1.1,UNIQUE,Exact logical attribute ↔ physical column.,users,phone,NO,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,password_hash,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,users,password_hash,NO,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,role_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→roles.id,Exact logical attribute ↔ physical column.,users,role_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,users,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,email_verified_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,users,email_verified_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+USERS,last_login_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,users,last_login_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+USERS,deleted_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,users,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+USERS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,users,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+USERS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,users,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,agent_ai_connections,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,agent_ai_connections,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,provider_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→ai_providers.id,Exact logical attribute ↔ physical column.,agent_ai_connections,provider_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,encrypted_api_key,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_ai_connections,encrypted_api_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_ai_connections,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,last_validated_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_ai_connections,last_validated_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,connected_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_ai_connections,connected_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_ai_connections,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_AI_CONNECTIONS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_ai_connections,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,agent_profiles,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE; FK→users.id,Exact logical attribute ↔ physical column.,agent_profiles,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,full_name,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_profiles,full_name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,avatar_url,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_profiles,avatar_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROFILES,bio,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_profiles,bio,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROFILES,specialization,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_profiles,specialization,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROFILES,coverage_area,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_profiles,coverage_area,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROFILES,office_name,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_profiles,office_name,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROFILES,license_number,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_profiles,license_number,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROFILES,whatsapp_number,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_profiles,whatsapp_number,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,contact_visibility,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_profiles,contact_visibility,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,public_slug,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,agent_profiles,public_slug,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,total_listings_sold,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_profiles,total_listings_sold,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,total_listings_rented,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_profiles,total_listings_rented,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,deleted_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_profiles,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROFILES,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_profiles,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_profiles,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROFILES,ktp_requirement_state,LOGICAL_AUGMENTATION,v1.1,DEFERRED / NOT_PROVIDED remains representable as outstanding KTP requirement | M01 logical augmentation,No exact physical column; deferred KTP remains semantic state.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+AGENT_PROFILES,profile_visibility,LOGICAL_AUGMENTATION,v1.1,PUBLIC / PRIVATE; default PUBLIC | M02 logical semantic augmentation,No exact physical column; contact_visibility is not equivalent to whole-profile visibility.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+AGENT_PROFILES,public_cta_enabled,LOGICAL_AUGMENTATION,v1.1,Explicit Agent opt-in for public contact/WhatsApp CTA | M02 logical semantic augmentation,No exact physical column; public CTA opt-in remains downstream.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+AGENT_REVIEWS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,agent_reviews,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,agent_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,agent_reviews,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,buyer_id,PHYSICAL_CORROBORATION,v1.1,FK→users.id,Exact logical attribute ↔ physical column.,agent_reviews,buyer_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,listing_lead_id,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_reviews,listing_lead_id,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,reviewer_name,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_reviews,reviewer_name,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,rating,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_reviews,rating,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,comment,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_reviews,comment,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_reviews,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,moderated_by,PHYSICAL_CORROBORATION,v1.1,FK→users.id,Exact logical attribute ↔ physical column.,agent_reviews,moderated_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,moderated_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_reviews,moderated_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,deleted_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_reviews,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_REVIEWS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_reviews,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,agent_verification_documents,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,agent_verification_documents,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,doc_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_verification_documents,doc_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,file_url,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_verification_documents,file_url,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,encrypted,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_verification_documents,encrypted,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,review_status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_verification_documents,review_status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,reviewed_by,PHYSICAL_CORROBORATION,v1.1,FK→users.id,Exact logical attribute ↔ physical column.,agent_verification_documents,reviewed_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,rejection_reason,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,agent_verification_documents,rejection_reason,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_VERIFICATION_DOCUMENTS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,agent_verification_documents,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,courses,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,title,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,courses,title,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,category,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,courses,category,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COURSES,description,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,courses,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COURSES,prerequisite_course_id,PHYSICAL_CORROBORATION,v1.2,FK→courses.id,Exact logical attribute ↔ physical column.,courses,prerequisite_course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,passing_grade,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,courses,passing_grade,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,courses,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,created_by,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,courses,created_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,deleted_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,courses,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COURSES,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,courses,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COURSES,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,courses,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_CONFIG,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,dbr_config,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_CONFIG,dbr_threshold_percent,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_config,dbr_threshold_percent,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_CONFIG,default_interest_rate,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_config,default_interest_rate,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_CONFIG,updated_by,PHYSICAL_CORROBORATION,v1.1,FK→users.id,Exact logical attribute ↔ physical column.,dbr_config,updated_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_CONFIG,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_config,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,id,PHYSICAL_CORROBORATION,v1.5,PK,Exact logical attribute ↔ physical column.,developer_partners,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,company_name,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_partners,company_name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,pic_name,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_partners,pic_name,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,pic_contact,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_partners,pic_contact,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,user_id,PHYSICAL_CORROBORATION,v1.5,FK→users.id,Exact logical attribute ↔ physical column.,developer_partners,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,status,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_partners,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,deleted_at,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_partners,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,created_at,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_partners,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PARTNERS,company_logo,LOGICAL_AUGMENTATION,v1.5,Company logo | M06 semantic locked; physical realization downstream,No exact physical column.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PARTNERS,description,LOGICAL_AUGMENTATION,v1.5,Free-text “Tentang Developer” | M06 semantic locked; physical realization downstream,No exact physical column.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+NOTIFICATIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,notifications,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+NOTIFICATIONS,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,notifications,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+NOTIFICATIONS,type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,notifications,type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+NOTIFICATIONS,title,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,notifications,title,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+NOTIFICATIONS,message,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,notifications,message,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+NOTIFICATIONS,related_entity_type,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,notifications,related_entity_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+NOTIFICATIONS,related_entity_id,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,notifications,related_entity_id,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+NOTIFICATIONS,is_read,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,notifications,is_read,NO,EXPLICIT,PASS,CORROBORATION ONLY
+NOTIFICATIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,notifications,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,organizations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,organization_name,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organizations,organization_name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,slug,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,organizations,slug,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,organization_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organizations,organization_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,logo_url,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,logo_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,banner_url,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,banner_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,description,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,website,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,website,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,social_media,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,social_media,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,address,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,address,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,contact_phone,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,contact_phone,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,created_by,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,organizations,created_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organizations,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,deleted_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organizations,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organizations,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATIONS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organizations,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+REF_DISTRICTS,id,PHYSICAL_CORROBORATION,Core v1.3,PK,Exact logical attribute ↔ physical column.,ref_districts,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_DISTRICTS,city_id,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL; FK→ref_cities.id,Exact logical attribute ↔ physical column.,ref_districts,city_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_DISTRICTS,code,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,ref_districts,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_DISTRICTS,name,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL,Exact logical attribute ↔ physical column.,ref_districts,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SYSTEM_CONFIGS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,system_configs,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SYSTEM_CONFIGS,config_key,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,system_configs,config_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SYSTEM_CONFIGS,config_value,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,system_configs,config_value,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SYSTEM_CONFIGS,updated_by,PHYSICAL_CORROBORATION,v1.1,FK→users.id,Exact logical attribute ↔ physical column.,system_configs,updated_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SYSTEM_CONFIGS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,system_configs,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AUDIT_LOGS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,audit_logs,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AUDIT_LOGS,user_id,PHYSICAL_CORROBORATION,v1.1,FK→users.id,Exact logical attribute ↔ physical column.,audit_logs,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AUDIT_LOGS,action,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,audit_logs,action,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AUDIT_LOGS,entity_type,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,audit_logs,entity_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AUDIT_LOGS,entity_id,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,audit_logs,entity_id,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AUDIT_LOGS,organization_id,PHYSICAL_CORROBORATION,v1.1,FK→organizations.id,Exact logical attribute ↔ physical column.,audit_logs,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AUDIT_LOGS,old_value,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,audit_logs,old_value,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AUDIT_LOGS,new_value,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,audit_logs,new_value,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AUDIT_LOGS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,audit_logs,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+CERTIFICATES,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,certificates,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+CERTIFICATES,agent_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,certificates,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+CERTIFICATES,course_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→courses.id,Exact logical attribute ↔ physical column.,certificates,course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+CERTIFICATES,certificate_url,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,certificates,certificate_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+CERTIFICATES,issued_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,certificates,issued_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COURSE_LESSONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,course_lessons,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COURSE_LESSONS,course_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→courses.id,Exact logical attribute ↔ physical column.,course_lessons,course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COURSE_LESSONS,title,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,course_lessons,title,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COURSE_LESSONS,content_type,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,course_lessons,content_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COURSE_LESSONS,content_url,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,course_lessons,content_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COURSE_LESSONS,sort_order,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,course_lessons,sort_order,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,id,PHYSICAL_CORROBORATION,v1.5,PK,Exact logical attribute ↔ physical column.,developer_projects,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,developer_id,PHYSICAL_CORROBORATION,v1.5,NOT NULL; FK→developer_partners.id,Exact logical attribute ↔ physical column.,developer_projects,developer_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,name,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_projects,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,slug,PHYSICAL_CORROBORATION,v1.5,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,developer_projects,slug,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,meta_title,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,meta_title,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,meta_description,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,meta_description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,location,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,location,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,city_id,PHYSICAL_CORROBORATION,v1.5,NOT NULL; FK→ref_cities.id,Exact logical attribute ↔ physical column.,developer_projects,city_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,property_type,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,property_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,price_min,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,price_min,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,price_max,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,price_max,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,unit_availability,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,unit_availability,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,commission_scheme,PHYSICAL_CORROBORATION,v1.5,,Exact logical attribute ↔ physical column.,developer_projects,commission_scheme,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,is_exclusive_by_region,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_projects,is_exclusive_by_region,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,status,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_projects,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,created_at,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_projects,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECTS,updated_at,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_projects,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ENROLLMENTS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,enrollments,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ENROLLMENTS,agent_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,enrollments,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ENROLLMENTS,course_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→courses.id,Exact logical attribute ↔ physical column.,enrollments,course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ENROLLMENTS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,enrollments,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ENROLLMENTS,progress_percent,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,enrollments,progress_percent,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ENROLLMENTS,enrolled_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,enrollments,enrolled_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ENROLLMENTS,completed_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,enrollments,completed_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,organization_invitations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,organization_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→organizations.id,Exact logical attribute ↔ physical column.,organization_invitations,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,agent_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,organization_invitations,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,leader_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,organization_invitations,leader_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,initiated_by_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organization_invitations,initiated_by_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organization_invitations,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,responded_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organization_invitations,responded_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,expires_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organization_invitations,expires_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ORGANIZATION_INVITATIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organization_invitations,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_MEMBERS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,organization_members,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_MEMBERS,organization_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→organizations.id,Exact logical attribute ↔ physical column.,organization_members,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_MEMBERS,agent_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,organization_members,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_MEMBERS,role,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organization_members,role,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_MEMBERS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organization_members,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_MEMBERS,joined_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,organization_members,joined_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ORGANIZATION_MEMBERS,left_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,organization_members,left_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUIZZES,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,quizzes,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZZES,course_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→courses.id,Exact logical attribute ↔ physical column.,quizzes,course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZZES,title,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,quizzes,title,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+REF_VILLAGES,id,PHYSICAL_CORROBORATION,Core v1.3,PK,Exact logical attribute ↔ physical column.,ref_villages,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_VILLAGES,district_id,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL; FK→ref_districts.id,Exact logical attribute ↔ physical column.,ref_villages,district_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_VILLAGES,code,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,ref_villages,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_VILLAGES,name,PHYSICAL_CORROBORATION,Core v1.3,NOT NULL,Exact logical attribute ↔ physical column.,ref_villages,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+REF_VILLAGES,postal_code,PHYSICAL_CORROBORATION,Core v1.3,,Exact logical attribute ↔ physical column.,ref_villages,postal_code,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AGENT_PROJECT_CLAIMS,id,PHYSICAL_CORROBORATION,v1.5,PK,Exact logical attribute ↔ physical column.,agent_project_claims,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROJECT_CLAIMS,agent_id,PHYSICAL_CORROBORATION,v1.5,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,agent_project_claims,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROJECT_CLAIMS,project_id,PHYSICAL_CORROBORATION,v1.5,NOT NULL; FK→developer_projects.id,Exact logical attribute ↔ physical column.,agent_project_claims,project_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AGENT_PROJECT_CLAIMS,claimed_at,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,agent_project_claims,claimed_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECT_MEDIA,id,PHYSICAL_CORROBORATION,v1.5,PK,Exact logical attribute ↔ physical column.,developer_project_media,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECT_MEDIA,project_id,PHYSICAL_CORROBORATION,v1.5,NOT NULL; FK→developer_projects.id,Exact logical attribute ↔ physical column.,developer_project_media,project_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECT_MEDIA,type,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_project_media,type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DEVELOPER_PROJECT_MEDIA,url,PHYSICAL_CORROBORATION,v1.5,NOT NULL,Exact logical attribute ↔ physical column.,developer_project_media,url,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,events,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,title,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,events,title,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,category,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,events,category,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,description,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,events,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+EVENTS,is_online,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,events,is_online,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,location,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,events,location,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+EVENTS,meeting_link,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,events,meeting_link,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+EVENTS,host,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,events,host,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+EVENTS,quota,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,events,quota,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+EVENTS,related_course_id,PHYSICAL_CORROBORATION,v1.3,FK→courses.id,Exact logical attribute ↔ physical column.,events,related_course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,related_project_id,PHYSICAL_CORROBORATION,v1.3,FK→developer_projects.id,Exact logical attribute ↔ physical column.,events,related_project_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,submitted_by,PHYSICAL_CORROBORATION,v1.3,FK→users.id,Exact logical attribute ↔ physical column.,events,submitted_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,status,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,events,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,start_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,events,start_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,end_at,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,events,end_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+EVENTS,deleted_at,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,events,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+EVENTS,created_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,events,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+EVENTS,updated_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,events,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,listings,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,agent_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,listings,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,developer_project_id,PHYSICAL_CORROBORATION,v1.3,FK→developer_projects.id,Exact logical attribute ↔ physical column.,listings,developer_project_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,organization_id,PHYSICAL_CORROBORATION,v1.3,FK→organizations.id,Exact logical attribute ↔ physical column.,listings,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,listing_context,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,listing_context,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,category,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,category,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,transaction_type,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,transaction_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,title,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,title,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,slug,PHYSICAL_CORROBORATION,v1.3,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,listings,slug,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,meta_title,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,meta_title,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,meta_description,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,meta_description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,description,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,property_type,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,property_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,price,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,price,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,price_unit,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,price_unit,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,is_negotiable,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,is_negotiable,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,address,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,address,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,province_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→ref_provinces.id,Exact logical attribute ↔ physical column.,listings,province_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,city_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→ref_cities.id,Exact logical attribute ↔ physical column.,listings,city_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,district_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→ref_districts.id,Exact logical attribute ↔ physical column.,listings,district_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,area_keyword,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,area_keyword,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,latitude,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,latitude,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,longitude,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,longitude,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,land_area,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,land_area,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,building_area,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,building_area,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,bedrooms,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,bedrooms,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,bathrooms,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,bathrooms,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,floors,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,floors,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,carport_capacity,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,carport_capacity,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,electrical_power,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,electrical_power,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,water_source,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,water_source,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,furnishing,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,furnishing,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,year_built,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,year_built,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,certificate_type,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,certificate_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,certificate_transferred,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,certificate_transferred,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,imb_status,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,imb_status,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,dispute_free_declared,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,dispute_free_declared,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,whatsapp_number,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,whatsapp_number,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,status,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,rejection_reason,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,rejection_reason,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,view_count,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,view_count,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,cta_click_count,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,cta_click_count,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,published_at,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,published_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,expired_at,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,expired_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,sold_or_rented_at,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,sold_or_rented_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,deleted_at,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listings,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTINGS,created_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LISTINGS,updated_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listings,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_ATTEMPTS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,quiz_attempts,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_ATTEMPTS,enrollment_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→enrollments.id,Exact logical attribute ↔ physical column.,quiz_attempts,enrollment_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_ATTEMPTS,quiz_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→quizzes.id,Exact logical attribute ↔ physical column.,quiz_attempts,quiz_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_ATTEMPTS,score,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,quiz_attempts,score,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUIZ_ATTEMPTS,passed,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,quiz_attempts,passed,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUIZ_ATTEMPTS,attempted_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,quiz_attempts,attempted_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_QUESTIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,quiz_questions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_QUESTIONS,quiz_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→quizzes.id,Exact logical attribute ↔ physical column.,quiz_questions,quiz_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_QUESTIONS,question_text,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,quiz_questions,question_text,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_QUESTIONS,question_type,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,quiz_questions,question_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,dbr_simulations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,agent_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,dbr_simulations,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,listing_id,PHYSICAL_CORROBORATION,v1.1,FK→listings.id,Exact logical attribute ↔ physical column.,dbr_simulations,listing_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,prospect_name,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,dbr_simulations,prospect_name,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,prospect_phone,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,dbr_simulations,prospect_phone,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,net_income,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,net_income,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,existing_installments,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,existing_installments,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,property_price,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,property_price,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,down_payment,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,down_payment,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,loan_amount,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,loan_amount,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,tenor_months,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,tenor_months,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,interest_rate_annual,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,interest_rate_annual,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,monthly_installment,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,monthly_installment,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,dbr_percent,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,dbr_percent,NO,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,eligibility_status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,eligibility_status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,pdf_export_url,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,dbr_simulations,pdf_export_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+DBR_SIMULATIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,dbr_simulations,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+EVENT_REGISTRATIONS,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,event_registrations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENT_REGISTRATIONS,event_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→events.id,Exact logical attribute ↔ physical column.,event_registrations,event_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENT_REGISTRATIONS,agent_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,event_registrations,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENT_REGISTRATIONS,status,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,event_registrations,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+EVENT_REGISTRATIONS,registered_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,event_registrations,registered_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+EVENT_REGISTRATIONS,guest_email,LOGICAL_AUGMENTATION,v1.3,Guest notification/contact destination; not canonical user identity | M05 semantic augmentation,No exact physical column; guest contact persistence remains downstream.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_REGISTRATIONS,participant_mode,LOGICAL_AUGMENTATION,v1.3,REGISTERED USER / GUEST | M05 semantic augmentation; exact physical representation downstream,No exact physical column; participant mode remains downstream.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+LISTING_AMENITIES,listing_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→listings.id,Exact logical attribute ↔ physical column.,listing_amenities,listing_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_AMENITIES,amenity_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→amenities.id,Exact logical attribute ↔ physical column.,listing_amenities,amenity_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_LEADS,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,listing_leads,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_LEADS,listing_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→listings.id,Exact logical attribute ↔ physical column.,listing_leads,listing_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_LEADS,agent_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,listing_leads,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_LEADS,source,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_leads,source,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_LEADS,ip_address,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listing_leads,ip_address,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTING_LEADS,user_agent,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listing_leads,user_agent,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTING_LEADS,created_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_leads,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,listing_photos,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,listing_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→listings.id,Exact logical attribute ↔ physical column.,listing_photos,listing_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,url,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_photos,url,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,alt_text,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listing_photos,alt_text,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,is_cover,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_photos,is_cover,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,sort_order,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_photos,sort_order,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,file_hash,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listing_photos,file_hash,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTING_PHOTOS,photo_hash,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listing_photos,photo_hash,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTING_PRICE_HISTORY,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,listing_price_history,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PRICE_HISTORY,listing_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→listings.id,Exact logical attribute ↔ physical column.,listing_price_history,listing_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_PRICE_HISTORY,old_price,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listing_price_history,old_price,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTING_PRICE_HISTORY,new_price,PHYSICAL_CORROBORATION,v1.3,,Exact logical attribute ↔ physical column.,listing_price_history,new_price,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LISTING_PRICE_HISTORY,changed_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_price_history,changed_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_VIDEOS,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,listing_videos,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_VIDEOS,listing_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→listings.id,Exact logical attribute ↔ physical column.,listing_videos,listing_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_VIDEOS,url,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_videos,url,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_VIDEOS,type,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_videos,type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_VIEWS,id,PHYSICAL_CORROBORATION,v1.3,PK,Exact logical attribute ↔ physical column.,listing_views,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_VIEWS,listing_id,PHYSICAL_CORROBORATION,v1.3,NOT NULL; FK→listings.id,Exact logical attribute ↔ physical column.,listing_views,listing_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LISTING_VIEWS,viewed_at,PHYSICAL_CORROBORATION,v1.3,NOT NULL,Exact logical attribute ↔ physical column.,listing_views,viewed_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_OPTIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,quiz_options,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_OPTIONS,question_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→quiz_questions.id,Exact logical attribute ↔ physical column.,quiz_options,question_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_OPTIONS,option_text,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,quiz_options,option_text,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUIZ_OPTIONS,is_correct,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,quiz_options,is_correct,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_sessions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,owner_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,learning_sessions,owner_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,course_id,PHYSICAL_CORROBORATION,v1.2,FK→courses.id,Exact logical attribute ↔ physical column.,learning_sessions,course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,organization_id,PHYSICAL_CORROBORATION,v1.2,FK→organizations.id,Exact logical attribute ↔ physical column.,learning_sessions,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,event_id,PHYSICAL_CORROBORATION,v1.2,FK→events.id,Exact logical attribute ↔ physical column.,learning_sessions,event_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,session_type,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_sessions,session_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_sessions,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,start_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_sessions,start_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,end_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_sessions,end_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,visibility,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_sessions,visibility,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_sessions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_sessions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSIONS,deleted_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_sessions,deleted_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_session_assignments,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,session_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_sessions.id,Exact logical attribute ↔ physical column.,learning_session_assignments,session_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,actor_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,learning_session_assignments,actor_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,capability,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_session_assignments,capability,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_session_assignments,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_session_assignments,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,created_by,PHYSICAL_CORROBORATION,v1.2,FK→users.id,Exact logical attribute ↔ physical column.,learning_session_assignments,created_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,revoked_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_session_assignments,revoked_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_SESSION_ASSIGNMENTS,revoked_by,PHYSICAL_CORROBORATION,v1.2,FK→users.id,Exact logical attribute ↔ physical column.,learning_session_assignments,revoked_by,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,session_artifacts,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,session_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_sessions.id,Exact logical attribute ↔ physical column.,session_artifacts,session_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,artifact_type,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_artifacts,artifact_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,provider_key,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_artifacts,provider_key,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,source_url,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_artifacts,source_url,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_artifacts,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_artifacts,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ARTIFACTS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_artifacts,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,session_enrollments,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,session_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_sessions.id,Exact logical attribute ↔ physical column.,session_enrollments,session_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,agent_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,session_enrollments,agent_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_enrollments,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,activation_reference,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_enrollments,activation_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,requested_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_enrollments,requested_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,activated_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_enrollments,activated_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,completed_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_enrollments,completed_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_enrollments,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ENROLLMENTS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_enrollments,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,session_provider_bindings,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,session_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_sessions.id,Exact logical attribute ↔ physical column.,session_provider_bindings,session_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,provider_key,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_provider_bindings,provider_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,external_provider_session_id,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_provider_bindings,external_provider_session_id,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,binding_state,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_provider_bindings,binding_state,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,effective_from,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_provider_bindings,effective_from,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,effective_to,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_provider_bindings,effective_to,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_provider_bindings,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PROVIDER_BINDINGS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_provider_bindings,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,session_participation_evidence,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,binding_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→session_provider_bindings.id,Exact logical attribute ↔ physical column.,session_participation_evidence,binding_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,session_enrollment_id,PHYSICAL_CORROBORATION,v1.2,FK→session_enrollments.id,Exact logical attribute ↔ physical column.,session_participation_evidence,session_enrollment_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,external_event_id,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_participation_evidence,external_event_id,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,idempotency_key,PHYSICAL_CORROBORATION,v1.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,session_participation_evidence,idempotency_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,observed_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_participation_evidence,observed_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,received_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_participation_evidence,received_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,processed_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_participation_evidence,processed_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,payload_metadata,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,session_participation_evidence,payload_metadata,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SESSION_PARTICIPATION_EVIDENCE,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_participation_evidence,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ATTENDANCE_EVALUATIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,session_attendance_evaluations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ATTENDANCE_EVALUATIONS,session_enrollment_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→session_enrollments.id,Exact logical attribute ↔ physical column.,session_attendance_evaluations,session_enrollment_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ATTENDANCE_EVALUATIONS,evidence_id,PHYSICAL_CORROBORATION,v1.2,FK→session_participation_evidence.id,Exact logical attribute ↔ physical column.,session_attendance_evaluations,evidence_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ATTENDANCE_EVALUATIONS,policy_version,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_attendance_evaluations,policy_version,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ATTENDANCE_EVALUATIONS,result,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_attendance_evaluations,result,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ATTENDANCE_EVALUATIONS,evaluated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_attendance_evaluations,evaluated_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_ATTENDANCE_EVALUATIONS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_attendance_evaluations,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_COMPLETION_OUTCOMES,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,session_completion_outcomes,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_COMPLETION_OUTCOMES,session_enrollment_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→session_enrollments.id,Exact logical attribute ↔ physical column.,session_completion_outcomes,session_enrollment_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_COMPLETION_OUTCOMES,attendance_evaluation_id,PHYSICAL_CORROBORATION,v1.2,FK→session_attendance_evaluations.id,Exact logical attribute ↔ physical column.,session_completion_outcomes,attendance_evaluation_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_COMPLETION_OUTCOMES,completion_policy_version,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_completion_outcomes,completion_policy_version,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_COMPLETION_OUTCOMES,result,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_completion_outcomes,result,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_COMPLETION_OUTCOMES,completed_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_completion_outcomes,completed_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SESSION_COMPLETION_OUTCOMES,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,session_completion_outcomes,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATHS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_paths,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATHS,course_id,PHYSICAL_CORROBORATION,v1.2,FK→courses.id,Exact logical attribute ↔ physical column.,learning_paths,course_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATHS,code,PHYSICAL_CORROBORATION,v1.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,learning_paths,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATHS,name,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_paths,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATHS,description,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_paths,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_PATHS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_paths,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATHS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_paths,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATHS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_paths,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_path_versions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,learning_path_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_paths.id,Exact logical attribute ↔ physical column.,learning_path_versions,learning_path_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,version_no,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_path_versions,version_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_path_versions,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,effective_from,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_path_versions,effective_from,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,effective_to,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_path_versions,effective_to,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,definition_snapshot,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_path_versions,definition_snapshot,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_path_versions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_PATH_VERSIONS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_path_versions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_activities,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,learning_path_version_id,PHYSICAL_CORROBORATION,v1.2,FK→learning_path_versions.id,Exact logical attribute ↔ physical column.,learning_activities,learning_path_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,code,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,activity_type,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,activity_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,title,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,title,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,description,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_activities,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,sequence_no,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,sequence_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,completion_required,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,completion_required,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,reward_lp,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,reward_lp,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITIES,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activities,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_activity_completions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,learning_activity_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_activities.id,Exact logical attribute ↔ physical column.,learning_activity_completions,learning_activity_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,user_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,learning_activity_completions,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,completion_status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activity_completions,completion_status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,outcome,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_activity_completions,outcome,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,evidence_reference,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_activity_completions,evidence_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,attempt_no,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activity_completions,attempt_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,completed_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_activity_completions,completed_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activity_completions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_ACTIVITY_COMPLETIONS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_activity_completions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_ACCOUNTS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_point_accounts,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_ACCOUNTS,user_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; UNIQUE; FK→users.id,Exact logical attribute ↔ physical column.,learning_point_accounts,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_ACCOUNTS,balance_projection,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_accounts,balance_projection,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_ACCOUNTS,status,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_accounts,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_ACCOUNTS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_accounts,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_ACCOUNTS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_accounts,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_point_transactions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,account_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_point_accounts.id,Exact logical attribute ↔ physical column.,learning_point_transactions,account_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,user_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,learning_point_transactions,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,transaction_type,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_transactions,transaction_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,amount,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_transactions,amount,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,source_type,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_transactions,source_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,source_reference,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_point_transactions,source_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,idempotency_key,PHYSICAL_CORROBORATION,v1.2,UNIQUE,Exact logical attribute ↔ physical column.,learning_point_transactions,idempotency_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,occurred_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_transactions,occurred_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_POINT_TRANSACTIONS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_point_transactions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,id,PHYSICAL_CORROBORATION,v1.2,PK,Exact logical attribute ↔ physical column.,learning_unlock_progressions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,user_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,learning_unlock_progressions,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,learning_path_version_id,PHYSICAL_CORROBORATION,v1.2,NOT NULL; FK→learning_path_versions.id,Exact logical attribute ↔ physical column.,learning_unlock_progressions,learning_path_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,state,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_unlock_progressions,state,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,source_type,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_unlock_progressions,source_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,source_reference,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_unlock_progressions,source_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,unlocked_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_unlock_progressions,unlocked_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,completed_at,PHYSICAL_CORROBORATION,v1.2,,Exact logical attribute ↔ physical column.,learning_unlock_progressions,completed_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,created_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_unlock_progressions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+LEARNING_UNLOCK_PROGRESSIONS,updated_at,PHYSICAL_CORROBORATION,v1.2,NOT NULL,Exact logical attribute ↔ physical column.,learning_unlock_progressions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,subscriptions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,user_id,PHYSICAL_CORROBORATION,v2.2,FK→users.id,Exact logical attribute ↔ physical column.,subscriptions,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,organization_id,PHYSICAL_CORROBORATION,v2.2,FK→organizations.id,Exact logical attribute ↔ physical column.,subscriptions,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,product_code,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,subscriptions,product_code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,subscriptions,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,starts_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,subscriptions,starts_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,ends_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,subscriptions,ends_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,renews_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,subscriptions,renews_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,historical_purchase_snapshot,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,subscriptions,historical_purchase_snapshot,NO,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,subscriptions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+SUBSCRIPTIONS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,subscriptions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,promotions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,code,PHYSICAL_CORROBORATION,v2.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,promotions,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,name,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,promotions,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,rule_configuration,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,promotions,rule_configuration,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,eligibility_configuration,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,promotions,eligibility_configuration,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,benefit_configuration,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,promotions,benefit_configuration,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,valid_from,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,promotions,valid_from,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PROMOTIONS,valid_to,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,promotions,valid_to,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PROMOTIONS,status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,promotions,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,promotions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PROMOTIONS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,promotions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,addons,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,code,PHYSICAL_CORROBORATION,v2.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,addons,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,name,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,addons,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,validity_type,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,addons,validity_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,validity_days,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,addons,validity_days,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ADDONS,capacity_type,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,addons,capacity_type,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ADDONS,capacity_value,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,addons,capacity_value,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+ADDONS,promotion_id,PHYSICAL_CORROBORATION,v2.2,FK→promotions.id,Exact logical attribute ↔ physical column.,addons,promotion_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,addons,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,configuration,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,addons,configuration,NO,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,addons,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+ADDONS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,addons,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,commercial_orders,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,order_number,PHYSICAL_CORROBORATION,v2.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,commercial_orders,order_number,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,user_id,PHYSICAL_CORROBORATION,v2.2,FK→users.id,Exact logical attribute ↔ physical column.,commercial_orders,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,organization_id,PHYSICAL_CORROBORATION,v2.2,FK→organizations.id,Exact logical attribute ↔ physical column.,commercial_orders,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,subscription_id,PHYSICAL_CORROBORATION,v2.2,FK→subscriptions.id,Exact logical attribute ↔ physical column.,commercial_orders,subscription_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,addon_id,PHYSICAL_CORROBORATION,v2.2,FK→addons.id,Exact logical attribute ↔ physical column.,commercial_orders,addon_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,promotion_id,PHYSICAL_CORROBORATION,v2.2,FK→promotions.id,Exact logical attribute ↔ physical column.,commercial_orders,promotion_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,amount,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_orders,amount,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,currency,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_orders,currency,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_orders,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,commercial_snapshot,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_orders,commercial_snapshot,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,placed_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_orders,placed_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,confirmed_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,commercial_orders,confirmed_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_orders,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ORDERS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_orders,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,payment_transactions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,commercial_order_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→commercial_orders.id,Exact logical attribute ↔ physical column.,payment_transactions,commercial_order_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,payment_reference,PHYSICAL_CORROBORATION,v2.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,payment_transactions,payment_reference,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,amount,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_transactions,amount,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,currency,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_transactions,currency,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,payment_state,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_transactions,payment_state,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,verification_state,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_transactions,verification_state,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,provider_independent_reference,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_transactions,provider_independent_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,idempotency_key,PHYSICAL_CORROBORATION,v2.2,UNIQUE,Exact logical attribute ↔ physical column.,payment_transactions,idempotency_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,paid_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_transactions,paid_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,verified_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_transactions,verified_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_transactions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_TRANSACTIONS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_transactions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,payment_provider_results,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,payment_transaction_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→payment_transactions.id,Exact logical attribute ↔ physical column.,payment_provider_results,payment_transaction_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,provider_key,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_provider_results,provider_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,external_transaction_reference,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_provider_results,external_transaction_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,provider_status,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_provider_results,provider_status,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,normalized_status,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_provider_results,normalized_status,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,raw_payload,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_provider_results,raw_payload,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,verification_evidence,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_provider_results,verification_evidence,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,received_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,payment_provider_results,received_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,processed_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,payment_provider_results,processed_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+PAYMENT_PROVIDER_RESULTS,idempotency_key,PHYSICAL_CORROBORATION,v2.2,UNIQUE,Exact logical attribute ↔ physical column.,payment_provider_results,idempotency_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,commercial_fulfillments,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,payment_transaction_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→payment_transactions.id,Exact logical attribute ↔ physical column.,commercial_fulfillments,payment_transaction_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,commercial_order_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→commercial_orders.id,Exact logical attribute ↔ physical column.,commercial_fulfillments,commercial_order_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,fulfillment_key,PHYSICAL_CORROBORATION,v2.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,commercial_fulfillments,fulfillment_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,fulfillment_status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_fulfillments,fulfillment_status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,outcome_reference,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,commercial_fulfillments,outcome_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,idempotency_key,PHYSICAL_CORROBORATION,v2.2,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,commercial_fulfillments,idempotency_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,fulfilled_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,commercial_fulfillments,fulfilled_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,reversed_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,commercial_fulfillments,reversed_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_fulfillments,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_FULFILLMENTS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_fulfillments,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,commercial_entitlements,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,user_id,PHYSICAL_CORROBORATION,v2.2,FK→users.id,Exact logical attribute ↔ physical column.,commercial_entitlements,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,organization_id,PHYSICAL_CORROBORATION,v2.2,FK→organizations.id,Exact logical attribute ↔ physical column.,commercial_entitlements,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,entitlement_type,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_entitlements,entitlement_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,source_order_id,PHYSICAL_CORROBORATION,v2.2,FK→commercial_orders.id,Exact logical attribute ↔ physical column.,commercial_entitlements,source_order_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,source_payment_transaction_id,PHYSICAL_CORROBORATION,v2.2,FK→payment_transactions.id,Exact logical attribute ↔ physical column.,commercial_entitlements,source_payment_transaction_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,source_fulfillment_id,PHYSICAL_CORROBORATION,v2.2,FK→commercial_fulfillments.id,Exact logical attribute ↔ physical column.,commercial_entitlements,source_fulfillment_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,capacity_value,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,commercial_entitlements,capacity_value,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,lifecycle_status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_entitlements,lifecycle_status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,starts_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,commercial_entitlements,starts_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,ends_at,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,commercial_entitlements,ends_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,historical_source,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_entitlements,historical_source,NO,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_entitlements,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+COMMERCIAL_ENTITLEMENTS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,commercial_entitlements,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,quota_capacities,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,entitlement_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→commercial_entitlements.id,Exact logical attribute ↔ physical column.,quota_capacities,entitlement_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,capacity_type,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_capacities,capacity_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,granted_quantity,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_capacities,granted_quantity,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,remaining_projection,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,quota_capacities,remaining_projection,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,valid_from,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,quota_capacities,valid_from,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,valid_to,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,quota_capacities,valid_to,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,configuration,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_capacities,configuration,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_capacities,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_capacities,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_CAPACITIES,daily_refresh_allowance,LOGICAL_AUGMENTATION,v2.2,Configurable commercial daily Refresh allowance | M14 semantic entitlement/configuration; exact physical realization downstream,No exact physical column; quota configuration is corroborating infrastructure only.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+OPERATIONAL_QUOTA_POOLS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,operational_quota_pools,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+OPERATIONAL_QUOTA_POOLS,quota_capacity_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→quota_capacities.id,Exact logical attribute ↔ physical column.,operational_quota_pools,quota_capacity_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+OPERATIONAL_QUOTA_POOLS,user_id,PHYSICAL_CORROBORATION,v2.2,FK→users.id,Exact logical attribute ↔ physical column.,operational_quota_pools,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+OPERATIONAL_QUOTA_POOLS,organization_id,PHYSICAL_CORROBORATION,v2.2,FK→organizations.id,Exact logical attribute ↔ physical column.,operational_quota_pools,organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+OPERATIONAL_QUOTA_POOLS,pool_status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,operational_quota_pools,pool_status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+OPERATIONAL_QUOTA_POOLS,operational_quantity,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,operational_quota_pools,operational_quantity,NO,EXPLICIT,PASS,CORROBORATION ONLY
+OPERATIONAL_QUOTA_POOLS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,operational_quota_pools,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+OPERATIONAL_QUOTA_POOLS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,operational_quota_pools,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,quota_allocations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,operational_quota_pool_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→operational_quota_pools.id,Exact logical attribute ↔ physical column.,quota_allocations,operational_quota_pool_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,beneficiary_user_id,PHYSICAL_CORROBORATION,v2.2,FK→users.id,Exact logical attribute ↔ physical column.,quota_allocations,beneficiary_user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,beneficiary_organization_id,PHYSICAL_CORROBORATION,v2.2,FK→organizations.id,Exact logical attribute ↔ physical column.,quota_allocations,beneficiary_organization_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,allocated_quantity,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_allocations,allocated_quantity,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,status,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_allocations,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,effective_from,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,quota_allocations,effective_from,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,effective_to,PHYSICAL_CORROBORATION,v2.2,,Exact logical attribute ↔ physical column.,quota_allocations,effective_to,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_allocations,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_ALLOCATIONS,updated_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_allocations,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,id,PHYSICAL_CORROBORATION,v2.2,PK,Exact logical attribute ↔ physical column.,quota_usage,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,quota_allocation_id,PHYSICAL_CORROBORATION,v2.2,FK→quota_allocations.id,Exact logical attribute ↔ physical column.,quota_usage,quota_allocation_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,operational_quota_pool_id,PHYSICAL_CORROBORATION,v2.2,NOT NULL; FK→operational_quota_pools.id,Exact logical attribute ↔ physical column.,quota_usage,operational_quota_pool_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,consuming_resource_type,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_usage,consuming_resource_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,consuming_resource_reference,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_usage,consuming_resource_reference,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,consumed_quantity,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_usage,consumed_quantity,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,usage_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_usage,usage_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,idempotency_key,PHYSICAL_CORROBORATION,v2.2,UNIQUE,Exact logical attribute ↔ physical column.,quota_usage,idempotency_key,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUOTA_USAGE,created_at,PHYSICAL_CORROBORATION,v2.2,NOT NULL,Exact logical attribute ↔ physical column.,quota_usage,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,reconciliation_cases,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,case_number,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,reconciliation_cases,case_number,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,payment_transaction_id,PHYSICAL_CORROBORATION,v1.1,FK→payment_transactions.id,Exact logical attribute ↔ physical column.,reconciliation_cases,payment_transaction_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,commercial_order_id,PHYSICAL_CORROBORATION,v1.1,FK→commercial_orders.id,Exact logical attribute ↔ physical column.,reconciliation_cases,commercial_order_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,fulfillment_id,PHYSICAL_CORROBORATION,v1.1,FK→commercial_fulfillments.id,Exact logical attribute ↔ physical column.,reconciliation_cases,fulfillment_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,entitlement_id,PHYSICAL_CORROBORATION,v1.1,FK→commercial_entitlements.id,Exact logical attribute ↔ physical column.,reconciliation_cases,entitlement_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,mismatch_category,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,reconciliation_cases,mismatch_category,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,evidence,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,reconciliation_cases,evidence,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,reconciliation_cases,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,resolution_metadata,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,reconciliation_cases,resolution_metadata,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,opened_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,reconciliation_cases,opened_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,resolved_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,reconciliation_cases,resolved_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,reconciliation_cases,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+RECONCILIATION_CASES,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,reconciliation_cases,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_DEFINITIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,title_definitions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_DEFINITIONS,code,PHYSICAL_CORROBORATION,v1.1,NOT NULL; UNIQUE,Exact logical attribute ↔ physical column.,title_definitions,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_DEFINITIONS,name,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_definitions,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_DEFINITIONS,description,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,title_definitions,description,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+TITLE_DEFINITIONS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_definitions,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_DEFINITIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_definitions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_DEFINITIONS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_definitions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_AUTHORITY_SCOPES,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,title_authority_scopes,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_AUTHORITY_SCOPES,title_definition_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→title_definitions.id,Exact logical attribute ↔ physical column.,title_authority_scopes,title_definition_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_AUTHORITY_SCOPES,scope_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_authority_scopes,scope_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_AUTHORITY_SCOPES,scope_reference,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,title_authority_scopes,scope_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+TITLE_AUTHORITY_SCOPES,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_authority_scopes,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_AUTHORITY_SCOPES,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_authority_scopes,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATHS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,awarding_paths,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATHS,title_definition_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→title_definitions.id,Exact logical attribute ↔ physical column.,awarding_paths,title_definition_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATHS,code,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_paths,code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATHS,name,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_paths,name,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATHS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_paths,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATHS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_paths,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATHS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_paths,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,awarding_path_versions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,awarding_path_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_paths.id,Exact logical attribute ↔ physical column.,awarding_path_versions,awarding_path_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,version_no,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_path_versions,version_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_path_versions,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,effective_from,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,awarding_path_versions,effective_from,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,effective_to,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,awarding_path_versions,effective_to,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,definition_snapshot,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_path_versions,definition_snapshot,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_path_versions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_VERSIONS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_path_versions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,awarding_rule_versions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,rule_code,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_rule_versions,rule_code,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,version_no,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_rule_versions,version_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_rule_versions,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,effective_from,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,awarding_rule_versions,effective_from,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,effective_to,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,awarding_rule_versions,effective_to,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,rule_definition,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_rule_versions,rule_definition,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_rule_versions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_RULE_VERSIONS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_rule_versions,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_RULES,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,awarding_path_rules,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_RULES,awarding_path_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_path_versions.id,Exact logical attribute ↔ physical column.,awarding_path_rules,awarding_path_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_RULES,awarding_rule_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_rule_versions.id,Exact logical attribute ↔ physical column.,awarding_path_rules,awarding_rule_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PATH_RULES,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_path_rules,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITION_GROUPS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,awarding_condition_groups,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITION_GROUPS,awarding_rule_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_rule_versions.id,Exact logical attribute ↔ physical column.,awarding_condition_groups,awarding_rule_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITION_GROUPS,group_operator,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_condition_groups,group_operator,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITION_GROUPS,sequence_no,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_condition_groups,sequence_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITION_GROUPS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_condition_groups,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,awarding_conditions,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITIONS,condition_group_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_condition_groups.id,Exact logical attribute ↔ physical column.,awarding_conditions,condition_group_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITIONS,condition_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_conditions,condition_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITIONS,operator,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_conditions,operator,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITIONS,expected_value,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,awarding_conditions,expected_value,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARDING_CONDITIONS,sequence_no,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_conditions,sequence_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_CONDITIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_conditions,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PREREQUISITES,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,awarding_prerequisites,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PREREQUISITES,awarding_path_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_path_versions.id,Exact logical attribute ↔ physical column.,awarding_prerequisites,awarding_path_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PREREQUISITES,prerequisite_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_prerequisites,prerequisite_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PREREQUISITES,prerequisite_reference,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,awarding_prerequisites,prerequisite_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARDING_PREREQUISITES,requirement_definition,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_prerequisites,requirement_definition,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PREREQUISITES,sequence_no,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_prerequisites,sequence_no,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARDING_PREREQUISITES,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,awarding_prerequisites,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,qualification_evidence,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,qualification_evidence,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,qualification_evaluation_id,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,qualification_evidence,qualification_evaluation_id,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,evidence_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evidence,evidence_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,source_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evidence,source_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,source_reference,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evidence,source_reference,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,evidence_payload,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,qualification_evidence,evidence_payload,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,captured_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evidence,captured_at,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVIDENCE,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evidence,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,qualification_evaluations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,qualification_evaluations,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,awarding_path_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_path_versions.id,Exact logical attribute ↔ physical column.,qualification_evaluations,awarding_path_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,awarding_rule_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_rule_versions.id,Exact logical attribute ↔ physical column.,qualification_evaluations,awarding_rule_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,result,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evaluations,result,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,evaluation_time,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evaluations,evaluation_time,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,evaluator_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evaluations,evaluator_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,evaluator_reference,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,qualification_evaluations,evaluator_reference,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,provenance,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evaluations,provenance,NO,EXPLICIT,PASS,CORROBORATION ONLY
+QUALIFICATION_EVALUATIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,qualification_evaluations,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,award_instances,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,award_instances,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,title_definition_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→title_definitions.id,Exact logical attribute ↔ physical column.,award_instances,title_definition_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,awarding_path_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_path_versions.id,Exact logical attribute ↔ physical column.,award_instances,awarding_path_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,awarding_rule_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_rule_versions.id,Exact logical attribute ↔ physical column.,award_instances,awarding_rule_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,qualification_evaluation_id,PHYSICAL_CORROBORATION,v1.1,FK→qualification_evaluations.id,Exact logical attribute ↔ physical column.,award_instances,qualification_evaluation_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,status,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,award_instances,status,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,issued_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,award_instances,issued_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,expires_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,award_instances,expires_at,YES,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,revoked_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,award_instances,revoked_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,restored_at,PHYSICAL_CORROBORATION,v1.1,,Exact logical attribute ↔ physical column.,award_instances,restored_at,NO,PHYSICAL_CORROBORATION_WITH_NOTE,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,historical_snapshot,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,award_instances,historical_snapshot,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,award_instances,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_INSTANCES,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,award_instances,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_QUALIFYING_PATHS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,award_qualifying_paths,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_QUALIFYING_PATHS,award_instance_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→award_instances.id,Exact logical attribute ↔ physical column.,award_qualifying_paths,award_instance_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_QUALIFYING_PATHS,awarding_path_version_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→awarding_path_versions.id,Exact logical attribute ↔ physical column.,award_qualifying_paths,awarding_path_version_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_QUALIFYING_PATHS,qualification_evaluation_id,PHYSICAL_CORROBORATION,v1.1,FK→qualification_evaluations.id,Exact logical attribute ↔ physical column.,award_qualifying_paths,qualification_evaluation_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_QUALIFYING_PATHS,provenance,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,award_qualifying_paths,provenance,NO,EXPLICIT,PASS,CORROBORATION ONLY
+AWARD_QUALIFYING_PATHS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,award_qualifying_paths,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,id,PHYSICAL_CORROBORATION,v1.1,PK,Exact logical attribute ↔ physical column.,title_presentations,id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,user_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→users.id,Exact logical attribute ↔ physical column.,title_presentations,user_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,title_definition_id,PHYSICAL_CORROBORATION,v1.1,NOT NULL; FK→title_definitions.id,Exact logical attribute ↔ physical column.,title_presentations,title_definition_id,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,presentation_type,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_presentations,presentation_type,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,active,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_presentations,active,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,display_order,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_presentations,display_order,NO,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,created_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_presentations,created_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+TITLE_PRESENTATIONS,updated_at,PHYSICAL_CORROBORATION,v1.1,NOT NULL,Exact logical attribute ↔ physical column.,title_presentations,updated_at,YES,EXPLICIT,PASS,CORROBORATION ONLY
+MARKETING_KIT,id,LOGICAL_NEW_ENTITY,v1.5,PK | logical identity,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+MARKETING_KIT,project_id,LOGICAL_NEW_ENTITY,v1.5,FK→DEVELOPER_PROJECTS.id | project owner,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+MARKETING_KIT,file_id,LOGICAL_NEW_ENTITY,v1.5,File identity | physical storage contract downstream,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+MARKETING_KIT,file_type,LOGICAL_NEW_ENTITY,v1.5,PDF brochure / PDF pricelist,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+MARKETING_KIT,file_name,LOGICAL_NEW_ENTITY,v1.5,File name,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+MARKETING_KIT,file_url,LOGICAL_NEW_ENTITY,v1.5,Download link,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET,id,LOGICAL_NEW_ENTITY,v1.1,PK,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET,name,LOGICAL_NEW_ENTITY,v1.1,Editable preset name,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET,target_role_id,LOGICAL_NEW_ENTITY,v1.1,FK→ROLES.id | exactly one target role,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET,created_by,LOGICAL_NEW_ENTITY,v1.1,Creator actor | users,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET,updated_by,LOGICAL_NEW_ENTITY,v1.1,Last editor | users,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET,created_at,LOGICAL_NEW_ENTITY,v1.1,Creation timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET,updated_at,LOGICAL_NEW_ENTITY,v1.1,Last update timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET_ITEM,id,LOGICAL_NEW_ENTITY,v1.1,PK,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET_ITEM,preset_id,LOGICAL_NEW_ENTITY,v1.1,FK→PERMISSION_PRESET.id,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET_ITEM,permission_id,LOGICAL_NEW_ENTITY,v1.1,FK→PERMISSIONS.id,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET_ITEM,granted_scope,LOGICAL_NEW_ENTITY,v1.1,all / own / none,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET_ITEM,created_at,LOGICAL_NEW_ENTITY,v1.1,Creation timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PERMISSION_PRESET_ITEM,updated_at,LOGICAL_NEW_ENTITY,v1.1,Last update timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+USER_PERMISSION_PRESET,user_id,LOGICAL_NEW_ENTITY,v1.1,FK→USERS.id | UNIQUE; zero or one current assignment,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+USER_PERMISSION_PRESET,preset_id,LOGICAL_NEW_ENTITY,v1.1,FK→PERMISSION_PRESET.id,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+USER_PERMISSION_PRESET,assigned_by,LOGICAL_NEW_ENTITY,v1.1,Assigning actor | users,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+USER_PERMISSION_PRESET,assigned_at,LOGICAL_NEW_ENTITY,v1.1,Assignment timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+USER_PERMISSION_PRESET,updated_at,LOGICAL_NEW_ENTITY,v1.1,Last update timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,id,LOGICAL_NEW_ENTITY,v2.0,Logical identity,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,title,LOGICAL_NEW_ENTITY,v2.0,Public content title,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,slug,LOGICAL_NEW_ENTITY,v2.0,Public URL/slug,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,content,LOGICAL_NEW_ENTITY,v2.0,Simple public content,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,meta_title,LOGICAL_NEW_ENTITY,v2.0,SEO metadata,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,meta_description,LOGICAL_NEW_ENTITY,v2.0,SEO metadata,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,canonical_url,LOGICAL_NEW_ENTITY,v2.0,Canonical public URL,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,indexability,LOGICAL_NEW_ENTITY,v2.0,Index / noindex policy,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,sitemap_participation,LOGICAL_NEW_ENTITY,v2.0,Sitemap eligibility,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,status,LOGICAL_NEW_ENTITY,v2.0,Draft / Published / Unpublished / Archived,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,published_at,LOGICAL_NEW_ENTITY,v2.0,Publication timestamp where applicable,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,created_at,LOGICAL_NEW_ENTITY,v2.0,Creation timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+STATIC_PUBLIC_CONTENT,updated_at,LOGICAL_NEW_ENTITY,v2.0,Last update timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,id,LOGICAL_NEW_ENTITY,v2.0,Logical identity,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,title,LOGICAL_NEW_ENTITY,v2.0,Public communication title,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,content,LOGICAL_NEW_ENTITY,v2.0,Public copy,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,image_reference,LOGICAL_NEW_ENTITY,v2.0,Optional public image reference,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,cta_reference,LOGICAL_NEW_ENTITY,v2.0,CTA configuration/reference,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,campaign_reference,LOGICAL_NEW_ENTITY,v2.0,Optional campaign reference,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,priority,LOGICAL_NEW_ENTITY,v2.0,Configurable display priority,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,schedule_at,LOGICAL_NEW_ENTITY,v2.0,Configured activation schedule,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,expires_at,LOGICAL_NEW_ENTITY,v2.0,Configured expiration,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,status,LOGICAL_NEW_ENTITY,v2.0,Draft / Scheduled / Active / Expired / Archived,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,canonical_url,LOGICAL_NEW_ENTITY,v2.0,Canonical public URL where applicable,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,created_at,LOGICAL_NEW_ENTITY,v2.0,Creation timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+PUBLIC_ANNOUNCEMENT_PROMOTION,updated_at,LOGICAL_NEW_ENTITY,v2.0,Last update timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+ORGANIZATION_DOCUMENT,id,LOGICAL_NEW_ENTITY,v1.1,Logical identity,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+ORGANIZATION_DOCUMENT,organization_id,LOGICAL_NEW_ENTITY,v1.1,FK→ORGANIZATIONS.id,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+ORGANIZATION_DOCUMENT,document_reference,LOGICAL_NEW_ENTITY,v1.1,Organization-owned document/file reference,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+ORGANIZATION_DOCUMENT,document_type,LOGICAL_NEW_ENTITY,v1.1,Document classification; exact vocabulary downstream,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+ORGANIZATION_DOCUMENT,visibility,LOGICAL_NEW_ENTITY,v1.1,Organization/member visibility according to M12,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+ORGANIZATION_DOCUMENT,created_at,LOGICAL_NEW_ENTITY,v1.1,Creation timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+ORGANIZATION_DOCUMENT,updated_at,LOGICAL_NEW_ENTITY,v1.1,Last update timestamp,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,id,LOGICAL_NEW_ENTITY,v1.3,Logical identity,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,event_id,LOGICAL_NEW_ENTITY,v1.3,FK→EVENTS.id,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,provider_selection,LOGICAL_NEW_ENTITY,v1.3,Selected provider; exact provider vocabulary downstream,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,binding_state,LOGICAL_NEW_ENTITY,v1.3,Binding/lifecycle state; exact vocabulary downstream,Logical attribute is source-supported; physical realization not claimed.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,fallback_position,LOGICAL_NEW_ENTITY,v1.3,Primary/fallback ordering where applicable,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,effective_from,LOGICAL_NEW_ENTITY,v1.3,Binding effectiveness/history boundary,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,effective_to,LOGICAL_NEW_ENTITY,v1.3,Binding end/history boundary,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+EVENT_PROVIDER_BINDING,credential_reference,LOGICAL_NEW_ENTITY,v1.3,Provider credential/reference; exact persistence contract downstream,Logical attribute is source-supported; physical realization not claimed.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,province_id,LOGICAL_AUGMENTATION,v1.5,FK wilayah province,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,district_id,LOGICAL_AUGMENTATION,v1.5,FK wilayah district,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,bedrooms,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,bathrooms,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,land_area,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,building_area,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,floors,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,carport_capacity,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,electrical_power,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,water_source,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,furnishing,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,year_built,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,certificate_type,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,imb_status,LOGICAL_AUGMENTATION,v1.5,M03-compatible,New in A1 RERUN v2.1 versus superseded B v1.1.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,extra_commission,LOGICAL_AUGMENTATION,v1.5,promo additional commission,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,category,LOGICAL_AUGMENTATION,v1.5,M03-required project/listing content,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,transaction_type,LOGICAL_AUGMENTATION,v1.5,M03-required project/listing content,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,price_unit,LOGICAL_AUGMENTATION,v1.5,M03-required project/listing content,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,is_negotiable,LOGICAL_AUGMENTATION,v1.5,M03-required project/listing content,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,area_keyword,LOGICAL_AUGMENTATION,v1.5,M03-required project/listing content,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,latitude,LOGICAL_AUGMENTATION,v1.5,Project input; RumahAgen default,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,longitude,LOGICAL_AUGMENTATION,v1.5,Project input; RumahAgen default,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,certificate_transferred,LOGICAL_AUGMENTATION,v1.5,M03-required property declaration,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+DEVELOPER_PROJECTS,dispute_free_declared,LOGICAL_AUGMENTATION,v1.5,M03-required property declaration,New in A1 RERUN v2.1 versus superseded B v1.1.,,,NO,EXPLICIT,PASS,NOT PHYSICAL CLAIM
+LISTINGS,last_refreshed_at,LOGICAL_AUGMENTATION,v1.3,NULLABLE; listing freshness field; updated by successful Refresh; exact physical execution remains downstream.,New in A1 RERUN v2.1 versus superseded B v1.1.,,,YES,EXPLICIT,PASS,NOT PHYSICAL CLAIM

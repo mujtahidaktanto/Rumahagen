@@ -1,0 +1,17 @@
+screen_id,title,surface,substep,scope,states
+EVT-001,Event Calendar & Discovery,client,WF-05.01,"Event calendar, filters, authenticated continuation from WIRE-01 public discovery",loading;ready;empty;error;retry;offline
+EVT-002,Event Detail & Registration,client,WF-05.02,"Event detail, lifecycle, quota/window, participant_mode, Guest path, RSVP, related Session",loading;ready;pending;confirmed;waitinglist;rejected;error;expired;denied
+EVT-003,My Event Registration & Participant State,client,WF-05.02,Registered/Waitinglist/Cancelled/optional Attended; cancellation,loading;ready;empty;pending;confirmed;cancelled;error;denied
+ADM-EVT-001,Event Management,admin,WF-05.03,"Event collection, search/filter, lifecycle/status, authorized actions",loading;ready;empty;error;retry;denied
+ADM-EVT-002,Create/Edit Event Wizard,admin,WF-05.03,"Event basics, schedule/location, registration, associations, review/publish",untouched;dirty;valid;invalid;submitting;success;server-error;denied
+ADM-EVT-003,Event Registration & Attendee Management,admin,WF-05.03,Registered/Waitinglist/Cancelled/Attended participant operations,loading;ready;empty;error;retry;denied
+ADM-EVT-004,"Event Review, Publish & Cancellation",admin,WF-05.03,"Event publication approval boundary, lifecycle and cancellation",loading;ready;pending_approval;published;rejected;cancelled;error;denied
+ADM-EVT-005,Event Provider Configuration & Binding,admin,WF-05.03,"Event provider policy/binding, selection timing, provider-specific configuration boundary",loading;ready;unbound;bound;switch-pending;error;denied
+SES-001,Session Detail & Access,client,WF-05.04,"Authenticated session continuation, type, schedule, visibility, Host/Instructor, related Event",loading;ready;unavailable;error;denied
+SES-002,Session Enrollment & Access State,client,WF-05.04,"PENDING→ACTIVE→COMPLETED, access eligibility and join",loading;ready;pending;active;completed;rejected;error;denied
+SES-003,Session Participation & Outcome,client,WF-05.04,"Participation state, attendance/completion outcome presentation, artifact access",loading;ready;empty;processing;completed;failed;error;denied
+ADM-SES-001,Session Management,admin,WF-05.05,"Session collection, lifecycle, visibility, search/filter",loading;ready;empty;error;retry;denied
+ADM-SES-002,Create/Edit Session Wizard,admin,WF-05.05,"Type/content, schedule/visibility, Organization/Event association, draft/review",untouched;dirty;valid;invalid;submitting;success;server-error;denied
+ADM-SES-003,Host & Instructor Assignment,admin,WF-05.05,Explicit resource assignment for HOST and/or INSTRUCTOR,loading;ready;empty;success;error;denied
+ADM-SES-004,Session Provider Binding,admin,WF-05.06,"Learning Session provider binding, provider-specific state, manual switch",loading;ready;unbound;bound;error;denied
+ADM-SES-005,"Session Attendance, Evidence, Completion & Artifacts",admin,WF-05.06,"Evidence validation/evaluation, attendance, completion outcome, artifacts",loading;ready;empty;processing;success;failed;error;denied

@@ -1,0 +1,136 @@
+module,layer,contract_id,p4_scope,boundary
+M01,Business Rules,M01-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,Architecture/Dependency,M01-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,Data,M01-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,API,M01-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,RBAC/RLS,M01-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,Functional/User Flow,M01-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,Technical,M01-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,UI/UX,M01-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M01,SEO/Analytics,M01-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,Business Rules,M02-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,Architecture/Dependency,M02-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,Data,M02-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,API,M02-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,RBAC/RLS,M02-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,Functional/User Flow,M02-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,Technical,M02-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,UI/UX,M02-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M02,SEO/Analytics,M02-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,Business Rules,M03-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,Architecture/Dependency,M03-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,Data,M03-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,API,M03-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,RBAC/RLS,M03-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,Functional/User Flow,M03-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,Technical,M03-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,UI/UX,M03-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M03,SEO/Analytics,M03-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,Business Rules,M04-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,Architecture/Dependency,M04-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,Data,M04-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,API,M04-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,RBAC/RLS,M04-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,Functional/User Flow,M04-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,Technical,M04-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,UI/UX,M04-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M04,SEO/Analytics,M04-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,Business Rules,M05-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,Architecture/Dependency,M05-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,Data,M05-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,API,M05-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,RBAC/RLS,M05-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,Functional/User Flow,M05-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,Technical,M05-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,UI/UX,M05-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M05,SEO/Analytics,M05-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,Business Rules,M06-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,Architecture/Dependency,M06-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,Data,M06-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,API,M06-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,RBAC/RLS,M06-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,Functional/User Flow,M06-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,Technical,M06-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,UI/UX,M06-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M06,SEO/Analytics,M06-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,Business Rules,M07-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,Architecture/Dependency,M07-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,Data,M07-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,API,M07-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,RBAC/RLS,M07-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,Functional/User Flow,M07-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,Technical,M07-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,UI/UX,M07-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M07,SEO/Analytics,M07-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,Business Rules,M08-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,Architecture/Dependency,M08-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,Data,M08-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,API,M08-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,RBAC/RLS,M08-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,Functional/User Flow,M08-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,Technical,M08-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,UI/UX,M08-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M08,SEO/Analytics,M08-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,Business Rules,M09-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,Architecture/Dependency,M09-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,Data,M09-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,API,M09-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,RBAC/RLS,M09-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,Functional/User Flow,M09-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,Technical,M09-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,UI/UX,M09-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M09,SEO/Analytics,M09-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,Business Rules,M10-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,Architecture/Dependency,M10-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,Data,M10-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,API,M10-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,RBAC/RLS,M10-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,Functional/User Flow,M10-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,Technical,M10-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,UI/UX,M10-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M10,SEO/Analytics,M10-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,Business Rules,M11-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,Architecture/Dependency,M11-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,Data,M11-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,API,M11-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,RBAC/RLS,M11-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,Functional/User Flow,M11-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,Technical,M11-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,UI/UX,M11-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M11,SEO/Analytics,M11-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,Business Rules,M12-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,Architecture/Dependency,M12-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,Data,M12-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,API,M12-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,RBAC/RLS,M12-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,Functional/User Flow,M12-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,Technical,M12-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,UI/UX,M12-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M12,SEO/Analytics,M12-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,Business Rules,M13-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,Architecture/Dependency,M13-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,Data,M13-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,API,M13-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,RBAC/RLS,M13-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,Functional/User Flow,M13-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,Technical,M13-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,UI/UX,M13-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M13,SEO/Analytics,M13-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,Business Rules,M14-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,Architecture/Dependency,M14-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,Data,M14-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,API,M14-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,RBAC/RLS,M14-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,Functional/User Flow,M14-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,Technical,M14-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,UI/UX,M14-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M14,SEO/Analytics,M14-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,Business Rules,M15-P4-L01,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,Architecture/Dependency,M15-P4-L02,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,Data,M15-P4-L03,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,API,M15-P4-L04,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,RBAC/RLS,M15-P4-L05,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,Functional/User Flow,M15-P4-L06,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,Technical,M15-P4-L07,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,UI/UX,M15-P4-L08,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream
+M15,SEO/Analytics,M15-P4-L09,CONTRACT + VALIDATION + EVIDENCE,P4 only; physical/runtime downstream

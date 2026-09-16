@@ -1,0 +1,6 @@
+artifact,type,role,status
+PROJECT_CONSTITUTION_v1.17_STEP09-A2_CONTROLLED_REENTRY.docx,DOCX,Primary output,PASS
+STEP09-A2_DEEP_SCAN_AND_GATE_REPORT_v1.0.md,MD,Deep-scan/gate evidence,PASS
+STEP09-A2_CONTROLLED_REENTRY_DECISION_RECORD_v1.0.md,MD,Controlled re-entry decision record,PASS
+STEP09-A2_PROVENANCE_SHA256_MANIFEST_v1.0.csv,CSV,Provenance/SHA manifest,PASS
+STEP09-A2_ARTIFACT_INVENTORY_v1.0.csv,CSV,Artifact inventory,PASS

@@ -1,0 +1,7 @@
+﻿finding_id,severity,area,finding,correction,status
+P10_AI_BLUEPRINT-REV1-F-001,MATERIAL,Core 6.31 section fidelity,v1.0 did not explicitly map all substantive 6.31 sections.,v1.2 adds 34/34 section-level mapping.,CLOSED
+P10_AI_BLUEPRINT-REV1-F-002,MATERIAL,M01-M15 semantic precision,v1.0 compressed locked module distinctions.,v1.2 exact module register restores all locked distinctions.,CLOSED
+P10_AI_BLUEPRINT-REV1-F-003,MATERIAL,P9 → 6.31 → P10_AI_BLUEPRINT reconciliation,v1.0 did not explicitly bind accepted P9 changes to the AI execution layer.,v1.2 makes P9 the accepted upstream engineering contract and translates it without redesigning Core 6.31.,CLOSED
+P10_AI_BLUEPRINT-REV1-F-004,MATERIAL,Operational AI controls,v1.0 lacked explicit artifacts for several 6.31 operational controls.,v1.2 adds operational-control and section traceability.,CLOSED
+P10_AI_BLUEPRINT-REV1-F-005,MATERIAL,Post-correction explicitness defect,v1.1 still referenced STOP-01..10 as a range in the main blueprint and did not state the exact Permission Preset model in that primary artifact.,v1.2 explicitly enumerates STOP-01..10 and states the exact Permission Preset governance model.,CLOSED
+P10_AI_BLUEPRINT-REV1-F-006,CONTROLLED,Governance source boundary,Governance Checklist v2.5 was not among the uploaded source files in this request.,Retain as evidence-gated residual; no independent Governance Checklist claim.,OPEN-CONTROLLED

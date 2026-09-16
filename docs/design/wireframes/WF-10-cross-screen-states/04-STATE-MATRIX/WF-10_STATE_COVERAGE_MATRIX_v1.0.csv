@@ -1,0 +1,23 @@
+State,Family,Presentation Rule,Visual Reference
+Loading,Global,Skeleton; preserve layout; no success implication,XST-001
+Ready,Global,Normal usable state,XST-002
+Empty / no resource,Data,Explain no resource; next action if available,XST-003
+Empty / no authorized resource,Security,Do not disclose protected existence,XST-004
+Empty / no configured benefit,Commercial/Learning presentation,Distinguish configuration absence from data absence,XST-005
+Empty / no transaction,Commercial,Distinguish history absence from system error,XST-006
+Empty / no eligible action,Eligibility/action,Explain current ineligibility without inventing authority,XST-007
+Validation,Input,"Inline, associated, accessible; no invented business limit",XST-008
+Error / Retry,Operation,Explain failure and safe recovery,XST-009
+Pending / Processing,Mutation,Do not show final outcome prematurely,XST-010
+Success / Confirmed,Mutation,Only after authoritative response,XST-011
+Rejected / Failed,Mutation,Reason when authorized; retry only if safe,XST-012
+Expired,Lifecycle,Item/action no longer active; valid next step,XST-013
+Unavailable / Degraded,Availability,Distinct from revocation/ownership,XST-014
+Unauthorized / Denied / Restricted,Authorization,UI does not substitute for server enforcement,XST-015
+Protected non-existence,Security,No protected-resource leakage,XST-016
+Destructive confirmation / dirty state,Safety,Explicit confirmation; preserve unsaved work,XST-017
+Offline / Interrupted / Recovery,Connectivity,No authoritative success claim; safe recovery,XST-018
+Session expired,Authentication,Re-authenticate; preserve safe context where possible,XST-019
+Duplicate / Replay,Idempotency,Preserve existing authoritative outcome,XST-020
+Long content / Pagination,Scalability,Wrap content; pagination for dense operational data,XST-021
+Cross-module handoff,Continuity,Preserve context; no authority transfer,XST-022

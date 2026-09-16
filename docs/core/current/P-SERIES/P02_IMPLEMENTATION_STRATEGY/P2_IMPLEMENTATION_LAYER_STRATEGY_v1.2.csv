@@ -1,0 +1,7 @@
+phase,name,modules,strategy
+L0,Identity foundation,M01,Identity/authentication foundation.
+L1,Authorization foundation,M10,Authorization over M01; no domain outcome ownership.
+L2,Context/admin foundations,M12; M09,Context and bounded configuration.
+L3,Core domain implementation,M02; M03; M04; M05; M06; M07; M13; M14,Implement each canonical domain after prerequisites.
+L4,Qualification,M15,Consume governed evidence/context; own qualification/Award.
+L5,Projection/discovery,M08; M11,Observe/project canonical source state.

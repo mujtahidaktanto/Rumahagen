@@ -1,0 +1,7 @@
+id,finding,status,interpretation,disposition
+P1-R01,Physical schema/RLS implementation proof,CONTROLLED,Not a P1 semantic blocker,Downstream implementation/verification
+P1-R02,Runtime verification,CONTROLLED,Evidence-gated; absence does not invalidate semantic dependency contract,Downstream verification
+P1-R03,Exact endpoint identifiers where not evidenced,CONTROLLED,No invention; retain semantic/API-level dependency only,API/implementation stage
+P1-R04,Exact permission IDs / RLS SQL where not evidenced,CONTROLLED,M10 semantic authority remains valid without invented physical identifiers,Authorization/implementation stage
+P1-R05,Physical bootstrap ordering,PHYSICAL BOOTSTRAP,Implementation ordering only; not semantic authority,P2/P4
+P1-R06,Core package version-label mismatch,CONTROLLED,"Outer package filename says v1.3 while internal root is v1.2; control/index artifacts carry v1.3 labels. Freeze authority is content/status hierarchy, not filename.",Retain as provenance/currentness note; do not silently relabel Core

@@ -1,0 +1,463 @@
+{
+  "nodes": [
+    {
+      "id": "M01",
+      "type": "module",
+      "authority": "Identity / Authentication / KTP lifecycle"
+    },
+    {
+      "id": "M02",
+      "type": "module",
+      "authority": "Profile / Review / Public Visibility / CTA"
+    },
+    {
+      "id": "M03",
+      "type": "module",
+      "authority": "Listing / Refresh action truth"
+    },
+    {
+      "id": "M04",
+      "type": "module",
+      "authority": "Learning / Learning Economy / evidence production"
+    },
+    {
+      "id": "M05",
+      "type": "module",
+      "authority": "Event / Calendar / Event Registration"
+    },
+    {
+      "id": "M06",
+      "type": "module",
+      "authority": "Developer / Project / Marketing Kit / Claim"
+    },
+    {
+      "id": "M07",
+      "type": "module",
+      "authority": "DBR domain / configuration"
+    },
+    {
+      "id": "M08",
+      "type": "module",
+      "authority": "Dashboard Projection / Notification State"
+    },
+    {
+      "id": "M09",
+      "type": "module",
+      "authority": "Administration / configuration / export / audit surface"
+    },
+    {
+      "id": "M10",
+      "type": "module",
+      "authority": "Authorization / RBAC / Permission / Scope / Condition / Ownership / Organization / RLS"
+    },
+    {
+      "id": "M11",
+      "type": "module",
+      "authority": "Public discovery / SEO / tracking / measurement"
+    },
+    {
+      "id": "M12",
+      "type": "module",
+      "authority": "Organization / Membership / lifecycle / context"
+    },
+    {
+      "id": "M13",
+      "type": "module",
+      "authority": "Provider catalogue / BYOK governance"
+    },
+    {
+      "id": "M14",
+      "type": "module",
+      "authority": "Commercial / Payment / Entitlement / Quota / Promotion / Reconciliation"
+    },
+    {
+      "id": "M15",
+      "type": "module",
+      "authority": "Title / Qualification / Evidence / Awarding"
+    },
+    {
+      "id": "CORE",
+      "type": "core",
+      "authority": "Layer-specific contract/control/physical authority; not a replacement for module semantic authority."
+    }
+  ],
+  "edges": [
+    {
+      "id": "AUTH-001",
+      "source": "M01",
+      "target": "M02",
+      "object": "identity_subject",
+      "relationship": "CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-002",
+      "source": "M01",
+      "target": "M10",
+      "object": "identity_subject",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-003",
+      "source": "M01",
+      "target": "M12",
+      "object": "identity_subject",
+      "relationship": "CONTEXT_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-004",
+      "source": "M01",
+      "target": "M14",
+      "object": "identity_subject",
+      "relationship": "CONTEXT_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-005",
+      "source": "M01",
+      "target": "M15",
+      "object": "identity_subject",
+      "relationship": "CONTEXT_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-006",
+      "source": "M02",
+      "target": "M03",
+      "object": "profile_public_context",
+      "relationship": "CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-007",
+      "source": "M02",
+      "target": "M11",
+      "object": "profile_public_visibility",
+      "relationship": "PROJECTION_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-008",
+      "source": "M03",
+      "target": "M10",
+      "object": "listing_refresh_action",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-009",
+      "source": "M03",
+      "target": "M11",
+      "object": "listing",
+      "relationship": "DISCOVERY_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-010",
+      "source": "M03",
+      "target": "M14",
+      "object": "refresh_quota",
+      "relationship": "COMMERCIAL_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-011",
+      "source": "M04",
+      "target": "M10",
+      "object": "learning_capability",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-012",
+      "source": "M04",
+      "target": "M14",
+      "object": "paid_learning_outcome",
+      "relationship": "COMMERCIAL_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-013",
+      "source": "M04",
+      "target": "M15",
+      "object": "learning_evidence",
+      "relationship": "QUALIFICATION_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-014",
+      "source": "M05",
+      "target": "M11",
+      "object": "event",
+      "relationship": "DISCOVERY_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-015",
+      "source": "M06",
+      "target": "M03",
+      "object": "project_to_listing",
+      "relationship": "EXECUTION_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-016",
+      "source": "M06",
+      "target": "M11",
+      "object": "project_marketing",
+      "relationship": "DISCOVERY_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-017",
+      "source": "M06",
+      "target": "M14",
+      "object": "commercial_context",
+      "relationship": "COMMERCIAL_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-018",
+      "source": "M07",
+      "target": "M09",
+      "object": "dbr_configuration",
+      "relationship": "ADMIN_SURFACE",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-019",
+      "source": "M07",
+      "target": "M10",
+      "object": "dbr_capability",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-020",
+      "source": "M08",
+      "target": "M01",
+      "object": "identity_projection",
+      "relationship": "PROJECTION",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-021",
+      "source": "M08",
+      "target": "M03",
+      "object": "listing_projection",
+      "relationship": "PROJECTION",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-022",
+      "source": "M08",
+      "target": "M11",
+      "object": "measurement_projection",
+      "relationship": "PROJECTION",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-023",
+      "source": "M09",
+      "target": "M10",
+      "object": "admin_action",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-024",
+      "source": "M09",
+      "target": "M11",
+      "object": "public_content_configuration",
+      "relationship": "ADMIN_TO_DISCOVERY",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-025",
+      "source": "M11",
+      "target": "M02",
+      "object": "public_profile",
+      "relationship": "DISCOVERY_CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-026",
+      "source": "M11",
+      "target": "M03",
+      "object": "public_listing",
+      "relationship": "DISCOVERY_CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-027",
+      "source": "M11",
+      "target": "M05",
+      "object": "public_event",
+      "relationship": "DISCOVERY_CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-028",
+      "source": "M11",
+      "target": "M06",
+      "object": "public_project_marketing",
+      "relationship": "DISCOVERY_CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-029",
+      "source": "M11",
+      "target": "M09",
+      "object": "public_content_config",
+      "relationship": "DISCOVERY_CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-030",
+      "source": "M11",
+      "target": "M12",
+      "object": "public_organization",
+      "relationship": "DISCOVERY_CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-031",
+      "source": "M11",
+      "target": "M14",
+      "object": "public_promotion",
+      "relationship": "DISCOVERY_CONSUMER",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-032",
+      "source": "M12",
+      "target": "M03",
+      "object": "organization_context",
+      "relationship": "CONTEXT_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-033",
+      "source": "M12",
+      "target": "M10",
+      "object": "organization_context",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-034",
+      "source": "M12",
+      "target": "M11",
+      "object": "organization_public_surface",
+      "relationship": "DISCOVERY_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-035",
+      "source": "M12",
+      "target": "M14",
+      "object": "organization_context",
+      "relationship": "COMMERCIAL_CONTEXT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-036",
+      "source": "M13",
+      "target": "M10",
+      "object": "byok_connection",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-037",
+      "source": "M13",
+      "target": "M09",
+      "object": "provider_catalogue_admin",
+      "relationship": "ADMIN_SURFACE",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-038",
+      "source": "M14",
+      "target": "M03",
+      "object": "entitlement_quota",
+      "relationship": "COMMERCIAL_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-039",
+      "source": "M14",
+      "target": "M04",
+      "object": "commercial_entitlement",
+      "relationship": "COMMERCIAL_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-040",
+      "source": "M14",
+      "target": "M06",
+      "object": "commercial_context",
+      "relationship": "COMMERCIAL_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-041",
+      "source": "M14",
+      "target": "M10",
+      "object": "entitlement_condition",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-042",
+      "source": "M14",
+      "target": "M11",
+      "object": "commercial_public_promotion",
+      "relationship": "DISCOVERY_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-043",
+      "source": "M14",
+      "target": "M15",
+      "object": "commercial_context",
+      "relationship": "CONTEXT_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-044",
+      "source": "M15",
+      "target": "M04",
+      "object": "qualification_evidence",
+      "relationship": "EVIDENCE_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-045",
+      "source": "M15",
+      "target": "M10",
+      "object": "awarding_action",
+      "relationship": "AUTH_INPUT",
+      "authority_transfer": false
+    },
+    {
+      "id": "AUTH-046",
+      "source": "M15",
+      "target": "M14",
+      "object": "qualification_commercial_context",
+      "relationship": "CONTEXT_INPUT",
+      "authority_transfer": false
+    }
+  ],
+  "rules": {
+    "semantic_ownership": "one canonical owner per semantic domain",
+    "authorization": "M10 is orthogonal authorization authority",
+    "discovery": "M11 is discovery/measurement layer and does not own underlying resource lifecycle",
+    "projection": "M08 is projection/notification only",
+    "commercial": "M14 owns commercial truth; M03 consumes listing/refresh allowance",
+    "qualification": "M15 owns qualification/awarding; M04 owns learning/evidence",
+    "merge": "Mxx authority is domain-scoped and never whole-artifact replacement"
+  }
+}
