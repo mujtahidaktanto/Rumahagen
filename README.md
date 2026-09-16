@@ -19,7 +19,7 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 | **Scaffold Next.js** | ✅ **Kode nyata** | `apps/web/` — `package.json`, Supabase client, 1 contoh route nyata (`GET /api/authorization/roles`) yang sudah query ke migration M10 |
 | **M09 — Admin Console** | ✅ **Kode nyata** | `supabase/migrations/0011`–`0014` — `system_configs`, `audit_logs`, `notification_templates` (baru), `public_announcement_promotion` (baru) — menutup residual R-06, D13-05, D13-08, D13-13; D13-12 tertutup di level permission, D13-14 CLOSED (lihat M13) |
 | **M13 — Provider Catalogue / BYOK** | ✅ **Kode nyata** (DB layer) | `supabase/migrations/0015`–`0016` — `ai_providers`, `agent_ai_connections` (status 5-state + trigger lifecycle), fungsi `admin_force_provider_connection()` — menutup R-07, D13-11 penuh; D13-09/D13-10 sebagian (rute REST menyusul Step 3) |
-| **M03 — Listing** + **M14 — Refresh Allowance/Entitlement** | ✅ **Kode nyata** | `supabase/migrations/0017`–`0020` — `listings` (skema penuh + trigger lifecycle), rantai kuota M14 (5 tabel), fungsi `refresh_listing()` memanggil `consume_refresh_allowance()` — menutup R-04, D13-01 penuh (kontrak invocation M14→M03 nyata, bukan lagi semantik) |
+| **M03 — Listing** + **M14 — Refresh Allowance/Entitlement** | ✅ **Kode nyata + REST API** | `supabase/migrations/0017`–`0020` — `listings` (skema penuh + trigger lifecycle), rantai kuota M14 (5 tabel), fungsi `refresh_listing()` memanggil `consume_refresh_allowance()` — menutup R-04, D13-01 penuh. **STEP11-B2 (API-025/026/027/028/029/035/237)**: `apps/web/app/api/listings/**` + `apps/web/app/api/agents/me/listings/**` — route REST nyata kedua di repo ini (setelah M10), diuji langsung ke project Supabase. Media/price-history/from-project/admin-queue (API-030–034/036–038) belum diimplementasi (tabelnya belum ada) |
 | **M04 — Learning Session/Evidence** + **M15 — Qualification/Award** | ✅ **Kode nyata** | `supabase/migrations/0021`–`0027` — 8 tabel Session/Evidence M04, LP economy, Partnership Learning Result (baru), 5 tabel Qualification/Award M15, fungsi `grant_learning_points_from_purchase()` + `capture_qualification_evidence_from_session()`/`evaluate_qualification()` — menutup R-08, D13-02, D13-03 (lihat catatan gap terbuka: mesin awarding path/rule belum dibangun) |
 | **M02 — Profile** | ✅ **Kode nyata** | `supabase/migrations/0029`–`0030` — `agent_profiles`, `agent_reviews` (auto-approve sesuai Gate PRE-00-D, bukan default literal STEP10-D) — di luar 31 residual asli, dikerjakan atas permintaan eksplisit |
 | **M05 — Event** | ✅ **Kode nyata** | `supabase/migrations/0031`–`0032` — `events`, `event_provider_bindings`, `event_registrations` (termasuk Guest Registration) — di luar 31 residual asli, dikerjakan atas permintaan eksplisit |
@@ -34,8 +34,9 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 > unik di `P9_CONTROLLED_ENGINEERING_RESIDUAL_REGISTER_v1.1.csv` sudah tertutup
 > di level migration/RLS/fungsi (Tahap 1-6)**, ditambah 5 modul (M02/M05/M06
 > lengkap/M08/M11) yang diminta eksplisit di luar checklist asli.
-> Route REST (STEP-11) baru 1 contoh (`GET /api/authorization/roles`) — SEMUA
-> modul lain baru punya migration+RLS+fungsi, belum punya endpoint HTTP.
+> Route REST (STEP-11) baru 2 slice (`GET /api/authorization/roles` untuk M10,
+> dan set endpoint M03 Listing + M14 Refresh di atas) — modul lain baru punya
+> migration+RLS+fungsi, belum punya endpoint HTTP.
 
 ## Struktur folder
 
@@ -100,8 +101,8 @@ npm run dev
 Repo ini **sebagian sudah punya kode**, sebagian masih spesifikasi. Jangan
 mengasumsikan seluruh SaaS sudah bisa dijalankan — hanya M10 Authorization, M09
 Admin Console, M13 Provider/BYOK, M03 Listing + M14 Refresh Allowance (lapisan
-database), dan fondasi API yang sudah ada implementasinya. Modul bisnis lain
-(learning, commercial di luar Refresh Allowance, dst.) menyusul sesuai urutan di
-`CHECKLIST_RESIDUAL_IMPLEMENTASI.md`. Route REST (STEP-11) untuk M09, M13, dan
-M03/M14 juga masih menyusul — tabel, RLS, dan fungsi sudah bisa diuji langsung
-dari SQL Editor/Supabase client, tapi belum ada endpoint HTTP untuk semuanya.
+database + REST API), dan fondasi API yang sudah ada implementasinya. Modul
+bisnis lain (learning, commercial di luar Refresh Allowance, dst.) menyusul
+sesuai urutan di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`. Route REST (STEP-11)
+untuk M09 dan M13 masih menyusul — tabel, RLS, dan fungsinya sudah bisa diuji
+langsung dari SQL Editor/Supabase client, tapi belum ada endpoint HTTP.

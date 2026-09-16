@@ -26,6 +26,7 @@ export interface ApiContext {
   request: Request;
   traceId: string;
   userId: string | null;
+  params: Record<string, string>; // ADD-NEW — dynamic segment ([id], dst.) untuk route Step 3
 }
 
 export interface HandlerResult<T> {
@@ -43,10 +44,18 @@ export function withApiHandler<T>(
   options: WithApiHandlerOptions,
   fn: (ctx: ApiContext) => Promise<HandlerResult<T>>,
 ) {
-  return async function handler(request: Request): Promise<NextResponse> {
+  return async function handler(
+    request: Request,
+    routeContext?: { params: Promise<Record<string, string>> },
+  ): Promise<NextResponse> {
     const traceId = crypto.randomUUID(); // D13-23
 
     try {
+      // ADD-NEW — Next.js 15 App Router mengirim dynamic segment ([id], dst.)
+      // sebagai Promise; route tanpa dynamic segment (mis. roles/route.ts)
+      // tidak mengirim routeContext sama sekali, jadi default ke {}.
+      const params = routeContext?.params ? await routeContext.params : {};
+
       assertJsonContentType(request); // D13-22
 
       const supabase = await createClient();
@@ -78,7 +87,7 @@ export function withApiHandler<T>(
         }
       }
 
-      const result = await fn({ request, traceId, userId });
+      const result = await fn({ request, traceId, userId, params });
       const status = result.status ?? 200;
 
       const response = jsonSuccess(result.data, {

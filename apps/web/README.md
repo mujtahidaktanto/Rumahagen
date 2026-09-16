@@ -20,13 +20,39 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
 - `app/api/authorization/roles/route.ts` — **contoh route nyata** (`GET /api/authorization/roles`)
   yang memakai semua middleware di atas DAN benar-benar query ke tabel `roles`
   dari migration Step 1 — bukti kedua step ini sudah nyambung.
+- **M03 Listing + M14 Refresh** (STEP11-B2, API-025/026/027/028/029/035/237) —
+  route nyata pertama di luar M10:
+  - `app/api/listings/route.ts` — `POST /listings` (API-025), `GET /listings` (list dasar)
+  - `app/api/listings/[id]/route.ts` — `GET` (API-026), `PUT` (API-027, ordinary edit), `DELETE` (API-029)
+  - `app/api/listings/[id]/status/route.ts` — `PATCH .../status` (API-028, lifecycle/publish)
+  - `app/api/listings/[id]/refresh/route.ts` — `POST .../refresh` (API-237, membungkus
+    fungsi `refresh_listing()` dari migration `0020` — menutup D13-01 di lapisan HTTP)
+  - `app/api/agents/me/listings/route.ts` — `GET /agents/me/listings` (API-035)
+  - `lib/validation/listings.ts` — skema Zod, field persis mengikuti kolom `listings` (0018)
+  - `lib/api/handler.ts` diperluas: `withApiHandler()` sekarang meneruskan `params`
+    dynamic segment Next.js 15 (`[id]`) ke `ApiContext` — perubahan non-breaking,
+    dibutuhkan supaya route `/listings/{id}` bisa baca `:id` dari URL.
+  - Otorisasi TIDAK diduplikasi di route manapun — sepenuhnya RLS/trigger dari
+    `0018`/`0020` (R-02). Endpoint mutasi (`POST`/`PATCH .../status`/`POST .../refresh`)
+    mewajibkan header `Idempotency-Key` (D13-21) karena menyentuh kuota/lifecycle.
+  - **Diuji nyata** terhadap project Supabase (bukan cuma compile): `GET /listings`,
+    `GET /listings/{id}` (404 untuk id tidak ada), validasi Idempotency-Key wajib,
+    dan `401` untuk endpoint yang butuh login tanpa sesi — semua merespons sesuai
+    kontrak. `POST`/`PATCH`/`refresh` butuh `SUPABASE_SERVICE_ROLE_KEY` terisi
+    (dipakai `lib/api/idempotency.ts`) untuk diuji penuh — belum diisi di environment
+    pengujian ini karena secret harus diambil manual dari Dashboard, bukan lewat MCP.
+  - Route M03 lain di STEP11-B2 (media, price-history, from-project, admin
+    pending/approve/reject — API-030-034/036-038) BELUM diimplementasi karena
+    tabel pendukungnya (listing media, price history) belum ada di migration
+    manapun — di luar scope batch ini, bukan diam-diam diabaikan.
 
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M03 Listing, M04 Learning, M09 Admin Console, M13
-Provider/BYOK, M14 Commercial, M15 Qualification) — mengikuti urutan Tahap 2–6
-di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`, setiap route WAJIB dibungkus
-`withApiHandler()` dari sini, tidak menulis middleware sendiri.
+Route untuk modul lain (M04 Learning, M05 Event, M06 Developer/Project, M09
+Admin Console, M13 Provider/BYOK, M14 Commercial di luar Refresh, M15
+Qualification) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
+middleware sendiri.
 
 ## Menjalankan
 
