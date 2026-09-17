@@ -116,6 +116,22 @@ export function withApiHandler<T>(
         return NextResponse.json({ ...errorBody(err), meta: { traceId } }, { status: err.status, headers });
       }
 
+      // ADD-NEW — Postgres/PostgREST error 42501 ("insufficient_privilege")
+      // terjadi saat RLS WITH CHECK menolak INSERT/UPDATE. Berbeda dari
+      // SELECT/UPDATE yang RLS-nya diam-diam mengembalikan 0 baris, INSERT
+      // yang ditolak WITH CHECK melempar error Postgres asli — tanpa mapping
+      // ini setiap route harus menangkapnya sendiri-sendiri (ditemukan
+      // pertama kali di POST /events/{id}/rsvp saat Agent mencoba
+      // guest-registration yang scope-nya cuma Instructor). Ditaruh di sini
+      // (bukan per-route) supaya SEMUA endpoint mutasi otomatis dapat 403
+      // yang benar, bukan 500 generik — R-02: satu tempat, bukan duplikasi.
+      if (err && typeof err === "object" && "code" in err && (err as { code?: string }).code === "42501") {
+        return NextResponse.json(
+          { error: { code: "FORBIDDEN", message: "Anda tidak punya akses untuk operasi ini." }, meta: { traceId } },
+          { status: 403, headers: { "Content-Type": "application/json; charset=utf-8" } },
+        );
+      }
+
       // Error tak terduga — jangan bocorkan detail internal ke client (D13-17/18).
       console.error(`[${traceId}] Unhandled API error:`, err);
       return NextResponse.json(

@@ -107,13 +107,50 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     dashboard `total:2, unread:0` (baris yang di-dismiss tidak dihitung).
     Data uji dibersihkan total setelahnya.
 
+- **M05 Event** (STEP11-A API-079/080/081/082/083/084) — batch route keempat:
+  - `app/api/events/route.ts` — `GET /events` (API-079, list), `POST /events`
+    (API-082, create)
+  - `app/api/events/[id]/route.ts` — `GET` (API-080), `PUT` (API-083, SATU
+    route generic mencakup update biasa MAUPUN transisi status
+    published/cancelled/rejected — beda dari Listing yang punya route
+    `.../status` terpisah, mengikuti bentuk kontrak STEP11-A untuk Event),
+    `DELETE` (API-084)
+  - `app/api/events/[id]/rsvp/route.ts` — `POST .../rsvp` (API-081), satu
+    endpoint untuk pendaftaran self MAUPUN guest (`participant_mode`), sesuai
+    desain tabel gabungan `event_registrations` (0032)
+  - `lib/validation/events.ts` — skema Zod untuk resource di atas
+  - **GAP DITEMUKAN & DITUTUP**: migration `0031_m05_events.sql` tidak pernah
+    membuat RLS policy untuk command `DELETE` di tabel `events` (diverifikasi
+    lewat `pg_policies` — hanya select/insert/update yang ada), padahal
+    STEP11-A meng-evidence `API-084 DELETE /events/{id}` sebagai route yang
+    harus dipertahankan. Tanpa policy itu, endpoint delete TIDAK BISA
+    berfungsi sama sekali untuk siapa pun (RLS default-deny, bukan
+    Superadmin-bypass-otomatis). Ditutup lewat migration BARU
+    `supabase/migrations/0039_events_delete_policy.sql` — memakai permission
+    `m05.event.update` yang sudah ada (tidak ada `m05.event.delete` di master
+    matrix 50-baris frozen, jadi tidak mengarang permission baru).
+  - **PERBAIKAN LINTAS-ROUTE** di `lib/api/handler.ts`: ditemukan saat test
+    RSVP guest sebagai Agent (yang scope-nya memang tidak mencakup
+    `m05.guest_registration.create`) — INSERT yang ditolak RLS `WITH CHECK`
+    melempar error Postgres asli (`42501`) yang sebelumnya jatuh ke 500
+    generik, bukan 403. Sekarang di-mapping ke `FORBIDDEN`/403 secara
+    terpusat di `withApiHandler()` — otomatis berlaku untuk SEMUA endpoint
+    mutasi yang sudah ada (M03/M08/M09), tidak perlu ditambal satu-satu.
+  - **Diuji nyata**: create (status default `pending_approval`, tidak publik
+    terlihat) → update biasa → publish (`status=published`, langsung terlihat
+    publik) → RSVP self (201) → RSVP guest tanpa email (422, validasi) →
+    RSVP guest sebagai Agent (403, benar — bukan lagi 500) → RSVP guest
+    sebagai Instructor yang punya izin (201, benar) → DELETE (200, menutup
+    gap) → GET setelahnya (404). Data uji dibersihkan total.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M04 Learning, M05 Event, M06 Developer/Project, M13
+Route untuk modul lain (M04 Learning, M06 Developer/Project, M13
 Provider/BYOK, M14 Commercial di luar Refresh, M15 Qualification) — mengikuti
 urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`, setiap route WAJIB
 dibungkus `withApiHandler()` dari sini, tidak menulis middleware sendiri.
-`packages/ui`/`packages/config` masih placeholder kosong.
+`packages/ui`/`packages/config` masih placeholder kosong. `event_provider_bindings`
+(M05) belum ada route — tidak ada kontrak evidenced di STEP11-A untuknya.
 
 ## Menjalankan
 

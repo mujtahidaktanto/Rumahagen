@@ -320,3 +320,20 @@ komentar `0023_m04_learning_points.sql`/`0024_m04_partnership_learning_result.sq
 sudah tertutup di level migration/RLS/fungsi** (bukan rute REST — itu Step 3/
 STEP-11 terpisah), ditambah 5 modul (M02/M05/M06 lengkap/M08/M11) yang tidak
 ada di 31 residual asli tapi diminta eksplisit dikerjakan di Tahap 6.
+
+## Migration pasca-Tahap 6 (Step 3/STEP-11, ADD-NEW)
+
+- **`0038_performance_indexes_fk.sql`** — index B-tree untuk 85 kolom FK yang
+  ditandai Supabase Performance Advisor. Murni optimasi, bukan dari dokumen
+  sumber manapun — lihat rasional lengkap di file itu sendiri.
+- **`0039_events_delete_policy.sql`** — menutup gap: `0031_m05_events.sql`
+  tidak pernah membuat RLS policy untuk command `DELETE` di tabel `events`,
+  padahal STEP11-A meng-evidence `API-084 DELETE /events/{id}` sebagai route
+  yang harus dipertahankan. Ditemukan saat implementasi route REST M05 (bukan
+  saat migration 0031 ditulis) — tanpa policy ini, endpoint delete tidak bisa
+  berfungsi untuk siapa pun. Memakai permission `m05.event.update` yang sudah
+  ada (tidak ada `m05.event.delete` di master matrix).
+
+Klaim "belum ada satu route pun selain `GET /api/authorization/roles`" di atas
+sudah TIDAK akurat lagi sejak Step 3 dimulai — lihat `apps/web/README.md`
+untuk daftar route REST M03/M14/M09/M08/M05 yang sudah nyata dan diuji.
