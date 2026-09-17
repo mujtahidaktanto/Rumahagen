@@ -419,3 +419,90 @@ ada tabel fisiknya. Lihat `apps/web/README.md` untuk daftar lengkap route.
 Klaim "belum ada satu route pun selain `GET /api/authorization/roles`" di atas
 sudah TIDAK akurat lagi sejak Step 3 dimulai — lihat `apps/web/README.md`
 untuk daftar route REST M03/M14/M09/M08/M05/M06/M13/M04 yang sudah nyata dan diuji.
+
+## Fase 1 "100% Tabel" — 0047-0055 (deep-scan RumahAgen-SaaS-Core-M01-M37.zip)
+
+Hasil deep-scan terhadap `STEP10-D_ENTITY_TO_PHYSICAL_TABLE_RECONCILIATION.csv`
+(dokumen sumber, bukan hasil migration kita) menemukan **94 logical entity**
+total di spec — 86 sudah punya physical table di baseline frozen (W4-01E),
+8 lagi ADD-NEW logis tanpa tabel fisik. Sebelum batch ini, repo baru punya 54
+dari 94 itu. Fase 1 menutup 13 tabel yang PALING tidak saling bergantung
+(sisanya — M04 Learning Catalog 13 tabel, M15 Awarding Engine 9 tabel, M14
+Commercial 8 tabel — menyusul di fase berikutnya, lihat pembagian fase di
+percakapan perencanaan).
+
+- **`0047_m03_listing_media_analytics.sql`** — 7 tabel M03:
+  `listing_photos`, `listing_videos`, `listing_price_history`,
+  `listing_views`, `listing_leads`, `amenities`, `listing_amenities`. Kolom
+  persis sesuai `STEP10-D_ATTRIBUTE_TO_PHYSICAL_COLUMN_RECONCILIATION.csv`.
+  `listing_price_history` ADD-NEW diisi otomatis lewat trigger
+  `log_listing_price_change()` (SECURITY DEFINER) saat `listings.price`
+  berubah — bukan tabel yang bisa di-INSERT manual. Tidak ada permission
+  baru, RLS memakai `m03.listing.update` yang sudah ada lewat join ke
+  `listings.agent_id`.
+- **`0048_ref_villages.sql`** — level ke-4 rantai referensi wilayah, pola
+  identik ref_provinces/cities/districts (0017).
+- **`0049_m01_agent_verification_documents.sql`** — permission BARU
+  `m01.verification_document.manage` (tidak ada baris M01 di permissions
+  seed sama sekali sebelumnya — M01 Identity/Auth sepenuhnya ditangani
+  Supabase Auth). Agent=OWN upload dokumen sendiri, Superadmin/Admin/
+  Manager=ALL review.
+- **`0050_m12_organization_document_invitations.sql`** — 2 tabel M12:
+  `organization_invitations` (leader_invite vs agent_request, dengan
+  trigger anti-self-approval) dan `organization_document` (salah satu dari
+  8 entitas ADD-NEW STEP10-D, vocabulary document_type/visibility adalah
+  keputusan engineering baru — spec sengaja meninggalkannya "downstream").
+  Helper baru `is_org_leader()` (pola sama seperti `is_org_member()`/0006).
+- **`0051_m11_url_redirects.sql`** — tabel SEO redirect 301/302, memakai
+  permission `m11.static_public_content.publish` yang sudah ada.
+- **`0052_m07_dbr_simulations.sql`** — riwayat simulasi kelayakan KPR,
+  append-only, memakai `m07.dbr.domain_operations` yang sudah ada.
+- **`0053_performance_indexes_fk_phase1.sql`** — index B-tree untuk kolom
+  FK di 13 tabel di atas (pola sama seperti 0038).
+
+**2 BUG DITEMUKAN & DITUTUP lewat testing nyata langsung ke PostgREST**
+(bukan lewat route Next.js — belum dibangun untuk tabel-tabel ini):
+1. `0054_fix_listing_child_tables_status_check.sql` — RLS SELECT
+   `listing_photos`/`listing_videos`/`listing_amenities` di 0047 salah
+   memakai `listings.status = 'active'` (nilai itu TIDAK PERNAH ada di
+   CHECK constraint `listings.status`, yang benar adalah `'published'`) —
+   akibatnya foto/video/amenity listing yang sudah published TIDAK PERNAH
+   terlihat publik. Ditemukan saat memasang data uji (INSERT test listing
+   gagal dengan status yang salah), dikonfirmasi ulang lewat GET anonim
+   setelah fix.
+2. `0055_fix_verification_document_self_approval.sql` — RLS UPDATE
+   `agent_verification_documents_update` (0049) awalnya HANYA mengecek
+   `has_permission(..., user_id)` tanpa membedakan kolom yang diubah;
+   komentar asli 0049 mengklaim `review_status` "dilindungi lapisan REST
+   API", TERBUKTI TIDAK CUKUP saat diuji langsung lewat PostgREST — Agent
+   BERHASIL self-approve dokumennya sendiri. Ditutup dengan trigger
+   `enforce_verification_document_staff_only_review()`, pola sama seperti
+   `trg_enforce_organization_invitation_no_self_accept` (0050) dan
+   `trg_partnership_result_validation_superadmin_only` (0024). Pelajaran:
+   Supabase mengekspos SETIAP tabel lewat PostgREST otomatis terlepas dari
+   route Next.js apa pun yang (belum) dibangun — proteksi field sensitif
+   HARUS di level RLS/trigger, tidak cukup "nanti dijaga lapisan REST API".
+
+**CATATAN ARSITEKTURAL untuk pembangunan REST API batch berikutnya**:
+`listing_views_insert`/`listing_leads_insert` sengaja `WITH CHECK (true)`
+(insert publik/anonim) sementara SELECT-nya dibatasi pemilik listing. Postgres
+`INSERT ... RETURNING` (yang direalisasikan pola `.insert().select()` di
+SETIAP route kita sejauh ini) mensyaratkan baris hasil insert JUGA lolos RLS
+SELECT — untuk anon yang tidak lolos SELECT, ini membuat seluruh INSERT
+gagal dengan error RLS walau `WITH CHECK` sendiri sudah `true`. Dikonfirmasi
+lewat test langsung (insert dengan `Prefer: return=representation` gagal,
+tanpa itu berhasil 201). Route REST untuk kedua tabel ini nanti WAJIB pakai
+`.insert()` TANPA `.select()` (return minimal), bukan pola standar
+`.insert().select().single()` yang dipakai tabel lain.
+
+**CATATAN BELUM DIOTOMATISASI** (bukan bug, keputusan ditunda): accept pada
+`organization_invitations` HANYA mengubah `status`, TIDAK otomatis membuat
+baris `organization_members` — automasi "accept invitation -> insert
+membership" adalah keputusan alur bisnis yang lebih pas diputuskan saat
+membangun REST API/trigger untuk resource ini, bukan diasumsikan sekarang.
+
+Seluruh 13 tabel di atas diuji nyata lewat PostgREST langsung (bukan lewat
+route Next.js) dengan throwaway test user per role, mencakup: owner vs
+non-owner isolation, publik vs staf visibility, insert-publik vs
+select-terbatas, self-approval/self-accept blocking, dan trigger
+otomatis (price history). Data uji dibersihkan total setelahnya.
