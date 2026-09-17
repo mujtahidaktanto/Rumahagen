@@ -379,12 +379,112 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     validasi → 200, `validated_by`/`validated_at` otomatis terisi trigger.
     Data uji dibersihkan total.
 
+- **M15 Qualification/Evidence/Awarding** (STEP11-B8 API-200-236, 37 record
+  evidenced — TAPI hanya 5 dari 14 tabel yang disebut dokumen yang benar-benar
+  ada di migration 0026: `title_definitions`, `title_authority_scopes`,
+  `qualification_evaluations`, `qualification_evidence`, `award_instances`.
+  9 tabel lain — `awarding_paths`/`awarding_path_versions`/
+  `awarding_rule_versions`/`awarding_path_rules`/`awarding_condition_groups`/
+  `awarding_conditions`/`awarding_prerequisites`/`award_qualifying_paths`/
+  `title_presentations` — SENGAJA tidak pernah dibuat migration 0026
+  (didokumentasikan eksplisit di sana sebagai "mesin konfigurasi jalur/aturan
+  kelulusan", residual terpisah untuk masa depan). Batch ini HANYA membangun
+  REST layer di atas 5 tabel yang benar-benar ada; endpoint Path/Rule
+  Version, Condition/Prerequisite, Appeal, dan Presentation (STEP11-B8
+  sendiri menandainya CONTROLLED API GAP / tidak ada tabel) TIDAK dibangun —
+  membangunnya butuh migration baru untuk 9 tabel besar itu dulu, jauh di
+  luar lingkup "REST layer atas skema yang sudah ada") — batch route
+  kesembilan, 20 route file.
+  - `app/api/titles/route.ts` (`GET`/`POST`) + `[id]/route.ts` (`GET`/`PUT`)
+    + `[id]/status/route.ts` (`PATCH`) — API-200/201/202/203/204, CRUD+status
+    Title Definition
+  - `app/api/titles/[id]/authority-scopes/route.ts` (`GET`/`POST`) +
+    `app/api/title-authority-scopes/[id]/route.ts` (`PUT`/`DELETE`) —
+    ADD-NEW (STEP11-B8 F11-B8-001: "no dedicated exact endpoint evidenced"),
+    TAPI tabel+RLS `title_authority_scopes` sudah lengkap sejak 0026 dan
+    **wajib ada** supaya `POST /awards` bisa berfungsi sama sekali (trigger
+    `enforce_award_requires_authority_scope` menolak award tanpa scope aktif)
+  - `app/api/qualification-evaluations/route.ts` (`POST`, create manual) +
+    `[id]/route.ts` (`GET`) + `[id]/evidence/route.ts` (`GET`) +
+    `app/api/agents/me/qualification-evaluations/route.ts` (`GET`) —
+    API-216/217/222/219
+  - `app/api/qualification-evidence/route.ts` (`POST`, create manual) +
+    `[id]/route.ts` (`GET`) — API-220/221
+  - `app/api/qualification-evidence/[id]/evaluate/route.ts` — ADD-NEW,
+    membungkus fungsi `evaluate_qualification()` (0027) yang sudah fisik
+    sejak Tahap 6 tapi belum pernah punya route. STEP11-B8 API-218 menulis
+    path `POST /qualification-evaluations/{evaluation_id}/evaluate`, TAPI
+    fungsi SQL yang benar-benar ada bertumpu pada **evidence_id** (satu
+    evidence → satu evaluation BARU), bukan mengubah evaluation lama —
+    endpoint di-key oleh evidence_id supaya cocok dengan fungsi SQL yang
+    fisik, bukan memaksakan path dokumen yang tidak match realisasinya (pola
+    sama seperti M13 ai-connections DELETE yang direalisasikan sebagai
+    soft-disconnect)
+  - `app/api/qualification-evidence/from-session-completion/route.ts` —
+    ADD-NEW, membungkus `capture_qualification_evidence_from_session()`
+    (0027) — separuh pertama pipeline D13-03 (M04
+    `session_completion_outcomes` → M15 `qualification_evidence`), fisik
+    sejak Tahap 6 tapi juga belum pernah punya route sampai batch ini
+  - `app/api/awards/route.ts` (`GET`/`POST`) + `[id]/route.ts` (`GET`) +
+    `[id]/lifecycle/route.ts` (`PATCH`, revoke) + `[id]/restore/route.ts`
+    (`POST`) + `[id]/provenance/route.ts` (`GET`) +
+    `app/api/agents/me/awards/route.ts` (`GET`) +
+    `app/api/agents/[id]/awards/route.ts` (`GET`) — API-223/224/225/226/227/
+    228/229/233. `provenance` menggabungkan `historical_snapshot` (kolom
+    JSONB di `award_instances` sendiri) dengan entri `audit_logs` terkait —
+    dipanggil lewat client biasa (bukan admin client) supaya RLS
+    `audit_logs_select` (butuh `m09.administrative_audit_log.view`)
+    otomatis menyaring: staf lihat log lengkap, non-staf otomatis dapat
+    array kosong tanpa percabangan permission manual. `lifecycle` PATCH
+    HANYA mengimplementasikan revoke — transisi `expired` tidak diimplementasikan
+    karena tidak ada mekanisme auto-expire (cron/job) di manapun pada repo ini
+  - `lib/validation/titles.ts` + `lib/validation/qualification.ts` +
+    `lib/validation/awards.ts` — skema Zod untuk semua resource di atas
+  - **TIDAK ADA migration baru** — kelima tabel M15 yang ada sudah punya RLS
+    lengkap sejak 0026 tanpa gap (beda dari M04/M05/M06 yang masing-masing
+    butuh migration fix), batch ini murni REST layer
+  - **Verifikasi desain (bukan bug)**: master matrix M15 memberi Agent scope
+    'own' untuk `m15.award.award`/`m15.award.revoke`/`m15.award.manage` (0009)
+    — arti sesungguhnya, dikonfirmasi lewat test nyata, seorang Agent BISA
+    self-award dan self-revoke selama title yang dituju punya
+    `title_authority_scopes` aktif (trigger tetap menggerbangi). Ini
+    keputusan permission dari master matrix (M10/STEP12 domain), bukan bug
+    REST layer — tidak diubah di batch ini. Juga dikonfirmasi: award berstatus
+    `restored` TIDAK otomatis terlihat publik lagi (RLS `award_instances_select`
+    hanya mengecualikan status `active` untuk visibility publik, `restored`
+    tetap butuh `m15.award.manage` untuk dilihat) — sesuai literal RLS 0026,
+    bukan diubah.
+  - **Diuji nyata secara menyeluruh** (pipeline penuh M04→M15 pertama kali
+    diuji end-to-end): Superadmin buat title (201) → Agent coba buat title →
+    **403** → GET title publik (200, anon) → POST award TANPA authority scope
+    → **409 CONFLICT** (trigger) → Superadmin buat authority scope (201) →
+    POST award lagi → **201** (berhasil) → GET award publik (200, status
+    active) → Agent (pemilik award, scope 'own') revoke award sendiri → 200,
+    status jadi revoked → GET award publik setelah revoke → **404** (RLS
+    menyembunyikan non-active dari publik) → Superadmin restore → 200, status
+    jadi restored → restore lagi → **404** (guard status='revoked' tidak
+    match lagi) → GET award publik setelah restore → tetap **404** (restored
+    ≠ active, sesuai RLS) → Agent POST qualification-evidence untuk diri
+    sendiri (201) → Agent evaluate evidence sendiri via
+    `evaluate_qualification()` → 201, `result=pending` (evidence_payload
+    kosong) → Instructor buat session → publish → Agent enroll → Superadmin
+    aktivasi → Instructor evaluate completion (`result=passed`) →
+    **Instructor coba capture-evidence-from-session untuk Agent lain →
+    403** (benar, scope 'own' Instructor tidak mencakup evaluasi murid) →
+    Superadmin capture-evidence-from-session → 201, `evidence_payload`
+    berisi field yang sama persis dengan `session_completion_outcomes`
+    sumbernya → Superadmin evaluate evidence tersebut →
+    **result=qualified** (benar, sesuai kontrak field CASE mapping
+    'passed'→'qualified') — pipeline D13-03 M04→M15 terverifikasi utuh
+    lewat HTTP untuk pertama kalinya. Data uji dibersihkan total.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
 Route untuk modul lain (M04 Learning Catalog/Activity — courses/learning_paths/
 learning_activities dari B4, tidak ada tabelnya di migration manapun; M14
-Commercial di luar Refresh; M15 Qualification/Award — tabel sudah ada sejak
-0026-0027, belum ada REST layer) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+Commercial di luar Refresh; M15 Path/Rule Version, Condition/Prerequisite,
+Appeal, Award Presentation — 9 tabel besarnya sendiri belum ada di migration
+manapun, lihat catatan di batch M15 di atas) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
 setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
 middleware sendiri. `POST /ai-assistant/chat` (M13, invokasi AI sungguhan)
 SENGAJA belum ada — butuh adapter per-provider nyata, bukan sekadar CRUD atas

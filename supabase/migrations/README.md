@@ -393,6 +393,29 @@ Evidence (STEP11-B5) yang nyata terhadap database — bukan review kode statis.
   ditolak Postgres code `23514`, sekarang dipetakan ke 409 CONFLICT lewat
   fix terpusat baru di `apps/web/lib/api/handler.ts`, bukan 500 generik).
 
+**M15 Qualification/Evidence/Awarding REST API (STEP11-B8) — TIDAK ADA
+migration baru.** Kelima tabel M15 yang ada sejak `0026`
+(`title_definitions`, `title_authority_scopes`, `qualification_evaluations`,
+`qualification_evidence`, `award_instances`) sudah punya RLS lengkap tanpa
+gap sejak awal — beda dari M04/M05/M06 yang masing-masing perlu migration
+fix RLS/trigger, batch M15 murni REST layer di atas skema yang sudah benar.
+Dua fungsi SQL yang sudah fisik sejak `0027`
+(`capture_qualification_evidence_from_session()`/`evaluate_qualification()`)
+akhirnya dapat route HTTP pertama kalinya di batch ini
+(`POST /qualification-evidence/from-session-completion` dan
+`POST /qualification-evidence/{id}/evaluate`) — pipeline D13-03 M04→M15
+evidence→evaluation→award kini teruji end-to-end lewat HTTP untuk pertama
+kalinya, bukan cuma via SQL langsung. **Cakupan REST dibatasi ke 5 tabel
+yang benar-benar ada** — 9 tabel besar "mesin konfigurasi jalur/aturan
+kelulusan" (`awarding_paths`, `awarding_path_versions`,
+`awarding_rule_versions`, `awarding_path_rules`,
+`awarding_condition_groups`, `awarding_conditions`,
+`awarding_prerequisites`, `award_qualifying_paths`, `title_presentations`)
+masih seperti dicatat di `0026`: belum punya migration sama sekali, jadi
+STEP11-B8 API-205-215/230-236 (awarding path/rule/version, appeal,
+presentation) tidak diimplementasikan — bukan gap REST, tapi memang belum
+ada tabel fisiknya. Lihat `apps/web/README.md` untuk daftar lengkap route.
+
 Klaim "belum ada satu route pun selain `GET /api/authorization/roles`" di atas
 sudah TIDAK akurat lagi sejak Step 3 dimulai — lihat `apps/web/README.md`
 untuk daftar route REST M03/M14/M09/M08/M05/M06/M13/M04 yang sudah nyata dan diuji.
