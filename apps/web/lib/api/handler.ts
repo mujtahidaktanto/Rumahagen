@@ -132,6 +132,24 @@ export function withApiHandler<T>(
         );
       }
 
+      // ADD-NEW — Postgres 23514 ("check_violation") terjadi saat sebuah
+      // CHECK constraint DB menolak INSERT/UPDATE (mis.
+      // learning_point_accounts.balance_projection >= 0 saat admin mencoba
+      // adjustment yang membuat saldo negatif — ditemukan saat testing
+      // POST /admin/learning-point-adjustments). Ini kegagalan business-rule
+      // yang sah (409), bukan bug server (500) — di-mapping terpusat di sini
+      // supaya semua endpoint mutasi otomatis dapat status yang benar.
+      if (err && typeof err === "object" && "code" in err && (err as { code?: string }).code === "23514") {
+        const message =
+          "detail" in err && typeof (err as { detail?: unknown }).detail === "string"
+            ? "Perubahan ini melanggar aturan data (mis. saldo tidak boleh negatif)."
+            : "Perubahan ini melanggar aturan data.";
+        return NextResponse.json(
+          { error: { code: "CONFLICT", message }, meta: { traceId } },
+          { status: 409, headers: { "Content-Type": "application/json; charset=utf-8" } },
+        );
+      }
+
       // Error tak terduga — jangan bocorkan detail internal ke client (D13-17/18).
       console.error(`[${traceId}] Unhandled API error:`, err);
       return NextResponse.json(

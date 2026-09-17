@@ -303,8 +303,11 @@ komentar `0023_m04_learning_points.sql`/`0024_m04_partnership_learning_result.sq
 - M14 Commercial di luar rantai Refresh Allowance/LP Grant (subscriptions/
   addons/promotions/commercial_orders/payment_transactions/
   commercial_fulfillments) — belum ada nomor residual.
-- M04 Learning Catalog/Activity di luar Session (courses/learning_paths/
-  learning_activities) — belum ada nomor residual.
+- M04 Learning Catalog/Activity di luar Session/LP Economy (courses/
+  learning_paths/learning_activities) — belum ada nomor residual. (LP Economy
+  sendiri — `learning_point_accounts`/`learning_point_transactions`/
+  Partnership Learning Result — SUDAH ditutup REST API-nya, lihat migration
+  `0046` di bawah dan `apps/web/README.md`.)
 - M12 Organization di luar `organizations`/`organization_members` (manajemen
   organisasi penuh) — belum ada nomor residual.
 - Mesin konfigurasi awarding path/rule (8 tabel M15) — lihat catatan D13-03 di
@@ -372,6 +375,23 @@ ada di 31 residual asli tapi diminta eksplisit dikerjakan di Tahap 6.
 
 Ketiga bug di atas (0043-0045) ditemukan lewat testing REST API M04 Session/
 Evidence (STEP11-B5) yang nyata terhadap database — bukan review kode statis.
+
+- **`0046_learning_point_adjustment_function.sql`** — GAP FUNGSIONAL: permission
+  `m04.learning_point.adjust` sudah di-seed sejak `0023_m04_learning_points.sql`
+  khusus untuk koreksi manual saldo LP oleh staf, TAPI tabel
+  `learning_point_transactions` cuma pernah dibuatkan RLS `SELECT` — tidak ada
+  jalur `INSERT` apa pun lewat client langsung untuk siapapun (termasuk
+  Superadmin). Ditemukan saat implementasi route REST M04 LP Economy
+  (STEP11-B4). Ditutup dengan fungsi `SECURITY DEFINER` baru
+  `adjust_learning_points(p_user_id, p_amount, p_reason, p_idempotency_key)`
+  — pola sama seperti `grant_learning_points_from_purchase()` yang sudah ada:
+  cek permission sendiri, auto-create `learning_point_accounts` kalau belum
+  ada, insert transaksi tipe `adjustment`, dukung idempotency key opsional.
+  Dibungkus route `POST /api/admin/learning-point-adjustments`. CHECK
+  constraint `learning_point_accounts_balance_projection_check` (saldo tidak
+  boleh negatif) tetap berlaku dan diuji nyata (percobaan over-deduction
+  ditolak Postgres code `23514`, sekarang dipetakan ke 409 CONFLICT lewat
+  fix terpusat baru di `apps/web/lib/api/handler.ts`, bukan 500 generik).
 
 Klaim "belum ada satu route pun selain `GET /api/authorization/roles`" di atas
 sudah TIDAK akurat lagi sejak Step 3 dimulai — lihat `apps/web/README.md`

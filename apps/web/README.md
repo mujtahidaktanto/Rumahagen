@@ -323,11 +323,68 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     delete enrollment (menutup gap 0042) → 404 setelahnya. Data uji
     dibersihkan total.
 
+- **M04 LP Economy + Partnership Learning Result** (STEP11-B4 §LP Economy
+  evidenced routes + Partnership Learning Result ADD-NEW/Gate PRE-00-F §51)
+  — batch route kedelapan, terkecil sejauh ini (7 route file) karena tabel
+  "Learning Catalog/Activity" (courses/learning_paths/learning_activities)
+  yang dibahas luas di STEP11-B4 memang tidak pernah dibuat di migration
+  manapun (lihat catatan `supabase/migrations/README.md` "Yang SENGAJA belum
+  termasuk").
+  - `app/api/agents/me/learning-points/route.ts` — `GET` (evidenced), saldo
+    LP milik sendiri; mengembalikan objek saldo nol default kalau baris
+    `learning_point_accounts` belum pernah dibuat (Agent belum pernah
+    bertransaksi LP)
+  - `app/api/agents/me/learning-points/transactions/route.ts` — `GET`
+    (evidenced), riwayat transaksi LP milik sendiri, paginated
+  - `app/api/admin/learning-point-adjustments/route.ts` — `POST` (evidenced)
+    — koreksi manual saldo LP oleh staf, membungkus fungsi SQL baru
+    `adjust_learning_points()` (migration 0046, pola sama seperti
+    `grant_learning_points_from_purchase()` yang sudah ada)
+  - `app/api/partnership-learning-results/route.ts` (`POST`/`GET`) +
+    `app/api/partnership-learning-results/[id]/route.ts` (`GET`/`PUT`) —
+    ADD-NEW (tidak ada di STEP11-B4, sumbernya Gate PRE-00-F §51 — lihat
+    rasional di migration 0024); `POST` default `partner_user_id` ke
+    pemanggil; `PUT` mengubah `validation_status` HANYA bisa Superadmin
+    (ditegakkan trigger `trg_partnership_result_validation_superadmin_only`
+    dari 0024, tidak diduplikasi di route)
+  - `lib/validation/learning-points.ts` +
+    `lib/validation/partnership-learning-results.ts` — skema Zod untuk
+    kedua resource di atas
+  - **1 GAP DITEMUKAN & DITUTUP lewat migration baru**:
+    `0046_learning_point_adjustment_function.sql` — permission
+    `m04.learning_point.adjust` sudah di-seed sejak migration 0023 khusus
+    untuk koreksi manual staf, TAPI tabel `learning_point_transactions`
+    hanya punya RLS `SELECT`, tidak ada jalur `INSERT` apa pun lewat client
+    langsung untuk siapapun. Ditutup dengan fungsi `SECURITY DEFINER` baru
+    `adjust_learning_points()` yang mengecek permission itu sendiri lalu
+    insert transaksi + auto-create account kalau belum ada (pola sama
+    seperti `grant_learning_points_from_purchase()`).
+  - **1 BUG DITEMUKAN & DITUTUP lewat centralized handler.ts fix**:
+    percobaan Superadmin melakukan adjustment yang membuat saldo negatif
+    (mis. `-1000` dari saldo `70`) ditolak dengan benar oleh CHECK
+    constraint DB (`learning_point_accounts_balance_projection_check`),
+    TAPI hasilnya 500 generik, bukan error business-rule yang bersih.
+    Ditambahkan mapping terpusat baru di `lib/api/handler.ts` untuk kode
+    Postgres `23514` (check_violation) → 409 CONFLICT, supaya semua endpoint
+    mutasi otomatis dapat status yang benar tanpa duplikasi per-route.
+  - **Diuji nyata secara menyeluruh**: Agent baca saldo LP sebelum pernah
+    bertransaksi → default nol (bukan 404) → riwayat transaksi kosong →
+    Agent coba adjust saldo sendiri → **403** (benar, endpoint khusus staf)
+    → Superadmin `+100` → 201, saldo jadi 100 → Superadmin `-30` → 201,
+    saldo jadi 70 → Superadmin `-1000` (would go negative) → awalnya **500**
+    (bug) → diperbaiki jadi **409 CONFLICT** setelah fix handler.ts, saldo
+    tetap 70 (tidak berubah, benar) → Developer Partner buat partnership
+    learning result → 201, `validation_status: pending` → DP coba
+    validasi sendiri → **403** (benar, ditolak trigger) → Superadmin
+    validasi → 200, `validated_by`/`validated_at` otomatis terisi trigger.
+    Data uji dibersihkan total.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M04 Learning Catalog/Activity/Economy — B4, di luar
-Session/Evidence yang sudah selesai di atas; M14 Commercial di luar Refresh;
-M15 Qualification) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+Route untuk modul lain (M04 Learning Catalog/Activity — courses/learning_paths/
+learning_activities dari B4, tidak ada tabelnya di migration manapun; M14
+Commercial di luar Refresh; M15 Qualification/Award — tabel sudah ada sejak
+0026-0027, belum ada REST layer) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
 setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
 middleware sendiri. `POST /ai-assistant/chat` (M13, invokasi AI sungguhan)
 SENGAJA belum ada — butuh adapter per-provider nyata, bukan sekadar CRUD atas
