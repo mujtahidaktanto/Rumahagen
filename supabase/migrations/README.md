@@ -348,6 +348,31 @@ ada di 31 residual asli tapi diminta eksplisit dikerjakan di Tahap 6.
   ditolak RLS). Ditambahkan klausul OR yang mengecek lewat
   `project_id -> developer_projects.developer_id -> developer_partners.user_id`.
 
+- **`0042_session_enrollments_delete_policy.sql`** — gap RLS DELETE yang
+  sama seperti 0039/0040, tapi di `session_enrollments`. BEDA penting: 0021
+  eksplisit melarang permission baru untuk tabel ini (Gate §26 "NO NEW
+  PERMISSION"), jadi policy barunya memakai ekspresi yang SAMA PERSIS dengan
+  `UPDATE` staf yang sudah ada, bukan permission baru.
+- **`0043_fix_attendance_completion_manage_policy.sql`** — BUG FUNGSIONAL:
+  RLS `session_attendance_evaluations_manage`/`session_completion_outcomes_manage`
+  (0022) memanggil `has_permission()` TANPA argumen owner_id, membuat scope
+  'own' Instructor tidak pernah terpenuhi. Percobaan perbaikan PERTAMA
+  (subquery langsung di ekspresi policy) — TERNYATA MASIH BUG, lihat 0044.
+- **`0044_fix_attendance_completion_owner_resolution.sql`** — perbaikan
+  LANJUTAN 0043: subquery yang ditulis langsung di ekspresi `CREATE POLICY`
+  ternyata ikut tunduk RLS actor pemanggil (Instructor tidak punya akses
+  SELECT ke `session_enrollments` milik Agent lain), jadi tetap gagal.
+  Diperbaiki dengan fungsi `SECURITY DEFINER` baru `session_owner_for_enrollment()`
+  — pola sama seperti `has_permission()` sendiri.
+- **`0045_fix_completion_trigger_rls_visibility.sql`** — BUG KETIGA dari
+  kelas yang sama: trigger `enforce_completion_requires_active_enrollment()`
+  (0022) SELECT langsung ke `session_enrollments` tanpa `SECURITY DEFINER`,
+  salah menolak Instructor walau status enrollment sungguhan sudah valid.
+  Ditambahkan `SECURITY DEFINER` ke fungsi trigger tersebut.
+
+Ketiga bug di atas (0043-0045) ditemukan lewat testing REST API M04 Session/
+Evidence (STEP11-B5) yang nyata terhadap database — bukan review kode statis.
+
 Klaim "belum ada satu route pun selain `GET /api/authorization/roles`" di atas
 sudah TIDAK akurat lagi sejak Step 3 dimulai — lihat `apps/web/README.md`
-untuk daftar route REST M03/M14/M09/M08/M05/M06 yang sudah nyata dan diuji.
+untuk daftar route REST M03/M14/M09/M08/M05/M06/M13/M04 yang sudah nyata dan diuji.

@@ -254,10 +254,80 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     `status=disconnected`, baris TETAP ada di DB — bukan hard delete). Data
     uji dibersihkan total.
 
+- **M04 Learning Session/Enrollment/Provider Binding/Evidence/Attendance/
+  Completion/Artifacts** (STEP11-B5 API-086-115, 37 record evidenced) —
+  batch route ketujuh, yang terbesar sejauh ini (21 route file).
+  - `app/api/learning/sessions/route.ts` + `[id]/route.ts` + `[id]/status/route.ts`
+    — CRUD + lifecycle (API-086-091)
+  - `app/api/learning/sessions/[id]/enrollments/route.ts` (API-092/094) +
+    `app/api/agents/me/session-enrollments/route.ts` (API-093) +
+    `app/api/learning/session-enrollments/[id]/route.ts` + `.../status/route.ts`
+    (API-095/096/097)
+  - `app/api/learning/sessions/[id]/provider-binding/route.ts` (API-098/099/100)
+  - `app/api/integrations/learning-session/providers/[provider]/events/route.ts`
+    (API-101, provider event ingress) — **ditambahkan shared-secret minimal**
+    (`X-Webhook-Secret` vs env `LEARNING_SESSION_WEBHOOK_SECRET`, ADD-NEW di
+    luar STEP11-B5) karena endpoint ini pakai admin client (bypass RLS) dan
+    STEP11-B5 sendiri eksplisit tidak mengevidence skema signature
+    per-provider — tanpa penjagaan apa pun, endpoint ini terbuka bebas di
+    internet untuk menyuntik evidence palsu
+  - `app/api/learning/sessions/[id]/evidence/route.ts` (API-102) +
+    `app/api/learning/session-enrollments/[id]/evidence/route.ts` (API-103)
+  - `app/api/learning/sessions/[id]/attendance/route.ts` (API-104) +
+    `.../attendance/evaluate/route.ts` (API-105) +
+    `app/api/learning/session-enrollments/[id]/attendance/route.ts` (API-106)
+  - `app/api/learning/sessions/[id]/completion-outcomes/route.ts` (API-107) +
+    `.../completion/evaluate/route.ts` (API-108) +
+    `app/api/learning/session-enrollments/[id]/completion/route.ts` (API-109)
+  - `app/api/learning/sessions/[id]/artifacts/route.ts` (API-110/111) +
+    `app/api/learning/session-artifacts/[id]/route.ts` (API-112)
+  - `app/api/learning/sessions/[id]/event/route.ts` (API-113/114/115)
+  - `app/api/learning/sessions/[id]/assignments/route.ts` — ADD-NEW (Q-M04-G-01/G-02
+    dibahas STEP11-B5 sebagai konsep, tanpa API ID; tabel+RLS
+    `learning_session_assignments` sudah lengkap sejak 0021)
+  - `lib/validation/learning-sessions.ts` — skema Zod untuk semua resource di atas
+  - **3 GAP/BUG DITEMUKAN & DITUTUP lewat migration** (yang terbanyak dalam
+    satu batch sejauh ini):
+    1. `0042_session_enrollments_delete_policy.sql` — gap RLS DELETE (pola
+       sama seperti 0039/0040), TAPI migration 0021 sendiri eksplisit
+       melarang permission baru untuk tabel ini (Gate §26 "NO NEW
+       PERMISSION") — jadi policy baru memakai ekspresi otorisasi yang SAMA
+       PERSIS dengan `UPDATE` yang sudah ada (staf saja), bukan permission baru.
+    2. `0043_fix_attendance_completion_manage_policy.sql` +
+       `0044_fix_attendance_completion_owner_resolution.sql` — **bug
+       fungsional dua lapis**: RLS `session_attendance_evaluations_manage`/
+       `session_completion_outcomes_manage` (0022) memanggil `has_permission()`
+       TANPA argumen owner_id sama sekali, membuat scope 'own' Instructor
+       tidak pernah terpenuhi (0043 mencoba perbaiki dengan subquery
+       langsung di ekspresi policy — TAPI subquery itu sendiri tunduk RLS
+       actor pemanggil dan gagal juga untuk kasus yang sama; 0044
+       memperbaikinya dengan benar lewat fungsi `SECURITY DEFINER` baru
+       `session_owner_for_enrollment()`, pola sama seperti `has_permission()`
+       sendiri).
+    3. `0045_fix_completion_trigger_rls_visibility.sql` — **bug KETIGA dari
+       kelas yang sama**: trigger `enforce_completion_requires_active_enrollment()`
+       (0022) melakukan `SELECT` langsung ke `session_enrollments` tanpa
+       `SECURITY DEFINER`, sehingga tunduk RLS dan salah menolak Instructor
+       yang meng-evaluate completion enrollment milik Agent lain walau
+       status baris sungguhan sudah `active`.
+  - **Diuji nyata secara menyeluruh** (Instructor buat session → publish →
+    Agent enroll+duplikat-ditolak → staf aktivasi enrollment (Agent
+    ditolak, sesuai Gate §26) → Superadmin buat provider binding
+    (Instructor ditolak, sesuai Gate §30) → webhook ingress tanpa secret
+    ditolak 401 → dengan secret berhasil, duplikat idempotency_key ditolak
+    409 → evidence ter-baca via join → **Instructor evaluate attendance
+    ditolak 2x sampai bug RLS ketemu & diperbaiki, akhirnya berhasil** →
+    **completion evaluate juga ditolak sampai bug trigger ketemu &
+    diperbaiki, akhirnya berhasil** → Agent baca attendance/completion
+    miliknya sendiri → assignment HOST → event association →
+    delete enrollment (menutup gap 0042) → 404 setelahnya. Data uji
+    dibersihkan total.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M04 Learning, M14 Commercial di luar Refresh, M15
-Qualification) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+Route untuk modul lain (M04 Learning Catalog/Activity/Economy — B4, di luar
+Session/Evidence yang sudah selesai di atas; M14 Commercial di luar Refresh;
+M15 Qualification) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
 setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
 middleware sendiri. `POST /ai-assistant/chat` (M13, invokasi AI sungguhan)
 SENGAJA belum ada — butuh adapter per-provider nyata, bukan sekadar CRUD atas

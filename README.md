@@ -20,7 +20,7 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 | **M09 — Admin Console** | ✅ **Kode nyata + REST API** | `supabase/migrations/0011`–`0014` — `system_configs`, `audit_logs`, `notification_templates` (baru), `public_announcement_promotion` (baru) — menutup residual R-06, D13-05, D13-08, D13-13; D13-12 tertutup di level permission, D13-14 CLOSED (lihat M13). **STEP11-A (API-129/149/238/239) + M11 (API-135/136)**: `apps/web/app/api/admin/config/**`, `admin/audit-logs`, `admin/notification-templates/**`, `banners`/`admin/banners/**` — diuji end-to-end sebagai Superadmin nyata. `admin/reports/export` (API-138) dan `admin/internal-users` (API-139-142) belum ada — dataset/skemanya tidak evidenced |
 | **M13 — Provider Catalogue / BYOK** | ✅ **Kode nyata + REST API** | `supabase/migrations/0015`–`0016` — `ai_providers`, `agent_ai_connections` (status 5-state + trigger lifecycle), fungsi `admin_force_provider_connection()` — menutup R-07, D13-11 penuh, D13-09/D13-10 penuh di lapisan HTTP. **STEP11-B10 + kelengkapan penuh**: `apps/web/app/api/ai-providers/**`, `ai-connections/**`, `admin/ai-connections/**` + `lib/crypto/byok.ts` (enkripsi AES-256-GCM baru, sebelumnya belum ada pola enkripsi di repo) — diuji end-to-end menyeluruh (create/rotate/test/force-disable/reverse/soft-disconnect, termasuk verifikasi `encrypted_api_key` benar-benar ter-enkripsi di DB). `POST /ai-assistant/chat` (invokasi AI sungguhan) belum ada — butuh adapter provider nyata |
 | **M03 — Listing** + **M14 — Refresh Allowance/Entitlement** | ✅ **Kode nyata + REST API** | `supabase/migrations/0017`–`0020` — `listings` (skema penuh + trigger lifecycle), rantai kuota M14 (5 tabel), fungsi `refresh_listing()` memanggil `consume_refresh_allowance()` — menutup R-04, D13-01 penuh. **STEP11-B2 (API-025/026/027/028/029/035/237)**: `apps/web/app/api/listings/**` + `apps/web/app/api/agents/me/listings/**` — route REST nyata kedua di repo ini (setelah M10), diuji langsung ke project Supabase. Media/price-history/from-project/admin-queue (API-030–034/036–038) belum diimplementasi (tabelnya belum ada) |
-| **M04 — Learning Session/Evidence** + **M15 — Qualification/Award** | ✅ **Kode nyata** | `supabase/migrations/0021`–`0027` — 8 tabel Session/Evidence M04, LP economy, Partnership Learning Result (baru), 5 tabel Qualification/Award M15, fungsi `grant_learning_points_from_purchase()` + `capture_qualification_evidence_from_session()`/`evaluate_qualification()` — menutup R-08, D13-02, D13-03 (lihat catatan gap terbuka: mesin awarding path/rule belum dibangun) |
+| **M04 — Learning Session/Evidence** + **M15 — Qualification/Award** | ✅ **Kode nyata** (M04 Session + REST API) | `supabase/migrations/0021`–`0027` — 8 tabel Session/Evidence M04, LP economy, Partnership Learning Result (baru), 5 tabel Qualification/Award M15, fungsi `grant_learning_points_from_purchase()` + `capture_qualification_evidence_from_session()`/`evaluate_qualification()` — menutup R-08, D13-02, D13-03 (lihat catatan gap terbuka: mesin awarding path/rule belum dibangun). **STEP11-B5 (API-086-115)**: `apps/web/app/api/learning/**` + `integrations/learning-session/**` — 21 route file, diuji end-to-end menyeluruh. Migration `0042` menutup gap RLS DELETE; `0043`+`0044`+`0045` memperbaiki **3 bug fungsional RLS/trigger** (scope 'own' Instructor tidak pernah terpenuhi di attendance/completion). M04 Learning Catalog/Activity/Economy (B4) dan M15 Qualification/Award REST API belum dikerjakan |
 | **M02 — Profile** | ✅ **Kode nyata** | `supabase/migrations/0029`–`0030` — `agent_profiles`, `agent_reviews` (auto-approve sesuai Gate PRE-00-D, bukan default literal STEP10-D) — di luar 31 residual asli, dikerjakan atas permintaan eksplisit |
 | **M05 — Event** | ✅ **Kode nyata + REST API** | `supabase/migrations/0031`–`0032` — `events`, `event_provider_bindings`, `event_registrations` (termasuk Guest Registration) — di luar 31 residual asli, dikerjakan atas permintaan eksplisit. **STEP11-A (API-079-084)**: `apps/web/app/api/events/**` — diuji end-to-end penuh (create→publish→RSVP self/guest→delete). Migration `0039` menutup gap RLS DELETE yang hilang di `0031`; perbaikan mapping error 403 di `lib/api/handler.ts` berlaku untuk semua endpoint mutasi |
 | **M06 — Developer/Project/Marketing Kit/Claim** | ✅ **Kode nyata + REST API penuh** | `supabase/migrations/0033`–`0035` — `developer_partners`, `developer_projects` (+ FK retroaktif ke `listings`/`events`), `marketing_kit`, `agent_project_claims` — menutup **R-05**. **STEP11-B3 (API-116-122) + kelengkapan penuh**: `apps/web/app/api/developer-projects/**`, `developer-partners/**`, `marketing-kit/**`, `project-media/**`, `claims/**`, `admin/developer-projects/**` — diuji end-to-end menyeluruh (self-service create, moderation-gate publish, media, marketing kit, klaim+review+approve, delete). Migration `0040` menutup gap RLS DELETE (pola sama seperti M05); migration `0041` memperbaiki **bug fungsional** RLS review-klaim yang ditemukan saat testing (Developer Partner tidak bisa approve klaim di project miliknya sendiri). Hanya Approval Claim PDF yang belum ada (tidak ada tabel/mekanisme fisik) |
@@ -34,11 +34,11 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 > unik di `P9_CONTROLLED_ENGINEERING_RESIDUAL_REGISTER_v1.1.csv` sudah tertutup
 > di level migration/RLS/fungsi (Tahap 1-6)**, ditambah 5 modul (M02/M05/M06
 > lengkap/M08/M11) yang diminta eksplisit di luar checklist asli.
-> Route REST (STEP-11) baru 7 slice (M10 `GET /api/authorization/roles`, M03
-> Listing + M14 Refresh, M09 Admin Console, M08 Notifications, M05 Event, M06
-> Developer/Project/Media/Marketing Kit/Claim, dan M13 Provider/BYOK — semua
-> lengkap) — modul lain baru punya migration+RLS+fungsi, belum punya
-> endpoint HTTP.
+> Route REST (STEP-11) baru 8 slice (M10, M03 Listing + M14 Refresh, M09
+> Admin Console, M08 Notifications, M05 Event, M06 Developer/Project/Media/
+> Marketing Kit/Claim, M13 Provider/BYOK, dan M04 Learning Session/Evidence —
+> semua lengkap) — M04 Learning Catalog/Activity/Economy (B4) dan M15
+> Qualification/Award masih migration+RLS saja, belum punya endpoint HTTP.
 
 ## Struktur folder
 
@@ -67,7 +67,7 @@ RumahAgen-SaaS/
 │   ├── ui/                        # KOSONG
 │   └── config/                    # KOSONG
 ├── supabase/
-│   ├── migrations/                # 0001–0041: M10 + M09 + M13 + M03/M14 + M04/M15 + M02/M05/M06/M08/M11 + 0038 index performa + 0039/0040 fix RLS DELETE events/developer_projects + 0041 fix RLS review-klaim (lihat migrations/README.md)
+│   ├── migrations/                # 0001–0045: M10 + M09 + M13 + M03/M14 + M04/M15 + M02/M05/M06/M08/M11 + 0038 index performa + 0039/0040/0042 fix gap RLS DELETE + 0041 fix RLS review-klaim + 0043-0045 fix RLS/trigger attendance-completion (lihat migrations/README.md)
 │   └── functions/                 # KOSONG
 └── .github/workflows/             # KOSONG
 ```
@@ -103,7 +103,9 @@ npm run dev
 Repo ini **sebagian sudah punya kode**, sebagian masih spesifikasi. Jangan
 mengasumsikan seluruh SaaS sudah bisa dijalankan — hanya M10 Authorization, M09
 Admin Console, M03 Listing + M14 Refresh Allowance, M08 Notifications, M05
-Event, M06 Developer/Project/Media/Marketing Kit/Claim, M13 Provider/BYOK
-(ketujuhnya lapisan database + REST API), dan fondasi API yang sudah ada
-implementasinya. Modul bisnis lain (learning, commercial di luar Refresh
-Allowance, dst.) menyusul sesuai urutan di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`.
+Event, M06 Developer/Project/Media/Marketing Kit/Claim, M13 Provider/BYOK, M04
+Learning Session/Evidence (kedelapannya lapisan database + REST API), dan
+fondasi API yang sudah ada implementasinya. Modul bisnis lain (M04 Learning
+Catalog/Activity/Economy, M15 Qualification/Award REST API, M14 commercial
+di luar Refresh Allowance, dst.) menyusul sesuai urutan di
+`CHECKLIST_RESIDUAL_IMPLEMENTASI.md`.
