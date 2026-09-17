@@ -506,3 +506,68 @@ route Next.js) dengan throwaway test user per role, mencakup: owner vs
 non-owner isolation, publik vs staf visibility, insert-publik vs
 select-terbatas, self-approval/self-accept blocking, dan trigger
 otomatis (price history). Data uji dibersihkan total setelahnya.
+
+## Fase 2 "100% Tabel" — 0056-0063 (M04 Learning Catalog/Activity)
+
+13 tabel M04 Learning Catalog/Activity/Assessment — domain yang SECARA
+EKSPLISIT terpisah dari M04 Session/Evidence (Tahap 5/STEP11-B5): course
+adalah konten self-paced/katalog, learning_sessions adalah live/terjadwal.
+Sumber kolom: `STEP10-D_ATTRIBUTE_TO_PHYSICAL_COLUMN_RECONCILIATION.csv`,
+tanpa deviasi kolom. Kontrak API dipelajari dari `STEP11-B4` (API-051-078)
+untuk memahami arah role/scope — permission action_code sendiri semuanya
+ADD-NEW karena master matrix 50-baris TIDAK PUNYA satu baris pun untuk
+Course/Learning Catalog (dicek ke `M10_PERMISSION_SEED_TRACEABILITY.csv`,
+nihil).
+
+- **`0056_m04_courses.sql`** — `courses` + `course_lessons`. Permission
+  baru `m04.course.manage` (Instructor=OWN via `created_by`, pola identik
+  `learning_sessions.owner_id`; Superadmin/Admin/Manager=ALL).
+- **`0057_m04_learning_paths.sql`** — `learning_paths` +
+  `learning_path_versions`. Permission baru `m04.learning_path.manage`
+  (HANYA Superadmin/Admin/Manager=ALL — TIDAK ADA kolom owner fisik di
+  kedua tabel ini, beda dari courses).
+- **`0058_m04_learning_activities.sql`** — `learning_activities` +
+  `learning_activity_completions` + `learning_unlock_progressions`.
+  Permission baru `m04.learning_activity.manage` (staf=ALL) dan
+  `m04.learning_activity_completion.create` (Agent=OWN — completion adalah
+  klaim milik learner sendiri sesuai Q-M04-LC-02A, staf=ALL untuk
+  oversight). `learning_unlock_progressions` SENGAJA tidak punya RLS
+  INSERT/UPDATE untuk Agent sama sekali (Q-M04-C-05B: "no invented
+  progression mutation route" — CONTROLLED API GAP), hanya staf sebagai
+  stop-gap administratif.
+- **`0059_m04_course_enrollments.sql`** — `enrollments` (Course Enrollment,
+  STEP11-B4 §8: "distinct from Session Enrollment"). Permission baru
+  `m04.course_enrollment.create`/`.view`, pola PERSIS sama seperti
+  `m04.session_enrollment.create`/`.view` yang sudah ada.
+- **`0060_m04_quizzes.sql`** — `quizzes`/`quiz_questions`/`quiz_options`/
+  `quiz_attempts`. TIDAK ADA permission baru — quiz konten memakai
+  `m04.course.manage` yang sama (join ke `courses.created_by`), quiz_attempts
+  memakai kepemilikan `enrollments.agent_id` langsung. `quiz_options` SENGAJA
+  hanya bisa di-SELECT pemilik course/staf (kunci jawaban `is_correct` tidak
+  boleh terlihat Agent yang sedang mengerjakan) — penyajian opsi ke Agent
+  nanti WAJIB lewat REST API yang men-strip `is_correct`, bukan query
+  langsung ke tabel ini (dikonfirmasi lewat test: Agent enrolled bisa lihat
+  `quiz_questions` tapi `quiz_options` selalu kosong).
+- **`0061_m04_certificates.sql`** — `certificates`. Permission baru
+  `m04.certificate.manage` (HANYA Superadmin/Admin/Manager=ALL — Agent
+  SENGAJA TIDAK PERNAH diberi grant permission ini sama sekali, demi
+  mencegah self-issue; akses baca Agent ditegakkan lewat kondisi
+  `agent_id = auth.uid()` langsung di policy SELECT, bukan lewat grant
+  permission apa pun, pola sama seperti `award_instances_select`/M15).
+- **`0062_fix_learning_sessions_course_id_fk.sql`** — menutup FK yang
+  SENGAJA ditunda sejak 0021 ("FK ke courses DITUNDA — di luar scope Tahap
+  5"). `ON DELETE SET NULL` (course terhapus tidak boleh ikut menghapus/
+  memblokir session terkait). Diverifikasi lewat test: course_id valid
+  berhasil, course_id palsu ditolak error 23503.
+- **`0063_performance_indexes_fk_phase2.sql`** — index B-tree untuk kolom
+  FK di 13 tabel di atas (pola sama seperti 0038/0053).
+
+Seluruh 13 tabel diuji nyata lewat PostgREST langsung dengan throwaway test
+user (Superadmin, Instructor, 2 Agent), mencakup: Instructor create/publish
+course sendiri vs Agent ditolak, draft vs published visibility, quiz
+question terlihat tapi quiz_options (kunci jawaban) tersembunyi dari Agent
+enrolled, cross-agent enrollment/completion isolation, certificate
+self-issue diblokir, learning_unlock_progressions tanpa jalur mutasi Agent,
+dan FK retroaktif `learning_sessions.course_id`. Tidak ada bug ditemukan
+pada batch ini (berbeda dari Fase 1) — desain RLS tervalidasi benar sejak
+percobaan pertama. Data uji dibersihkan total setelahnya.
