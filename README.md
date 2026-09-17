@@ -24,7 +24,7 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 | **M02 — Profile** | ✅ **Kode nyata** | `supabase/migrations/0029`–`0030` — `agent_profiles`, `agent_reviews` (auto-approve sesuai Gate PRE-00-D, bukan default literal STEP10-D) — di luar 31 residual asli, dikerjakan atas permintaan eksplisit |
 | **M05 — Event** | ✅ **Kode nyata** | `supabase/migrations/0031`–`0032` — `events`, `event_provider_bindings`, `event_registrations` (termasuk Guest Registration) — di luar 31 residual asli, dikerjakan atas permintaan eksplisit |
 | **M06 — Developer/Project/Marketing Kit/Claim** | ✅ **Kode nyata** | `supabase/migrations/0033`–`0035` — `developer_partners`, `developer_projects` (+ FK retroaktif ke `listings`/`events`), `marketing_kit`, `agent_project_claims` — menutup **R-05** |
-| **M08 — Dashboard/Notification State** | ✅ **Kode nyata** | `supabase/migrations/0036` — `notifications` (+ dismiss/delivery-state) + fungsi `create_notification()` sebagai satu-satunya jalur insert — menutup **D13-07** |
+| **M08 — Dashboard/Notification State** | ✅ **Kode nyata + REST API** | `supabase/migrations/0036` — `notifications` (+ dismiss/delivery-state) + fungsi `create_notification()` sebagai satu-satunya jalur insert — menutup **D13-07**. **STEP11-A (API-131/132/133/134/137)**: `apps/web/app/api/notifications/**`, `admin/notifications/push`, `dashboard/summary` — diuji end-to-end (push ditolak untuk Agent, diterima untuk Superadmin; read/dismiss/read-all/dashboard summary semua sesuai kontrak) |
 | **M11 — Public Discovery/SEO** | ✅ **Kode nyata** | `supabase/migrations/0037` + koreksi `0028` (permission `public_announcement_promotion` dari Tahap 2 dipindah ke M11 yang benar) — `static_public_content` |
 | M07 (di luar `dbr_config`), M12 (di luar organizations dasar), M14 (di luar Refresh Allowance), M04 (di luar Session) | ⏳ Belum ada kode | Belum punya nomor residual — lihat `supabase/migrations/README.md` |
 | `packages/ui`, `packages/config` | ⏳ Belum ada kode | Placeholder |
@@ -34,9 +34,9 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 > unik di `P9_CONTROLLED_ENGINEERING_RESIDUAL_REGISTER_v1.1.csv` sudah tertutup
 > di level migration/RLS/fungsi (Tahap 1-6)**, ditambah 5 modul (M02/M05/M06
 > lengkap/M08/M11) yang diminta eksplisit di luar checklist asli.
-> Route REST (STEP-11) baru 3 slice (M10 `GET /api/authorization/roles`, M03
-> Listing + M14 Refresh, dan M09 Admin Console di atas) — modul lain baru
-> punya migration+RLS+fungsi, belum punya endpoint HTTP.
+> Route REST (STEP-11) baru 4 slice (M10 `GET /api/authorization/roles`, M03
+> Listing + M14 Refresh, M09 Admin Console, dan M08 Notifications di atas) —
+> modul lain baru punya migration+RLS+fungsi, belum punya endpoint HTTP.
 
 ## Struktur folder
 
@@ -100,10 +100,10 @@ npm run dev
 
 Repo ini **sebagian sudah punya kode**, sebagian masih spesifikasi. Jangan
 mengasumsikan seluruh SaaS sudah bisa dijalankan — hanya M10 Authorization, M09
-Admin Console, M03 Listing + M14 Refresh Allowance (ketiganya lapisan database
-+ REST API), M13 Provider/BYOK (lapisan database), dan fondasi API yang sudah
-ada implementasinya. Modul bisnis lain (learning, commercial di luar Refresh
-Allowance, dst.) menyusul sesuai urutan di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`.
-Route REST (STEP-11) untuk M13 masih menyusul — tabel, RLS, dan fungsinya
-sudah bisa diuji langsung dari SQL Editor/Supabase client, tapi belum ada
-endpoint HTTP.
+Admin Console, M03 Listing + M14 Refresh Allowance, M08 Notifications
+(keempatnya lapisan database + REST API), M13 Provider/BYOK (lapisan
+database), dan fondasi API yang sudah ada implementasinya. Modul bisnis lain
+(learning, commercial di luar Refresh Allowance, dst.) menyusul sesuai urutan
+di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`. Route REST (STEP-11) untuk M13 masih
+menyusul — tabel, RLS, dan fungsinya sudah bisa diuji langsung dari SQL
+Editor/Supabase client, tapi belum ada endpoint HTTP.

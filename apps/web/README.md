@@ -80,12 +80,40 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     diekspor; internal-users: butuh akses `auth.users.email` yang belum ada
     pola aksesnya di repo ini) — bukan diam-diam diabaikan.
 
+- **M08 Notifications** (STEP11-A API-131/132/133/134/137) — batch route ketiga:
+  - `app/api/notifications/route.ts` — `GET /notifications` (API-131), inbox
+    milik sendiri, scoped eksplisit `user_id = ctx.userId` (pola sama seperti
+    `agents/me/listings`) walau RLS Superadmin/Admin/Manager sebenarnya
+    scope-nya 'all' — endpoint ini semantiknya inbox pribadi, bukan browse-all
+  - `app/api/notifications/[id]/read/route.ts` — `PUT .../read` (API-132)
+  - `app/api/notifications/[id]/dismiss/route.ts` — `PUT .../dismiss` (ADD-NEW,
+    tidak ada di STEP11-A baseline — menutup D13-07 di lapisan HTTP; tanpa
+    route ini kolom `dismissed_at` dari 0036 tidak punya jalur pakai dari luar)
+  - `app/api/notifications/read-all/route.ts` — `PUT /notifications/read-all`
+    (API-133), scoped eksplisit ke user sendiri dengan alasan yang sama
+  - `app/api/admin/notifications/push/route.ts` — `POST /admin/notifications/push`
+    (API-134), bungkus `create_notification()` (0036) — otorisasi
+    Superadmin/Admin-only ditegakkan DI DALAM fungsi, bukan diduplikasi di route
+  - `app/api/dashboard/summary/route.ts` — `GET /dashboard/summary` (API-137),
+    SENGAJA dipersempit ke ringkasan notifikasi (`total`/`unread`) milik
+    sendiri — STEP11-A tidak memberi dataset dashboard yang lebih luas
+    (pola sama seperti alasan skip `/admin/reports/export` di M09)
+  - `lib/validation/notifications.ts` — skema Zod untuk resource di atas
+  - **Diuji nyata**: push notifikasi ditolak untuk Agent (403 FORBIDDEN, benar
+    — hanya Superadmin/Admin), berhasil untuk Superadmin (201), lalu siklus
+    penuh sebagai Agent: list → dashboard unread=1 → read → dashboard
+    unread=0 → dismiss → hilang dari list default → muncul lagi dengan
+    `?include_dismissed=true` → push 2 lagi → read-all (`updated_count:2`) →
+    dashboard `total:2, unread:0` (baris yang di-dismiss tidak dihitung).
+    Data uji dibersihkan total setelahnya.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
 Route untuk modul lain (M04 Learning, M05 Event, M06 Developer/Project, M13
 Provider/BYOK, M14 Commercial di luar Refresh, M15 Qualification) — mengikuti
 urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`, setiap route WAJIB
 dibungkus `withApiHandler()` dari sini, tidak menulis middleware sendiri.
+`packages/ui`/`packages/config` masih placeholder kosong.
 
 ## Menjalankan
 
