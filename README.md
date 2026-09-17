@@ -28,7 +28,7 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 | **M11 — Public Discovery/SEO** | ✅ **Kode nyata** | `supabase/migrations/0037` + koreksi `0028` (permission `public_announcement_promotion` dari Tahap 2 dipindah ke M11 yang benar) — `static_public_content`. **Fase 1 "100% tabel"**: `0051_m11_url_redirects.sql` menambah `url_redirects` (SEO 301/302 redirect) |
 | **Fase 1 "100% tabel"** (hasil deep-scan `STEP10-D_ENTITY_TO_PHYSICAL_TABLE_RECONCILIATION.csv` — 94 entitas logis di spec, 54 tabel sudah ada sebelum fase ini) | ✅ **Kode nyata (migration saja, belum REST API)** | `supabase/migrations/0047`–`0053` — 13 tabel PRESERVE/ADD-NEW spec yang belum pernah dibangun: M03 (`listing_photos`/`videos`/`views`/`leads`/`price_history`/`amenities`/`listing_amenities`), `ref_villages`, M01 (`agent_verification_documents`, permission baru `m01.verification_document.manage`), M12 (`organization_invitations`, `organization_document`), M11 (`url_redirects`), M07 (`dbr_simulations`). Diuji nyata langsung lewat PostgREST (bukan route Next.js — belum dibangun); **2 bug ditemukan & ditutup**: `0054` (RLS listing child tables salah cek `status='active'`, seharusnya `'published'`) dan `0055` (Agent bisa self-approve `agent_verification_documents` miliknya sendiri — RLS scope 'own' tidak membedakan kolom). Lihat `supabase/migrations/README.md` untuk rincian penuh dan catatan arsitektural `INSERT...RETURNING` vs RLS publik |
 | **Fase 2 "100% tabel"** — M04 Learning Catalog/Activity/Assessment | ✅ **Kode nyata + REST API penuh** | `supabase/migrations/0056`–`0063` — 13 tabel domain self-paced/katalog (TERPISAH dari `learning_sessions` M04 Session/live): `courses`+`course_lessons`, `learning_paths`+`learning_path_versions`, `learning_activities`+`learning_activity_completions`+`learning_unlock_progressions`, `enrollments` (Course Enrollment, distinct dari Session Enrollment), `quizzes`+`quiz_questions`+`quiz_options`+`quiz_attempts`, `certificates`. 7 permission baru (`m04.course.manage`, `m04.learning_path.manage`, `m04.learning_activity.manage`, `m04.learning_activity_completion.create`, `m04.course_enrollment.create`/`.view`, `m04.certificate.manage`) — master matrix 50-baris TIDAK PUNYA satu baris pun untuk Course/Learning Catalog. `0062` menutup FK `learning_sessions.course_id` yang ditunda sejak 0021. Diuji nyata lewat PostgREST menyeluruh (draft/publish visibility, quiz answer-key hidden dari Agent, self-issue certificate diblokir, no-client-mutation untuk unlock progression) — **tidak ada bug ditemukan**, desain tervalidasi sejak percobaan pertama. **REST API (Next.js + Zod), 26 route file**: `apps/web/app/api/courses/**`, `course-lessons/**`, `enrollments/**`, `agents/me/enrollments`, `quizzes/**`, `quiz-questions/**`, `agents/me/certificates`, `admin/certificates`, `learning/paths/**`, `learning/activities/**`, `agents/me/learning/**`, `admin/learning/activities/**` — dua route ADD-NEW keamanan-kritis di luar path literal STEP11-B4: `quizzes/{id}/take` (GET, admin client + strip manual `is_correct` sebelum dikirim ke Agent) dan `quizzes/{id}/submit` (POST, grading server-side exact-match per soal, dikunci ke `enrollment_id` milik sendiri). Diuji end-to-end nyata dengan 4 role (Superadmin/Instructor/Agent×2) lewat dev server — **tidak ada bug ditemukan**, termasuk verifikasi jawaban kunci quiz tidak pernah bocor dan hijack enrollment lintas-agent diblokir |
-| **Fase 3 "100% tabel"** — M15 Awarding Engine | ✅ **Kode nyata (migration saja, belum REST API)** | `supabase/migrations/0064`–`0070` — 9 tabel "mesin konfigurasi jalur/aturan kelulusan" yang ditunda sejak 0026: `awarding_paths`+`awarding_path_versions`, `awarding_rule_versions`+`awarding_path_rules` (junction N:N), `awarding_condition_groups`+`awarding_conditions`+`awarding_prerequisites`, `award_qualifying_paths` (provenance), `title_presentations`. Dengan ini **seluruh 14 tabel M15** (STEP11-B8 §13) lengkap. 2 permission baru (`m15.awarding_path_rule.configure` Superadmin/Admin/Manager saja, `m15.title_presentation.manage` Agent=own). `0069` menutup FK `qualification_evaluations`/`award_instances` → `awarding_path_versions`/`awarding_rule_versions` yang ditunda sejak 0026. Diuji nyata lewat PostgREST membangun satu rantai config engine utuh ujung-ke-ujung — tidak ada bug ditemukan |
+| **Fase 3 "100% tabel"** — M15 Awarding Engine | ✅ **Kode nyata + REST API (evidence-scoped)** | `supabase/migrations/0064`–`0070` — 9 tabel "mesin konfigurasi jalur/aturan kelulusan" yang ditunda sejak 0026: `awarding_paths`+`awarding_path_versions`, `awarding_rule_versions`+`awarding_path_rules` (junction N:N), `awarding_condition_groups`+`awarding_conditions`+`awarding_prerequisites`, `award_qualifying_paths` (provenance), `title_presentations`. Dengan ini **seluruh 14 tabel M15** (STEP11-B8 §13) lengkap. 2 permission baru (`m15.awarding_path_rule.configure` Superadmin/Admin/Manager saja, `m15.title_presentation.manage` Agent=own). `0069` menutup FK `qualification_evaluations`/`award_instances` → `awarding_path_versions`/`awarding_rule_versions` yang ditunda sejak 0026. Diuji nyata lewat PostgREST membangun satu rantai config engine utuh ujung-ke-ujung — tidak ada bug ditemukan. **REST API (Next.js + Zod), 9 route file** atas 9 endpoint API-205/207/208/209/210/212/213/214/215/234/235/236 yang eksplisit dievidence STEP11-B8: `titles/{id}/awarding-paths`, `awarding-paths/{id}` (+`/status`, `/versions`), `awarding-path-versions/{id}`, `awarding-rule-versions` (+`{id}`), `agents/me/awards/presentation`, `agents/{id}/awards/presentation` — plus enrichment route `awards/{id}/provenance` (API-229) yang sudah ada sekarang menyertakan `qualifying_paths`. **SENGAJA TIDAK dibangun**: endpoint untuk `awarding_path_rules`/`awarding_condition_groups`/`awarding_conditions`/`awarding_prerequisites` dan PATCH status untuk `awarding_path_versions`/`awarding_rule_versions` — STEP11-B8 F11-B8-002 s.d. F11-B8-006 eksplisit menyatakan "Do not invent" untuk keenamnya; 4 tabel tsb tetap migration+RLS-only (dikelola staff internal lewat Supabase langsung, bukan REST). Diuji end-to-end dengan 4 user throwaway (Superadmin/Manager/Agent×2) — **tidak ada bug ditemukan**, termasuk verifikasi isolasi RLS config-engine (Agent 403/404 di semua endpoint staff-only) dan hijack title-presentation lintas-agent diblokir (UNIQUE(user_id, title_definition_id) mencegah baris silang) |
 | **Fase 4 "100% tabel"** — M14 Commercial (Midtrans sebagai payment gateway MVP) | ✅ **Kode nyata (migration saja, belum REST API)** | `supabase/migrations/0071`–`0078` — 8 tabel terakhir: `promotions` (staff-only), `addons` (katalog publik), `subscriptions` (privat), `commercial_orders`, `payment_transactions` (`payment_state` DIKUNCI ke vocabulary status Midtrans resmi — pending/capture/settlement/deny/cancel/expire/failure/refund/partial_refund/chargeback/partial_chargeback/authorize), `payment_provider_results` (webhook mentah, TIDAK ADA jalur INSERT untuk siapa pun termasuk staf), `commercial_fulfillments` (juga tanpa jalur INSERT klien), `reconciliation_cases` (status dikunci ke lifecycle STEP11-B7 §13). TIDAK ADA permission baru (4 permission M14 sudah ada sejak seed 0009). `0077` menutup 3 FK `commercial_entitlements.source_*` yang ditunda sejak 0019. **Keputusan keamanan terpenting**: `commercial_orders`/`payment_transactions` sengaja TIDAK PUNYA UPDATE untuk pemilik sama sekali — dikonfirmasi lewat test bahwa Agent mencoba self-approve `payment_state` ke `settlement` gagal total (baris tidak berubah). Dengan Fase 1-4 selesai, **seluruh 97 tabel target sudah ada di Supabase** |
 | `packages/ui`, `packages/config` | ⏳ Belum ada kode | Placeholder |
 
@@ -37,17 +37,18 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 > unik di `P9_CONTROLLED_ENGINEERING_RESIDUAL_REGISTER_v1.1.csv` sudah tertutup
 > di level migration/RLS/fungsi (Tahap 1-6)**, ditambah 5 modul (M02/M05/M06
 > lengkap/M08/M11) yang diminta eksplisit di luar checklist asli.
-> Route REST (STEP-11) baru 11 slice (M10, M03 Listing + M14 Refresh, M09
+> Route REST (STEP-11) baru 12 slice (M10, M03 Listing + M14 Refresh, M09
 > Admin Console, M08 Notifications, M05 Event, M06 Developer/Project/Media/
 > Marketing Kit/Claim, M13 Provider/BYOK, M04 Learning Session/Evidence, M04
 > LP Economy + Partnership Learning Result, M15 Qualification/Evidence/
-> Awarding, dan M04 Learning Catalog/Activity (Fase 2) — semua lengkap atas
-> skema yang ada). M15 Awarding Engine (Fase 3, 9 tabel — melengkapi SELURUH
-> 14 tabel M15) dan M14 Commercial (Fase 4, 8 tabel, Midtrans sebagai
-> gateway MVP) kini punya migration+RLS lengkap TAPI belum punya REST API —
-> menyusul batch terpisah, modul demi modul. **Dengan Fase 1-4 "100% tabel"
-> selesai, seluruh 94 entitas logis STEP10-D + 3 tabel ADD-NEW di luar
-> STEP10-D (api_idempotency_keys, notification_templates,
+> Awarding, M04 Learning Catalog/Activity (Fase 2), dan M15 Awarding Engine
+> (Fase 3) — semua lengkap atas skema yang ada, kecuali 4 tabel config-engine
+> M15 yang STEP11-B8 eksplisit larang endpoint-nya, lihat baris Fase 3).
+> M14 Commercial (Fase 4, 8 tabel, Midtrans sebagai gateway MVP) kini punya
+> migration+RLS lengkap TAPI belum punya REST API — menyusul batch terpisah,
+> modul demi modul. **Dengan Fase 1-4 "100% tabel" selesai, seluruh 94
+> entitas logis STEP10-D + 3 tabel ADD-NEW di luar STEP10-D
+> (api_idempotency_keys, notification_templates,
 > partnership_learning_results) = 97 tabel total sudah ada di Supabase.**
 
 ## Struktur folder
@@ -115,12 +116,12 @@ mengasumsikan seluruh SaaS sudah bisa dijalankan — hanya M10 Authorization, M0
 Admin Console, M03 Listing + M14 Refresh Allowance, M08 Notifications, M05
 Event, M06 Developer/Project/Media/Marketing Kit/Claim, M13 Provider/BYOK, M04
 Learning Session/Evidence, M04 LP Economy + Partnership Learning Result, M15
-Qualification/Evidence/Awarding (M15 hanya di atas 5 dari 14 tabel yang
-disebut STEP11-B8, sisanya lapisan REST-nya belum ada), dan M04 Learning
-Catalog/Activity (kesebelasnya lapisan database + REST API), dan fondasi
-API yang sudah ada implementasinya.
-Modul bisnis lain (M15 Awarding Engine — Path/Rule Version/Condition/
-Prerequisite/Appeal/Presentation, 9 tabel sudah punya migration+RLS tapi
-belum ada REST API-nya, M14 Commercial di luar Refresh Allowance — 8 tabel
-Midtrans MVP juga sudah punya migration+RLS tapi belum ada REST API, dst.)
+Qualification/Evidence/Awarding + Awarding Engine (lapisan REST-nya evidence-
+scoped — 4 dari 14 tabel M15, yakni `awarding_path_rules`/
+`awarding_condition_groups`/`awarding_conditions`/`awarding_prerequisites`,
+SENGAJA tanpa endpoint karena STEP11-B8 eksplisit melarangnya, tetap
+migration+RLS-only), dan M04 Learning Catalog/Activity (kedua belasnya
+lapisan database + REST API), dan fondasi API yang sudah ada implementasinya.
+Modul bisnis lain (M14 Commercial di luar Refresh Allowance — 8 tabel
+Midtrans MVP sudah punya migration+RLS tapi belum ada REST API, dst.)
 menyusul sesuai urutan di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`.

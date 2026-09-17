@@ -2,11 +2,14 @@
 // API-229 GET /awards/{award_id}/provenance — riwayat provenance award:
 // historical_snapshot (kolom JSONB di award_instances sendiri, terbaca oleh
 // siapa pun yang lolos award_instances_select) digabung entri audit_logs
-// terkait (0012). audit_logs_select membutuhkan
+// terkait (0012) DAN qualifying_paths (award_qualifying_paths, M15 Fase 3/
+// 0067 — provenance eksplisit Path Version + Evaluation yang menghasilkan
+// award ini). audit_logs_select membutuhkan
 // m09.administrative_audit_log.view — dipakai client biasa (BUKAN admin
 // client) supaya RLS otomatis menyaring: staf lihat log lengkap, non-staf
 // otomatis dapat array kosong tanpa perlu percabangan permission manual di
-// sini (R-02).
+// sini (R-02). award_qualifying_paths_select juga digerbangi RLS-nya sendiri
+// (pemilik award atau m15.award.manage) — query polos tanpa filter manual.
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
@@ -39,6 +42,16 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw auditError;
   }
 
+  const { data: qualifyingPaths, error: qualifyingError } = await supabase
+    .from("award_qualifying_paths")
+    .select("*")
+    .eq("award_instance_id", ctx.params.id)
+    .order("created_at", { ascending: true });
+
+  if (qualifyingError) {
+    throw qualifyingError;
+  }
+
   return {
     data: {
       award_id: award.id,
@@ -47,6 +60,7 @@ export const GET = withApiHandler({}, async (ctx) => {
       revoked_at: award.revoked_at,
       restored_at: award.restored_at,
       audit_logs: auditLogs ?? [],
+      qualifying_paths: qualifyingPaths ?? [],
     },
   };
 });

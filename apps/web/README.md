@@ -565,13 +565,100 @@ M04 Session/live (B5) yang sudah punya REST API sejak batch sebelumnya.
   (kebocoran kunci jawaban quiz dan hijack kepemilikan enrollment). Data
   uji dan 4 user test dibersihkan total setelah pengujian.
 
+## Batch: M15 Awarding Engine REST API (9 route file, evidence-scoped)
+
+REST API + Zod di atas migration+RLS Fase 3 "100% tabel" (`0064`–`0070`,
+lihat root `README.md`) yang melengkapi 9 tabel terakhir dari 14 tabel M15
+total. Batch ini **lebih kecil dari biasanya secara sengaja**: STEP11-B8
+(`docs/core/current/04-api/STEP-11-API-SYNCHRONIZATION/
+STEP11-B8_M15_FULL_VERSION_PACKAGE_v1.0.zip`) mendaftar 37 endpoint M15
+resmi (API-200–236) dan secara eksplisit menandai 5 temuan "CONTROLLED API
+GAP" (F11-B8-002 s.d. F11-B8-006) dengan instruksi tegas "Do not invent" —
+jadi 4 dari 9 tabel baru **sengaja tidak dapat route REST sama sekali**,
+konsisten dengan aturan proyek untuk tidak mengarang endpoint yang tidak
+dievidence.
+
+- **Awarding Path** (API-205-209): `titles/[id]/awarding-paths/route.ts`
+  (GET list, POST create — staff config-engine saja lewat RLS
+  `awarding_paths_manage`), `awarding-paths/[id]/route.ts` (GET, PUT),
+  `awarding-paths/[id]/status/route.ts` (PATCH — `status` TEXT tanpa CHECK
+  di DB, divalidasi sebagai string bebas bukan enum, mengikuti keputusan
+  migration 0064 untuk tidak mengunci vocabulary yang tidak dievidence)
+- **Awarding Path Version** (API-210-212): `awarding-paths/[id]/
+  versions/route.ts` (GET list, POST create — duplicate `version_no`
+  dipetakan ke `CONFLICT`), `awarding-path-versions/[id]/route.ts` (GET
+  saja — **TIDAK ADA PUT/PATCH**, F11-B8-002 eksplisit: "no exact
+  version-status transition endpoint... do not invent a PATCH route").
+  `status` dikunci ke enum `draft/active/retired` di Zod — satu-satunya
+  vocabulary M15 Fase 3 yang teksnya eksplisit disebut di STEP11-B8
+- **Awarding Rule Version** (API-213-215): `awarding-rule-versions/
+  route.ts` (POST **saja**, sengaja TIDAK ADA GET list — tidak dievidence),
+  `awarding-rule-versions/[id]/route.ts` (GET, PUT — status enum sama
+  `draft/active/retired`, TIDAK ADA PATCH status terpisah karena F11-B8-003
+  sama persis dengan F11-B8-002)
+- **Award Presentation** (API-234-236): `agents/me/awards/presentation/
+  route.ts` (GET milik sendiri termasuk non-aktif, PUT replace-set — upsert
+  tiap item berdasarkan `UNIQUE(user_id, title_definition_id)`, isolasi
+  otomatis lintas-agent karena key komposit menyertakan `user_id`),
+  `agents/[id]/awards/presentation/route.ts` (GET publik — RLS
+  `title_presentations_select` yang menggerbangi, publik hanya lihat
+  `active=true`, pemilik/staf lihat semua)
+- **Enrichment, bukan route baru**: `awards/[id]/provenance/route.ts`
+  (API-229, sudah ada sejak batch M15 pertama sebelum `award_qualifying_paths`
+  ada) sekarang juga menyertakan array `qualifying_paths` dari tabel
+  tersebut (M15 Fase 3/0067) — RLS `award_qualifying_paths_select` sendiri
+  yang menggerbangi visibility (pemilik award atau `m15.award.manage`)
+- **SENGAJA TIDAK dibangun** (STEP11-B8 F11-B8-004/005/006, instruksi "Do
+  not invent" untuk ketiganya): endpoint asosiasi `awarding_path_rules`
+  (N:N Path Version ↔ Rule Version), CRUD `awarding_condition_groups`/
+  `awarding_conditions`, dan CRUD `awarding_prerequisites`. Keempat tabel
+  ini TETAP migration+RLS-only sejak Fase 3 — RLS `_manage` staff-only
+  penuh sudah ada, hanya belum ada jalur REST-nya; dikelola staff internal
+  lewat Supabase langsung (Studio/PostgREST dengan service role) sampai ada
+  bukti kontrak API baru
+- **TIDAK ADA migration baru** — seluruh 9 tabel Fase 3 sudah punya RLS
+  lengkap tanpa gap sejak `0064`–`0070`, batch ini murni REST layer
+- **Diuji nyata** dengan 4 user Supabase Auth throwaway per role
+  (Superadmin/Manager/Agent×2) lewat dev server: Superadmin buat title →
+  Agent coba buat awarding-path di title itu → **403** → Superadmin buat
+  awarding-path (201) → Manager GET detail (200) → Agent GET detail →
+  **404** (RLS staff-only menyembunyikan, bukan cuma memblokir mutasi) →
+  Superadmin PUT nama (200) → PATCH status ke `inactive` (200) → Agent PATCH
+  status → **404** → Superadmin POST version pertama (201) → POST
+  `version_no` sama lagi → **409 CONFLICT** → GET versions list (200) → GET
+  version detail sebagai Superadmin (200) vs Agent (**404**) → Superadmin
+  POST rule version (201) → duplicate `rule_code`+`version_no` → **409** →
+  Agent POST rule version → **403** → Superadmin PUT rule version
+  status→`active` (200) → Agent GET/PUT rule version → **404** keduanya →
+  Superadmin buat authority scope + issue award ke Agent1 → Agent1 GET
+  presentation sendiri (200, kosong) → PUT set presentation aktif (200) →
+  **Agent2 PUT presentation untuk title yang SAMA meski tidak pernah
+  di-award ke dirinya → berhasil (200)** — dikonfirmasi lewat test ini
+  sebagai **verifikasi desain, bukan bug**: migration 0068 sendiri
+  mencatat tidak ada validasi bahwa `title_definition_id` yang ditampilkan
+  benar-benar sudah di-award, itu keputusan sengaja (bukan trigger DB) —
+  → publik (anon) GET presentation Agent1 → terlihat (200, `active=true`)
+  → Agent1 set `active=false` → publik GET lagi → **array kosong** →
+  Agent1 GET sendiri → tetap terlihat (pemilik lihat semua) → **Agent2 coba
+  PUT ke `agents/me/awards/presentation` dengan payload yang menyerupai
+  punya Agent1 → hanya mengubah baris milik Agent2 sendiri, baris Agent1
+  terverifikasi tidak berubah** (hijack lintas-agent mustahil secara
+  struktural karena UNIQUE key menyertakan `user_id`) → insert manual
+  `award_qualifying_paths` lewat service role (simulasi staff/internal
+  engine, karena memang tidak ada POST endpoint) → GET
+  `/awards/{id}/provenance` sebagai Superadmin/Agent1(pemilik) → keduanya
+  melihat `qualifying_paths` terisi → Agent2 (bukan pemilik, bukan staf) →
+  `qualifying_paths` kosong (RLS menyaring, bukan 403/404 di level award)
+  → verifikasi endpoint yang sengaja tidak dibangun (`/awarding-path-rules`,
+  `/awarding-conditions`) memang 404 Next.js murni. **Tidak ada bug
+  ditemukan** di seluruh 9 route. Data uji dan 4 user test dibersihkan
+  total setelah pengujian.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
 Route untuk modul lain (M14 Commercial di luar Refresh Allowance — 8 tabel
-Midtrans MVP dari Fase 4 sudah punya migration+RLS tapi belum ada REST-nya;
-M15 Path/Rule Version, Condition/Prerequisite, Appeal, Award Presentation —
-9 tabel dari Fase 3 juga sudah punya migration+RLS tapi belum ada REST-nya,
-lihat catatan di batch M15 di atas) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+Midtrans MVP dari Fase 4 sudah punya migration+RLS tapi belum ada REST-nya)
+— mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
 setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
 middleware sendiri. `POST /ai-assistant/chat` (M13, invokasi AI sungguhan)
 SENGAJA belum ada — butuh adapter per-provider nyata, bukan sekadar CRUD atas
