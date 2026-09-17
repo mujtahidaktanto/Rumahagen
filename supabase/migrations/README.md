@@ -723,7 +723,63 @@ tervalidasi benar sejak percobaan pertama. Data uji dibersihkan total.
 **Dengan Fase 1-4 selesai, seluruh 94 entitas logis STEP10-D + 3 tabel
 ADD-NEW di luar STEP10-D (api_idempotency_keys, notification_templates,
 partnership_learning_results) = 97 tabel total sudah ada di Supabase.**
-REST API layer untuk M04 Catalog/M15 Awarding/M14 Commercial menyusul
-sebagai batch terpisah — M14 khususnya butuh implementasi Midtrans Snap
-API + webhook handler sungguhan sebelum bisa diuji end-to-end nyata
-(sandbox Midtrans, bukan lagi migration/RLS saja).
+
+## `0079_m14_commercial_functions.sql` — batch REST API M14 Commercial (ADD-NEW)
+
+Bukan tabel baru — merealisasikan 4 potongan business logic yang SENGAJA
+ditunda oleh migration Fase 4 sendiri untuk "batch REST API nanti":
+
+- **`cancel_commercial_order(p_order_id)`** — realisasi API-182, dijanjikan
+  di komentar 0072. Pemilik order atau staf; hanya order `status='pending'`
+  yang bisa dibatalkan.
+- **`fulfill_commercial_order(p_payment_transaction_id)`** — realisasi
+  "idempotent fulfillment" (STEP11-B7 §5/§10), dijanjikan di komentar 0075.
+  Hanya bisa dipanggil dari `service_role` (webhook, tidak ada sesi user
+  sama sekali) atau staf — dideteksi lewat helper baru
+  `is_service_role_request()` (baca klaim JWT `role`, BUKAN `has_permission()`
+  yang butuh `auth.uid()`). Memverifikasi `payment_state IN ('settlement',
+  'capture')` + `verification_state='verified'` sebelum memproses, idempoten
+  lewat `idempotency_key='fulfill:<payment_transaction_id>'`. **SCOPE MVP:
+  hanya addon-sourced order** (`order.addon_id NOT NULL`) — subscription
+  purchase TIDAK direalisasikan karena tidak ada tabel katalog/harga
+  subscription plan yang dievidence (`subscriptions`/0071 adalah catatan
+  INSTANCE milik user, bukan katalog). Untuk addon `capacity_type=
+  'learning_point'`, memanggil `grant_learning_points_from_purchase()`;
+  untuk capacity_type lain, membangun rantai
+  `commercial_entitlements→quota_capacities→operational_quota_pools→
+  quota_allocations` (0019) secara generik.
+- **`grant_learning_points_from_purchase()` diperbarui** (CREATE OR
+  REPLACE, signature tidak berubah) — merealisasikan TODO eksplisit yang
+  didokumentasikan di komentar migration 0025: kini bisa dipanggil lewat
+  `is_superadmin()` (manual/testing, perilaku lama tetap jalan),
+  `service_role` (webhook), ATAU `p_idempotency_key` yang match
+  `fulfillment_key` sah di `commercial_fulfillments` (pipeline
+  `fulfill_commercial_order()` otomatis) — menutup gap yang sejak 0025
+  membuat fungsi ini hanya bisa dipanggil manual oleh Superadmin.
+- **`allocate_quota_capacity()`/`consume_quota_capacity()`** — realisasi
+  API-194/195. `allocate` staff-only (mengisi `quota_allocations` yang RLS
+  0019-nya sengaja tanpa INSERT policy). `consume` "Server-authorized
+  domain operation" (staf/`service_role` saja, BUKAN endpoint client bebas
+  — beda dari `consume_refresh_allowance()`/0020 yang dipanggil Agent
+  sendiri lewat `refresh_listing()` khusus `capacity_type='listing_refresh'`).
+
+**Proaktif, ditemukan SEBELUM ada bug nyata** (pola sama seperti Fase 1/
+`agent_verification_documents`-0055): RLS INSERT `commercial_orders`/
+`payment_transactions` (0072/0073) memang `WITH CHECK` permission, TAPI
+TIDAK membatasi NILAI kolom `status`/`payment_state`/`verification_state`/
+`confirmed_at`/`paid_at`/`verified_at` yang boleh diisi klien saat INSERT —
+seorang Agent bisa langsung INSERT order dengan `status='confirmed'` atau
+payment dengan `payment_state='settlement'` lewat PostgREST mentah, TANPA
+pernah membayar sungguhan. Ditutup lewat 2 trigger BEFORE INSERT
+(`enforce_commercial_order_insert_pending()`/
+`enforce_payment_transaction_insert_pending()`) yang memaksa nilai
+pending/unverified untuk siapa pun selain `service_role`/staf — **diuji
+nyata dan dikonfirmasi terblokir** (`RAISE EXCEPTION`, bukan diam-diam
+seperti pola RLS 0055 sebelumnya) sebelum REST API dibangun, bukan sesudah
+ditemukan lewat testing.
+
+REST API layer untuk M04 Catalog/M15 Awarding/M14 Commercial (25 endpoint
+API-175-199, lihat `apps/web/README.md` untuk narasi lengkap termasuk
+integrasi Midtrans Snap API + webhook SUNGGUHAN yang diuji end-to-end
+terhadap Sandbox asli) kini SEMUANYA sudah dibangun — modul demi modul
+REST API selesai untuk ketiga modul terakhir dari rencana "100% tabel".

@@ -654,11 +654,120 @@ dievidence.
   ditemukan** di seluruh 9 route. Data uji dan 4 user test dibersihkan
   total setelah pengujian.
 
+## Batch: M14 Commercial REST API + Integrasi Midtrans Snap API Sungguhan (25 route file)
+
+REST API + Zod di atas migration+RLS Fase 4 "100% tabel" (`0071`–`0078`,
+lihat root `README.md`), PLUS migration baru `0079` yang merealisasikan
+business logic (fungsi SECURITY DEFINER) yang sengaja ditunda migration
+Fase 4. **Batch ini BERBEDA dari batch REST API lain di repo ini**: bukan
+sekadar CRUD di atas RLS, tapi integrasi payment gateway pihak ketiga
+sungguhan (Midtrans Snap API + webhook), diuji end-to-end terhadap
+**Sandbox Midtrans asli** (kredensial milik user, base URL
+`app.sandbox.midtrans.com`/`api.sandbox.midtrans.com` — TIDAK PERNAH
+Production, dikunci di kode `lib/payments/midtrans.ts`).
+
+Seluruh 25 endpoint API-175–199 (STEP11-B7 §7, "Exact 25-Row Preservation")
+dibangun — evidence-scoped, mengikuti persis daftar CONTROLLED API GAP yang
+didokumentasikan dokumen sumber sendiri (F11-B7-002 s.d. 005): admin
+CRUD `promotions`/`addons` SENGAJA TIDAK dibangun (staff kelola langsung
+lewat Supabase), fulfillment untuk subscription purchase SENGAJA tidak
+direalisasikan (tidak ada tabel katalog harga subscription plan yang
+dievidence — `subscriptions`/0071 adalah catatan instance milik user,
+bukan katalog).
+
+- **`lib/payments/midtrans.ts`** — Payment Provider Adapter (Midtrans PDF
+  §11): `createSnapTransaction()` (POST Snap API asli, Basic Auth Server
+  Key), `verifyMidtransWebhookSignature()` (SHA512 order_id+status_code+
+  gross_amount+ServerKey, timing-safe compare), `isValidMidtransPaymentState()`.
+  Base URL Sandbox di-hardcode, bukan env-flag — mencegah risiko transaksi
+  Production tidak sengaja.
+- **`lib/payments/initiate-payment.ts`** — logika bersama API-181
+  (`/commercial/orders/{id}/checkout`) dan API-183
+  (`POST /commercial/payments`, order_id di body) — satu implementasi,
+  tidak ada divergensi bisnis antar dua endpoint yang secara semantik sama.
+- **Catalog (publik, baca-saja)**: `commercial/catalog` (GET, = `addons`
+  aktif — satu-satunya tabel katalog harga nyata), `commercial/products/[id]`
+  (GET), `commercial/offers` (GET — addons aktif dengan `promotion_id`
+  terisi, TIDAK menyertakan field `promotions` apa pun karena 0071 eksplisit
+  melarang representasi publik langsung dari tabel staff-only itu)
+- **Order lifecycle**: `commercial/orders` (POST create — `status`/
+  `commercial_snapshot` dipaksa server-side, trigger 0079 menolak nilai
+  lain), `commercial/orders/[id]` (GET), `agents/me/commercial/orders`
+  (GET milik sendiri), `commercial/orders/[id]/checkout` (POST, panggil
+  Midtrans nyata), `commercial/orders/[id]/cancel` (POST, lewat RPC
+  `cancel_commercial_order()` — tidak ada UPDATE RLS langsung)
+- **Payment + webhook (paling kritis)**: `commercial/payments` (POST,
+  bentuk top-level dari checkout), `commercial/payments/[id]` (GET),
+  `integrations/payments/providers/[provider]/webhook` (POST) —
+  verifikasi signature SHA512 SEBELUM payload dipercaya sama sekali,
+  admin client untuk `payment_provider_results`/update
+  `payment_transactions` (RLS staff-only, webhook tidak punya sesi user),
+  amount-mismatch dan `transaction_status` tak dikenal otomatis membuka
+  `reconciliation_cases` alih-alih diproses sebagai pembayaran sah,
+  settlement/capture memicu `fulfill_commercial_order()` otomatis
+- **Entitlement/Quota (baca RLS existing 0019 + 2 RPC baru)**:
+  `commercial/entitlements`(+`/[id]`), `agents/me/entitlements`,
+  `organizations/[id]/entitlements` (catatan: RLS 0019 belum ada jalur
+  organization-membership, hanya user_id-based — didokumentasikan sebagai
+  keterbatasan evidenced, bukan ditutup diam-diam),
+  `admin/commercial/entitlements/reconcile` (POST — membuka
+  `reconciliation_cases`, TIDAK memutasi `lifecycle_status` entitlement
+  langsung karena F11-B7-004 controlled gap), `agents/me/quota`,
+  `organizations/[id]/quota`, `commercial/quota/[id]`(+`/allocate`
+  staff-only, `/consume` staff/service_role saja, `/usage`)
+- **Reconciliation**: `admin/commercial/reconciliation`(+`/[id]`/`/resolve`
+  — lifecycle open→investigating→resolved/rejected/escalated, dikunci
+  CHECK constraint 0076)
+
+**Diuji nyata end-to-end terhadap Sandbox Midtrans asli** dengan 3 user
+throwaway (Superadmin/Agent×2): GET catalog/products/offers publik (200)
+→ Agent1 buat order addon Learning Point (201, `status` dipaksa pending) →
+**Agent1 coba INSERT `commercial_orders` langsung lewat PostgREST mentah
+dengan `status='confirmed'` → REJECTED oleh trigger 0079** →
+**Agent1 coba INSERT `payment_transactions` langsung dengan
+`payment_state='settlement'` → REJECTED oleh trigger 0079** (kedua
+skenario self-approval proaktif dari catatan migration, dikonfirmasi
+terblokir sebelum pernah jadi bug nyata) → Agent2 GET/checkout order
+milik Agent1 → **404** (isolasi lintas-agent) → Agent1 checkout →
+**Snap API Sandbox ASLI dipanggil, `snap_token`+`redirect_url` sungguhan
+diterima** → webhook signature invalid → **401** → webhook signature
+valid TAPI `gross_amount` salah → **200, TIDAK diproses, `reconciliation_cases`
+otomatis terbuka dengan bukti expected/received** (payment tetap pending,
+tidak berubah) → webhook valid dengan amount benar, `transaction_status:
+settlement` → **200 ok** → **payment_state=settlement,
+verification_state=verified, order status=confirmed, LP Agent1 bertambah
+50 (cross-module M14→M04 fulfillment otomatis via
+`grant_learning_points_from_purchase()`)** → replay webhook identik →
+**duplicate_ignored, LP TIDAK bertambah lagi** (idempotency, Midtrans §12)
+→ ulangi alur penuh untuk addon `capacity_type='listing_refresh'` (bukan
+LP) → **rantai `commercial_entitlements→quota_capacities→
+operational_quota_pools` otomatis terbentuk dengan `source_order_id`/
+`source_payment_transaction_id`/`source_fulfillment_id` terisi benar** →
+Agent2 panggil RPC `fulfill_commercial_order` langsung lewat PostgREST
+untuk payment Agent1 yang sudah settlement → **REJECTED** (bukan
+staff/service_role, defense-in-depth di luar business-state check) →
+uji cancel: Agent2 cancel order Agent1 → **404**, Agent1 cancel order
+sendiri → **200**, cancel lagi → **409** (sudah cancelled), checkout order
+yang sudah cancelled → **409** → uji quota staff: allocate ke Agent2 dari
+pool Agent1 (201), consume (201), GET usage (200) → uji reconciliation:
+list/detail/resolve semua 200, `reconcile` endpoint buka case baru (201)
+→ webhook status tak dikenal (`totally_bogus_status`) → **200, flagged
+untuk reconciliation, tidak crash** → provider selain 'midtrans' → **404**.
+**2 bug ditemukan & diperbaiki langsung di kode route batch ini** (bukan
+migration): (1) idempotency-key webhook awalnya hanya `order_id:status` —
+notification amount-salah "mengunci" key sehingga notification BERIKUTNYA
+dengan amount BENAR untuk order+status yang sama ditolak sebagai
+duplicate (diperbaiki: key menyertakan `gross_amount`); (2) error
+permission dari RPC `allocate_quota_capacity`/`consume_quota_capacity`
+awalnya jatuh ke 500 INTERNAL_ERROR generik alih-alih 403 (ditambahkan
+error-message mapping di kedua route, pola sama seperti
+`cancel_commercial_order`). Data uji (2 addon, 5 order, payment, quota
+chain, reconciliation cases, LP) dan 3 user test dibersihkan total setelah
+pengujian.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M14 Commercial di luar Refresh Allowance — 8 tabel
-Midtrans MVP dari Fase 4 sudah punya migration+RLS tapi belum ada REST-nya)
-— mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+Route untuk modul lain — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
 setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
 middleware sendiri. `POST /ai-assistant/chat` (M13, invokasi AI sungguhan)
 SENGAJA belum ada — butuh adapter per-provider nyata, bukan sekadar CRUD atas
@@ -686,3 +795,10 @@ Supabase Dashboard — generate sendiri:
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
+
+`MIDTRANS_SERVER_KEY`/`MIDTRANS_CLIENT_KEY`/`MIDTRANS_MERCHANT_ID` (M14
+Commercial, `lib/payments/midtrans.ts`) dari dashboard.sandbox.midtrans.com
+— kode ini SELALU memanggil base URL `*.sandbox.midtrans.com`, TIDAK PERNAH
+Production, jadi aman pakai key apa pun (key tetap harus valid untuk
+environment Sandbox — key yang hanya valid di Production akan gagal auth
+saat dites terhadap endpoint Sandbox).
