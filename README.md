@@ -29,7 +29,7 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 | **Fase 1 "100% tabel"** (hasil deep-scan `STEP10-D_ENTITY_TO_PHYSICAL_TABLE_RECONCILIATION.csv` — 94 entitas logis di spec, 54 tabel sudah ada sebelum fase ini) | ✅ **Kode nyata (migration saja, belum REST API)** | `supabase/migrations/0047`–`0053` — 13 tabel PRESERVE/ADD-NEW spec yang belum pernah dibangun: M03 (`listing_photos`/`videos`/`views`/`leads`/`price_history`/`amenities`/`listing_amenities`), `ref_villages`, M01 (`agent_verification_documents`, permission baru `m01.verification_document.manage`), M12 (`organization_invitations`, `organization_document`), M11 (`url_redirects`), M07 (`dbr_simulations`). Diuji nyata langsung lewat PostgREST (bukan route Next.js — belum dibangun); **2 bug ditemukan & ditutup**: `0054` (RLS listing child tables salah cek `status='active'`, seharusnya `'published'`) dan `0055` (Agent bisa self-approve `agent_verification_documents` miliknya sendiri — RLS scope 'own' tidak membedakan kolom). Lihat `supabase/migrations/README.md` untuk rincian penuh dan catatan arsitektural `INSERT...RETURNING` vs RLS publik |
 | **Fase 2 "100% tabel"** — M04 Learning Catalog/Activity/Assessment | ✅ **Kode nyata (migration saja, belum REST API)** | `supabase/migrations/0056`–`0063` — 13 tabel domain self-paced/katalog (TERPISAH dari `learning_sessions` M04 Session/live): `courses`+`course_lessons`, `learning_paths`+`learning_path_versions`, `learning_activities`+`learning_activity_completions`+`learning_unlock_progressions`, `enrollments` (Course Enrollment, distinct dari Session Enrollment), `quizzes`+`quiz_questions`+`quiz_options`+`quiz_attempts`, `certificates`. 7 permission baru (`m04.course.manage`, `m04.learning_path.manage`, `m04.learning_activity.manage`, `m04.learning_activity_completion.create`, `m04.course_enrollment.create`/`.view`, `m04.certificate.manage`) — master matrix 50-baris TIDAK PUNYA satu baris pun untuk Course/Learning Catalog. `0062` menutup FK `learning_sessions.course_id` yang ditunda sejak 0021. Diuji nyata lewat PostgREST menyeluruh (draft/publish visibility, quiz answer-key hidden dari Agent, self-issue certificate diblokir, no-client-mutation untuk unlock progression) — **tidak ada bug ditemukan**, desain tervalidasi sejak percobaan pertama |
 | **Fase 3 "100% tabel"** — M15 Awarding Engine | ✅ **Kode nyata (migration saja, belum REST API)** | `supabase/migrations/0064`–`0070` — 9 tabel "mesin konfigurasi jalur/aturan kelulusan" yang ditunda sejak 0026: `awarding_paths`+`awarding_path_versions`, `awarding_rule_versions`+`awarding_path_rules` (junction N:N), `awarding_condition_groups`+`awarding_conditions`+`awarding_prerequisites`, `award_qualifying_paths` (provenance), `title_presentations`. Dengan ini **seluruh 14 tabel M15** (STEP11-B8 §13) lengkap. 2 permission baru (`m15.awarding_path_rule.configure` Superadmin/Admin/Manager saja, `m15.title_presentation.manage` Agent=own). `0069` menutup FK `qualification_evaluations`/`award_instances` → `awarding_path_versions`/`awarding_rule_versions` yang ditunda sejak 0026. Diuji nyata lewat PostgREST membangun satu rantai config engine utuh ujung-ke-ujung — tidak ada bug ditemukan |
-| M14 Commercial (8 tabel: orders/fulfillments/payment/subscriptions/promotions/addons/reconciliation) | ⏳ Belum ada kode | Fase 4 rencana "100% tabel" — perlu keputusan payment gateway dulu sebelum migration ditulis, lihat `supabase/migrations/README.md` |
+| **Fase 4 "100% tabel"** — M14 Commercial (Midtrans sebagai payment gateway MVP) | ✅ **Kode nyata (migration saja, belum REST API)** | `supabase/migrations/0071`–`0078` — 8 tabel terakhir: `promotions` (staff-only), `addons` (katalog publik), `subscriptions` (privat), `commercial_orders`, `payment_transactions` (`payment_state` DIKUNCI ke vocabulary status Midtrans resmi — pending/capture/settlement/deny/cancel/expire/failure/refund/partial_refund/chargeback/partial_chargeback/authorize), `payment_provider_results` (webhook mentah, TIDAK ADA jalur INSERT untuk siapa pun termasuk staf), `commercial_fulfillments` (juga tanpa jalur INSERT klien), `reconciliation_cases` (status dikunci ke lifecycle STEP11-B7 §13). TIDAK ADA permission baru (4 permission M14 sudah ada sejak seed 0009). `0077` menutup 3 FK `commercial_entitlements.source_*` yang ditunda sejak 0019. **Keputusan keamanan terpenting**: `commercial_orders`/`payment_transactions` sengaja TIDAK PUNYA UPDATE untuk pemilik sama sekali — dikonfirmasi lewat test bahwa Agent mencoba self-approve `payment_state` ke `settlement` gagal total (baris tidak berubah). Dengan Fase 1-4 selesai, **seluruh 97 tabel target sudah ada di Supabase** |
 | `packages/ui`, `packages/config` | ⏳ Belum ada kode | Placeholder |
 
 > Modul-modul yang belum dikerjakan **masih murni dokumentasi/wireframe** —
@@ -42,13 +42,13 @@ saat deep scan (lihat `audit/WIREFRAME_DEEP_SCAN_REPORT.md` dan
 > Marketing Kit/Claim, M13 Provider/BYOK, M04 Learning Session/Evidence, M04
 > LP Economy + Partnership Learning Result, dan M15 Qualification/Evidence/
 > Awarding — semua lengkap atas skema yang ada). M04 Learning Catalog/Activity
-> (Fase 2, 13 tabel) dan M15 Awarding Engine (Fase 3, 9 tabel — melengkapi
-> SELURUH 14 tabel M15) kini punya migration+RLS lengkap TAPI belum punya
-> REST API — menyusul batch terpisah. Dengan Fase 1-3 "100% tabel" selesai,
-> 89 dari 94 entitas logis spec sudah ada tabel fisiknya di Supabase; sisa
-> 5 (M14 Commercial) menunggu keputusan payment gateway di Fase 4.
-> M15 Path/Rule Version/Condition/Prerequisite/Appeal/Presentation (9 tabel
-> besar) masih TIDAK PUNYA TABEL sama sekali — itu Fase 3 rencana "100% tabel".
+> (Fase 2, 13 tabel), M15 Awarding Engine (Fase 3, 9 tabel — melengkapi
+> SELURUH 14 tabel M15), dan M14 Commercial (Fase 4, 8 tabel, Midtrans
+> sebagai gateway MVP) kini SEMUA punya migration+RLS lengkap TAPI belum
+> punya REST API — menyusul batch terpisah. **Dengan Fase 1-4 "100% tabel"
+> selesai, seluruh 94 entitas logis STEP10-D + 3 tabel ADD-NEW di luar
+> STEP10-D (api_idempotency_keys, notification_templates,
+> partnership_learning_results) = 97 tabel total sudah ada di Supabase.**
 
 ## Struktur folder
 
@@ -77,7 +77,7 @@ RumahAgen-SaaS/
 │   ├── ui/                        # KOSONG
 │   └── config/                    # KOSONG
 ├── supabase/
-│   ├── migrations/                # 0001–0070: M10 + M09 + M13 + M03/M14 + M04/M15 + M02/M05/M06/M08/M11 + 0038 index performa + 0039/0040/0042 fix gap RLS DELETE + 0041 fix RLS review-klaim + 0043-0045 fix RLS/trigger attendance-completion + 0046 fungsi adjust_learning_points + 0047-0053 Fase 1 "100% tabel" (13 tabel M01/M03/M07/M11/M12 + index) + 0054-0055 fix RLS status-check & self-approval + 0056-0063 Fase 2 "100% tabel" (13 tabel M04 Learning Catalog + FK fix + index) + 0064-0070 Fase 3 "100% tabel" (9 tabel M15 Awarding Engine + FK fix + index) (lihat migrations/README.md)
+│   ├── migrations/                # 0001–0078: M10 + M09 + M13 + M03/M14 + M04/M15 + M02/M05/M06/M08/M11 + 0038 index performa + 0039/0040/0042 fix gap RLS DELETE + 0041 fix RLS review-klaim + 0043-0045 fix RLS/trigger attendance-completion + 0046 fungsi adjust_learning_points + 0047-0053 Fase 1 "100% tabel" (13 tabel M01/M03/M07/M11/M12 + index) + 0054-0055 fix RLS status-check & self-approval + 0056-0063 Fase 2 "100% tabel" (13 tabel M04 Learning Catalog + FK fix + index) + 0064-0070 Fase 3 "100% tabel" (9 tabel M15 Awarding Engine + FK fix + index) + 0071-0078 Fase 4 "100% tabel" (8 tabel M14 Commercial, Midtrans MVP + FK fix + index) — SELURUH 97 tabel target selesai (lihat migrations/README.md)
 │   └── functions/                 # KOSONG
 └── .github/workflows/             # KOSONG
 ```

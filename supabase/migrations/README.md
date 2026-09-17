@@ -632,3 +632,98 @@ baru ditutup, award_qualifying_paths (provenance), dan title_presentations
 dikonfirmasi (Agent ditolak create awarding_paths, Agent tidak bisa
 SELECT awarding_conditions). Tidak ada bug ditemukan pada batch ini. Data
 uji dibersihkan total setelahnya.
+
+## Fase 4 "100% Tabel" — 0071-0078 (M14 Commercial, Midtrans sebagai gateway MVP)
+
+8 tabel terakhir dari rencana "100% tabel" — M14 Commercial/Payment/
+Entitlement/Reconciliation, PALING SENSITIF dari seluruh Fase 1-4 karena
+menyentuh alur pembayaran sungguhan. Dipelajari dari 2 sumber: `STEP10-D_
+ATTRIBUTE_TO_PHYSICAL_COLUMN_RECONCILIATION.csv` (kolom eksak) dan
+`STEP11-B7_COMMERCIAL_PAYMENT_ENTITLEMENT_QUOTA_RECONCILIATION` v1.1
+(causal chain "Offer → Order → immutable commercial snapshot → Checkout →
+Payment → trusted verification → idempotent fulfillment → Entitlement →
+Quota/benefit", 8 MVP commercial surfaces, dan konfirmasi eksplisit bahwa
+5 tabel M14 lain — `commercial_entitlements`/`quota_capacities`/
+`operational_quota_pools`/`quota_allocations`/`quota_usage` — SUDAH ada
+sejak 0019). Gateway pembayaran MVP: **Midtrans**, dipelajari dari
+`Midtrans_API_Dokumentasi_Detail_2026.pdf` yang diupload user.
+
+**TIDAK ADA permission baru** — 4 permission M14 SUDAH ADA sejak seed 0009
+(`m14.commercial_administration.configure`, `.manage_commercial_resources`,
+`m14.commercial_purchase_access.access`, `.own_purchase`) — master matrix
+50-baris SUDAH mengantisipasi resource commercial generik ini, beda dari
+M04 Catalog/M15 Awarding yang butuh permission baru.
+
+- **`0071_m14_promotions_addons_subscriptions.sql`** — `promotions`
+  (staff-only config, M11 yang urus representasi publik lewat
+  `public_announcement_promotion`), `addons` (katalog produk PUBLIK untuk
+  status=active — realisasi "Listing quota add-ons"/"Learning Point
+  packages"), `subscriptions` (privat per-user — realisasi "Free
+  membership"/"Pro monthly"/"Pro annual").
+- **`0072_m14_commercial_orders.sql`** — `commercial_orders`, titik awal
+  causal chain. `order_number` dipetakan ke `order_id` payload Midtrans
+  Snap.
+- **`0073_m14_payment_transactions.sql`** — `payment_transactions`.
+  **KEPUTUSAN ENGINEERING BARU** (diminta eksplisit user, bukan dari
+  STEP10-D): `payment_state` DIKUNCI ke vocabulary status transaksi
+  Midtrans resmi (pending/capture/settlement/deny/cancel/expire/failure/
+  refund/partial_refund/chargeback/partial_chargeback/authorize —
+  Midtrans PDF §6 "Transaction Status"), `verification_state` dikunci ke
+  (unverified/verified/failed) merealisasikan "trusted verification"
+  boundary STEP11-B7.
+- **`0074_m14_payment_provider_results.sql`** — `payment_provider_results`,
+  penyimpanan MENTAH webhook Midtrans. **TIDAK ADA RLS INSERT untuk siapa
+  pun TERMASUK staf** — hanya ditulis lewat route webhook admin-client
+  dengan validasi signature/shared-secret di level route (pola sama
+  seperti webhook M04 Session), bukan lewat RLS permission (RLS tidak bisa
+  memvalidasi signature kriptografis).
+- **`0075_m14_commercial_fulfillments.sql`** — `commercial_fulfillments`.
+  **TIDAK ADA RLS INSERT untuk siapa pun** — realisasi sungguhan lewat
+  fungsi SECURITY DEFINER baru di batch REST API nanti (pola sama seperti
+  `grant_learning_points_from_purchase()`), STEP11-B7 F11-B7-004 sendiri
+  mencatat "generic entitlement grant/revoke/adjust lifecycle route is not
+  explicitly evidenced" sebagai CONTROLLED API GAP.
+- **`0076_m14_reconciliation_cases.sql`** — `reconciliation_cases`, staff
+  penuh. `status` DIKUNCI ke lifecycle yang dievidence eksplisit STEP11-B7
+  §13: open/investigating/resolved/rejected/escalated (BUKAN dikarang,
+  vocabulary itu ada di dokumen sumber).
+- **`0077_fix_commercial_entitlements_source_fk.sql`** — menutup 3 FK yang
+  SENGAJA ditunda sejak 0019 (`source_order_id`/`source_payment_
+  transaction_id`/`source_fulfillment_id`). `ON DELETE SET NULL` (beda
+  dari RESTRICT di FK retroaktif Fase 2/3) — entitlement adalah catatan
+  HAK milik user yang harus tetap valid meski sumbernya dihapus.
+- **`0078_performance_indexes_fk_phase4.sql`** — index B-tree untuk kolom
+  FK di 8 tabel + 3 kolom FK baru dari 0077.
+
+**KEPUTUSAN KEAMANAN PALING PENTING di seluruh rencana "100% tabel"**:
+`commercial_orders`/`payment_transactions` SENGAJA TIDAK PUNYA UPDATE untuk
+pemilik sama sekali (hanya staf) — `status`/`payment_state`/
+`verification_state` HANYA boleh berubah lewat verifikasi server-side
+(webhook Midtrans + fungsi fulfillment nanti), BUKAN klien langsung. Kalau
+Agent diberi UPDATE scope 'own' pada kolom ini, itu setara celah
+self-approval yang ditemukan di `agent_verification_documents` (0055),
+TAPI untuk sistem pembayaran: Agent bisa "membayar" tanpa membayar
+sungguhan. Diuji nyata dan DIKONFIRMASI TERBLOKIR: Agent mencoba PATCH
+`payment_state` miliknya sendiri ke `settlement` — request "berhasil"
+(HTTP 204, PostgREST tidak error karena 0 baris cocok RLS), TAPI baris
+TIDAK BERUBAH sama sekali (diverifikasi ulang via Superadmin). Midtrans
+PDF §4/§10 eksplisit: "Jangan menjadikan callback frontend sebagai
+satu-satunya sumber kebenaran status pembayaran."
+
+Seluruh 8 tabel diuji nyata lewat PostgREST + SQL langsung (untuk 2 tabel
+webhook-only yang tidak punya jalur INSERT client sama sekali) dengan
+throwaway test user: katalog publik vs privat, cross-agent isolation,
+CHECK vocabulary Midtrans, blokir self-approval payment (test paling
+kritis), zero-insert-path `payment_provider_results`/
+`commercial_fulfillments` dikonfirmasi (bahkan Superadmin ditolak insert
+langsung), CHECK lifecycle reconciliation, dan FK retroaktif
+`commercial_entitlements`. Tidak ada bug ditemukan — desain RLS
+tervalidasi benar sejak percobaan pertama. Data uji dibersihkan total.
+
+**Dengan Fase 1-4 selesai, seluruh 94 entitas logis STEP10-D + 3 tabel
+ADD-NEW di luar STEP10-D (api_idempotency_keys, notification_templates,
+partnership_learning_results) = 97 tabel total sudah ada di Supabase.**
+REST API layer untuk M04 Catalog/M15 Awarding/M14 Commercial menyusul
+sebagai batch terpisah — M14 khususnya butuh implementasi Midtrans Snap
+API + webhook handler sungguhan sebelum bisa diuji end-to-end nyata
+(sandbox Midtrans, bukan lagi migration/RLS saja).
