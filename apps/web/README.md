@@ -143,14 +143,78 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     sebagai Instructor yang punya izin (201, benar) → DELETE (200, menutup
     gap) → GET setelahnya (404). Data uji dibersihkan total.
 
+- **M06 Developer/Project/Media/Marketing Kit/Claim** (STEP11-B3
+  API-116-122 + kelengkapan penuh atas apa yang sudah dibangun di migration
+  0033-0035) — batch route kelima.
+  - `app/api/developer-projects/route.ts` — `GET /developer-projects`
+    (API-116, publik/scoped)
+  - `app/api/developer-projects/[id]/route.ts` — `GET .../{id}` (API-117)
+  - `app/api/developer-projects/[id]/claim/route.ts` — `POST .../claim`
+    (API-118)
+  - `app/api/admin/developer-projects/route.ts` — `POST`/`GET
+    /admin/developer-projects` (API-119/120) — nama path mengikuti kontrak
+    evidenced ("administrative") apa adanya, TAPI RLS `developer_projects_insert`
+    (0034) juga mengizinkan Developer Partner scope OWN membuat project
+    miliknya sendiri lewat path yang SAMA — RLS yang membedakan wewenang,
+    bukan route
+  - `app/api/admin/developer-projects/[id]/route.ts` — `PUT`/`DELETE`
+    (API-121/122), `PUT` SATU route generic mencakup update biasa MAUPUN
+    publish/activate (trigger `enforce_developer_project_publish_permission`
+    dari 0034 — F11-B3-015 "ordinary Update does not imply Publish/Activate")
+  - `app/api/developer-partners/route.ts` + `[id]/route.ts` — `GET`/`POST`/
+    `PUT`/`DELETE`, direktori Developer Partner staf-dikelola (RLS
+    `developer_partners_manage`, 0033)
+  - `app/api/developer-projects/[id]/marketing-kit/route.ts` +
+    `app/api/marketing-kit/[id]/route.ts` — CRUD Marketing Kit (PDF
+    brochure/pricelist) per project (RLS `marketing_kit_manage`/`_select`, 0035)
+  - `app/api/developer-projects/[id]/media/route.ts` +
+    `app/api/project-media/[id]/route.ts` — CRUD Project Media (foto/video
+    resmi) per project (RLS `developer_project_media_manage`/`_select`, 0034)
+  - `app/api/developer-projects/[id]/claims/route.ts` (list klaim per
+    project, untuk Developer Partner/staf review) + `app/api/agents/me/claims/route.ts`
+    (klaim milik sendiri) + `app/api/claims/[id]/route.ts` (`GET`/`PUT`
+    transisi status approve/reject/revoke)
+  - `lib/validation/developer-projects.ts`, `developer-partners.ts`,
+    `marketing-kit.ts`, `claims.ts`, `project-media.ts` — skema Zod
+  - **2 GAP DITEMUKAN & DITUTUP lewat migration**:
+    1. `supabase/migrations/0040_developer_projects_delete_policy.sql` —
+       `0034` tidak pernah membuat RLS `DELETE` untuk `developer_projects`
+       (pola sama seperti events/0039), padahal API-122 evidenced.
+    2. `supabase/migrations/0041_fix_agent_project_claims_review_policy.sql`
+       — **bug fungsional** (bukan gap dokumentasi): RLS
+       `agent_project_claims_review` (0035) mengecek kepemilikan HANYA lewat
+       `agent_id` (si pengklaim), padahal Developer Partner juga punya scope
+       'own' di permission `m06.claim.review/approve/reject/revoke` (seed
+       0009) untuk me-review klaim di PROJECT MILIKNYA — beda rantai
+       kepemilikan yang tidak pernah dicek policy lama. Dikonfirmasi lewat
+       test nyata: Developer Partner approve klaim di project sendiri
+       ditolak RLS (404) sebelum diperbaiki. Ditambahkan klausul OR yang
+       mengecek lewat `project_id -> developer_projects.developer_id ->
+       developer_partners.user_id` (pola sama seperti `marketing_kit_select`).
+  - **Diuji nyata secara menyeluruh**: Superadmin buat Developer Partner
+    (201) → Developer Partner buat project sendiri (201, RLS 'own') → publik
+    lihat `coming_soon` → DP tambah Project Media (201) → publik lihat media
+    → DP tambah Marketing Kit (201) → anon TIDAK bisa lihat kit (kosong,
+    benar) → Agent klaim project (201) → Agent lihat klaim sendiri (200) →
+    DP lihat klaim di project-nya (200) → **DP approve klaim → 404 (bug
+    ditemukan)** → migration 0041 diterapkan → **DP approve klaim → 200
+    (benar, `reviewed_by`/`reviewed_at` otomatis terisi trigger)** → DP coba
+    publish project → 403 (benar, moderation-gated) → Superadmin publish →
+    200 → Agent coba buat marketing kit project orang lain → 403 (benar) →
+    Superadmin update+delete kit → 200 → delete media → 200 → delete project
+    (menutup gap 0040) → 404 setelahnya. Data uji dibersihkan total.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M04 Learning, M06 Developer/Project, M13
-Provider/BYOK, M14 Commercial di luar Refresh, M15 Qualification) — mengikuti
-urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`, setiap route WAJIB
-dibungkus `withApiHandler()` dari sini, tidak menulis middleware sendiri.
+Route untuk modul lain (M04 Learning, M13 Provider/BYOK, M14 Commercial di
+luar Refresh, M15 Qualification) — mengikuti urutan Tahap 2–6 di
+`CHECKLIST_RESIDUAL_IMPLEMENTASI.md`, setiap route WAJIB dibungkus
+`withApiHandler()` dari sini, tidak menulis middleware sendiri.
 `packages/ui`/`packages/config` masih placeholder kosong. `event_provider_bindings`
 (M05) belum ada route — tidak ada kontrak evidenced di STEP11-A untuknya.
+Approval Claim PDF Generate/View/Download (M06) belum ada — tidak ada
+tabel/mekanisme fisik untuk itu di migration manapun (beda dari resource M06
+lain yang tabelnya sudah ada sejak 0033-0035).
 
 ## Menjalankan
 

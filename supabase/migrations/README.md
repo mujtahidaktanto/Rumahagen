@@ -334,6 +334,20 @@ ada di 31 residual asli tapi diminta eksplisit dikerjakan di Tahap 6.
   berfungsi untuk siapa pun. Memakai permission `m05.event.update` yang sudah
   ada (tidak ada `m05.event.delete` di master matrix).
 
+- **`0040_developer_projects_delete_policy.sql`** — gap yang PERSIS SAMA
+  seperti 0039, tapi di tabel `developer_projects` (migration 0034 tidak
+  pernah membuat RLS `DELETE`, padahal STEP11-B3 API-122 meng-evidence-nya).
+  Memakai permission `m06.developer_project.manage` yang sudah ada.
+- **`0041_fix_agent_project_claims_review_policy.sql`** — BUG FUNGSIONAL
+  (bukan gap dokumentasi): RLS `agent_project_claims_review` (0035) hanya
+  mengecek kepemilikan lewat `agent_id` (si pengklaim), padahal Developer
+  Partner juga punya scope 'own' di permission `m06.claim.review/approve/
+  reject/revoke` (seed 0009) untuk me-review klaim di PROJECT MILIKNYA —
+  rantai kepemilikan berbeda yang tidak pernah dicek policy lama. Ditemukan
+  saat testing REST API (Developer Partner approve klaim di project sendiri
+  ditolak RLS). Ditambahkan klausul OR yang mengecek lewat
+  `project_id -> developer_projects.developer_id -> developer_partners.user_id`.
+
 Klaim "belum ada satu route pun selain `GET /api/authorization/roles`" di atas
 sudah TIDAK akurat lagi sejak Step 3 dimulai — lihat `apps/web/README.md`
-untuk daftar route REST M03/M14/M09/M08/M05 yang sudah nyata dan diuji.
+untuk daftar route REST M03/M14/M09/M08/M05/M06 yang sudah nyata dan diuji.
