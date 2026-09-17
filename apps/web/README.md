@@ -478,13 +478,100 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     'passed'→'qualified') — pipeline D13-03 M04→M15 terverifikasi utuh
     lewat HTTP untuk pertama kalinya. Data uji dibersihkan total.
 
+## Batch: M04 Learning Catalog/Activity REST API (26 route file)
+
+REST API + Zod di atas migration+RLS Fase 2 "100% tabel" (`0056`–`0063`,
+lihat root `README.md`) yang sebelumnya hanya diuji lewat PostgREST mentah.
+Modul ini domain self-paced/katalog — TERPISAH dari `learning_sessions`
+M04 Session/live (B5) yang sudah punya REST API sejak batch sebelumnya.
+
+- **Courses**: `courses/route.ts` (GET list publik+filter kategori, POST
+  create — `created_by` default `ctx.userId`), `courses/[id]/route.ts`
+  (GET detail, PUT update), `courses/[id]/status/route.ts` (PATCH transisi
+  lifecycle draft→published dst.), `courses/[id]/lessons/route.ts` (GET
+  list, POST create lesson), `course-lessons/[id]/route.ts` (PUT, DELETE)
+- **Enrollment**: `courses/[id]/enroll/route.ts` (POST, `agent_id:
+  ctx.userId`, unique-violation Postgres `23505` dipetakan ke `CONFLICT`),
+  `agents/me/enrollments/route.ts` (GET milik sendiri, paginated),
+  `enrollments/[id]/route.ts` (GET, PATCH `progress_percent`/`status`,
+  hanya pemilik)
+- **Quiz** (subsistem paling sensitif keamanan di batch ini):
+  `courses/[id]/quizzes/route.ts` (GET, POST), `quizzes/[id]/questions/
+  route.ts` (GET — hanya `question_text`/`question_type`, POST),
+  `quiz-questions/[id]/options/route.ts` (POST **saja**, sengaja TIDAK ADA
+  GET — opsi mentah beserta `is_correct` tidak boleh pernah di-list lewat
+  route publik manapun)
+  - `quizzes/[id]/take/route.ts` — **ADD-NEW, deviasi dari path literal
+    STEP11-B4** (dikunci ke `quiz_id`, bukan `/courses/{id}/quiz/take`,
+    karena skema mengizinkan multi-quiz per course). GET: verifikasi
+    `enrollment_id` milik sendiri lewat client RLS biasa, lalu pakai
+    `createAdminClient()` HANYA untuk membaca `quiz_options` (bypass RLS
+    staff-only), field `is_correct` di-strip manual di kode (`select("id,
+    question_id, option_text")`) sebelum dikirim ke Agent — pola yang sama
+    dengan strip `encrypted_api_key` di M13 BYOK
+  - `quizzes/[id]/submit/route.ts` — **ADD-NEW, deviasi sama**. Verifikasi
+    kepemilikan enrollment via client biasa; admin client dipakai untuk baca
+    `quizzes`/`courses.passing_grade`/`quiz_options.is_correct`; grading
+    server-side per soal (exact-match set jawaban terpilih vs kunci jawaban),
+    hitung persentase, bandingkan ke `passing_grade` untuk `passed`, lalu
+    INSERT `quiz_attempts` lewat client RLS biasa (mengunci `enrollment_id`
+    ke milik sendiri)
+- **Certificate**: `agents/me/certificates/route.ts` (GET milik sendiri),
+  `admin/certificates/route.ts` (POST issue — staff-only murni lewat RLS,
+  Agent tidak pernah diberi grant `m04.certificate.manage` sama sekali,
+  bukan filter di kode)
+- **Learning Path/Activity**: `learning/paths/route.ts` (GET, POST —
+  ADD-NEW karena STEP11-B4 menandai ini sebagai gap API terkontrol),
+  `learning/paths/[id]/route.ts` (GET, PUT), `learning/paths/[id]/
+  versions/route.ts` (GET, POST — duplicate `version_no` dipetakan ke
+  `CONFLICT`), `learning/paths/[id]/activities/route.ts` (GET, join semua
+  `learning_path_versions` milik path lalu query `learning_activities`
+  via `.in()`), `learning/activities/[id]/route.ts` (GET),
+  `learning/activities/[id]/start/route.ts` (POST — insert
+  `learning_activity_completions` baru dengan `completion_status:
+  "in_progress"`, `attempt_no` dihitung dari count baris sebelumnya —
+  desain append-only, TIDAK ADA UPDATE karena memang tidak ada RLS UPDATE
+  policy-nya), `learning/activities/[id]/complete/route.ts` (POST — insert
+  baris completion BARU lagi dengan `attempt_no` berikutnya, bukan update
+  baris start), `agents/me/learning/progress/route.ts` (GET milik sendiri,
+  diperkirakan selalu kosong — tidak ada jalur mutasi klien untuk
+  `learning_unlock_progressions`), `agents/me/learning/activities/route.ts`
+  (GET riwayat completion milik sendiri), `admin/learning/activities/
+  route.ts` (GET list semua + POST create, staff), `admin/learning/
+  activities/[id]/route.ts` (PUT update)
+- **TIDAK ADA migration baru** — seluruh 13 tabel Fase 2 sudah punya RLS
+  lengkap tanpa gap sejak `0056`–`0063`, batch ini murni REST layer
+- **Diuji nyata** dengan 4 user Supabase Auth throwaway per role
+  (Superadmin/Instructor/Agent×2) lewat dev server (`npm run dev`, bukan
+  PostgREST mentah): course draft tidak terlihat publik → publish →
+  terlihat → enroll Agent1 (201) → enroll Agent1 lagi → **409 CONFLICT**
+  (duplicate) → GET `/quizzes/{id}/take` sebagai Agent1 → opsi jawaban
+  TIDAK mengandung `is_correct` sama sekali → submit jawaban benar → grading
+  server benar, `passed=true` → submit jawaban salah (attempt kedua) →
+  `passed=false` → **Agent2 coba submit ke enrollment_id milik Agent1 →
+  403** (hijack enrollment lintas-agent diblokir) → Agent1 coba
+  `admin/certificates` self-issue → **403** (tidak ada grant sama sekali,
+  bukan RLS scope check) → Superadmin issue certificate untuk Agent1 → 201
+  → GET `agents/me/certificates` sebagai Agent1 → hanya lihat milik sendiri
+  → Instructor buat learning path (201) → Agent coba buat learning path →
+  **403** → buat version kedua dengan `version_no` sama → **409 CONFLICT**
+  → Agent start activity (201, `attempt_no=1`) → complete (201, baris baru
+  `attempt_no=2`, bukan update baris start) → start lagi (`attempt_no=3`,
+  penomoran attempt berlanjut benar) → seluruh GET/PUT sekunder (own
+  enrollments, learning path detail, activity detail, Superadmin PUT
+  activity, Instructor PUT lesson) — semua 200 dengan data benar.
+  **Tidak ada bug ditemukan** di seluruh 26 route — desain tervalidasi
+  sejak percobaan pertama, termasuk kedua skenario keamanan kritis
+  (kebocoran kunci jawaban quiz dan hijack kepemilikan enrollment). Data
+  uji dan 4 user test dibersihkan total setelah pengujian.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M04 Learning Catalog/Activity — courses/learning_paths/
-learning_activities dari B4, tidak ada tabelnya di migration manapun; M14
-Commercial di luar Refresh; M15 Path/Rule Version, Condition/Prerequisite,
-Appeal, Award Presentation — 9 tabel besarnya sendiri belum ada di migration
-manapun, lihat catatan di batch M15 di atas) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+Route untuk modul lain (M14 Commercial di luar Refresh Allowance — 8 tabel
+Midtrans MVP dari Fase 4 sudah punya migration+RLS tapi belum ada REST-nya;
+M15 Path/Rule Version, Condition/Prerequisite, Appeal, Award Presentation —
+9 tabel dari Fase 3 juga sudah punya migration+RLS tapi belum ada REST-nya,
+lihat catatan di batch M15 di atas) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
 setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
 middleware sendiri. `POST /ai-assistant/chat` (M13, invokasi AI sungguhan)
 SENGAJA belum ada — butuh adapter per-provider nyata, bukan sekadar CRUD atas
