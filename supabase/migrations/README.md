@@ -571,3 +571,64 @@ self-issue diblokir, learning_unlock_progressions tanpa jalur mutasi Agent,
 dan FK retroaktif `learning_sessions.course_id`. Tidak ada bug ditemukan
 pada batch ini (berbeda dari Fase 1) — desain RLS tervalidasi benar sejak
 percobaan pertama. Data uji dibersihkan total setelahnya.
+
+## Fase 3 "100% Tabel" — 0064-0070 (M15 Awarding Engine)
+
+9 tabel "mesin konfigurasi jalur/aturan kelulusan" yang sejak migration
+0026 sengaja ditunda ("di luar lingkup literal D13-03... belum punya nomor
+residual di checklist manapun"). Dengan batch ini, SELURUH 14 tabel M15
+yang dicatat STEP11-B8 §13 "Physical Schema Parity" akhirnya lengkap
+(5 dari 0026 + 9 di sini). Sumber kolom: `STEP10-D_ATTRIBUTE_TO_PHYSICAL_
+COLUMN_RECONCILIATION.csv`, tanpa deviasi.
+
+- **`0064_m15_awarding_paths.sql`** — `awarding_paths` + `awarding_path_
+  versions`. Permission baru `m15.awarding_path_rule.configure`
+  (Superadmin/Admin/Manager=ALL SAJA — realisasi downstream dari semantic
+  capability inventory STEP11-B8 §10 `awarding.path.manage`/
+  `awarding.rule.manage`, yang dokumen sumbernya sendiri menyatakan
+  "semantic capability inventory, not a final permission-ID seed"; satu
+  permission mencakup SELURUH 7 tabel config engine, pola konsolidasi
+  verb sama seperti `ai_providers`/0015).
+- **`0065_m15_awarding_rules.sql`** — `awarding_rule_versions` +
+  `awarding_path_rules` (junction N:N Path Version <-> Rule Version, ON
+  DELETE RESTRICT ke rule version — rule yang masih dipakai tidak boleh
+  terhapus). TIDAK ADA permission baru — reuse 0064.
+- **`0066_m15_awarding_conditions.sql`** — `awarding_condition_groups` +
+  `awarding_conditions` + `awarding_prerequisites`, penutup config engine.
+  TIDAK ADA permission baru — reuse 0064. `group_operator`/`condition_type`/
+  `operator` semuanya TEXT/VARCHAR bebas TANPA CHECK persis sesuai sumber
+  (logika evaluasi AND/OR/pembanding dijalankan di lapisan aplikasi).
+- **`0067_m15_award_qualifying_paths.sql`** — provenance yang menaut
+  `award_instances` ke `awarding_path_versions` + `qualification_
+  evaluations`. TIDAK ADA permission baru — otorisasi diturunkan LANGSUNG
+  dari `m15.award.award`/`.manage` yang sudah ada (0026) lewat join ke
+  `award_instances.user_id`.
+- **`0068_m15_title_presentations.sql`** — tabel M15 terakhir (14/14).
+  Permission baru `m15.title_presentation.manage` (Agent=OWN atur tampilan
+  title miliknya di profil publik — API-234/235, Superadmin/Admin/
+  Manager=ALL moderasi). SELECT publik untuk `active=true` (dikonsumsi
+  profil publik M02 sesuai STEP11-B8 §11 boundary), TERPISAH dari
+  `award_instances` sendiri (STEP11-B8 §11: "M02 does not issue, revoke,
+  qualify, or alter Award").
+- **`0069_fix_qualification_award_awarding_fk.sql`** — menutup 2 pasang FK
+  yang SENGAJA ditunda sejak 0026: `qualification_evaluations`/
+  `award_instances` kolom `awarding_path_version_id`/`awarding_rule_
+  version_id` (NULLABLE tetap dipertahankan — NULL masih berarti "evaluasi/
+  award manual tanpa mesin konfigurasi formal", sesuai keputusan asli
+  0026). `ON DELETE RESTRICT` (pola sama seperti `awarding_path_rules`).
+  Diverifikasi lewat test: FK valid berhasil, FK palsu ditolak error 23503.
+- **`0070_performance_indexes_fk_phase3.sql`** — index B-tree untuk kolom
+  FK di 9 tabel di atas + 4 kolom FK baru dari 0069 (pola sama seperti
+  0038/0053/0063).
+
+Seluruh 9 tabel diuji nyata lewat PostgREST langsung dengan throwaway test
+user (Superadmin, Agent), membangun SATU rantai config engine utuh dari
+ujung ke ujung: title_definitions → awarding_paths → awarding_path_versions
+→ awarding_rule_versions → awarding_path_rules (junction) →
+awarding_condition_groups → awarding_conditions → awarding_prerequisites,
+lalu qualification_evaluations + award_instances dengan FK awarding yang
+baru ditutup, award_qualifying_paths (provenance), dan title_presentations
+(self-manage + visibility publik `active=true`). Staf-only config
+dikonfirmasi (Agent ditolak create awarding_paths, Agent tidak bisa
+SELECT awarding_conditions). Tidak ada bug ditemukan pada batch ini. Data
+uji dibersihkan total setelahnya.
