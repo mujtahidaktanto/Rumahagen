@@ -204,12 +204,64 @@ dari rencana eksekusi (Tahap 0 checklist: item D13-16 s.d. D13-23).
     Superadmin update+delete kit → 200 → delete media → 200 → delete project
     (menutup gap 0040) → 404 setelahnya. Data uji dibersihkan total.
 
+- **M13 Provider/BYOK** (STEP11-B10 §4 evidenced routes + kelengkapan penuh
+  atas migration 0015-0016) — batch route keenam.
+  - `app/api/ai-providers/route.ts` — `GET` (evidenced) + `POST` (ADD-NEW,
+    B10-C02: "mutation is Superadmin-only semantically, but exact mutation
+    routes are not evidenced" — RLS `ai_providers_write_superadmin` sudah
+    mendukung penuh sejak 0015)
+  - `app/api/ai-providers/[id]/route.ts` — `GET`/`PUT`/`DELETE` (edit/enable/
+    disable/retire, satu action code menutup kelimanya sesuai catatan 0015)
+  - `app/api/ai-connections/route.ts` — `POST` (evidenced) — buat koneksi
+    BYOK, hanya bisa dipanggil role dengan permission
+    `m13.own_byok_connection.create` (**Developer Partner**, BUKAN Agent —
+    dikonfirmasi lewat test nyata: Agent ditolak 403, Developer Partner
+    berhasil 201)
+  - `app/api/agents/me/ai-connections/route.ts` — `GET` (evidenced)
+  - `app/api/ai-connections/[id]/route.ts` — `GET`, `PUT` (rotate key/ubah
+    status), `DELETE` (evidenced di kontrak HTTP, TAPI diimplementasikan
+    sebagai **soft-disconnect** `status='disconnected'`, BUKAN SQL DELETE
+    nyata — migration 0016 sengaja tidak membuat RLS DELETE demi jejak audit;
+    keputusan desain itu lebih diutamakan daripada mengubah RLS)
+  - `app/api/ai-connections/[id]/test/route.ts` — `POST .../test`
+    (evidenced) — validasi bahwa koneksi ada/aktif/`encrypted_api_key` bisa
+    didekripsi; **TIDAK** memanggil API provider AI eksternal sungguhan
+    (butuh adapter per-provider, kredensial asli dikirim ke pihak ketiga,
+    potensi biaya nyata — di luar scope REST-API-layer batch ini)
+  - `app/api/admin/ai-connections/[id]/force/route.ts` — ADD-NEW (B10-C03:
+    "FORCE_REVOKE/FORCE_DISCONNECT/FORCE_DISABLE... not evidenced"), TAPI
+    fungsi SQL `admin_force_provider_connection()` sudah lengkap sejak 0016
+    — endpoint ini membungkusnya (pola sama seperti listings/refresh)
+  - `lib/crypto/byok.ts` — **ADD-NEW infrastruktur enkripsi** (AES-256-GCM)
+    untuk `encrypted_api_key` — belum ada pola enkripsi apa pun di repo
+    sebelum M13. Key dari env var `BYOK_ENCRYPTION_KEY` (wajib, tidak ada
+    fallback tertanam). `api_key` mentah TIDAK PERNAH keluar lagi dari route
+    manapun (field `encrypted_api_key` selalu di-strip dari response,
+    termasuk hasil RPC `admin_force_provider_connection()` yang
+    me-return seluruh baris)
+  - `lib/validation/ai-providers.ts` — skema Zod untuk kelima resource di atas
+  - **Diuji nyata secara menyeluruh**: Superadmin buat provider (201) →
+    Agent coba buat koneksi BYOK → **403** (benar, `m13.own_byok_connection.create`
+    hanya Developer Partner) → Developer Partner buat koneksi (201,
+    `encrypted_api_key` terverifikasi ter-enkripsi di DB, bukan plaintext) →
+    list milik sendiri (200) → test koneksi (200, `last_validated_at` terisi)
+    → rotate key (200) → Developer Partner coba force-disable → **403**
+    (benar, bukan wewenangnya) → Superadmin force-disable (200,
+    `disabled_by_admin=true`) → Developer Partner coba reaktivasi sendiri →
+    **409 CONFLICT** (benar, trigger 0016 menolak — awalnya 500 generik,
+    diperbaiki jadi mapping error yang jelas) → Superadmin membalikkan
+    `disabled_by_admin` (200) → Developer Partner soft-disconnect (200,
+    `status=disconnected`, baris TETAP ada di DB — bukan hard delete). Data
+    uji dibersihkan total.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
-Route untuk modul lain (M04 Learning, M13 Provider/BYOK, M14 Commercial di
-luar Refresh, M15 Qualification) — mengikuti urutan Tahap 2–6 di
-`CHECKLIST_RESIDUAL_IMPLEMENTASI.md`, setiap route WAJIB dibungkus
-`withApiHandler()` dari sini, tidak menulis middleware sendiri.
+Route untuk modul lain (M04 Learning, M14 Commercial di luar Refresh, M15
+Qualification) — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
+setiap route WAJIB dibungkus `withApiHandler()` dari sini, tidak menulis
+middleware sendiri. `POST /ai-assistant/chat` (M13, invokasi AI sungguhan)
+SENGAJA belum ada — butuh adapter per-provider nyata, bukan sekadar CRUD atas
+tabel sendiri, di luar scope kerja REST-API-layer batch ini.
 `packages/ui`/`packages/config` masih placeholder kosong. `event_provider_bindings`
 (M05) belum ada route — tidak ada kontrak evidenced di STEP11-A untuknya.
 Approval Claim PDF Generate/View/Download (M06) belum ada — tidak ada
@@ -227,3 +279,9 @@ npm run dev
 
 Butuh migration di `supabase/migrations/` sudah di-push ke project Supabase
 Anda terlebih dulu (lihat `supabase/migrations/README.md`).
+
+`BYOK_ENCRYPTION_KEY` (dipakai `lib/crypto/byok.ts` untuk M13) BUKAN dari
+Supabase Dashboard — generate sendiri:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
