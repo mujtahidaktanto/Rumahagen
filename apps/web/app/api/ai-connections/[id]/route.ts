@@ -21,7 +21,11 @@ import { encryptApiKey } from "@/lib/crypto/byok";
 import { ApiError } from "@/lib/api/errors";
 import { createClient } from "@/lib/supabase/server";
 
-const SAFE_COLUMNS = "id, user_id, provider_id, status, disabled_by_admin, last_validated_at, connected_at, created_at, updated_at";
+// `public_identifier` (0080) ikut disertakan — bukan rahasia, aman
+// ditampilkan balik ke pemilik (mis. Cloudinary cloud_name). `encrypted_
+// api_key`/`encrypted_secondary_key` TETAP tidak pernah diikutkan.
+const SAFE_COLUMNS =
+  "id, user_id, provider_id, public_identifier, status, disabled_by_admin, last_validated_at, connected_at, created_at, updated_at";
 
 export const GET = withApiHandler({}, async (ctx) => {
   const supabase = await createClient();
@@ -47,6 +51,8 @@ export const PUT = withApiHandler({}, async (ctx) => {
 
   const update: Record<string, unknown> = {};
   if (body.api_key) update.encrypted_api_key = encryptApiKey(body.api_key);
+  if (body.public_identifier !== undefined) update.public_identifier = body.public_identifier;
+  if (body.secondary_key) update.encrypted_secondary_key = encryptApiKey(body.secondary_key);
   if (body.status) update.status = body.status;
   if (body.disabled_by_admin === false) update.disabled_by_admin = false;
 

@@ -783,3 +783,41 @@ API-175-199, lihat `apps/web/README.md` untuk narasi lengkap termasuk
 integrasi Midtrans Snap API + webhook SUNGGUHAN yang diuji end-to-end
 terhadap Sandbox asli) kini SEMUANYA sudah dibangun — modul demi modul
 REST API selesai untuk ketiga modul terakhir dari rencana "100% tabel".
+
+## `0080_m13_multi_credential_connections.sql` — ADD-NEW (kolom kredensial generik)
+
+Bukan tabel baru — 2 kolom tambahan di `agent_ai_connections` (M13, 0016),
+ditemukan lewat evaluasi nyata provider Cloudinary untuk BYOK M13 (upload/
+edit foto listing): skema lama hanya punya SATU field kredensial
+(`encrypted_api_key`), cukup untuk provider model-AI single-bearer-token
+(Gemini, dst.) tapi TIDAK CUKUP untuk Cloudinary yang butuh TIGA kredensial
+sekaligus (`cloud_name` + `api_key` + `api_secret`).
+
+- **`public_identifier VARCHAR(150)`** — plaintext, TIDAK dienkripsi (memang
+  bukan rahasia — mis. Cloudinary `cloud_name` selalu terlihat apa adanya
+  di setiap delivery URL publik). Boleh ditampilkan balik ke agent tanpa
+  dekripsi.
+- **`encrypted_secondary_key VARCHAR(500)`** — dienkripsi PERSIS seperti
+  `encrypted_api_key` (mekanisme AES-256-GCM yang sama, `lib/crypto/
+  byok.ts`, tidak ada skema kripto baru). Untuk kredensial rahasia KEDUA
+  yang sebagian provider butuhkan (mis. Cloudinary `api_secret`, dipakai
+  membuat signature SHA-1 upload — `encrypted_api_key` menyimpan Cloudinary
+  `api_key`-nya sendiri).
+
+**Keputusan desain**: kedua kolom GENERIK (bukan `cloudinary_cloud_name`/
+`cloudinary_api_secret`) — dipakai ulang provider multi-kredensial mana pun
+di masa depan, konsisten dengan filosofi M13 provider-agnostic sejak
+0015/0016. Provider single-key membiarkan keduanya NULL, tidak ada
+perubahan perilaku untuk koneksi yang sudah ada. **TIDAK ADA perubahan
+RLS/permission baru** — kolom baru tunduk pada policy `agent_ai_connections_
+select/_self_insert/_self_update/_admin_force` yang sudah ada, sama seperti
+`encrypted_api_key`.
+
+Diuji nyata: buat koneksi single-key (Gemini) DAN multi-kredensial
+(Cloudinary) berdampingan dengan Developer Partner test user — respons API
+menyertakan `public_identifier` tapi tidak pernah membocorkan kolom
+terenkripsi manapun; rotasi `secondary_key`+`public_identifier` via PUT;
+`/test` endpoint dikonfirmasi mendekripsi KEDUA kolom terenkripsi
+sekaligus; query langsung ke DB mengonfirmasi `encrypted_secondary_key`
+tersimpan dalam format `iv.authTag.ciphertext` (bukan plaintext). Data uji
+dan 2 user test dibersihkan total setelah pengujian.

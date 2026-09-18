@@ -20,7 +20,7 @@ export const POST = withApiHandler({}, async (ctx) => {
   const supabase = await createClient();
   const { data: connection, error: findErr } = await supabase
     .from("agent_ai_connections")
-    .select("id, encrypted_api_key, status")
+    .select("id, encrypted_api_key, encrypted_secondary_key, status")
     .eq("id", ctx.params.id)
     .maybeSingle();
 
@@ -34,20 +34,24 @@ export const POST = withApiHandler({}, async (ctx) => {
     throw new ApiError("CONFLICT", `Koneksi berstatus '${connection.status}', hanya koneksi 'active' yang bisa diuji.`);
   }
 
-  // Pastikan encrypted_api_key benar-benar bisa didekripsi (mis. mendeteksi
-  // BYOK_ENCRYPTION_KEY yang salah/berubah) — ini validasi INTEGRITAS
-  // penyimpanan, bukan validasi kredensial ke provider eksternal.
+  // Pastikan encrypted_api_key (dan encrypted_secondary_key kalau ada,
+  // provider multi-kredensial/0080) benar-benar bisa didekripsi (mis.
+  // mendeteksi BYOK_ENCRYPTION_KEY yang salah/berubah) — ini validasi
+  // INTEGRITAS penyimpanan, bukan validasi kredensial ke provider eksternal.
   try {
     decryptApiKey(connection.encrypted_api_key);
+    if (connection.encrypted_secondary_key) {
+      decryptApiKey(connection.encrypted_secondary_key);
+    }
   } catch {
-    throw new ApiError("CONFLICT", "encrypted_api_key tidak bisa didekripsi (kemungkinan BYOK_ENCRYPTION_KEY berubah) — Agent perlu rotate koneksi.");
+    throw new ApiError("CONFLICT", "Kredensial tersimpan tidak bisa didekripsi (kemungkinan BYOK_ENCRYPTION_KEY berubah) — Agent perlu rotate koneksi.");
   }
 
   const { data, error } = await supabase
     .from("agent_ai_connections")
     .update({ last_validated_at: new Date().toISOString() })
     .eq("id", ctx.params.id)
-    .select("id, user_id, provider_id, status, disabled_by_admin, last_validated_at, connected_at, created_at, updated_at")
+    .select("id, user_id, provider_id, public_identifier, status, disabled_by_admin, last_validated_at, connected_at, created_at, updated_at")
     .maybeSingle();
 
   if (error) {

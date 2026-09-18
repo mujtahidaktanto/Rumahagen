@@ -23,9 +23,16 @@ export type UpdateAiProviderInput = z.infer<typeof updateAiProviderSchema>;
 
 // POST /ai-connections — `api_key` mentah diterima di sini, dienkripsi
 // (lib/crypto/byok.ts) SEBELUM insert. TIDAK PERNAH disimpan/dilogging mentah.
+// `public_identifier`/`secondary_key` OPSIONAL — hanya diisi untuk provider
+// multi-kredensial (mis. Cloudinary: public_identifier=cloud_name,
+// secondary_key=api_secret, api_key=Cloudinary api_key). Migration 0080.
+// `public_identifier` TIDAK dienkripsi (memang bukan rahasia); `secondary_key`
+// dienkripsi persis seperti `api_key` sebelum insert.
 export const createAiConnectionSchema = z.object({
   provider_id: z.string().uuid(),
   api_key: z.string().min(1),
+  public_identifier: z.string().max(150).optional(),
+  secondary_key: z.string().min(1).optional(),
 });
 export type CreateAiConnectionInput = z.infer<typeof createAiConnectionSchema>;
 
@@ -37,6 +44,8 @@ export type CreateAiConnectionInput = z.infer<typeof createAiConnectionSchema>;
 // diduplikasi di sini (R-02).
 export const updateAiConnectionSchema = z.object({
   api_key: z.string().min(1).optional(),
+  public_identifier: z.string().max(150).optional(),
+  secondary_key: z.string().min(1).optional(),
   status: z.enum(["active", "disconnected", "invalid"]).optional(),
   // Hanya berlaku untuk actor dengan permission
   // m13.administrative_force_revoke_disable.execute (RLS
