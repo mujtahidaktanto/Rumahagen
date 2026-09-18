@@ -765,6 +765,100 @@ error-message mapping di kedua route, pola sama seperti
 chain, reconciliation cases, LP) dan 3 user test dibersihkan total setelah
 pengujian.
 
+## Batch: Fase 1 "100% tabel" + M02 Profile REST API (37 route file)
+
+REST API + Zod di atas migration+RLS Fase 1 "100% tabel" (`0047`–`0055`,
+lihat root `README.md`, 13 tabel M01/M03/M07/M11/M12) PLUS M02 Profile
+(`0029`–`0030`, `agent_profiles`/`agent_reviews`) yang selama ini hanya
+punya migration+RLS tanpa satu route Next.js pun. Batch terbesar kedua di
+repo ini (37 route file) — evidence-scoped mengikuti STEP11-B1 (M01/M02),
+STEP11-B2 (M03 media/price-history/leads), STEP11-B6 (M12 invitations),
+tanpa migration baru sama sekali (murni REST layer di atas RLS yang sudah
+ada, kecuali 3 bug yang diperbaiki di kode route sendiri, bukan SQL).
+
+- **M02 Profile** (7 route): `users/me` (GET, gabungan `public.users`+
+  `agent_profiles`), `users/profile` (PUT — upsert, `public_slug` di-generate
+  server-side saat pertama kali dibuat, `total_listings_sold`/`rented`
+  SENGAJA tidak ada di skema manapun karena murni cache M03 tanpa mekanisme
+  sinkron), `agents/[id]` (GET publik, RLS `profile_visibility` menggerbangi),
+  `agents/[id]/credentials` (GET — presentasi `title_presentations`/M15,
+  BUKAN `certificates`/M04 yang RLS-nya tidak punya jalur publik sama
+  sekali), `agents/[id]/reviews` (GET publik + POST auto-approved — Buyer
+  ATAU Agent self-review, keduanya dievidence eksplisit di komentar
+  migration 0030), `admin/agent-reviews/pending`+`[id]/approve`+`[id]/reject`
+  (moderasi POST-PUBLIKASI, bukan gate normal — Gate PRE-00-D §13-14)
+- **M01 verification documents** (1 route, SENGAJA minimal):
+  `users/verification-documents` — **HANYA POST** (API-013 intake).
+  STEP11-B1 F11-B1-002/003 eksplisit: "Do not invent GET/PUT/DELETE
+  routes" — Agent tidak bisa cek status submisinya sendiri lewat REST,
+  staf tidak bisa review lewat REST, keduanya controlled gap yang
+  DISENGAJA, bukan kelalaian. Diuji: trigger `enforce_verification_
+  document_staff_only_review` (0055) dikonfirmasi tetap memblokir
+  self-approval lewat PostgREST mentah
+- **M03 listing extensions** (15 route): `listings/[id]/media` (GET list
+  gabungan photo+video, POST create — `media_type` discriminator ke
+  `listing_photos`/`listing_videos`), `listings/[id]/media/[mediaId]`
+  (DELETE — coba `listing_photos` dulu lalu `listing_videos`),
+  `.../set-cover` (PUT — eksklusif, foto lain otomatis `is_cover=false`),
+  `listings/[id]/price-history` (GET, read-only — diisi trigger
+  `log_listing_price_change` sejak 0047), `listings/[id]/views` (POST,
+  ADD-NEW), `listings/[id]/cta-click` + `leads` + `leads/[id]` +
+  `agents/me/leads`+`/stats` + `admin/leads` (API-044-048/050 STEP11-B2 —
+  API-049 PUT status SENGAJA tidak dibangun, `listing_leads` tidak punya
+  kolom `status` sama sekali), `amenities`+`[id]` (katalog publik,
+  Superadmin manage) + `listings/[id]/amenities`+`[amenityId]` (junction,
+  ADD-NEW)
+- **`ref_villages`** (2 route, ADD-NEW): `ref-villages` (GET filter
+  `district_id`, POST) + `[id]` (PUT/DELETE) — provinces/cities/districts
+  yang lebih lama pun belum punya REST API (gap pre-existing, dicatat,
+  bukan ditutup diam-diam di batch ini)
+- **`url_redirects`** (2 route, ADD-NEW): `url-redirects` (GET
+  `?old_path=` lookup + POST) + `[id]` (DELETE) — tidak ada di STEP11-B9
+  M11 sama sekali, dibangun karena RLS publik tabel ini sendiri
+  membuktikan maksud desainnya
+- **M12 `organization_invitations`** (5 route, `organization_document`
+  SENGAJA TIDAK dibangun — STEP11-B6 eksplisit "not grounds for inventing
+  tables"): `organizations/[id]/invitations` (leader invite, API-161),
+  `organizations/[id]/join-requests` (agent request, API-162 — `leader_id`
+  diresolusi server-side lewat admin client karena RLS `organization_
+  members_select` memblokir calon anggota yang belum bergabung),
+  `organization-invitations/[id]/accept`+`reject` (API-163/164 — trigger
+  `enforce_organization_invitation_no_self_accept` dikonfirmasi memblokir
+  kedua arah self-accept), `agents/me/organization-invitations` (API-165)
+- **`dbr_simulations`** (3 route, ADD-NEW — tidak ada dokumen STEP11-B
+  khusus M07): `dbr-simulations` (POST+GET) + `[id]` (GET). Formula
+  anuitas standar (`lib/dbr/calculate.ts`) dihitung SERVER-SIDE dari
+  `dbr_config` (0008, `dbr_threshold_percent`=35%/`default_interest_rate`
+  =8.5% sudah ada di DB) + pita "perlu_review" 10 percentage-point
+  (satu-satunya angka pita yang dievidence, PRE-00-I_M07_DOMAIN_ALIGNMENT_
+  GATE) — arah pemetaan band (DBR rendah=layak) inferensi definisional
+  "debt burden ratio", bukan kebijakan bisnis dikarang. Klien TIDAK BISA
+  mengirim `monthly_installment`/`dbr_percent`/`eligibility_status` sendiri.
+- **3 bug ditemukan & diperbaiki di kode REST** (bukan migration):
+  1. `listing_views`/`listing_leads` INSERT gagal untuk pengunjung anonim
+     — `.select()` setelah `.insert()` kena RLS SELECT yang lebih ketat
+     (owner/staf saja, bukan publik), gotcha arsitektural yang sama persis
+     dari testing migration Fase 1 (`INSERT...RETURNING` vs RLS publik,
+     lihat `supabase/migrations/README.md`) — diperbaiki hapus `.select()`,
+     return minimal.
+  2. Lookup `dbr_config` gagal untuk Agent biasa — RLS `dbr_config_select`
+     memakai `has_permission(..., updated_by)` scope 'own', tapi baris
+     config global ini singleton tanpa "pemilik" yang cocok dengan
+     `auth.uid()` Agent mana pun — diperbaiki pakai admin client khusus
+     untuk lookup config ini saja (otorisasi sesungguhnya tetap RLS INSERT
+     `dbr_simulations`).
+- **Diuji nyata** dengan 4 user throwaway (Superadmin/Agent×2/Buyer):
+  seluruh listing media lifecycle (upload/set-cover eksklusif/delete/cross-
+  agent block), price-history trigger otomatis, view/lead tracking anonim,
+  amenities katalog+junction, profil public/private toggle, review self &
+  buyer + moderasi post-publikasi, verification document self-approval
+  block via PostgREST mentah, ref-villages & url-redirects staff-only
+  write, organization invitation kedua arah (leader-invite & agent-
+  request) dengan self-accept block terverifikasi, dan simulasi DBR
+  dengan hasil `layak`/`tidak_layak` diverifikasi benar secara matematis
+  (formula anuitas manual dicocokkan). Data uji dan 4 user test dibersihkan
+  total setelah pengujian.
+
 ## Yang BELUM ada (menyusul di Step 3 dan seterusnya)
 
 Route untuk modul lain — mengikuti urutan Tahap 2–6 di `CHECKLIST_RESIDUAL_IMPLEMENTASI.md`,
