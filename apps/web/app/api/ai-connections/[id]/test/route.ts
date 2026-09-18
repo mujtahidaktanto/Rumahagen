@@ -2,14 +2,23 @@
 // POST /ai-connections/{id}/test (evidenced, STEP11-B10 §4 M13).
 //
 // SCOPE: endpoint ini memvalidasi & mencatat `last_validated_at` bahwa
-// koneksi ADA, dimiliki pemanggil, dan berstatus 'active' — TIDAK benar-benar
-// memanggil API provider AI eksternal (OpenAI/dst.) untuk verifikasi
-// kredensial nyata. Memanggil provider sungguhan butuh adapter per-provider
-// (payload/response provider-specific, di luar skema DB manapun — STEP11-B10
-// §3 eksplisit: "Provider-specific payloads remain adapter/provider-internal"),
-// kunci API asli (yang di-decrypt di sini HANYA untuk dipakai lokal, tidak
-// pernah dikirim balik ke client), dan potensi biaya/efek samping nyata ke
-// akun pihak ketiga milik Agent — tidak diasumsikan/dikarang di batch ini.
+// koneksi ADA, dimiliki pemanggil, dan berstatus 'unverified'/'active' —
+// TIDAK benar-benar memanggil API provider AI eksternal (OpenAI/dst.) untuk
+// verifikasi kredensial nyata. Memanggil provider sungguhan butuh adapter
+// per-provider (payload/response provider-specific, di luar skema DB
+// manapun — STEP11-B10 §3 eksplisit: "Provider-specific payloads remain
+// adapter/provider-internal"), kunci API asli (yang di-decrypt di sini
+// HANYA untuk dipakai lokal, tidak pernah dikirim balik ke client), dan
+// potensi biaya/efek samping nyata ke akun pihak ketiga milik Agent — tidak
+// diasumsikan/dikarang di batch ini.
+//
+// DIPERBARUI 0093 (Gate PRE-00-O §7-8, CREATE -> UNVERIFIED -> test ->
+// VALID/ACTIVE): koneksi BARU selalu mulai 'unverified' (trigger DB) —
+// endpoint ini sekarang menerima 'unverified' MAUPUN 'active' (re-test),
+// dan men-transisikan 'unverified' -> 'active' saat berhasil. Tanpa
+// perubahan ini, guard lama ("hanya 'active' yang bisa diuji") akan
+// membuat deadlock: koneksi baru tidak akan pernah bisa lolos test sama
+// sekali karena selalu mulai 'unverified', bukan 'active'.
 
 import { withApiHandler } from "@/lib/api/handler";
 import { decryptApiKey } from "@/lib/crypto/byok";
@@ -30,8 +39,8 @@ export const POST = withApiHandler({}, async (ctx) => {
   if (!connection) {
     throw new ApiError("NOT_FOUND", "Koneksi AI tidak ditemukan atau Anda tidak punya akses.");
   }
-  if (connection.status !== "active") {
-    throw new ApiError("CONFLICT", `Koneksi berstatus '${connection.status}', hanya koneksi 'active' yang bisa diuji.`);
+  if (connection.status !== "unverified" && connection.status !== "active") {
+    throw new ApiError("CONFLICT", `Koneksi berstatus '${connection.status}', hanya koneksi 'unverified' atau 'active' yang bisa diuji.`);
   }
 
   // Pastikan encrypted_api_key (dan encrypted_secondary_key kalau ada,
@@ -49,7 +58,10 @@ export const POST = withApiHandler({}, async (ctx) => {
 
   const { data, error } = await supabase
     .from("agent_ai_connections")
-    .update({ last_validated_at: new Date().toISOString() })
+    .update({
+      last_validated_at: new Date().toISOString(),
+      status: connection.status === "unverified" ? "active" : connection.status,
+    })
     .eq("id", ctx.params.id)
     .select("id, user_id, provider_id, public_identifier, status, disabled_by_admin, last_validated_at, connected_at, created_at, updated_at")
     .maybeSingle();

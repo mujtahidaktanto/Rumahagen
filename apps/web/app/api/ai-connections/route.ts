@@ -41,6 +41,13 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     .single();
 
   if (error) {
+    // Unique index agent_ai_connections_one_live_per_provider (0093, Gate
+    // PRE-00-O §9) — satu koneksi hidup (belum disconnect/revoke) per
+    // provider per user. Dibedakan dari error tak terduga supaya client
+    // dapat 409 (aturan bisnis), bukan 500 generik.
+    if (error.code === "23505") {
+      throw new ApiError("CONFLICT", "Anda sudah punya koneksi aktif ke provider ini — disconnect koneksi lama dulu sebelum membuat yang baru.");
+    }
     throw error;
   }
 

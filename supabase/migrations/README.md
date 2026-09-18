@@ -1169,3 +1169,66 @@ dbr_simulation()` dengan token yang sama → gagal (akses tercabut). Semua
 data uji (5 user, listing, organisasi, invitation, 2 event, registrasi,
 bank, simulasi DBR) dibersihkan total dan diverifikasi kosong setelah
 pengujian.
+
+## Tier 3 — `0092`/`0093`: belum diimplementasi, tapi sudah ditandai Core sendiri sebagai ditunda
+
+Lanjutan `audit/CORE_VS_MIGRATED_BACKEND_AUDIT.md` — 4 temuan Tier 3,
+prioritas lebih rendah dari Tier 1/2 karena dokumen gate-nya SENDIRI sudah
+mengakui ini residual/CONTROLLED (bukan penyimpangan diam-diam seperti pola
+0002/0083), tapi tetap ditutup sebelum UI terkait dibangun di Bolt.new.
+
+### `0092_add_agent_profile_region_organization_context.sql`
+
+Gate `PRE-00-D` §11.2 (`M02-CI-021`, AUGMENT/LOCK) mengunci alamat Agent
+Profile memakai model region Indonesia (Provinsi/Kota administratif, Area
+tetap bebas teks — "must not collapse the Indonesian regional hierarchy
+into one unrestricted administrative field"); §11.3 (`M02-CI-022`,
+PRESERVE/CLARIFY) mengunci "Organization Name" merepresentasikan konteks
+organisasi Agent TAPI eksplisit "M02 presents, M12 remains the authoritative
+Organization/Membership truth". Ditambahkan `province_id`/`city_id` (FK ke
+`ref_provinces`/`ref_cities` yang sudah ada — `coverage_area` yang sudah ada
+TETAP dipertahankan sebagai "Area" bebas teks, tidak perlu kolom baru untuk
+itu) dan `organization_id` (FK ke `organizations` — REFERENSI, bukan salinan
+teks nama, supaya tidak duplikasi/basi terhadap M12). Ketiganya nullable
+(kelengkapan profil opsional), tidak ada permission/RLS baru (sudah tercakup
+`m02.agent_profile.update` yang ada). Zod `upsertAgentProfileSchema`
+diperbarui menambah ketiga field.
+
+Diuji nyata: `PUT /users/profile` dengan `province_id`/`city_id`/
+`organization_id` → **201, ketiganya tersimpan benar**, `coverage_area`
+("Area") tetap berfungsi sebagai teks bebas terpisah. Data uji dibersihkan
+total.
+
+### `0093_m13_connection_uniqueness_unverified_state.sql` (+ 2 fix companion di kode aplikasi)
+
+Gate `PRE-00-O` §9 mengunci SATU koneksi hidup per provider per Agent/User
+(belum ada unique guard fisik); §7-8 mengunci siklus `CREATE → UNVERIFIED →
+test → VALID/ACTIVE` (AI ditolak selagi UNVERIFIED) — skema lama langsung
+default `'active'` tanpa state `unverified` sama sekali. Ditambahkan nilai
+`unverified` ke CHECK constraint + DEFAULT baru, trigger BARU
+`enforce_agent_ai_connection_initial_state()` yang memaksa status awal
+`unverified` TERLEPAS apa yang dikirim klien saat INSERT, dan unique partial
+index `agent_ai_connections_one_live_per_provider` pada `(user_id,
+provider_id) WHERE status NOT IN ('disconnected','revoked')` — user harus
+disconnect/kena revoke dulu sebelum bisa membuat koneksi baru ke provider
+yang sama.
+
+**2 fix companion ditemukan SAAT testing nyata**:
+- `POST /ai-connections/{id}/test` sebelumnya menolak apa pun selain status
+  `'active'` — begitu default berubah jadi `'unverified'`, ini akan
+  DEADLOCK TOTAL (koneksi baru tidak akan pernah bisa lolos test karena
+  syaratnya "harus sudah active", padahal test JUSTRU jalan yang membuatnya
+  active). Diperbaiki: terima `'unverified'` MAUPUN `'active'` (re-test),
+  dan transisikan `unverified→active` saat berhasil.
+- `POST /ai-connections` tidak memetakan error `23505` (pelanggaran unique
+  index baru) ke respons yang ramah — client dapat `500` generik alih-alih
+  `409`. Ditambahkan pemetaan eksplisit, pola sama seperti route claim.
+
+Diuji nyata: koneksi baru (role Developer Partner — permission BYOK memang
+digrant ke role itu, bukan Agent, sesuai komentar migration 0016) →
+**status `unverified`**; koneksi KEDUA ke provider yang sama selagi yang
+pertama masih hidup → **409 ditolak**; `POST .../test` pada koneksi
+`unverified` → **200, status jadi `active`**; disconnect koneksi pertama
+lalu buat koneksi baru ke provider yang sama → **201 berhasil** (uniqueness
+tidak menghalangi re-connect setelah disconnect). Data uji (2 user,
+organisasi, provider, 3 koneksi) dibersihkan total dan diverifikasi kosong.

@@ -4,7 +4,10 @@
 // `total_listings_sold`/`total_listings_rented` SENGAJA tidak ada di skema
 // manapun di sini — migration 0029 sendiri menyatakan itu proyeksi/cache
 // dari M03 yang belum ada mekanisme sinkronisasinya, bukan field yang bisa
-// ditulis lewat REST API mana pun (client atau staff).
+// ditulis lewat REST API mana pun (client atau staff). `province_id`/
+// `city_id`/`organization_id` (0092, Gate PRE-00-D §11.2/§11.3) ditambahkan
+// sebagai referensi presentasi — M02 tidak memvalidasi keberadaan/otoritas
+// organisasi/wilayahnya sendiri (FK database yang menegakkan itu).
 
 import { z } from "zod";
 
@@ -14,6 +17,9 @@ export const upsertAgentProfileSchema = z.object({
   bio: z.string().optional(),
   specialization: z.array(z.string()).optional(),
   coverage_area: z.string().max(255).optional(),
+  province_id: z.string().uuid().optional(),
+  city_id: z.string().uuid().optional(),
+  organization_id: z.string().uuid().optional(),
   office_name: z.string().max(150).optional(),
   license_number: z.string().max(50).optional(),
   whatsapp_number: z.string().min(1).max(20),

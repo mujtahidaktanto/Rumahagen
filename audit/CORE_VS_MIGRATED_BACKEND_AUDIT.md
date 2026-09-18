@@ -32,7 +32,19 @@ begitu org disuspend; RSVP ke event `manual_approval` otomatis berstatus
 anonim, gagal lagi setelah di-revoke. Data uji dibersihkan total. Detail
 di bagian "Tier 2" di bawah, ditandai ✅ per temuan.
 
-Tier 3 masih terbuka — lihat bagian di bawah.
+**Tier 3 (4 temuan) — ✅ SELESAI DIPERBAIKI (2026-09-18)**, lewat migration
+`0092` (agent_profiles Provinsi/Kota/Organization) dan `0093` (M13 BYOK
+satu-koneksi-hidup-per-provider + state `unverified`). Diuji nyata:
+`PUT /users/profile` menyimpan `province_id`/`city_id`/`organization_id`
+dengan benar; koneksi BYOK baru selalu mulai `unverified` (bukan langsung
+`active`); mencoba bikin koneksi kedua ke provider yang sama sementara yang
+pertama masih hidup → `409` ditolak; `POST /ai-connections/{id}/test`
+berhasil mentransisikan `unverified→active`; setelah disconnect, koneksi
+baru ke provider yang sama berhasil dibuat lagi. Perbaikan companion di
+`POST /ai-connections/{id}/test` (guard lama akan deadlock — koneksi baru
+tidak akan pernah lolos test karena syaratnya "harus sudah active") dan
+`POST /ai-connections` (pemetaan error 23505→409 yang ramah). Data uji
+dibersihkan total.
 
 ## Konteks
 
@@ -60,7 +72,7 @@ skema Supabase live.
 |---|---|---|
 | **Tier 1 — Bug permission aktif sekarang** | 4 (✅ semua diperbaiki `0084`/`0085`) | Staf punya akses salah HARI INI, bukan cuma gap fitur |
 | **Tier 2 — State/model terkunci hilang total dari skema** | 4 (✅ semua diperbaiki `0086`-`0089`, +`0090`/`0091` fix tambahan) | Tidak ada cara merepresentasikan state ini sama sekali |
-| **Tier 3 — Belum diimplementasi, sudah diketahui Core sendiri sebagai ditunda** | 4 | Lebih rendah urgensi — Core sudah menandainya CONTROLLED |
+| **Tier 3 — Belum diimplementasi, sudah diketahui Core sendiri sebagai ditunda** | 4 (✅ semua diperbaiki `0092`/`0093`) | Lebih rendah urgensi — Core sudah menandainya CONTROLLED |
 | **Bersih/minor** | M01, M04, M08, M11, sebagian M15; 0080/0081 dikonfirmasi BUKAN pelanggaran | — |
 
 ---
@@ -175,13 +187,13 @@ skema Supabase live.
 
 ---
 
-## Tier 3 — Belum diimplementasi, tapi SUDAH ditandai Core sendiri sebagai ditunda
+## Tier 3 — ✅ SEMUA DIPERBAIKI (0092/0093) — Belum diimplementasi, tapi SUDAH ditandai Core sendiri sebagai ditunda
 
 Lebih rendah urgensi karena bukan penyimpangan diam-diam — dokumen gate-nya
 sendiri sudah mengakui ini CONTROLLED/downstream residual, bukan LOCKED yang
 dilanggar.
 
-### T3-1 & T3-2. `agent_profiles` kehilangan field Provinsi/Kota dan Organization Name
+### T3-1 & T3-2. ✅ DIPERBAIKI (0092) — `agent_profiles` kehilangan field Provinsi/Kota dan Organization Name
 
 `PRE-00-D_M02_..._GATE_FULL_v1.1.md` §11.2 (`M02-CI-021`, AUGMENT/LOCK) dan
 §11.3 (`M02-CI-022`, PRESERVE/CLARIFY) mengunci field Provinsi/Kota (bukan satu
@@ -191,7 +203,7 @@ tidak ada province_id/city_id atau organization_name/organization_id. Gate
 PRE-00-D v1.1 ini direvisi SETELAH STEP10-D terakhir disinkronkan, jadi gap-nya
 bukan penyimpangan tapi keterlambatan propagasi.
 
-### T3-3 & T3-4. M13 BYOK: guard "satu koneksi aktif per provider" dan state "unverified" belum ada
+### T3-3 & T3-4. ✅ DIPERBAIKI (0093) — M13 BYOK: guard "satu koneksi aktif per provider" dan state "unverified" belum ada
 
 `PRE-00-O_M13_..._GATE_FULL_v1.0.md` §9 mengunci satu koneksi aktif per
 provider per Agent (belum ada unique index `(user_id, provider_id)`); §7-8
@@ -234,8 +246,9 @@ tapi masih terbuka.
    Bank Master (T2-3) adalah fitur baru yang cukup besar — lihat catatan di
    `supabase/migrations/README.md` untuk detail desain lengkap sebelum UI-nya
    dibangun di Bolt.
-3. **Bisa ditunda**: Tier 3 sudah diketahui dan ditandai Core sendiri —
-   prioritas produk yang menentukan kapan.
+3. ✅ **Selesai** — 4 temuan Tier 3 sudah diperbaiki (`0092`/`0093`) dan
+   diuji nyata end-to-end, termasuk 2 fix companion di route `/ai-
+   connections` yang ketemu saat testing.
 4. **Dokumentasi ringan**: perbarui baris STEP10-D untuk `AGENT_AI_CONNECTIONS`
    dan `ADDONS` supaya konsisten dengan `0080`/`0081` (bukan urgent, murni
    housekeeping dokumentasi).
