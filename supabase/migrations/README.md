@@ -956,3 +956,216 @@ Diuji nyata: user baru dibuat tanpa menyebut `status` sama sekali → langsung
 verifikasi KTP tetap bisa diupload setelah aktif (`POST /users/verification-
 documents` → 201, tidak digating). Data uji dibersihkan total dan diverifikasi
 kosong setelah pengujian.
+
+## `0084_fix_m09_admin_authority_permission_bugs.sql` — FIX (3 bug permission aktif, ditemukan lewat deep scan Core vs migrasi)
+
+Lahir dari deep scan menyeluruh Core (`docs/core/current/`, 580 file `.md`/`.csv`
+langsung terbaca) vs 83 migration yang sudah diterapkan
+(`audit/CORE_VS_MIGRATED_BACKEND_AUDIT.md`) — 3 dari 4 temuan "Tier 1" (bug
+permission AKTIF SEKARANG, bukan cuma gap fitur), semuanya bersumber dari
+`docs/core/current/00-governance/STEP-00/PRE-00-K_M09_ADMINISTRATION_AUTHORITY_
+GATE_FULL_v1.0.md` yang LOCKED tapi tidak konsisten dengan seed permission 0009 /
+RLS 0015 / RLS 0076:
+
+- **T1-1 Audit Log (M09-R04)**: Gate mengunci Superadmin=ALL, **Manager=ALL**,
+  **Admin=NONE**. Seed 0009 baris 375-376 justru memberi ALL ke Admin (bukan
+  Manager) — RLS `audit_logs_select` (0012) sudah benar memakai `has_permission()`,
+  jadi cukup diperbaiki di `role_permissions` (hapus grant Admin, tambah grant
+  Manager), tidak perlu ubah RLS.
+- **T1-2 Provider Catalogue (M09-R10)**: Gate mengunci Superadmin=ALL,
+  Manager=NONE, **Admin=ALL**. Seed 0009 hanya memberi Superadmin. BERBEDA dari
+  T1-1: RLS `ai_providers_write_superadmin` (0015) TIDAK memakai `has_permission()`
+  sama sekali — hardcode `is_superadmin()` langsung (menyalahi R-02, satu sumber
+  keputusan otorisasi). Diperbaiki dua lapis: tambah grant Admin di
+  `role_permissions` UNTUK `m09.provider_catalogue.mutation` +
+  `m13.provider_catalogue.create/edit/enable/disable/retire`, DAN ganti RLS-nya
+  memakai `has_permission('m09.provider_catalogue.mutation')` (DROP+CREATE POLICY,
+  nama tetap sama supaya jejak perbaikan jelas).
+- **T1-3 Reconciliation Manual Correction (M09-R09)**: Gate memisahkan
+  Review/Escalate (boleh Admin+Superadmin) dari Manual Correction — transisi kasus
+  ke status FINAL `resolved`/`rejected` yang mengoreksi data komersial —
+  **Superadmin-only**. RLS 0076 sebelumnya SATU policy `FOR ALL` lewat SATU
+  permission gabungan (`m14.commercial_administration.manage_commercial_resources`,
+  Admin+Superadmin), tidak ada pembedaan. Ditambah permission BARU
+  `m14.commercial_administration.manual_correction` (Superadmin-only), RLS
+  `reconciliation_cases` dipecah jadi 4 policy (SELECT/INSERT/UPDATE/DELETE) —
+  UPDATE ke `resolved`/`rejected` butuh permission tambahan ini, transisi lain
+  (investigating/escalated) tetap Admin+Superadmin seperti semula.
+
+Diuji nyata end-to-end lewat REST API sungguhan dengan 4 role test user
+(superadmin/admin/manager/agent): Admin `GET /admin/audit-logs` → **200, 0 baris**
+(sebelumnya bisa lihat); Manager → **200, ada baris** (sebelumnya tidak bisa sama
+sekali); Admin `POST /ai-providers` → **201 berhasil** (sebelumnya pasti 403);
+Admin `POST /admin/commercial/reconciliation/{id}/resolve` (status=resolved) →
+**403 ditolak**; Superadmin → **200 berhasil**. Data uji (4 user, 1 ai_provider, 1
+reconciliation_case) dibersihkan total dan diverifikasi kosong.
+
+## `0085_add_agent_project_claim_withdrawn_status.sql` — FIX (bug fungsional, agent_project_claims kekurangan status)
+
+Temuan Tier 1 ke-4 dari audit yang sama, domain berbeda (M06) jadi dipisah dari
+0084. `docs/core/current/00-governance/STEP-00/PRE-00-H_M06_DEVELOPER_PROJECT_
+MARKETING_CLAIM_GATE_FULL_v1.1.md` §17-18/§46/§51 mengunci siklus klaim proyek
+5-state termasuk `PENDING → WITHDRAWN` (Agent membatalkan klaim sendiri yang masih
+pending) — TERPISAH dari `REVOKED` (mencabut klaim yang SUDAH disetujui, keputusan
+staf/Developer Partner). Migration 0035 (seed Fase 1) hanya punya 4 state, RLS
+`agent_project_claims_review` (0041) diam-diam mengandalkan `revoked` dobel-fungsi
+untuk kedua kasus — bug fungsional nyata: kalau ada jalur yang coba
+`status='withdrawn'` mengikuti kontrak Core, akan GAGAL di CHECK constraint.
+
+Ditambah nilai `'withdrawn'` ke CHECK constraint, permission BARU
+`m06.claim.withdraw` (HANYA role `agent`, scope `own` — withdraw murni aksi
+self-service pemilik klaim, beda dari revoke yang juga bisa staf/Developer
+Partner), RLS `agent_project_claims_review` diperluas dengan OR-clause permission
+baru ini. Zod `claimStatusSchema` (`apps/web/lib/validation/claims.ts`) juga
+diperbarui menambah `'withdrawn'` — tanpa ini, request akan ditolak Zod sebelum
+sempat menyentuh database sama sekali.
+
+Diuji nyata: Agent buat klaim (`POST /developer-projects/{id}/claim` → 201, status
+`pending`) lalu tarik sendiri (`PUT /claims/{id}` dengan `status=withdrawn` →
+**200, status benar-benar berubah jadi `withdrawn`**). Data uji (developer partner,
+project, claim) dibersihkan total.
+
+## Tier 2 — `0086`-`0091`: state/model terkunci yang hilang total dari skema
+
+Lanjutan `audit/CORE_VS_MIGRATED_BACKEND_AUDIT.md` — 4 temuan Tier 2 (model
+yang dikunci Core tapi TIDAK ADA cara merepresentasikannya sama sekali di
+skema, beda dari Tier 1 yang "cuma" salah konfigurasi permission), plus 2
+migration perbaikan tambahan yang ketemu SAAT menguji nyata ketiganya.
+
+### `0086_add_listing_suspended_enforcement_state.sql`
+
+Gate `PRE-00-E` §10 mengunci `suspended` sebagai *enforcement state*
+pelanggaran platform ("bukan pengganti pending_review") — `listings_status_
+check` (0018) tidak pernah punya nilai ini. Ditambahkan ke CHECK constraint,
+plus permission BARU `m03.listing.suspend` (staf-only: Superadmin/Admin/
+Manager, TIDAK diberikan ke Agent) — mengikuti pola yang sama persis seperti
+transisi ke `published` (permission KHUSUS, bukan `m03.listing.update`
+generik). Trigger `enforce_listing_lifecycle_rules()` (0018) diperluas satu
+IF block baru untuk menggerbangi transisi ke/dari `suspended`.
+
+### `0087_add_organization_closing_suspended_states.sql`
+
+Gate `PRE-00-N` §6 mengunci siklus `ACTIVE → CLOSING → CLOSED` (dua langkah
+eksplisit) PLUS state enforcement terpisah `SUSPENDED` — `organizations_
+status_check` (0005) cuma biner `active`/`closed`. `closing`/`closed` tetap
+lewat RLS `organizations_manage` yang sudah ada (self-service leader,
+`created_by=auth.uid()`) — TIDAK diubah. `suspended` BEDA: trigger BARU
+`enforce_organization_lifecycle_rules()` menggerbanginya staf-only
+(Superadmin/Admin, konsisten dengan role yang sudah dipakai policy 0007 yang
+sama, bukan `has_permission()` baru supaya tidak campur konvensi dalam satu
+tabel). Trigger yang sama juga menutup konsekuensi lain yang dikunci gate:
+join-request (`organization_invitations`) PENDING otomatis `cancelled`
+begitu organisasi masuk CLOSING/SUSPENDED/CLOSED.
+
+### `0088_add_event_registration_approval_mode.sql` (+ fix keamanan di `0091`)
+
+Gate `PRE-00-G` (M05-DELTA-011/012, LOCKED, "two approval layers must not be
+collapsed" — approval PUBLIKASI event beda dari approval REGISTRASI event):
+default Registrasi AUTO-CONFIRM, Event Owner boleh override CLOSED atau
+MANUAL APPROVAL — skema lama tidak punya kolom apa pun untuk ini. Ditambah
+`events.registration_approval_mode` (`auto_confirm`/`manual_approval`/
+`closed`, diatur lewat UPDATE biasa `m05.event.update` yang sudah ada, bukan
+permission enforcement baru — ini konfigurasi normal, bukan moderasi) dan
+nilai `pending_approval` baru di `event_registrations.status`. Trigger BARU
+`enforce_event_registration_approval_mode()` menolak INSERT total kalau
+mode=closed, memaksa status awal `pending_approval` kalau mode=manual_
+approval (mengabaikan apa pun yang dikirim klien, kecuali `waitlist` yang
+tetap dihormati — sumbu kapasitas berbeda dari approval).
+
+**Bug ditemukan saat testing nyata, ditutup `0091`**: versi awal trigger di
+atas TIDAK `SECURITY DEFINER` — lookup `SELECT registration_approval_mode
+FROM events` di dalamnya berjalan dengan privilese REGISTRANT (bukan pemilik
+event), tunduk RLS `events_select` yang tidak mengizinkan lihat event
+published+public/orang lain. Registrant mendaftar ke event pihak lain yang
+belum published (kasus NORMAL) gagal SELECT sepenuhnya → `v_mode` jadi NULL
+→ seluruh pengecekan closed/manual_approval diam-diam TIDAK PERNAH berlaku.
+Dikonfirmasi lewat test nyata sebelum diperbaiki: RSVP ke event manual_
+approval tetap `registered`; RSVP ke event closed tetap berhasil 201.
+Ditutup dengan menambah `SECURITY DEFINER` — pola sama seperti alasan
+`admin_force_provider_connection()` dsb.: ini lookup *data integrity*, bukan
+keputusan otorisasi (otorisasi sesungguhnya tetap RLS `event_registrations_
+insert`, tidak berubah).
+
+### `0089_m07_bank_master_dbr_share_revoke.sql` (+ fix keamanan di `0091`) — GAP TERBESAR
+
+Gate `PRE-00-I` §8-13/§20-28 + sub-step khusus `PRE-00-I-1` (RESOLVED —
+PASS/LOCKED) menyatakan model lama satu threshold DBR global (`dbr_config`)
+EKSPLISIT "obsolete/RECONCILE-SUPERSEDED", diganti model **Bank Master +
+bank-specific configuration**: Admin configure Bank Master → User pilih bank
+→ M07 resolve threshold bank itu → simulasi → snapshot historis `threshold_
+used` (tidak boleh berubah retroaktif walau threshold bank diubah admin
+belakangan) → hasil boleh di-Share (recipient VIEW-ONLY lewat token) →
+Creator boleh Revoke (invalidasi seketika).
+
+- **Tabel baru `public.banks`** — kardinalitas TIDAK dibatasi (gate: batas 4
+  di UI cuma batas TAMPILAN, bukan batas data). View: Manager/Admin/Agent
+  (permission baru `m07.bank_master.view`); Configure: Admin+Superadmin
+  SAJA (permission baru `m07.bank_master.configure`, BUKAN Manager — beda
+  dari `m07.dbr.domain_operations` lama yang memberi Manager=ALL untuk
+  operasi simulasi).
+- **`dbr_simulations` diperluas**: `bank_id` (FK, `ON DELETE RESTRICT` —
+  bank berhistori tidak boleh dihapus, pensiunkan lewat `status=inactive`),
+  `threshold_used` (snapshot OTOMATIS lewat trigger, klien tidak bisa
+  mengirim nilai sendiri), `share_token`/`shared_at`/`revoked_at`.
+- **Share/Revoke lewat fungsi `SECURITY DEFINER`** (`share_dbr_simulation()`,
+  `revoke_dbr_simulation_share()`, `get_shared_dbr_simulation()`), BUKAN RLS
+  UPDATE biasa — `dbr_simulations` tetap *append-only* untuk field inti
+  (0052), share/revoke satu-satunya mutasi yang diizinkan lewat jalur
+  terpisah yang jelas cakupannya (pola sama seperti `refresh_listing()`).
+  `get_shared_dbr_simulation()` TIDAK mengecek `auth.uid()` sama sekali —
+  Gate §27: share "does not create a new platform role", recipient tidak
+  wajib punya akun platform. Akses recipient sengaja TIDAK lewat RLS row-
+  visibility biasa (RLS tidak bisa menegakkan "hanya yang tahu token").
+- `dbr_config` (0008) TIDAK DIHAPUS — dipertahankan sebagai artefak lama
+  yang sudah tidak dipakai simulasi baru, pola sama seperti nilai enum tak
+  terpakai yang tetap dipertahankan di tempat lain.
+- **Companion fix di kode aplikasi** (bukan migration): `POST /dbr-
+  simulations` sebelumnya membaca threshold/rate dari `dbr_config` global —
+  diperbarui membaca dari `banks` (bank yang dipilih klien via `bank_id`,
+  kolom baru wajib di Zod schema), atau endpoint akan rusak total begitu
+  `bank_id` jadi NOT NULL.
+
+**Bug ditemukan saat testing nyata, ditutup `0091`** (pola identik dengan
+bug event di atas, ditutup proaktif walau belum pernah gagal di test karena
+`banks_select` kebetulan mengizinkan semua role yang bisa INSERT
+`dbr_simulations`): trigger `enforce_dbr_simulation_bank_snapshot()` juga
+diperkuat `SECURITY DEFINER` untuk mencegah kelas bug yang sama kalau
+matrix permission `banks_select` berubah di masa depan.
+
+### `0090_fix_listings_update_rls_for_suspend.sql`
+
+Bug ditemukan saat testing nyata `0086`: trigger `enforce_listing_
+lifecycle_rules()` mengecek `m03.listing.suspend` DI DALAM trigger dengan
+benar, TAPI RLS `listings_update` (0018) USING clause HANYA mengecek
+`m03.listing.update` (superadmin+agent-own) — baris sudah difilter habis
+RLS SEBELUM trigger sempat jalan, jadi Manager/Admin yang punya permission
+suspend tetap dapat 404 (bukan benar-benar bisa suspend). Dikonfirmasi
+nyata: Manager `PATCH /listings/{id}/status` (suspended) → 404 sebelum
+diperbaiki. Ditutup dengan menambah `OR has_permission('m03.listing.
+suspend', agent_id)` ke USING clause.
+
+### `0091_fix_event_registration_approval_trigger_security_definer.sql`
+
+Menutup 2 bug `SECURITY DEFINER` yang ditemukan saat testing nyata `0088`/
+`0089` — detail lengkap di masing-masing sudah dijelaskan di atas.
+
+---
+
+Diuji nyata end-to-end untuk keempat Tier 2 + 2 fix tambahan sekaligus,
+semuanya lewat REST API sungguhan dengan 5 role test user (superadmin/
+admin/manager/agent×2): Agent gagal self-suspend listing (`403`), Manager
+berhasil (`200`, status benar-benar `suspended`); Leader organisasi gagal
+self-suspend org sendiri (`400`, pesan error trigger persis), join-request
+pending yang sudah dibuat otomatis jadi `cancelled` begitu org di-suspend
+(lewat service role, simulasi staf); RSVP ke event `manual_approval` →
+status registrasi otomatis `pending_approval`; RSVP ke event `closed` →
+`409` ditolak; Manager `POST /banks` → `403` (RLS menolak insert), Admin →
+`201` berhasil; Agent buat simulasi DBR dengan `bank_id` → `threshold_used`
+otomatis terisi PERSIS sama dengan `dbr_threshold_percent` bank yang
+dipilih; `share_dbr_simulation()` menghasilkan token, `get_shared_dbr_
+simulation()` lewat token itu (dipanggil TANPA sesi, seperti anonim) berhasil
+membaca data yang sama; `revoke_dbr_simulation_share()` lalu `get_shared_
+dbr_simulation()` dengan token yang sama → gagal (akses tercabut). Semua
+data uji (5 user, listing, organisasi, invitation, 2 event, registrasi,
+bank, simulasi DBR) dibersihkan total dan diverifikasi kosong setelah
+pengujian.

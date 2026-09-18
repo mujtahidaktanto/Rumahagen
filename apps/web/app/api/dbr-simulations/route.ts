@@ -1,21 +1,19 @@
 // app/api/dbr-simulations/route.ts
-// POST/GET dbr_simulations (M07 Fase 1, migration 0052). RLS
-// dbr_simulations_select/_insert (has_permission('m07.dbr.domain_operations',
-// agent_id) — Agent=OWN, Superadmin/Admin/Manager=ALL) yang menggerbangi.
-// Tidak ada literal endpoint STEP11 untuk M07 (tidak ada dokumen STEP11-B
-// khusus M07 di corpus) — dibangun karena tabel+RLS+permission sudah ada
-// sejak migration dan tidak ada jalur lain untuk memakainya.
+// POST/GET dbr_simulations (M07 Fase 1, migration 0052; diperluas 0089
+// untuk model Bank Master — Gate PRE-00-I). RLS dbr_simulations_select/
+// _insert (has_permission('m07.dbr.domain_operations', agent_id) —
+// Agent=OWN, Superadmin/Admin/Manager=ALL) yang menggerbangi. Tidak ada
+// literal endpoint STEP11 untuk M07 — dibangun karena tabel+RLS+permission
+// sudah ada sejak migration dan tidak ada jalur lain untuk memakainya.
 //
-// Lookup dbr_config SENGAJA memakai admin client, ditemukan lewat testing:
-// RLS dbr_config_select (0008) memakai has_permission('m07.dbr.
-// domain_operations', updated_by), dan `updated_by` baris config global ini
-// TIDAK PERNAH sama dengan auth.uid() Agent mana pun (baris singleton,
-// "pemilik"-nya konseptual tidak ada untuk scope 'own') — Agent biasa
-// SELALU gagal membaca dbr_config lewat client sesi biasa, membuat endpoint
-// ini gagal total untuk siapa pun kecuali staf. Nilai threshold/rate global
-// bukan data sensitif per-pemilik; otorisasi SESUNGGUHNYA tetap ditegakkan
-// RLS dbr_simulations_insert (agent_id harus sama dengan auth.uid()) saat
-// INSERT di bawah, bukan oleh lookup config ini.
+// DIPERBARUI 0089: threshold/rate TIDAK LAGI dibaca dari dbr_config global
+// (model itu dinyatakan usang Gate PRE-00-I) — klien memilih `bank_id` dari
+// Bank Master, endpoint membaca threshold/rate BANK ITU (RLS banks_select
+// mengizinkan Agent lewat m07.bank_master.view, jadi client biasa cukup,
+// tidak perlu admin client lagi seperti dbr_config dulu). threshold_used
+// yang benar-benar tersimpan tetap snapshot dari trigger DB (enforce_dbr_
+// simulation_bank_snapshot), bukan nilai yang dihitung di sini — dibaca di
+// sini HANYA untuk kalkulasi dbr_percent sebelum INSERT.
 
 import { withApiHandler } from "@/lib/api/handler";
 import { parsePagination, buildPaginationMeta } from "@/lib/api/pagination";
@@ -24,7 +22,6 @@ import { createDbrSimulationSchema } from "@/lib/validation/dbr-simulations";
 import { calculateDbrSimulation } from "@/lib/dbr/calculate";
 import { ApiError } from "@/lib/api/errors";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 
 export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
   if (!ctx.userId) {
@@ -33,23 +30,25 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
 
   const body = await validateJsonBody(ctx.request, createDbrSimulationSchema);
   const supabase = await createClient();
-  const admin = createAdminClient();
 
-  const { data: config, error: configError } = await admin
-    .from("dbr_config")
-    .select("dbr_threshold_percent, default_interest_rate")
-    .limit(1)
+  const { data: bank, error: bankError } = await supabase
+    .from("banks")
+    .select("dbr_threshold_percent, default_interest_rate, status")
+    .eq("id", body.bank_id)
     .maybeSingle();
 
-  if (configError) {
-    throw configError;
+  if (bankError) {
+    throw bankError;
   }
-  if (!config) {
-    throw new ApiError("INTERNAL_ERROR", "dbr_config belum ada baris — hubungi Superadmin.");
+  if (!bank) {
+    throw new ApiError("NOT_FOUND", "Bank tidak ditemukan.");
+  }
+  if (bank.status !== "active") {
+    throw new ApiError("CONFLICT", "Bank ini tidak aktif, tidak bisa dipakai untuk simulasi baru.");
   }
 
   const existingInstallments = body.existing_installments ?? 0;
-  const interestRateAnnual = body.interest_rate_annual ?? Number(config.default_interest_rate);
+  const interestRateAnnual = body.interest_rate_annual ?? Number(bank.default_interest_rate);
 
   const result = calculateDbrSimulation({
     propertyPrice: body.property_price,
@@ -58,13 +57,14 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     interestRateAnnual,
     netIncome: body.net_income,
     existingInstallments,
-    dbrThresholdPercent: Number(config.dbr_threshold_percent),
+    dbrThresholdPercent: Number(bank.dbr_threshold_percent),
   });
 
   const { data, error } = await supabase
     .from("dbr_simulations")
     .insert({
       agent_id: ctx.userId,
+      bank_id: body.bank_id,
       listing_id: body.listing_id ?? null,
       prospect_name: body.prospect_name ?? null,
       prospect_phone: body.prospect_phone ?? null,

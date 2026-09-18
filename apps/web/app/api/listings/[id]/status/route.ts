@@ -43,7 +43,10 @@ export const PATCH = withApiHandler({ requireIdempotencyKey: true }, async (ctx)
     // Trigger trg_listing_lifecycle_rules RAISE EXCEPTION untuk transisi
     // 'published' tanpa permission m03.listing.publish — bedakan dari error
     // tak terduga supaya client dapat 403, bukan 500 generik.
-    if (typeof error.message === "string" && error.message.includes("m03.listing.publish")) {
+    if (
+      typeof error.message === "string" &&
+      (error.message.includes("m03.listing.publish") || error.message.includes("m03.listing.suspend"))
+    ) {
       throw new ApiError("FORBIDDEN", error.message);
     }
     throw error;

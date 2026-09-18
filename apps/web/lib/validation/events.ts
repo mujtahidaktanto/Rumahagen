@@ -20,6 +20,7 @@ export const createEventSchema = z.object({
   visibility: z.enum(["public", "organization", "private"]).optional(),
   start_at: z.string().datetime(),
   end_at: z.string().datetime().optional(),
+  registration_approval_mode: z.enum(["auto_confirm", "manual_approval", "closed"]).optional(),
 });
 export type CreateEventInput = z.infer<typeof createEventSchema>;
 

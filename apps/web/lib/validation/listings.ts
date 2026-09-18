@@ -84,7 +84,7 @@ export type UpdateListingInput = z.infer<typeof updateListingSchema>;
 // sini supaya konsisten dengan pola CHECK constraint DB yang juga tidak
 // mensyaratkan itu secara struktural.
 export const listingStatusSchema = z.object({
-  status: z.enum(["draft", "pending_review", "published", "sold", "rented", "expired", "rejected"]),
+  status: z.enum(["draft", "pending_review", "published", "sold", "rented", "expired", "rejected", "suspended"]),
   rejection_reason: z.string().optional(),
 });
 export type ListingStatusInput = z.infer<typeof listingStatusSchema>;

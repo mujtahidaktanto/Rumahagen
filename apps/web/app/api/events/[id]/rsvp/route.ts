@@ -38,6 +38,12 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     .single();
 
   if (error) {
+    // Trigger trg_event_registration_approval_mode (0088) RAISE EXCEPTION
+    // saat registration_approval_mode=closed — bedakan dari error tak
+    // terduga supaya client dapat 409 (aturan bisnis), bukan 500 generik.
+    if (typeof error.message === "string" && error.message.includes("pendaftaran ditutup")) {
+      throw new ApiError("CONFLICT", error.message);
+    }
     throw error;
   }
 
