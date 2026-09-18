@@ -1281,3 +1281,89 @@ berbasis IP). `lib/api/rate-limit.ts` diganti total memanggil RPC ini
 baris tersimpan di Postgres (dikonfirmasi query langsung, bukan in-memory);
 65 request cepat → **429 tepat di request ke-60** (limit 60/menit) dengan
 `retryAfterSeconds` benar; counter di DB bertambah sesuai jumlah request.
+
+## `0096` — M01 Identity/Auth REST API: trigger sinkronisasi `auth.users` ↔ `public.users`
+
+Menutup Gap #1 dari `audit/CORE_DOCX_ZIP_VS_MIGRATED_BACKEND_AUDIT.md`: 10
+endpoint M01 (STEP11-B1) — register/verify-otp/resend-otp/login/oauth
+google/refresh/logout/logout-all/forgot-password/reset-password — 0/10
+dibangun, dan grep repo-wide mengonfirmasi tidak ada mekanisme apa pun yang
+membuat baris `public.users` begitu `auth.users` dibuat.
+
+### `0096_auth_users_sync_trigger.sql`
+
+Trigger `on_auth_user_created` (AFTER INSERT) + `on_auth_user_email_confirmed`
+(AFTER UPDATE) di `auth.users`, fungsi `handle_auth_user_sync()` SECURITY
+DEFINER. INSERT membuat baris `public.users` dengan `role_id` default
+`'agent'` (satu-satunya role yang STEP11-B1/STEP13-B gambarkan sebagai
+subjek self-registration publik) dan `status` ikut default kolom (`'active'`,
+migration 0083); UPDATE menyinkronkan `email_verified_at` begitu
+`email_confirmed_at` terisi. **Dipilih trigger DB, bukan insert manual di
+route `/auth/register`**, karena Google OAuth (salah satu dari 10 endpoint
+yang sama) tidak pernah melewati route custom manapun — user diarahkan
+langsung ke Supabase Auth dan balik dengan sesi sudah jadi; kalau
+`public.users` cuma dibuat di `/auth/register`, signup via Google akan lolos
+tanpa `role_id`/`status` dan `has_permission()` gagal permanen untuk user
+itu. Diuji nyata via Admin API (buat user → baris `public.users` langsung
+ada dengan role `agent`/status `active`; confirm email → `email_verified_at`
+tersinkron), data uji dihapus dan cascade delete dikonfirmasi bersih.
+
+### 10 route `app/api/auth/*` (M01 STEP11-B1 API-001 s.d. API-010)
+
+Semua membungkus method native `supabase.auth.*` (client ber-sesi cookie
+`lib/supabase/server.ts`, BUKAN admin) lewat `withApiHandler()`, dengan
+`lib/api/auth-error.ts` baru memetakan pesan error Supabase Auth ke
+`ApiError` seragam (R-02: satu tempat mapping, bukan diulang per route).
+`login` juga menulis `users.last_login_at` (kolom ada sejak migration 0002,
+belum pernah ada penulisnya) lewat client ber-sesi yang sama — diizinkan RLS
+`users_update_self` (migration 0007).
+
+`oauth/google` mengembalikan URL otorisasi (`{ url }}`) untuk di-redirect
+client, bukan melakukan redirect sendiri (tidak ada frontend browser di repo
+ini) — plus route baru `app/api/auth/callback/route.ts` (GET, di luar 10
+endpoint terkunci, infrastruktur pendukung) yang menukar PKCE `code` jadi
+sesi. `@supabase/ssr` default `flowType: 'pkce'`, jadi tautan email
+konfirmasi/reset password JUGA lewat jalur code (bukan token di URL
+fragment) — `forgot-password` mengarahkan `redirectTo` ke
+`/api/auth/callback?redirect_to=<tujuan akhir>` supaya code bisa ditukar di
+server yang sama yang memegang cookie code-verifier-nya, BARU dineruskan ke
+tujuan akhir. **Koreksi ditemukan lewat tes nyata** (bukan asumsi):
+rancangan awal `reset-password` menerima `access_token`+`refresh_token` di
+body — ternyata tautan reset yang benar-benar dikirim memakai PKCE `code`
+lewat `/api/auth/callback`, sehingga sesi recovery SUDAH terpasang di cookie
+saat user sampai di endpoint ini; skema diubah jadi hanya `{ new_password }`
+mengandalkan sesi cookie yang ada (pola sama seperti `/auth/logout`).
+
+Diuji nyata end-to-end pakai domain terverifikasi sendiri
+(`qa-m01-auth-*@rumahagen.com`, dibaca lewat log terkirim Resend, bukan
+Admin API generate_link untuk OTP kode — Admin API generate_link dipakai
+HANYA untuk membuktikan kode OTP 8-digit yang dikembalikan `email_otp`
+identik dengan yang bisa dipakai `verifyOtp()`): register → baris
+`public.users` otomatis ada; verify-otp dengan kode OTP asli → sesi
+terbentuk + `email_verified_at` tersinkron; login → sesi + `last_login_at`
+terisi; refresh → sesi baru; logout (sesi cookie ada) → 200, tanpa sesi →
+401; logout-all mencabut sesi global; forgot-password untuk email
+terdaftar/tidak terdaftar → **respons identik** (tidak bocor status akun);
+reset-password lewat rantai email asli → tautan Supabase → `/api/auth/
+callback` (menukar code jadi sesi) → `POST reset-password` dengan cookie itu
+→ password benar-benar berubah (dikonfirmasi login gagal dengan password
+lama, berhasil dengan password baru); email/password salah format → 422;
+Idempotency-Key hilang pada endpoint yang mewajibkannya → 422. Data uji
+(1 auth user + baris `public.users` terkait, idempotency keys) dihapus
+total dan diverifikasi kosong setelahnya.
+
+**Dependensi eksternal yang BELUM diselesaikan** (butuh konfigurasi dashboard
+manual, sama seperti SMTP Resend sebelumnya):
+- Provider Google harus diaktifkan di Supabase Dashboard > Authentication >
+  Providers dengan Client ID/Secret dari Google Cloud Console, dan URL App
+  ini + `/api/auth/callback` didaftarkan sebagai authorized redirect URI di
+  kedua sisi — tanpa ini `/auth/oauth/google` mengembalikan URL otorisasi
+  yang valid tapi Google akan menolak di ujungnya.
+- Email template "Confirm signup"/"Reset password" Supabase saat ini masih
+  bawaan (tombol tautan `{{ .ConfirmationURL }}`), BUKAN kode 6-8 digit
+  (`{{ .Token }}`) yang ditampilkan ke user — endpoint `/auth/verify-otp`
+  SUDAH benar menerima kode (dibuktikan lewat `email_otp` di atas), tapi
+  user asli yang menerima email HARI INI akan melihat tombol tautan, bukan
+  kode untuk diketik. Kalau UX yang diinginkan adalah user mengetik kode
+  (sesuai desain endpoint terkunci `/auth/verify-otp`), template email perlu
+  diubah manual di Dashboard untuk menampilkan `{{ .Token }}`.
