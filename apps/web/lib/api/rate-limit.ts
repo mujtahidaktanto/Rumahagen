@@ -1,23 +1,21 @@
 // lib/api/rate-limit.ts
 // Menutup D13-20 — header rate-limit standar termasuk Retry-After untuk 429.
 //
-// CATATAN PRODUKSI: implementasi di bawah pakai in-memory Map — cukup untuk
-// scaffold/dev satu instance, TAPI TIDAK reliable di deployment serverless
-// multi-instance (Vercel dsb.) karena tiap instance punya memori sendiri.
-// Untuk produksi, ganti `store` dengan backend bersama (mis. Upstash Redis)
-// tanpa mengubah kontrak fungsi di bawah (checkRateLimit/rateLimitHeaders).
+// DIPERBARUI 0095: sebelumnya pakai in-memory Map — komentar lama di sini
+// sendiri mengakui itu tidak reliable di deployment serverless
+// multi-instance dan menyarankan "ganti store dengan backend bersama (mis.
+// Upstash Redis)" untuk produksi. Itu bertentangan dengan ADR-018 (Core
+// Technical Decisions, LOCKED): "Rate limiting/application cache = Supabase
+// Postgres rate_limit_log" — dan baris tepat di atasnya eksplisit melarang
+// "cache vendor baru". Diganti memanggil RPC `check_and_increment_rate_limit`
+// (migration 0095) — satu sumber kebenaran di Postgres, reliable lintas
+// instance, tanpa vendor baru.
 
+import { SupabaseClient } from "@supabase/supabase-js";
 import { ApiError } from "./errors";
 
 const WINDOW_MS = 60_000; // 1 menit
 const MAX_REQUESTS_PER_WINDOW = 60;
-
-interface Bucket {
-  count: number;
-  windowStart: number;
-}
-
-const store = new Map<string, Bucket>();
 
 export interface RateLimitResult {
   limit: number;
@@ -25,29 +23,29 @@ export interface RateLimitResult {
   resetAt: number; // epoch ms
 }
 
-export function checkRateLimit(key: string): RateLimitResult {
-  const now = Date.now();
-  const bucket = store.get(key);
+export async function checkRateLimit(supabase: SupabaseClient, key: string): Promise<RateLimitResult> {
+  const { data, error } = await supabase.rpc("check_and_increment_rate_limit", {
+    p_key: key,
+    p_window_ms: WINDOW_MS,
+    p_max_requests: MAX_REQUESTS_PER_WINDOW,
+  });
 
-  if (!bucket || now - bucket.windowStart >= WINDOW_MS) {
-    store.set(key, { count: 1, windowStart: now });
-    return { limit: MAX_REQUESTS_PER_WINDOW, remaining: MAX_REQUESTS_PER_WINDOW - 1, resetAt: now + WINDOW_MS };
+  if (error) {
+    throw error;
   }
 
-  bucket.count += 1;
+  const row = Array.isArray(data) ? data[0] : data;
+  const windowStartMs = new Date(row.window_start).getTime();
+  const resetAt = windowStartMs + WINDOW_MS;
+  const remaining = Math.max(0, MAX_REQUESTS_PER_WINDOW - row.request_count);
 
-  if (bucket.count > MAX_REQUESTS_PER_WINDOW) {
-    const resetAt = bucket.windowStart + WINDOW_MS;
+  if (!row.allowed) {
     throw new ApiError("RATE_LIMITED", "Terlalu banyak request, coba lagi nanti.", {
-      retryAfterSeconds: Math.ceil((resetAt - now) / 1000),
+      retryAfterSeconds: Math.ceil((resetAt - Date.now()) / 1000),
     });
   }
 
-  return {
-    limit: MAX_REQUESTS_PER_WINDOW,
-    remaining: MAX_REQUESTS_PER_WINDOW - bucket.count,
-    resetAt: bucket.windowStart + WINDOW_MS,
-  };
+  return { limit: MAX_REQUESTS_PER_WINDOW, remaining, resetAt };
 }
 
 export function rateLimitHeaders(result: RateLimitResult): HeadersInit {

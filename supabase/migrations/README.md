@@ -1232,3 +1232,52 @@ pertama masih hidup → **409 ditolak**; `POST .../test` pada koneksi
 lalu buat koneksi baru ke provider yang sama → **201 berhasil** (uniqueness
 tidak menghalangi re-connect setelah disconnect). Data uji (2 user,
 organisasi, provider, 3 koneksi) dibersihkan total dan diverifikasi kosong.
+
+## `0094`/`0095` — deep scan lanjutan Core: 65 file `.docx`/`.zip` (STEP-09/11/12) vs migrasi
+
+Lanjutan `audit/CORE_DOCX_ZIP_VS_MIGRATED_BACKEND_AUDIT.md` — pass sebelumnya
+(`0084`-`0093`) sengaja melewatkan 65 file `.docx`/`.zip` (STEP-09
+Architecture, STEP-11 API Sync, STEP-12 Authorization/RBAC) karena butuh
+diekstrak dulu. Setelah diekstrak dan dibaca 5 agent paralel, ditemukan 2
+hal yang butuh perbaikan kode nyata (selain beberapa gap fitur besar yang
+didokumentasikan tapi butuh keputusan produk, bukan bug — lihat file audit).
+
+### `0094_reconcile_m09_provider_catalogue_audit_log_with_step12.sql`
+
+**Koreksi atas `0084`.** `STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv`
+(baru bisa dibaca penuh setelah diekstrak dari zip) + Conflict Register-nya
+sendiri (S12-01-001) mengunci KEBALIKAN dari 2 dari 3 perbaikan `0084`:
+Audit Log seharusnya Admin=ALL/Manager=NONE (bukan sebaliknya), Provider
+Catalogue seharusnya Superadmin-only (bukan Admin=ALL) — `0084` mengikuti
+`PRE-00-K` (gate STEP-00 yang lebih lama), padahal proyek ini SENDIRI sudah
+menetapkan preseden di `0008_dbr_config.sql`: dokumen STEP-12 yang lebih
+granular/baru menang atas wording STEP-00 yang lebih lama. Dikonfirmasi
+independen oleh 2 agent yang membaca dokumen konflik berbeda
+(`STEP12-01_ROLE_PERMISSION_CONFLICT_REGISTER.csv` dan `STEP12-C/D_CROSS_
+MODULE_..._CONFLICT_REGISTER.csv`, keduanya menyimpulkan hal sama).
+
+Membalik 2 dari 3 grant `0084` (Reconciliation Manual Correction, temuan
+ke-3, TIDAK disentuh — tidak dipertentangkan Master Matrix): Audit Log
+kembali Admin=ALL/Manager=NONE; Provider Catalogue kembali Superadmin-only
+(RLS `ai_providers_write_superadmin` dikembalikan ke hardcode
+`is_superadmin()`, bukan `has_permission()`). Diuji nyata: Admin `GET
+/admin/audit-logs` → 200 dengan baris (dikembalikan), Manager → 200/0
+baris; Admin `POST /ai-providers` → 403 (dikembalikan), Superadmin → 201.
+
+### `0095_add_postgres_rate_limit_log.sql`
+
+Kontradiksi arsitektur ditemukan di STEP-09: ADR-018 (Technical Decisions,
+LOCKED) mengunci "Rate limiting/application cache = Supabase Postgres
+`rate_limit_log`", dengan baris di atasnya eksplisit melarang "cache vendor
+baru". `lib/api/rate-limit.ts` versi lama pakai in-memory `Map` — komentarnya
+sendiri menyarankan solusi produksi "Upstash Redis", persis yang dilarang
+ADR itu sendiri.
+
+Ditambahkan tabel `rate_limit_log` (satu baris per key, upsert atomik) +
+fungsi `check_and_increment_rate_limit()` (SECURITY DEFINER, `GRANT EXECUTE`
+ke `anon`+`authenticated` supaya request tanpa login pun kena rate limit
+berbasis IP). `lib/api/rate-limit.ts` diganti total memanggil RPC ini
+(fungsi jadi `async`), `lib/api/handler.ts` disesuaikan `await`. Diuji nyata:
+baris tersimpan di Postgres (dikonfirmasi query langsung, bukan in-memory);
+65 request cepat → **429 tepat di request ke-60** (limit 60/menit) dengan
+`retryAfterSeconds` benar; counter di DB bertambah sesuai jumlah request.

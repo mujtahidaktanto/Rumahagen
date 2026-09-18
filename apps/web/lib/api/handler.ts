@@ -68,7 +68,7 @@ export function withApiHandler<T>(
       const userId = user?.id ?? null;
 
       const rateLimitKey = userId ?? request.headers.get("x-forwarded-for") ?? "anonymous";
-      const rl = checkRateLimit(rateLimitKey); // D13-20, bisa throw RATE_LIMITED
+      const rl = await checkRateLimit(supabase, rateLimitKey); // D13-20, bisa throw RATE_LIMITED
 
       const idempotencyKey = request.headers.get("idempotency-key");
       if (options.requireIdempotencyKey && !idempotencyKey) {
