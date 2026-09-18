@@ -867,3 +867,45 @@ token Sandbox asli) → webhook settlement (signature SHA512 asli) →
 KEDUANYA kuota nyata dan usable, bukan metadata dekoratif. Data uji
 (addon, order, payment, fulfillment, entitlement×2, quota chain×2, user
 test) dibersihkan total dan diverifikasi kosong setelah pengujian.
+
+## `0082_enforce_account_status_in_has_permission.sql` — FIX (gap keamanan, ditemukan lewat audit pra-Bolt.new)
+
+Ditemukan lewat audit keamanan sebelum migrasi UI ke Bolt.new:
+`public.users.status` (evidenced STEP10-D, dideklarasikan eksplisit di
+komentar 0002 sebagai "bagian dari... lifecycle akun yang menjadi
+tanggung jawab aplikasi") **TIDAK PERNAH benar-benar ditegakkan di mana
+pun** — di-grep di seluruh migration, `users.status` tidak pernah dipakai
+satu RLS policy pun, dan `lib/api/handler.ts` (Next.js) hanya memverifikasi
+sesi Supabase Auth valid (`getUser()`), tidak pernah query `users.status`.
+Akibatnya Agent yang di-suspend/rejected staf tapi JWT-nya belum
+expired/di-revoke tetap lolos SEMUA pemeriksaan `has_permission()` seolah
+statusnya tidak pernah berubah.
+
+**Keputusan perbaikan**: ditutup di `has_permission()` (0006), BUKAN di
+`lib/api/handler.ts` — sesuai prinsip R-02 migration 0006 sendiri
+("SATU-SATUNYA tempat keputusan otorisasi dihitung", dipanggil ~68 file
+migration lain) DAN karena rencana pindah ke Bolt.new (UI baru memanggil
+Supabase LANGSUNG dengan anon key, bukan lewat REST API Next.js) membuat
+perbaikan di level Next.js saja tidak cukup — kalau hanya ditutup di
+`handler.ts`, panggilan langsung ke Supabase dari UI Bolt tetap menembus
+lubang yang sama. Menutup di `has_permission()` otomatis berlaku ke SEMUA
+jalur.
+
+`has_permission()` sekarang mengecek `status` LEBIH DULU (sebelum bypass
+`is_superadmin()`, supaya Superadmin yang akunnya sendiri disuspend tidak
+diam-diam tetap punya akses penuh) — `suspended`/`rejected` selalu
+`FALSE`. **`pending_review` SENGAJA tidak diblok**: itu status DEFAULT
+agent baru yang justru butuh scope OWN baseline-nya (mis.
+`m01.verification_document.manage='own'`, 0049) untuk mengunggah dokumen
+verifikasi — kalau ikut diblok, agent baru tidak akan pernah bisa
+menyelesaikan verifikasi (deadlock onboarding).
+
+Diuji nyata 5 skenario lewat `POST /users/verification-documents` dan
+`GET /authorization/roles`: (1) agent baru default `pending_review` →
+**201, tetap bisa upload** (tidak regresi); (2) agent yang sama di-suspend
+staf, upload lagi → **403 FORBIDDEN** (gap tertutup); (3) agent
+`rejected` → **403** juga; (4) Superadmin `active` → tetap `200` dengan
+baris data (scope `all` normal, tidak terdampak); (5) Superadmin YANG SAMA
+di-suspend → **0 baris** (bypass `is_superadmin()` ikut tertutup, bukan
+cuma jalur scope biasa). Data uji (3 user, 1 dokumen) dibersihkan total
+dan diverifikasi kosong setelah pengujian.
