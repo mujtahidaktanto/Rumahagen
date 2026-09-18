@@ -128,7 +128,8 @@ export async function ensureApprovalRecord(claimId: string): Promise<ApprovalRec
   }
 
   const snapshot = await loadSnapshot(claimId);
-  const generatedAt = new Date().toISOString();
+  // Use the authoritative approval timestamp so concurrent retries generate identical bytes.
+  const generatedAt = snapshot.claim.reviewed_at ?? new Date().toISOString();
   const bytes = await buildPdf(snapshot, generatedAt);
   const hash = crypto.createHash("sha256").update(bytes).digest("hex");
   const path = `claims/${claimId}/approval-record-v1.pdf`;
