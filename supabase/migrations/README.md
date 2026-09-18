@@ -909,3 +909,50 @@ baris data (scope `all` normal, tidak terdampak); (5) Superadmin YANG SAMA
 di-suspend → **0 baris** (bypass `is_superadmin()` ikut tertutup, bukan
 cuma jalur scope biasa). Data uji (3 user, 1 dokumen) dibersihkan total
 dan diverifikasi kosong setelah pengujian.
+
+## `0083_users_default_active_no_pending_review_gate.sql` — KEPUTUSAN PRODUK (bukan fix, arah perbaikan terbalik dari audit wireframe)
+
+Lahir dari audit `docs/design/wireframes/` vs skema+API yang sudah dimigrasi
+(`audit/WIREFRAME_VS_MIGRATED_BACKEND_AUDIT.md`, Finding A1): wireframe WF-01.05
+(Authentication)/WF-01.06 (KTP Deferred Completion) sejak awal mengunci kontrak
+"OTP VERIFIED → ACCOUNT ACTIVE" TANPA gate Pending Review — berlawanan dengan
+`public.users.status` yang sejak 0002 mendefault user baru ke `'pending_review'`.
+
+**Dicek langsung ke `docs/core/current/` (bukan cuma dikonfirmasi pemilik produk)**:
+ternyata BUKAN wireframe yang menyimpang dari Core, melainkan migration 0002 yang
+sejak awal menyimpang dari keputusan Core sendiri yang sudah LOCKED jauh sebelumnya:
+- `00-governance/STEP-00/PRE-00-C_M01_IDENTITY_CONFLICT_GATE_FULL_v1.1.md`
+  (status "PASS — LOCKED"): "There is no PENDING_REVIEW gate for account
+  activation... OTP VERIFIED → ACCOUNT ACTIVE."
+- `01-business-rules/STEP-08/RUMAHAGEN_BUSINESS_RULES_BASELINE_CONSOLIDATED_
+  STEP08_v1.1.md` (M01-CI-009/STEP05-001, "LOCKED / CORE CANONICAL") — rumusan sama.
+- `07-reconciliation/STEP-14-.../STEP14_CROSS_DOCUMENT_CONSISTENCY_MATRIX...csv`
+  — direvalidasi PASS di rekonsiliasi FINAL Core.
+
+Penyimpangannya bersumber dari `STEP10-D_ATTRIBUTE_TO_PHYSICAL_COLUMN_
+RECONCILIATION.csv` yang melestarikan definisi fisik LAMA `DEFAULT 'pending_review'`
+apa adanya (ditandai `PRESERVE_EXACT_PHYSICAL_CORROBORATION` — verifikasi bentuk
+fisik saja, TIDAK direkonsiliasi ulang ke keputusan semantik PRE-00-C), lalu disalin
+verbatim ke migration 0002. Inkonsistensi internal Core ini tidak pernah tertangkap
+sampai audit wireframe-vs-backend sesi ini. Wireframe WF-01 (dibangun mengikuti
+PRE-00-C dengan benar) sudah cocok dengan Core sejak awal — migration 0002 fisik-lah
+yang keliru. Migration ini karenanya adalah KOREKSI ke Core yang sudah lama terkunci,
+bukan override/deviasi baru. Dikonfirmasi ulang oleh pemilik produk saat gap ini
+dilaporkan: akun langsung `active` begitu OTP terverifikasi, dokumen verifikasi
+(`agent_verification_documents`, 0049) boleh diisi belakangan tanpa memblokir
+aktivasi.
+
+**Scope**: HANYA `ALTER TABLE public.users ALTER COLUMN status SET DEFAULT 'active'`.
+Nilai `'pending_review'` TETAP ada di CHECK constraint (0002, tidak diubah) — untuk
+pemakaian manual staf di masa depan kalau perlu, pola sama seperti nilai enum tak
+terpakai yang tetap dipertahankan di `listings.status` (evidenced 0018). Tidak ada
+backfill — tabel `users` kosong (belum ada user produksi) saat migration ini
+diterapkan. `has_permission()` (0082) tidak perlu diubah — pengecualian
+`pending_review` di sana sudah benar sejak awal (tidak memblokir, bukan
+mem-block-nya), cuma sekarang praktis tidak akan pernah dipakai user baru manapun.
+
+Diuji nyata: user baru dibuat tanpa menyebut `status` sama sekali → langsung
+`active` (dikonfirmasi lewat insert langsung DAN lewat `GET /users/me`); dokumen
+verifikasi KTP tetap bisa diupload setelah aktif (`POST /users/verification-
+documents` → 201, tidak digating). Data uji dibersihkan total dan diverifikasi
+kosong setelah pengujian.

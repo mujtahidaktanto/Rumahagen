@@ -1,0 +1,55 @@
+-- 0083_users_default_active_no_pending_review_gate.sql
+-- BUKAN sekadar keputusan produk baru -- ini KOREKSI atas migration 0002
+-- yang sejak awal MENYIMPANG dari keputusan Core sendiri yang sudah
+-- LOCKED jauh sebelum 0002 ditulis:
+--
+-- - `docs/core/current/00-governance/STEP-00/PRE-00-C_M01_IDENTITY_
+--   CONFLICT_GATE_FULL_v1.1.md` (status "PASS -- LOCKED"): "There is no
+--   PENDING_REVIEW gate for account activation... OTP VERIFIED -> ACCOUNT
+--   ACTIVE." Eksplisit menyatakan urutan "OTP VERIFIED -> PENDING_REVIEW
+--   -> Reviewer approval -> ACTIVE" TIDAK VALID sebagai model aktivasi M01.
+-- - `docs/core/current/01-business-rules/STEP-08/RUMAHAGEN_BUSINESS_
+--   RULES_BASELINE_CONSOLIDATED_STEP08_v1.1.md` (M01-CI-009/STEP05-001,
+--   "LOCKED / CORE CANONICAL"): rumusan yang sama persis.
+-- - `docs/core/current/07-reconciliation/STEP-14-.../STEP14_CROSS_
+--   DOCUMENT_CONSISTENCY_MATRIX...csv`: direvalidasi PASS di rekonsiliasi
+--   FINAL Core (langkah terakhir sebelum semuanya dibekukan).
+--
+-- Penyimpangannya bersumber dari `STEP10-D_ATTRIBUTE_TO_PHYSICAL_COLUMN_
+-- RECONCILIATION.csv` (baris entity USERS) yang melestarikan definisi
+-- fisik LAMA `DEFAULT 'pending_review'` apa adanya (ditandai
+-- PRESERVE_EXACT_PHYSICAL_CORROBORATION -- cuma verifikasi bentuk fisik,
+-- BUKAN direkonsiliasi ulang terhadap kunci semantik PRE-00-C) -- lalu
+-- disalin verbatim ke migration 0002. Inkonsistensi internal Core ini
+-- (STEP10-D fisik vs PRE-00-C semantik) tidak pernah tertangkap sampai
+-- audit wireframe-vs-backend sesi ini (lihat
+-- audit/WIREFRAME_VS_MIGRATED_BACKEND_AUDIT.md Finding A1), yang mana
+-- wireframe (WF-01.05/WF-01.06, dibangun mengikuti PRE-00-C dengan benar)
+-- justru SUDAH cocok dengan Core sejak awal -- migration 0002 fisik-lah
+-- yang keliru.
+--
+-- Konsekuensi: tidak ada lagi gate Pending Review setelah registrasi.
+-- Begitu OTP terverifikasi, akun langsung berstatus 'active'. Dokumen
+-- verifikasi (KTP/NPWP/sertifikasi REI, agent_verification_documents/0049)
+-- boleh diisi belakangan, TIDAK memblokir aktivasi akun -- persis
+-- sebagaimana dikonfirmasi ulang oleh pemilik produk saat gap ini
+-- dilaporkan.
+--
+-- SCOPE: HANYA mengubah DEFAULT kolom `status` dari 'pending_review' ke
+-- 'active'. Nilai 'pending_review' TETAP ada di CHECK constraint (0002) --
+-- tidak dihapus, hanya sudah tidak pernah dipakai otomatis lagi -- staf
+-- tetap bisa memakainya manual di masa depan untuk kasus lain kalau perlu
+-- (pola sama seperti listings.status mempertahankan nilai yang tidak
+-- dipakai alur normal, evidenced di komentar 0018). Tidak ada baris
+-- public.users yang perlu di-backfill -- dikonfirmasi tabel kosong (belum
+-- ada user produksi sebelum migrasi ini diterapkan).
+--
+-- Tidak ada perubahan lain yang diperlukan: has_permission() (0082) sudah
+-- SENGAJA mengecualikan pending_review dari blokir (bukan mem-block-nya),
+-- jadi logika itu tetap benar dan aman dibiarkan apa adanya walau sekarang
+-- jalur itu praktis tidak akan pernah dipakai oleh akun baru manapun.
+
+ALTER TABLE public.users ALTER COLUMN status SET DEFAULT 'active';
+
+COMMENT ON COLUMN public.users.status IS
+  'Lifecycle akun (0002). DIUBAH 0083: DEFAULT sekarang ''active'' (bukan lagi ''pending_review'') -- ini KOREKSI, bukan penyimpangan dari Core: PRE-00-C (STEP-00, LOCKED) dan STEP-08 business rules baseline (M01-CI-009, LOCKED/CORE CANONICAL) sudah lama mengunci "tidak ada gate Pending Review, OTP VERIFIED -> ACCOUNT ACTIVE" -- migration 0002 menyimpang dari kunci itu karena STEP10-D (physical column reconciliation) melestarikan default fisik lama tanpa direkonsiliasi ulang ke keputusan semantik PRE-00-C. Nilai ''pending_review'' tetap valid di CHECK constraint untuk pemakaian manual staf di masa depan, hanya tidak lagi jadi default otomatis registrasi.';
