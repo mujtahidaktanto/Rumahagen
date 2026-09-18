@@ -821,3 +821,49 @@ terenkripsi manapun; rotasi `secondary_key`+`public_identifier` via PUT;
 sekaligus; query langsung ke DB mengonfirmasi `encrypted_secondary_key`
 tersimpan dalam format `iv.authTag.ciphertext` (bukan plaintext). Data uji
 dan 2 user test dibersihkan total setelah pengujian.
+
+## `0081_m14_multi_capacity_addons.sql` — ADD-NEW (kuota majemuk per addon)
+
+Ditemukan lewat testing nyata addon "10 listing tambahan + 50 kuota
+refresh" (batch sebelumnya): `fulfill_commercial_order()` (0079) hanya
+memproses SATU pasang `capacity_type`/`capacity_value` — kolom rigid di
+`addons`, evidenced STEP10-D. Angka kedua yang dititipkan di `configuration`
+JSONB TIDAK PERNAH benar-benar ter-grant sebagai kuota nyata (cuma
+metadata deskriptif) — dikonfirmasi lewat pengujian end-to-end (order →
+Midtrans Sandbox settlement → fulfillment), lalu dilaporkan apa adanya
+sebagai keterbatasan, bukan diam-diam dianggap sudah beres.
+
+- **`addons.additional_capacities JSONB NOT NULL DEFAULT '[]'`** — array
+  objek `{"capacity_type","capacity_value"}` untuk kapasitas TAMBAHAN di
+  luar kolom primer. Kolom GENERIK (bukan `capacity_type_2`/`capacity_
+  value_2`) — menampung N kapasitas sekaligus, dipakai ulang addon manapun
+  di masa depan, pola sama seperti `public_identifier`/`encrypted_secondary_
+  key` di 0080. Default array kosong — addon lama (single-capacity)
+  perilakunya tidak berubah sama sekali.
+- **`grant_addon_capacity(...)`** — fungsi baru, satu unit "grant kapasitas"
+  (entitlement → quota_capacity → operational_quota_pool → quota_allocation,
+  atau `grant_learning_points_from_purchase()` untuk `capacity_type=
+  'learning_point'`), diekstrak dari badan `fulfill_commercial_order()`
+  versi 0079 supaya dipanggil berulang tanpa duplikasi logika.
+  `entitlement_type` diberi suffix `capacity_type` (mis. `KODE:listing_
+  refresh`) — perubahan kecil disengaja supaya tidak ambigu saat satu
+  addon menghasilkan >1 entitlement (tidak ada data produksi yang
+  terdampak, tabel masih kosong).
+- **`fulfill_commercial_order(p_payment_transaction_id)`** — `CREATE OR
+  REPLACE`, signature sama (evidenced/dipanggil dari webhook 0073).
+  Sekarang memproses kapasitas PRIMER (kolom rigid, seperti sebelumnya)
+  DAN loop `additional_capacities`, masing-masing lewat
+  `grant_addon_capacity()`. `commercial_fulfillments.outcome_reference`
+  bisa berisi >1 referensi, digabung `;` (TEXT longgar, tidak butuh kolom
+  baru — pola sama seperti field TEXT longgar lain di skema ini).
+
+Diuji ulang nyata dengan addon BARU "50 kuota refresh (primer) + 25
+kuota listing tambahan (additional_capacities)": order → checkout (Snap
+token Sandbox asli) → webhook settlement (signature SHA512 asli) →
+`fulfill_commercial_order()` — hasil terverifikasi lewat query langsung:
+**2 baris** `commercial_entitlements`/`quota_capacities`/
+`operational_quota_pools`/`quota_allocations` dari SATU fulfillment,
+`granted_quantity`/`operational_quantity` masing-masing 50 dan 25 —
+KEDUANYA kuota nyata dan usable, bukan metadata dekoratif. Data uji
+(addon, order, payment, fulfillment, entitlement×2, quota chain×2, user
+test) dibersihkan total dan diverifikasi kosong setelah pengujian.

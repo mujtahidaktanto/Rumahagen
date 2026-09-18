@@ -765,6 +765,26 @@ error-message mapping di kedua route, pola sama seperti
 chain, reconciliation cases, LP) dan 3 user test dibersihkan total setelah
 pengujian.
 
+**Follow-up (migration `0081`, bukan batch REST baru)**: testing addon
+promosi nyata setelahnya ("10 listing tambahan + 50 kuota refresh
+sekaligus" dalam satu addon) menemukan `fulfill_commercial_order()` di
+atas HANYA memproses satu pasang `capacity_type`/`capacity_value` — angka
+kedua yang dititipkan di `configuration` JSONB TIDAK PERNAH ter-grant
+sebagai kuota nyata. Ditutup dengan kolom generik `addons.additional_
+capacities JSONB` + fungsi baru `grant_addon_capacity()` (satu unit grant,
+dipanggil berulang) — `fulfill_commercial_order()` (`CREATE OR REPLACE`,
+signature/RPC call tidak berubah, jadi tidak ada perubahan route Next.js)
+kini loop kapasitas primer + seluruh `additional_capacities`. Diuji ulang
+end-to-end nyata dengan addon BARU "50 kuota refresh + 25 kuota listing
+tambahan": order → checkout (Snap token Sandbox asli) → webhook settlement
+(signature SHA512 asli) → fulfillment — **2 baris independen**
+`commercial_entitlements`/`quota_capacities`/`operational_quota_pools`/
+`quota_allocations` terbentuk dari SATU fulfillment
+(`granted_quantity`/`operational_quantity` = 50 dan 25), dikonfirmasi
+lewat query langsung ke DB. Data uji dibersihkan total dan diverifikasi
+kosong setelah pengujian. Lihat `supabase/migrations/README.md` §0081
+untuk detail desain.
+
 ## Batch: Fase 1 "100% tabel" + M02 Profile REST API (37 route file)
 
 REST API + Zod di atas migration+RLS Fase 1 "100% tabel" (`0047`–`0055`,
