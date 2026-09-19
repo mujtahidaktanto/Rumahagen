@@ -56,3 +56,14 @@ export type BannerInput = z.infer<typeof bannerSchema>;
 
 export const updateBannerSchema = bannerSchema.partial();
 export type UpdateBannerInput = z.infer<typeof updateBannerSchema>;
+
+// GET/PUT /admin/config/seo — CORE-CFG-SEO-01 (STEP11-B9 §6), tabel baru
+// seo_config (migration 0097, permission m09.system_configuration.manage)
+export const seoConfigUpdateSchema = z.object({
+  site_title_suffix: z.string().max(150).nullable().optional(),
+  default_meta_description: z.string().max(500).nullable().optional(),
+  default_og_image_url: z.string().max(500).nullable().optional(),
+  robots_global_noindex: z.boolean().optional(),
+  sitemap_enabled: z.boolean().optional(),
+});
+export type SeoConfigUpdateInput = z.infer<typeof seoConfigUpdateSchema>;

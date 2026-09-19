@@ -1391,3 +1391,75 @@ emailnya.
 **Dependensi eksternal M01 yang tersisa**: tidak ada lagi. Google OAuth dan
 kedua template email (signup=kode, reset=tautan, sesuai desain
 masing-masing endpoint) sudah dikonfigurasi dan diverifikasi nyata.
+
+## `0097` — M11 SEO/Discovery: sitemap, robots.txt, admin config, reindex
+
+Menutup Gap #2 dari `audit/CORE_DOCX_ZIP_VS_MIGRATED_BACKEND_AUDIT.md`: 7
+route M11 (STEP11-B9 §5/§6) — `GET /sitemap-index.xml`,
+`GET /sitemap-listings.xml`, `GET /sitemap-agents.xml`,
+`GET /sitemap-developer-projects.xml`, `GET /robots.txt`,
+`POST /admin/seo/reindex`, `GET/PUT /admin/config/seo` — 0/7 dibangun
+sebelumnya. `GET /banners/promotions` (API-135) dan `POST /admin/banners`
+(API-136) yang juga disebut di STEP11-B9 TERNYATA sudah ada sejak lama
+(`app/api/banners/route.ts`, `app/api/admin/banners/route.ts`) — bukan bagian
+gap ini.
+
+**Sengaja TIDAK dibangun** (STEP11-B9 §8/§9/§13 eksplisit melarang): CRUD
+Static Public Content dan lifecycle Announcement/Promotion (appeal/approve/
+archive dst.) — keduanya "CONTROLLED API GAP" yang Core sendiri instruksikan
+untuk TIDAK diciptakan rute-nya ("Do not invent POST/PUT/PATCH... routes").
+
+### `0097_seo_config.sql`
+
+Tabel baru `seo_config` (baris tunggal, pola sama seperti `dbr_config` 0008)
+— bukan entity STEP10-D (dicek, tidak ada), didesain baru. **Tidak ada
+permission baru dibuat** (menegakkan D13-15/preseden 0011): STEP11-B9 §4.2
+sendiri menyatakan M09 mengonfigurasi SEO "through the **existing**
+configuration authority" — dibaca sebagai instruksi eksplisit memakai ulang
+`m09.system_configuration.view`/`.manage` (sudah ada sejak 0009/0011,
+Superadmin-only), bukan permission baru. SELECT dibuka **publik** (bukan
+Superadmin-only seperti `system_configs`) karena isinya memang harus dibaca
+tanpa sesi oleh `robots.ts`/`sitemap-*.xml` — tidak ada data sensitif di
+tabel ini; hanya WRITE yang dibatasi Superadmin.
+
+### Route baru
+
+- `app/api/admin/config/seo/route.ts` (CORE-CFG-SEO-01) — GET/PUT baris
+  tunggal `seo_config`, pola identik `admin/config/dbr`.
+- `app/api/admin/seo/reindex/route.ts` (API-155) — mencatat
+  `last_reindex_requested_at/_by`. **Catatan jujur**: TIDAK ada integrasi
+  nyata ke Google Search Console/Bing IndexNow (tidak ada kredensial
+  tersedia) — endpoint ini murni pencatatan administratif, bukan pemicu
+  crawl sungguhan. Didokumentasikan eksplisit di komentar route supaya tidak
+  ada yang mengira ini benar-benar memanggil API mesin pencari.
+- `app/sitemap-index.xml/route.ts` + `sitemap-listings.xml` +
+  `sitemap-agents.xml` + `sitemap-developer-projects.xml` — folder literal
+  (bukan konvensi `app/sitemap.ts` bawaan Next yang cuma hasilkan SATU file)
+  karena Core mengunci 4 nama file terpisah. Filter publik PERSIS sama
+  dengan kondisi RLS masing-masing tabel yang sudah ada (`listings.status=
+  'published'` per 0018, `agent_profiles.profile_visibility='public'` per
+  0029, `developer_projects.status IN ('active','coming_soon','sold_out')`
+  per 0034) — anon client dipakai apa adanya, tidak ada bypass RLS.
+  Menghormati `seo_config.sitemap_enabled` (saklar darurat, kembalikan
+  urlset/index kosong kalau dimatikan).
+- `app/robots.ts` — konvensi resmi Next.js. `seo_config.robots_global_noindex`
+  jadi saklar darurat "disallow semua" tanpa perlu deploy ulang.
+- `lib/seo/sitemap.ts` — util XML bersama (escape, builder urlset/sitemapindex,
+  `SITE_URL` default `https://rumahagen.com` karena belum ada env var domain
+  publik di proyek ini, bisa di-override `NEXT_PUBLIC_SITE_URL`). Pola URL
+  kanonik `/listing/{slug}`, `/agent/{public_slug}`, `/project/{slug}` adalah
+  ASUMSI wajar (Core tidak mengunci struktur URL frontend, belum ada
+  frontend dibangun) — gampang diubah di satu tempat kalau UI Bolt.new nanti
+  pakai pola lain.
+
+Diuji nyata: GET config tanpa sesi → 200 (SELECT publik, sesuai desain); PUT
+tanpa sesi → 403; PUT dengan sesi Superadmin sungguhan → 200, `sitemap_enabled=
+false` langsung membuat `sitemap-index.xml` kosong, `robots_global_noindex=
+true` langsung membuat `robots.txt` isi `Disallow: /`; PUT/reindex dengan
+sesi role `agent` (bukan Superadmin) → 403 di keduanya; `sitemap-agents.xml`
+dites dengan baris `agent_profiles` publik sungguhan (insert sementara) →
+XML berisi URL yang benar dengan `lastmod`, dihapus lagi setelahnya. Data uji
+(2 auth user + 1 baris `agent_profiles`) dihapus total, `seo_config`
+dikembalikan ke nilai default, `last_reindex_requested_by` otomatis ter-NULL
+lewat `ON DELETE SET NULL` setelah user uji dihapus (bukan bug — perilaku FK
+yang diharapkan).

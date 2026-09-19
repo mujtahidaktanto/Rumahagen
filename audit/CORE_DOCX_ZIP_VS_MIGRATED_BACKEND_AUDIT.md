@@ -113,15 +113,18 @@ di STEP-11, tapi belum pernah dibangun sama sekali di `apps/web/app/api/**`.
 Beda dari Tier 1/2/3 sebelumnya (yang semuanya bug/gap DB), ini murni
 pekerjaan REST API + kadang tabel baru yang belum dikerjakan:
 
-1. **M01 Identity/Auth — seluruh permukaan API kosong total.** `register/
-   verify-otp/resend-otp/login/oauth/refresh/logout/forgot-password/reset-
-   password` dikunci STEP11-A/B1 sebagai endpoint yang HARUS dipertahankan
-   — nol implementasi (sudah diketahui dari diskusi checklist Bolt.new
-   sebelumnya, dikonfirmasi ulang di sini).
-2. **M11 SEO/discovery — seluruh keluarga endpoint kosong.** `sitemap-*.xml`,
-   `robots.txt`, `POST /admin/seo/reindex`, `GET/PUT /admin/config/seo`
-   (STEP11-B9 §5/§6) — nol implementasi. Ini pekerjaan Next.js App Router
-   convention (`app/sitemap.ts`/`app/robots.ts`) + 2 route admin baru.
+1. ~~**M01 Identity/Auth — seluruh permukaan API kosong total.**~~
+   **SELESAI (migration `0096`, 2026-09-19).** 10 endpoint dibangun + trigger
+   sinkronisasi `auth.users`↔`public.users`. Google OAuth dan template OTP
+   kode diverifikasi dengan login/email asli. Detail: `migrations/README.md`
+   bagian `0096`.
+2. ~~**M11 SEO/discovery — seluruh keluarga endpoint kosong.**~~
+   **SELESAI (migration `0097`, 2026-09-19).** 7 route dibangun (4 sitemap +
+   robots.txt + admin config + reindex), tabel baru `seo_config`. Static
+   Public Content & Announcement/Promotion lifecycle SENGAJA tidak dibangun
+   (Core §8/§9/§13 melarang invent route untuk keduanya — tetap
+   "CONTROLLED API GAP" by design, bukan sisa pekerjaan). Detail:
+   `migrations/README.md` bagian `0097`.
 3. **M13 `POST /ai-assistant/chat` — belum ada.** Invocation AI sungguhan
    (dibedakan dari `/ai-connections/*` yang cuma CRUD+test koneksi) — sudah
    diketahui sebagai gap yang sengaja ditunda sejak evaluasi provider AI di
