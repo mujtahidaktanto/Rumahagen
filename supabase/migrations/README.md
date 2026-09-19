@@ -1352,13 +1352,21 @@ Idempotency-Key hilang pada endpoint yang mewajibkannya → 422. Data uji
 (1 auth user + baris `public.users` terkait, idempotency keys) dihapus
 total dan diverifikasi kosong setelahnya.
 
-**Dependensi eksternal yang BELUM diselesaikan** (butuh konfigurasi dashboard
-manual, sama seperti SMTP Resend sebelumnya):
-- Provider Google harus diaktifkan di Supabase Dashboard > Authentication >
-  Providers dengan Client ID/Secret dari Google Cloud Console, dan URL App
-  ini + `/api/auth/callback` didaftarkan sebagai authorized redirect URI di
-  kedua sisi — tanpa ini `/auth/oauth/google` mengembalikan URL otorisasi
-  yang valid tapi Google akan menolak di ujungnya.
+**Update (2026-09-19): Google OAuth SELESAI dikonfigurasi.** User membuat
+OAuth client "web" di Google Cloud Console (project "rumahagen"), mendaftarkan
+`https://jawywzavznjekxxlhwqo.supabase.co/auth/v1/callback` (redirect URI
+milik Supabase, BUKAN `/api/auth/callback` milik app ini — Google mengirim
+hasil login ke Supabase dulu, baru Supabase redirect balik ke app) sebagai
+authorized redirect URI, lalu memasukkan Client ID+Secret ke Supabase
+Dashboard > Authentication > Providers > Google. Diverifikasi nyata: URL
+otorisasi dari `/auth/oauth/google` dibuka di browser → Google menampilkan
+layar sign-in asli ("Sign in to continue to
+jawywzavznjekxxlhwqo.supabase.co"), BUKAN error `redirect_uri_mismatch` —
+konfigurasi kedua sisi terbukti benar. Login akun Google sungguhan sengaja
+tidak diselesaikan di sesi ini (bukan wewenang untuk login ke akun pribadi
+user tanpa diminta eksplisit).
+
+**Dependensi eksternal yang MASIH belum diselesaikan**:
 - Email template "Confirm signup"/"Reset password" Supabase saat ini masih
   bawaan (tombol tautan `{{ .ConfirmationURL }}`), BUKAN kode 6-8 digit
   (`{{ .Token }}`) yang ditampilkan ke user — endpoint `/auth/verify-otp`
