@@ -28,18 +28,6 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw new ApiError("NOT_FOUND", "Claim tidak ditemukan.");
   }
 
-  // Approval Record is an automatic consequence of approval. Generation is
-  // retriable and intentionally does not introduce a human "Generate" permission.
-  if (body.status === "approved" && data.status === "approved") {
-    try {
-      await ensureApprovalRecord(data.id);
-    } catch (error) {
-      // Do not undo the authoritative Claim decision because PDF storage is an
-      // external physical side effect. View/download will retry generation.
-      console.error(`[${ctx.traceId}] Approval Record generation deferred:`, error);
-    }
-  }
-
   return { data };
 });
 
@@ -61,5 +49,16 @@ export const PUT = withApiHandler({}, async (ctx) => {
     throw new ApiError("NOT_FOUND", "Claim tidak ditemukan atau Anda tidak punya akses.");
   }
 
+  // Approval Record is an automatic consequence of approval. Generation is
+  // retriable and intentionally does not introduce a human "Generate" permission.
+  if (body.status === "approved" && data.status === "approved") {
+    try {
+      await ensureApprovalRecord(data.id);
+    } catch (error) {
+      // Do not undo the authoritative Claim decision because PDF storage is an
+      // external physical side effect. View/download will retry generation.
+      console.error(`[${ctx.traceId}] Approval Record generation deferred:`, error);
+    }
+  }
   return { data };
 });
