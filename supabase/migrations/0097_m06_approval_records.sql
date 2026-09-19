@@ -45,15 +45,16 @@ CREATE POLICY approval_records_select ON public.approval_records
 CREATE OR REPLACE FUNCTION public.prevent_approval_record_mutation()
 RETURNS TRIGGER
 LANGUAGE plpgsql
-AS $
+AS $$
 BEGIN
   RAISE EXCEPTION 'approval_records is immutable';
 END;
-$;
+$$;
 
 CREATE TRIGGER trg_approval_records_immutable
   BEFORE UPDATE OR DELETE ON public.approval_records
   FOR EACH ROW EXECUTE FUNCTION public.prevent_approval_record_mutation();
+
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('approval-records', 'approval-records', false)
 ON CONFLICT (id) DO UPDATE SET public = false;
