@@ -1362,16 +1362,32 @@ Dashboard > Authentication > Providers > Google. Diverifikasi nyata: URL
 otorisasi dari `/auth/oauth/google` dibuka di browser → Google menampilkan
 layar sign-in asli ("Sign in to continue to
 jawywzavznjekxxlhwqo.supabase.co"), BUKAN error `redirect_uri_mismatch` —
-konfigurasi kedua sisi terbukti benar. Login akun Google sungguhan sengaja
-tidak diselesaikan di sesi ini (bukan wewenang untuk login ke akun pribadi
-user tanpa diminta eksplisit).
+konfigurasi kedua sisi terbukti benar.
 
-**Dependensi eksternal yang MASIH belum diselesaikan**:
-- Email template "Confirm signup"/"Reset password" Supabase saat ini masih
-  bawaan (tombol tautan `{{ .ConfirmationURL }}`), BUKAN kode 6-8 digit
-  (`{{ .Token }}`) yang ditampilkan ke user — endpoint `/auth/verify-otp`
-  SUDAH benar menerima kode (dibuktikan lewat `email_otp` di atas), tapi
-  user asli yang menerima email HARI INI akan melihat tombol tautan, bukan
-  kode untuk diketik. Kalau UX yang diinginkan adalah user mengetik kode
-  (sesuai desain endpoint terkunci `/auth/verify-otp`), template email perlu
-  diubah manual di Dashboard untuk menampilkan `{{ .Token }}`.
+**Update lanjutan (2026-09-19): login Google SUNGGUHAN diselesaikan user
+sendiri** (bukan disimulasikan) lewat panel browser sesi ini — memakai akun
+Google pribadi user. Dikonfirmasi lewat query langsung: baris `auth.users`
+baru dengan `raw_app_meta_data->>'provider' = 'google'` muncul, DAN trigger
+`on_auth_user_created` (migration 0096) otomatis membuat baris `public.users`
+(role `agent`, status `active`, `email_verified_at` langsung terisi) —
+**ini justru pembuktian paling penting untuk trigger tsb**, karena jalur
+OAuth memang TIDAK PERNAH melewati route `/api/auth/register` sama sekali;
+kalau sinkronisasi hanya ada di route itu, akun OAuth ini akan lolos tanpa
+`role_id`/`status` dan `has_permission()` gagal permanen. Akun uji (identitas
+Google asli user) dihapus lagi setelah dikonfirmasi, cascade delete bersih.
+
+**Update lanjutan (2026-09-19): template email "Confirm signup" SUDAH diubah
+ke format kode.** User mengganti body template di Supabase Dashboard dari
+tombol tautan `{{ .ConfirmationURL }}` menjadi kode `{{ .Token }}`
+tampil besar. Diverifikasi dengan register nyata ke email pribadi user:
+email diterima berisi kode 8 digit asli (bukan tautan), kode itu berhasil
+dipakai lewat `POST /auth/verify-otp` → sesi terbentuk. Template
+"Reset password" SENGAJA TIDAK diubah dengan cara sama, karena
+`/auth/reset-password` dirancang mengikuti alur klik-tautan (PKCE code lewat
+`/api/auth/callback`), bukan alur ketik-kode — mengubah template itu ke
+format kode akan membuat endpoint reset-password tidak cocok lagi dengan
+emailnya.
+
+**Dependensi eksternal M01 yang tersisa**: tidak ada lagi. Google OAuth dan
+kedua template email (signup=kode, reset=tautan, sesuai desain
+masing-masing endpoint) sudah dikonfigurasi dan diverifikasi nyata.
