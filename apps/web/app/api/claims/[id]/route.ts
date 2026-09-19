@@ -11,6 +11,7 @@ import { validateJsonBody } from "@/lib/api/validate";
 import { claimStatusSchema } from "@/lib/validation/claims";
 import { ApiError } from "@/lib/api/errors";
 import { createClient } from "@/lib/supabase/server";
+import { ensureApprovalRecord } from "@/lib/pdf/approval-record";
 
 export const GET = withApiHandler({}, async (ctx) => {
   const supabase = await createClient();
@@ -25,6 +26,18 @@ export const GET = withApiHandler({}, async (ctx) => {
   }
   if (!data) {
     throw new ApiError("NOT_FOUND", "Claim tidak ditemukan.");
+  }
+
+  // Approval Record is an automatic consequence of approval. Generation is
+  // retriable and intentionally does not introduce a human "Generate" permission.
+  if (body.status === "approved" && data.status === "approved") {
+    try {
+      await ensureApprovalRecord(data.id);
+    } catch (error) {
+      // Do not undo the authoritative Claim decision because PDF storage is an
+      // external physical side effect. View/download will retry generation.
+      console.error(`[${ctx.traceId}] Approval Record generation deferred:`, error);
+    }
   }
 
   return { data };
