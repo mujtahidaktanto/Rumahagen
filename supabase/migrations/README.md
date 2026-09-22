@@ -1593,3 +1593,61 @@ sama → 409 (keputusan final); appeal baru setelah yang lama diputuskan →
 benar-benar berubah `revoked`→`restored`** — membuktikan alur
 appeal→decide→restore kini benar-benar tersambung utuh. Data uji (3 auth
 user, 1 title, 1 award, 2 appeal) dihapus total dan diverifikasi kosong.
+
+## M09 `GET /admin/reports/export` (Gap #5, tanpa migration baru)
+
+Menutup Gap #5 dari `audit/CORE_DOCX_ZIP_VS_MIGRATED_BACKEND_AUDIT.md`.
+**Tidak ada migration SQL baru** — permission `m09.administrative_export.export`
+sudah di-seed Superadmin-only sejak `0009`, yang belum ada murni route-nya.
+Aktivasi antrian `GET /admin/agents/pending` (bagian lain Gap #6 di audit)
+DIKONFIRMASI TIDAK dibangun — dikonfirmasi eksplisit ke user bahwa
+keputusan produk `0083` (hapus gate Pending Review) tetap berlaku, bukan
+dibalik.
+
+### Sumber data export: `audit_logs`, bukan dump seluruh database
+
+`PRE-00-K` (§9 guardrail): "M09 does not create generic cross-domain CRUD"
+dan "Domain-specific export remains domain-owned" — M09 TIDAK memiliki
+wewenang export data spesifik modul lain (listings/courses/dst). Satu-satunya
+data administratif lintas-modul yang benar-benar dimiliki M09 sendiri adalah
+`audit_logs` (M09-R04) — jadi "Global Administrative Export" diimplementasi
+sebagai versi **download CSV penuh** dari data yang sama dengan
+`GET /admin/audit-logs` (filter `entity_type`/`action`/`user_id`/
+`organization_id` yang sama), BUKAN dump seluruh database.
+
+### Otorisasi LEBIH KETAT dari `/admin/audit-logs`
+
+RLS `audit_logs_select` memakai `m09.administrative_audit_log.view`
+(Superadmin+Manager, M09-R04). Tapi `M09-R11` mengunci **export**
+Superadmin-ONLY ("Global Administrative Export is Superadmin-only",
+`PRE-00-K` guardrail #9) — Manager boleh LIHAT tapi TIDAK boleh EXPORT. RLS
+tabel yang sama tidak bisa berbeda per-endpoint, jadi permission dicek
+EKSPLISIT di kode route (`supabase.rpc('has_permission', {p_action_code:
+'m09.administrative_export.export'})` lewat client bersesi asli — pertama
+kali fungsi ini dipanggil langsung dari TypeScript, bukan hanya dari dalam
+policy RLS) SEBELUM memakai `createAdminClient()` untuk query tanpa
+batasan RLS Manager-inclusive itu — pola ini PERSIS yang didokumentasikan
+di header `lib/supabase/admin.ts` sendiri ("HARUS tetap melakukan
+pengecekan has_permission()... sebelum memanggil ini").
+
+### File baru
+
+- `lib/api/csv.ts` — util escape CSV RFC 4180 dasar (tidak ada library CSV
+  di `package.json`, kebutuhannya sederhana).
+- `app/api/admin/reports/export/route.ts` — GET, respons `text/csv` +
+  `Content-Disposition: attachment` (BUKAN amplop JSON `{data, meta}` —
+  sengaja tidak dibungkus `withApiHandler`, sama seperti
+  `app/sitemap-*.xml/route.ts`). Batas 5000 baris per panggilan (pengaman
+  praktis, bukan aturan bisnis Core — Superadmin bisa mempersempit lewat
+  filter yang sama dengan `/admin/audit-logs`).
+
+Diuji nyata: tanpa sesi → 403; **Manager → 403 di export TAPI tetap 200 di
+`/admin/audit-logs`** (membuktikan M09-R04 vs M09-R11 benar-benar dua
+batas berbeda, bukan cuma teori); Superadmin → 200, CSV asli terunduh
+berisi baris `audit_logs` sungguhan dari database (bukan data palsu),
+kolom JSONB (`old_value`/`new_value`) ter-escape benar; filter
+`entity_type` teruji hanya mengembalikan baris yang cocok. Baris
+`audit_logs` yang tercipta dari tes M15 sesi ini (bukan dari fitur lain)
+dihapus setelah diverifikasi lewat export ini, baris `audit_logs` lama
+dari sesi kerja sebelumnya (M14/M04/M13) dibiarkan apa adanya (bukan milik
+tes ini, audit trail tidak dihapus sembarangan).

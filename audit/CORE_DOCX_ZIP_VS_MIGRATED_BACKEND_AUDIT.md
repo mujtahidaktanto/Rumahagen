@@ -139,19 +139,23 @@ pekerjaan REST API + kadang tabel baru yang belum dikerjakan:
    `has_permission()` tanpa `owner_id`. Alur penuh
    appeal→decide(approved)→`/restore` diverifikasi nyata tersambung utuh.
    Detail: `migrations/README.md` bagian `0098`.
-5. **M09 `GET /admin/reports/export` — permission benar, route tidak ada.**
-   `m09.administrative_export.export` sudah di-seed benar (superadmin-only)
-   sejak `0009`, tapi tidak ada route yang memakainya.
-6. **M09 Admin agent activation queue — kemungkinan sudah tidak relevan.**
-   `GET /admin/agents/pending`, approve/reject/suspend dikunci STEP11-A
-   sebagai endpoint yang harus dipertahankan — tapi setelah `0083`
-   (menghapus gate Pending Review, akun langsung aktif pasca-OTP), alur
-   "antrian aktivasi agent" ini kemungkinan besar sudah tidak relevan lagi
-   secara desain produk. Bukan sesuatu yang perlu dibangun tanpa
-   konfirmasi dulu.
+5. ~~**M09 `GET /admin/reports/export` — permission benar, route tidak ada.**~~
+   **SELESAI (2026-09-22, tanpa migration baru).** Export CSV `audit_logs`,
+   otorisasi Superadmin-only (M09-R11) dicek eksplisit di kode route
+   (lebih ketat dari RLS `/admin/audit-logs` yang Superadmin+Manager) —
+   diverifikasi nyata: Manager 403 di export tapi tetap 200 di
+   `/admin/audit-logs`. Detail: `migrations/README.md` bagian
+   "M09 GET /admin/reports/export".
+6. ~~**M09 Admin agent activation queue — kemungkinan sudah tidak relevan.**~~
+   **DIKONFIRMASI (2026-09-22): TETAP TIDAK DIBANGUN.** User mengonfirmasi
+   keputusan produk `0083` (hapus gate Pending Review, akun langsung aktif
+   pasca-OTP) tetap berlaku — antrian aktivasi agent tidak relevan lagi,
+   bukan gap yang perlu ditutup.
 
-**Rekomendasi**: jangan dibangun sekarang tanpa arahan — ini keputusan
-scope/prioritas produk (mana yang mau dibangun sebelum/sesudah UI Bolt.new),
+**Status akhir**: SELURUH 5 gap fitur besar dari `STEP-09/11/12` deep scan
+sudah tuntas (M01 Auth, M11 SEO, M13 AI Chat, M15 Award Appeal, M09 Export)
+— dilengkapi keputusan eksplisit untuk gap ke-6 (activation queue: tetap
+tidak dibangun). Tidak ada gap fitur besar tersisa dari audit ini.
 bukan "bug" yang harus segera ditutup seperti Tier 1-3 sebelumnya.
 
 ---
