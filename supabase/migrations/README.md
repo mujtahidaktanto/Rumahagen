@@ -1730,3 +1730,29 @@ sungguhan → agregat (avg/min/max/price-per-sqm) dihitung benar secara
 matematis, district kosong → 404, param hilang → 422. Data uji (3 auth
 user, 1 bank, 1 simulasi, 2 listing) dihapus total dan diverifikasi
 kosong.
+
+## Bank Master CRUD: `GET/POST /banks`, `GET/PUT /banks/{id}` (tanpa migration baru)
+
+Menutup temuan sampingan dari batch `0099` di atas: RLS `banks_select`/
+`banks_manage` (permission `m07.bank_master.view`/`.configure`) sudah ada
+sejak `0089`, tapi tidak ada SATU PUN route yang memakainya — satu-satunya
+cara mengisi Bank Master adalah SQL langsung. Tidak ada migration baru
+(RLS+permission sudah lengkap), murni `lib/validation/banks.ts` +
+`app/api/banks/route.ts` (GET+POST) + `app/api/banks/[id]/route.ts`
+(GET+PUT).
+
+`GET /banks` SENGAJA tidak difilter status (beda dari `GET /calculator/
+dbr/config` yang hanya menampilkan bank `active` untuk dipilih agent) —
+route ini untuk pengelolaan, staf perlu melihat bank `inactive` juga.
+
+Diuji nyata dengan 4 role sekaligus (superadmin/admin/manager/agent):
+tanpa sesi → list kosong (bukan error); Agent → GET berhasil (view=allowed)
+tapi POST 403 (configure=tidak diizinkan); **Manager → POST DAN PUT
+keduanya ditolak** (403/404) — membuktikan batas persis sesuai komentar
+`0089`: "Admin authority, Superadmin bypass -- BUKAN Manager", beda dari
+kebanyakan permission M07 lain yang biasanya Manager=ALL; Admin → POST
+berhasil membuat bank baru; Superadmin → PUT berhasil mengubah
+`default_interest_rate`; bank yang baru dibuat/diubah langsung muncul
+dengan nilai terbaru di `GET /calculator/dbr/config` (0099) — membuktikan
+kedua fitur benar-benar tersambung, bukan cuma lulus tes terpisah-pisah.
+Data uji (4 auth user, 1 bank) dihapus total dan diverifikasi kosong.
