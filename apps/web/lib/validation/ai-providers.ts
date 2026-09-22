@@ -62,3 +62,20 @@ export const forceConnectionActionSchema = z.object({
   reason: z.string().optional(),
 });
 export type ForceConnectionActionInput = z.infer<typeof forceConnectionActionSchema>;
+
+// POST /ai-assistant/chat (STEP11-B10 §4/§11 M13, evidenced route, request
+// body TIDAK dikunci Core — bentuk messages[] gaya OpenAI dipakai sebagai
+// kontrak generik provider-agnostic di lib/ai/adapters.ts, "provider-specific
+// payloads remain adapter/provider-internal" per §3/§11).
+export const aiChatMessageSchema = z.object({
+  role: z.enum(["system", "user", "assistant"]),
+  content: z.string().min(1).max(8000),
+});
+
+export const aiChatSchema = z.object({
+  connection_id: z.string().uuid(),
+  messages: z.array(aiChatMessageSchema).min(1).max(50),
+  model: z.string().max(100).optional(),
+  max_tokens: z.coerce.number().int().min(1).max(4096).optional(),
+});
+export type AiChatInput = z.infer<typeof aiChatSchema>;

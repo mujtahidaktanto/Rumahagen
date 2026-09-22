@@ -1463,3 +1463,66 @@ XML berisi URL yang benar dengan `lastmod`, dihapus lagi setelahnya. Data uji
 dikembalikan ke nilai default, `last_reindex_requested_by` otomatis ter-NULL
 lewat `ON DELETE SET NULL` setelah user uji dihapus (bukan bug — perilaku FK
 yang diharapkan).
+
+## M13 AI Invocation: `POST /ai-assistant/chat` (Gap #3, tanpa migration baru)
+
+Menutup Gap #3 dari `audit/CORE_DOCX_ZIP_VS_MIGRATED_BACKEND_AUDIT.md`.
+**Tidak ada migration SQL baru** — `ai_providers`/`agent_ai_connections`
+(0015/0016/0080/0093) sudah lengkap; yang belum ada murni kode aplikasi:
+route + adapter provider.
+
+Dibedakan eksplisit dari `POST /ai-connections/{id}/test` yang HANYA
+memvalidasi dekripsi kredensial (lihat komentar route itu sendiri —
+"TIDAK benar-benar memanggil API provider AI eksternal"). `/ai-assistant/
+chat` adalah invocation AI **sungguhan pertama** di repo ini: kredensial
+BYOK yang di-decrypt benar-benar dipakai memanggil provider asli, biaya
+dibebankan ke akun provider milik Agent/Developer Partner sendiri (BYOK,
+bukan M14/akun RumahAgen — sesuai STEP11-B10 §11/§14).
+
+### Otorisasi — tanpa permission baru
+
+Core §11 mensyaratkan "AI invocation requires applicable feature permission
++ own valid/active connection". Dicek langsung ke `public.permissions`:
+tidak ada satu pun permission code `ai_invocation`/`chat` di katalog sumber.
+"Applicable feature permission" dibaca sebagai tanggung jawab FITUR BISNIS
+spesifik yang nanti memanggil endpoint generik ini (di luar scope Gap #3),
+BUKAN sesuatu untuk dikarang di sini (D13-15). Endpoint ini menegakkan
+bagian kedua syaratnya ("own valid/active connection") lewat RLS
+`agent_ai_connections_select` yang sudah ada (0016) — otomatis membatasi
+hanya Superadmin+Developer Partner (satu-satunya role dengan
+`m13.own_byok_connection.view` di seed 0009) — ditambah pengecekan eksplisit
+`status='active'` (Gate PRE-00-O §7-8: "AI DITOLAK selagi UNVERIFIED").
+
+### File baru
+
+- `lib/ai/adapters.ts` — adapter OpenAI/Anthropic/Gemini. Kontrak request
+  (`messages[]` gaya OpenAI) provider-agnostic; translasi ke bentuk asli
+  tiap provider terjadi HANYA di sini (STEP11-B10 §3: "Provider-specific
+  payloads remain adapter/provider-internal"). Provider yang code-nya tidak
+  cocok salah satu dari 3 ini ditolak jelas ("belum didukung teknis"),
+  bukan ditebak/dipaksakan.
+- `app/api/ai-assistant/chat/route.ts` — decrypt `encrypted_api_key`
+  (`lib/crypto/byok.ts`, sudah ada), panggil adapter, map error provider ke
+  409 CONFLICT dengan pesan asli providernya (bukan 500 generik — Agent
+  perlu tahu persis kenapa kunci/kuota miliknya ditolak).
+- `aiChatSchema` baru di `lib/validation/ai-providers.ts`.
+
+### Diuji nyata (bukan mock)
+
+Alur penuh: Superadmin buat provider `gemini-qa` → Developer Partner buat
+BYOK connection dengan **API key Google AI Studio ASLI milik user** →
+`/ai-connections/{id}/test` (unverified→active) → `POST /ai-assistant/chat`
+→ **Gemini benar-benar membalas "Halo"** (2x, direproduksi). Ditemukan &
+diperbaiki lewat tes ini: default model `gemini-1.5-flash` sudah di-retire
+Google per 2026-09 (dikonfirmasi via `GET /v1beta/models` ke akun asli) —
+diganti ke alias `gemini-flash-latest` supaya tidak basi lagi.
+
+Jalur negatif juga dites nyata (bukan asumsi): tanpa sesi → 401; koneksi
+tidak ditemukan/milik user lain → 404 (isolasi multi-tenant RLS, dites
+dengan 2 Developer Partner berbeda); koneksi `unverified` → 409; provider
+tanpa adapter (`unknownvendor-qa`) → 422; API key OpenAI palsu → **panggilan
+jaringan nyata ke `api.openai.com`**, OpenAI menolak dengan pesan asli
+("Incorrect API key provided...") diteruskan sebagai 409. Data uji (3 auth
+user, 3 provider, koneksi BYOK termasuk yang berisi key Gemini asli)
+dihapus total dan diverifikasi kosong — key asli tidak pernah disimpan di
+luar kolom terenkripsi yang sudah dihapus.

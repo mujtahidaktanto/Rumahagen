@@ -125,10 +125,13 @@ pekerjaan REST API + kadang tabel baru yang belum dikerjakan:
    (Core §8/§9/§13 melarang invent route untuk keduanya — tetap
    "CONTROLLED API GAP" by design, bukan sisa pekerjaan). Detail:
    `migrations/README.md` bagian `0097`.
-3. **M13 `POST /ai-assistant/chat` — belum ada.** Invocation AI sungguhan
-   (dibedakan dari `/ai-connections/*` yang cuma CRUD+test koneksi) — sudah
-   diketahui sebagai gap yang sengaja ditunda sejak evaluasi provider AI di
-   sesi-sesi awal.
+3. ~~**M13 `POST /ai-assistant/chat` — belum ada.**~~
+   **SELESAI (2026-09-19/22, tanpa migration SQL baru).** Adapter
+   OpenAI/Anthropic/Gemini (`lib/ai/adapters.ts`) + route
+   `app/api/ai-assistant/chat/route.ts`. Diverifikasi dengan panggilan
+   Gemini ASLI (API key Google AI Studio milik user) — balasan sungguhan
+   diterima, direproduksi 2x. Detail: `migrations/README.md` bagian
+   "M13 AI Invocation".
 4. **M15 Award Appeal — endpoint DAN tabel fisik kosong total.**
    `POST/GET /awards/{id}/appeals`, `POST .../{appeal_id}/decide`
    (STEP11-B8 §14, "PRESERVE EXACT CURRENT CONTRACT") — tidak ada tabel
