@@ -1756,3 +1756,62 @@ berhasil membuat bank baru; Superadmin → PUT berhasil mengubah
 dengan nilai terbaru di `GET /calculator/dbr/config` (0099) — membuktikan
 kedua fitur benar-benar tersambung, bukan cuma lulus tes terpisah-pisah.
 Data uji (4 auth user, 1 bank) dihapus total dan diverifikasi kosong.
+
+## M06 Approval Claim PDF: `GET /claims/{id}/approval-pdf` (keputusan produk, tanpa migration baru)
+
+Menutup STEP11-B3 §14 "Approval Claim PDF Generate/View/Download" +
+"Approval Record" — DIBEDAKAN eksplisit dari 5 endpoint M07 di atas: Core
+di sini menyatakan "No exact current API route or physical resource is
+evidenced; no route/table invented" (CONTROLLED GAP sungguhan, bukan
+sekadar "belum ada route-nya" seperti M07) — jadi desainnya diminta
+konfirmasi produk ke user dulu sebelum dibangun (lihat riwayat chat),
+bukan langsung diasumsikan seperti gap-gap sebelumnya.
+
+**Keputusan yang dikonfirmasi user**: 1 endpoint (bukan 3 terpisah untuk
+Generate/View/Download), tanpa tabel Approval Record terpisah, tanpa
+migration baru — plus tambahan logo RumahAgen di PDF dan detail proyek
+lengkap.
+
+- **"Approval Record"** = baris `agent_project_claims` itu sendiri saat
+  `status='approved'` — sudah cukup immutable (`reviewed_by`/`reviewed_at`
+  otomatis terisi sejak `0035`, tidak ada jalur balik ke `pending`). Tidak
+  perlu tabel snapshot terpisah.
+- **"Generate"** ("Automatic/system consequence" per Core) diwujudkan
+  sebagai render on-demand setiap request (pola sama seperti export-pdf
+  DBR M07) — bukan trigger DB yang membuat file saat approval, karena data
+  sumbernya sendiri sudah tidak berubah lagi setelah approved.
+- **"View" + "Download"** digabung jadi SATU route:
+  `Content-Disposition: inline` (default, tampil di browser) vs
+  `?download=1` (`attachment`, unduh) — menghindari dua route nyaris
+  identik untuk actor yang sama persis ("Agent/Developer evidence
+  access").
+- **Tidak ada permission baru** — Core sendiri eksplisit "NO PERMISSION
+  INVENTION, not a human RBAC permission". RLS
+  `agent_project_claims_select` yang SUDAH ADA sejak `0035` persis
+  mencakup "Agent/Developer evidence access" (agent pemilik klaim,
+  developer pemilik project lewat EXISTS join, atau staf lewat
+  `m06.claim.review`) — tidak ada RLS baru ditulis.
+
+### File baru
+
+- `public/assets/rumahagen-logo.png` — disalin dari asset kanonik
+  `docs/design/wireframes/WF-00-foundation/07-Assets/RumahAgen-logo-source.png`
+  (bukan gambar baru dibuat, memakai ulang aset resmi yang sudah ada).
+- `lib/claims/pdf.ts` — pakai `pdf-lib` (sama seperti DBR, ADR-approved),
+  logo digambar pojok kanan atas. Isi: nama agent (`agent_profiles.
+  full_name`), nama+PIC developer (`developer_partners`), detail proyek
+  lengkap (nama, lokasi, tipe properti, kisaran harga, skema komisi) dari
+  `developer_projects`, tanggal diajukan/disetujui.
+- `app/api/claims/[id]/approval-pdf/route.ts` — GET, menolak 409 kalau
+  klaim belum/tidak lagi `approved`.
+
+Diuji nyata end-to-end: PDF pada klaim `pending` → 409; developer partner
+approve klaim lewat route yang sudah ada → PDF langsung bisa diakses;
+**PDF ASLI dibuka & dibaca ulang** — logo RumahAgen tampil benar di pojok
+kanan atas, semua field (agent, developer+PIC, proyek+lokasi+harga+
+komisi, tanggal diajukan/disetujui) cocok dengan data sungguhan; mode
+`inline` vs `?download=1` menghasilkan header `Content-Disposition`
+berbeda seperti dirancang; isolasi lintas-agent (agent tidak terkait → 404,
+tidak bocor info) dan tanpa sesi → 404. Data uji (3 auth user, 1 developer
+partner, 1 project, 1 klaim, 1 agent profile) dihapus total dan
+diverifikasi kosong.
