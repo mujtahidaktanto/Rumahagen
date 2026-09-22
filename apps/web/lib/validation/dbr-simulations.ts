@@ -23,3 +23,11 @@ export const createDbrSimulationSchema = z.object({
   interest_rate_annual: z.coerce.number().positive().optional(),
 });
 export type CreateDbrSimulationInput = z.infer<typeof createDbrSimulationSchema>;
+
+// POST /calculator/dbr/{id}/save-as-prospect — migration 0099. HANYA dua
+// field ini yang bisa diubah (ditegakkan trigger DB, bukan cuma di sini).
+export const saveDbrSimulationAsProspectSchema = z.object({
+  prospect_name: z.string().min(1).max(150),
+  prospect_phone: z.string().min(1).max(20),
+});
+export type SaveDbrSimulationAsProspectInput = z.infer<typeof saveDbrSimulationAsProspectSchema>;

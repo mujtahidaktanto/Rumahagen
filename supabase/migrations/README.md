@@ -1651,3 +1651,82 @@ kolom JSONB (`old_value`/`new_value`) ter-escape benar; filter
 dihapus setelah diverifikasi lewat export ini, baris `audit_logs` lama
 dari sesi kerja sebelumnya (M14/M04/M13) dibiarkan apa adanya (bukan milik
 tes ini, audit trail tidak dihapus sembarangan).
+
+## `0099` — M07 DBR: 5 endpoint STEP11-B10 (config, save-as-prospect, admin-simulations, export-pdf, market-insights)
+
+Ditemukan saat user bertanya soal gap "generate PDF" di M06 — riset
+menunjukkan M06 Approval Claim PDF memang `CONTROLLED GAP` (Core melarang
+invent route), TAPI STEP11-B10 §4 M07 punya 5 endpoint LOCKED/PRESERVE yang
+ternyata belum dibangun sama sekali: `GET /calculator/dbr/config`,
+`POST /calculator/dbr/{id}/save-as-prospect`, `GET /admin/dbr-simulations`,
+`GET /calculator/dbr/{id}/export-pdf`, `GET /market-insights/suburb`. Belum
+pernah masuk daftar 5 gap sebelumnya karena audit lama fokus M01/M11/M13/
+M15/M09.
+
+### `0099_m07_dbr_save_as_prospect.sql`
+
+`dbr_simulations` SENGAJA tidak punya RLS UPDATE sama sekali sejak `0052`
+("hasil simulasi historis/append-only"). STEP10-D sendiri mengunci
+`prospect_name`/`prospect_phone` sebagai kolom NULLABLE langsung di
+`DBR_SIMULATIONS` (bukan entity PROSPECT terpisah) — dibaca sebagai:
+"save as prospect" = melampirkan nama/telepon ke simulasi yang sudah ada
+(mis. dihitung anonim dulu, baru ditandai sebagai prospek setelah agent
+bicara ke calon pembeli), bukan membuat entity baru. Policy UPDATE baru
+(memakai ulang `m07.dbr.domain_operations`, tidak ada permission baru) +
+trigger `enforce_dbr_simulation_prospect_only_update` yang menolak
+perubahan ke kolom APA PUN selain `prospect_name`/`prospect_phone` —
+diuji nyata lewat UPDATE langsung SQL mencoba mengubah `property_price`,
+ditolak trigger. Immutabilitas kalkulasi tetap utuh.
+
+### `lib/dbr/pdf.ts` + `export-pdf` — pakai `pdf-lib`
+
+Satu-satunya library PDF yang "Approved" di
+`W4-02A.6.7_DEPENDENCY_MANIFEST` (STEP-09-D) — bukan pilihan bebas, dicek
+dulu ke ADR sebelum memilih. PDF dibuat **on-the-fly per request, TIDAK
+dipersist ke Supabase Storage** (repo ini belum punya integrasi Storage
+sama sekali di modul manapun — menambahnya adalah pekerjaan arsitektur
+terpisah, di luar cakupan menutup gap endpoint ini). Kolom
+`dbr_simulations.pdf_export_url` (sudah ada sejak `STEP10-D`) **TIDAK
+diisi** oleh implementasi ini — didokumentasikan eksplisit sebagai
+keputusan cakupan, bukan diam-diam diabaikan.
+
+### `market-insights/suburb` — keputusan rekayasa, bukan data dikarang
+
+Tidak ada definisi semantik "market insight" di mana pun di korpus Core
+selain nama endpoint itu sendiri (dicek menyeluruh: STEP10 dictionary
+kosong, tidak ada entity `MARKET_INSIGHT`). Diimplementasi sebagai agregat
+harga listing **published** per `district_id` (avg/min/max price, avg
+price/sqm, dikelompokkan per `property_type`+`transaction_type`) — murni
+agregat dari data `listings` yang sudah publik lewat RLS yang sudah ada,
+bukan tabel/data baru. Publik (tanpa sesi).
+
+### `admin-dbr-simulations` + `config`
+
+`GET /admin/dbr-simulations` — route admin terpisah dengan filter
+`agent_id` tambahan (RLS `m07.dbr.domain_operations` yang sama, ALL scope
+untuk staf sudah otomatis mengembalikan semua baris; route
+self-service `GET /dbr-simulations` yang sudah ada TIDAK punya filter
+`agent_id`, jadi route admin ini tetap punya nilai tambah, bukan duplikat
+murni). `GET /calculator/dbr/config` — daftar bank aktif (tabel `banks` +
+RLS `banks_select` sudah ada sejak `0089`, hanya belum ada route yang
+memakainya untuk tujuan ini).
+
+**Temuan tambahan (di luar 5 endpoint yang diminta, dilempar sebagai task
+terpisah)**: tidak ada SATU PUN route untuk membuat/mengubah baris `banks`
+— RLS `banks_manage` (Admin+Superadmin) sudah ada sejak `0089` tapi tidak
+terjangkau HTTP sama sekali. Satu-satunya cara mengisi Bank Master sampai
+sekarang adalah SQL langsung (dipakai untuk data uji sesi ini).
+
+Diuji nyata end-to-end: `GET /calculator/dbr/config` mengembalikan bank
+aktif sungguhan; `save-as-prospect` mengubah `prospect_name`/`_phone` saja
+(field lain identik); **PDF ASLI diverifikasi terbuka & terbaca** — semua
+angka (harga, cicilan, DBR%, nama bank, nama+telepon prospek) cocok
+dengan data sungguhan; isolasi lintas-agent (agent lain tidak bisa lihat/
+export/save-as-prospect simulasi orang lain, semuanya 404); admin melihat
+SEMUA simulasi + filter `agent_id` berfungsi, agent biasa di
+`/admin/dbr-simulations` hanya melihat scope OWN-nya (kosong kalau tidak
+punya); `market-insights/suburb` diuji dengan 2 listing published
+sungguhan → agregat (avg/min/max/price-per-sqm) dihitung benar secara
+matematis, district kosong → 404, param hilang → 422. Data uji (3 auth
+user, 1 bank, 1 simulasi, 2 listing) dihapus total dan diverifikasi
+kosong.
