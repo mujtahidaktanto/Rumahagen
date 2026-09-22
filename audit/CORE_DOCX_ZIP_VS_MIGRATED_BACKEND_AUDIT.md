@@ -132,12 +132,13 @@ pekerjaan REST API + kadang tabel baru yang belum dikerjakan:
    Gemini ASLI (API key Google AI Studio milik user) — balasan sungguhan
    diterima, direproduksi 2x. Detail: `migrations/README.md` bagian
    "M13 AI Invocation".
-4. **M15 Award Appeal — endpoint DAN tabel fisik kosong total.**
-   `POST/GET /awards/{id}/appeals`, `POST .../{appeal_id}/decide`
-   (STEP11-B8 §14, "PRESERVE EXACT CURRENT CONTRACT") — tidak ada tabel
-   `award_appeals` di migration manapun, tidak ada route. Restore
-   (`awards/{id}/restore`) sudah ada tapi tanpa appeal di depannya, alur
-   jadi tidak konsisten dengan kontrak yang dikunci.
+4. ~~**M15 Award Appeal — endpoint DAN tabel fisik kosong total.**~~
+   **SELESAI (migration `0098`, 2026-09-22).** Tabel `award_appeals`
+   ADD-NEW + 2 route (appeals GET/POST, decide POST). Self-approval
+   (pemilik award memutuskan appeal-nya sendiri) dicegah lewat
+   `has_permission()` tanpa `owner_id`. Alur penuh
+   appeal→decide(approved)→`/restore` diverifikasi nyata tersambung utuh.
+   Detail: `migrations/README.md` bagian `0098`.
 5. **M09 `GET /admin/reports/export` — permission benar, route tidak ada.**
    `m09.administrative_export.export` sudah di-seed benar (superadmin-only)
    sejak `0009`, tapi tidak ada route yang memakainya.

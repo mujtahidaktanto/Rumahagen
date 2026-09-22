@@ -17,3 +17,16 @@ export const revokeAwardSchema = z.object({
   reason: z.string().optional(),
 });
 export type RevokeAwardInput = z.infer<typeof revokeAwardSchema>;
+
+// POST /awards/{id}/appeals — API-230 (migration 0098, award_appeals ADD-NEW)
+export const createAwardAppealSchema = z.object({
+  reason: z.string().min(1),
+});
+export type CreateAwardAppealInput = z.infer<typeof createAwardAppealSchema>;
+
+// POST /awards/{id}/appeals/{appeal_id}/decide — API-232
+export const decideAwardAppealSchema = z.object({
+  decision: z.enum(["approved", "rejected"]),
+  decision_note: z.string().optional(),
+});
+export type DecideAwardAppealInput = z.infer<typeof decideAwardAppealSchema>;

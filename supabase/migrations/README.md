@@ -1526,3 +1526,70 @@ jaringan nyata ke `api.openai.com`**, OpenAI menolak dengan pesan asli
 user, 3 provider, koneksi BYOK termasuk yang berisi key Gemini asli)
 dihapus total dan diverifikasi kosong — key asli tidak pernah disimpan di
 luar kolom terenkripsi yang sudah dihapus.
+
+## `0098` — M15 Award Appeal (Gap #4): `award_appeals` ADD-NEW
+
+Menutup Gap #4 dari `audit/CORE_DOCX_ZIP_VS_MIGRATED_BACKEND_AUDIT.md`:
+STEP11-B8 mengunci API-230/231/232 (`POST/GET /awards/{id}/appeals`,
+`POST .../{appeal_id}/decide`) sebagai "PRESERVE EXACT CURRENT CONTRACT",
+tapi tabelnya TIDAK ADA di 14 tabel fisik M15 manapun yang dievidensi B8 §13
+— dicek satu per satu, tidak ada `award_appeals`. `restore` (API-233) sudah
+ada sejak awal tapi tanpa appeal di depannya, alur jadi tidak konsisten.
+
+### `0098_m15_award_appeals.sql`
+
+Tabel baru `award_appeals` — **bukan entity STEP10-D** (Core mengunci
+endpoint tapi tidak pernah mendefinisikan skemanya, sama seperti pola
+`dbr_config`/`seo_config` sebelumnya). STEP10-A1 sendiri menulis "M15:
+Appeal/history remain process/history reuse" dan STEP11-B8 §13 menulis
+"Award lifecycle history reuses canonical audit_logs; no duplicate
+appeal-history subsystem is introduced" — dibaca sebagai: tabel ini HANYA
+menyimpan STATE saat ini (pending/approved/rejected), histori keputusan
+tetap lewat `log_audit_event()` (0012) yang sudah ada, bukan tabel/kolom
+histori tambahan.
+
+**Tidak ada permission baru** (D13-15): `decide` memakai ulang
+`m15.award.revoke`/`m15.award.manage` — permission yang SAMA yang sudah
+dipakai `awards/{id}/restore` untuk alasan yang sama (tidak ada
+`m15.award.appeal_decide` terpisah di master matrix). **Kritis**: dipanggil
+TANPA `owner_id` (`has_permission('m15.award.revoke')`, bukan
+`has_permission('m15.award.revoke', user_id)`) — karena `has_permission()`
+(0006 baris 104-105) mengembalikan FALSE untuk scope `'own'` kalau
+`p_owner_id` NULL, ini otomatis MENGECUALIKAN Agent (yang scope-nya `'own'`
+untuk permission ini) dari RLS `award_appeals_decide`. Kalau dipanggil
+DENGAN `owner_id = award_instances.user_id` seperti pola RLS
+`award_instances_update`, pemilik award akan bisa memutuskan appeal-nya
+sendiri — kelas bug self-approval yang sudah beberapa kali ditemukan &
+diperbaiki di proyek ini sebelumnya (mis. 0079).
+
+Dua trigger: `enforce_award_appeal_eligibility` (BEFORE INSERT — appellant
+harus pemilik award, award harus berstatus `revoked`; pola sama seperti
+`enforce_award_requires_authority_scope` 0026 yang perlu membaca tabel
+lain) dan `enforce_award_appeal_decision_final` (BEFORE UPDATE — sekali
+diputuskan approved/rejected, tidak bisa diubah lagi, `decided_at` diisi
+otomatis bukan dari body request). Unique index parsial: satu appeal
+`pending` hidup per award (boleh appeal lagi setelah yang lama diputuskan).
+
+Route baru: `app/api/awards/[id]/appeals/route.ts` (GET+POST) dan
+`app/api/awards/[id]/appeals/[appealId]/decide/route.ts` (POST). `decide`
+SENGAJA TIDAK memanggil `/restore` otomatis saat `approved` — keduanya
+tetap endpoint terpisah sesuai kontrak masing-masing (API-232 vs API-233,
+authority yang sama memanggil `/restore` secara eksplisit sebagai langkah
+lanjutan), tidak menambah efek samping tersirat yang tidak dievidensi Core.
+
+Diuji nyata end-to-end: appeal pada award `active` (belum revoked) → 409
+(trigger eligibility); revoke award → appeal berhasil (201); **pemilik
+award mencoba memutuskan appeal-nya sendiri → RLS menolak (404, bukan
+403, karena baris memang tidak terlihat sama sekali oleh RLS — bukan celah
+info)**; appeal kedua selagi satu masih pending → 409; agent lain yang
+tidak terkait → GET appeals kosong (isolasi RLS) dan POST appeal ditolak
+"award_id tidak ditemukan" (RLS award_instances menyembunyikan award
+revoked dari non-pemilik, appellant palsu tidak pernah melihat baris
+sumbernya — tidak bocor informasi keberadaan award orang lain); Superadmin
+decide `approved` → 200, tercatat di `audit_logs`; re-decide appeal yang
+sama → 409 (keputusan final); appeal baru setelah yang lama diputuskan →
+201 (index unik tidak menghalangi); unauthenticated → 401; **follow-up
+`POST /awards/{id}/restore` setelah appeal disetujui → 200, status award
+benar-benar berubah `revoked`→`restored`** — membuktikan alur
+appeal→decide→restore kini benar-benar tersambung utuh. Data uji (3 auth
+user, 1 title, 1 award, 2 appeal) dihapus total dan diverifikasi kosong.
