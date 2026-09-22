@@ -1815,3 +1815,57 @@ berbeda seperti dirancang; isolasi lintas-agent (agent tidak terkait → 404,
 tidak bocor info) dan tanpa sesi → 404. Data uji (3 auth user, 1 developer
 partner, 1 project, 1 klaim, 1 agent profile) dihapus total dan
 diverifikasi kosong.
+
+## `0100`/`0101` — Fix keamanan: privilege escalation lewat `users_update_self`
+
+Temuan yang dilempar sebagai task terpisah saat mengerjakan M01 Auth
+(2026-09-19), sekarang ditutup. RLS `users_update_self` (`0007`) mengizinkan
+siapa pun UPDATE baris `public.users` MILIKNYA SENDIRI **tanpa batasan
+kolom sama sekali** (`USING/WITH CHECK (id = auth.uid())` saja). Karena
+PostgREST bisa dipanggil LANGSUNG oleh klien mana pun yang punya JWT (bukan
+cuma lewat route Next.js proyek ini), user manapun bisa
+`PATCH {SUPABASE_URL}/rest/v1/users?id=eq.<id-sendiri>` dengan body
+`{"role_id": "<id-role-superadmin>"}` dan RLS meloloskannya — privilege
+escalation penuh. Bug sudah ada sejak `0007`, bukan regresi sesi ini.
+
+### `0100_fix_users_self_update_privilege_escalation.sql`
+
+Trigger `enforce_users_protected_columns` (pola sama seperti
+`agent_ai_connections` `0016`/`dbr_simulations` `0099`: RLS menjawab
+"siapa boleh UPDATE", trigger menjawab "kolom mana boleh berubah").
+Kolom yang diproteksi: `role_id`, `status`, `deleted_at`, `id`,
+`created_at`. Kolom yang SENGAJA dibiarkan self-editable:
+`email_verified_at`/`last_login_at` — dicek langsung ke seluruh
+`apps/web/app/api`, tidak ada satu pun route yang mengubah `role_id`/
+`status` (gap terpisah: `PUT /admin/users/{id}/role` dikunci STEP11-B10
+M09 tapi belum dibangun, di luar cakupan fix keamanan ini), dan kedua
+kolom itu tidak menggerbangi keputusan otorisasi apa pun secara langsung.
+
+### `0101_fix_users_protected_columns_service_role_bypass.sql`
+
+**Ditemukan lewat tes nyata langsung setelah `0100` diterapkan**: trigger
+versi `0100` (guard `is_superadmin()` saja) TERNYATA juga memblokir akses
+SQL langsung/service-role (`auth.uid()` selalu NULL di konteks itu) —
+menutup jalur operasional sah (admin database, Supabase MCP/Dashboard SQL
+editor), bukan cuma jalur serangan. Diperbaiki (TANPA mengedit `0100` yang
+sudah applied — migration baru, `CREATE OR REPLACE FUNCTION`) dengan guard
+`auth.uid() IS NULL OR is_superadmin()`: RLS `users_update_self` sendiri
+sudah memastikan UPDATE lewat REST hanya lolos kalau `auth.uid()` cocok
+dengan baris itu — kalau `auth.uid()` NULL, satu-satunya cara baris itu
+ter-update sama sekali adalah koneksi service-role/postgres yang memang
+bypass RLS sepenuhnya (dipercaya penuh by design).
+
+Diuji nyata dengan JWT sungguhan (bukan asumsi): **eksploitasi PERSIS
+seperti temuan awal** — agent uji login asli, `PATCH` langsung ke
+`{SUPABASE_URL}/rest/v1/users` (BUKAN lewat app Next.js sama sekali)
+mencoba ganti `role_id` ke superadmin → **ditolak nyata** (`400`, pesan
+trigger), role di DB dikonfirmasi tidak berubah; percobaan sama untuk
+`status`/`deleted_at` → ditolak juga; `last_login_at` (kolom yang sengaja
+dibiarkan terbuka) → tetap berhasil diubah (`200`), membuktikan alur
+`/auth/login` yang sudah ada tidak rusak; SQL langsung (service role) ganti
+`role_id` → sempat gagal dengan `0100`, **dikonfirmasi berhasil lagi**
+setelah `0101`; Superadmin sungguhan (sesi REST asli, bukan SQL langsung)
+ubah `status` baris miliknya sendiri → berhasil, membuktikan bypass
+`is_superadmin()` tetap berfungsi untuk skenario user session asli (bukan
+cuma admin database). Seluruh data uji (2 auth user) dihapus dan
+diverifikasi kosong.
