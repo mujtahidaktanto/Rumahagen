@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Kelola Anggota — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tb-btn{width:36px;height:36px;border-radius:50%;background:var(--ra-ink-50);display:flex;align-items:center;justify-content:center;border:none;flex:none;}
+  .sec{padding:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);margin-bottom:14px;overflow:hidden;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--ra-ink-50);flex-wrap:wrap;}
+  .row:last-child{border-bottom:none;}
+  .empty-row{padding:24px;text-align:center;color:var(--ra-ink-300);font-size:13px;}
+  .modal-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:flex-end;z-index:20;}
+  .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;display:flex;flex-direction:column;gap:12px;max-height:80%;}
+  .search-result-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--ra-ink-50);}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="tb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="ra-title-md" style="flex:1;">Kelola Anggota</span>
+    <button class="ra-iconbtn" aria-label="Undang Anggota" onClick="{{openInviteModal}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg></button>
+  </div>
+
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;">
+
+    <sc-if value="{{hasJoinRequests}}" hint-placeholder-val="{{true}}">
+      <div class="sec" style="padding-bottom:0;">
+        <div class="card">
+          <div class="card-head"><span class="ra-title-md" style="font-size:14px;">Permintaan Bergabung ({{joinRequests.length}})</span></div>
+          <sc-for list="{{joinRequests}}" as="r" hint-placeholder-count="2">
+            <div class="row">
+              <div style="width:34px;height:34px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none;">{{r.initials}}</div>
+              <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{r.name}}</div><span class="ra-caption">{{r.date}}</span></div>
+              <div style="display:flex;gap:6px;width:100%;margin-top:6px;">
+                <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;">Tolak</button>
+                <button class="ra-btn ra-btn-primary ra-btn-sm" style="flex:1;">Terima</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <div class="sec" style="padding-bottom:0;">
+      <div class="card">
+        <div class="card-head"><span class="ra-title-md" style="font-size:14px;">Undangan Terkirim</span></div>
+        <sc-if value="{{hasSentInvites}}" hint-placeholder-val="{{true}}">
+          <sc-for list="{{sentInvites}}" as="i" hint-placeholder-count="2">
+            <div class="row">
+              <div style="width:34px;height:34px;border-radius:50%;background:var(--ra-ink-100);color:var(--ra-ink-500);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none;">{{i.initials}}</div>
+              <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{i.name}}</div><span class="ra-caption">{{i.expires}}</span></div>
+              <span class="ra-badge ra-badge-warning">Pending</span>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{noSentInvites}}" hint-placeholder-val="{{false}}"><div class="empty-row">Belum ada undangan terkirim.</div></sc-if>
+      </div>
+    </div>
+
+    <div class="sec" style="padding-bottom:0;">
+      <div class="card">
+        <div class="card-head"><span class="ra-title-md" style="font-size:14px;">Anggota Aktif ({{activeMemberCount}})</span></div>
+        <sc-for list="{{members}}" as="m" hint-placeholder-count="4">
+          <div class="row">
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none;">{{m.initials}}</div>
+            <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{m.name}}</div><span class="ra-caption">{{m.joinedDate}}</span></div>
+            <span class="ra-badge {{m.roleBadge}}">{{m.roleLabel}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+  </div>
+
+  <sc-if value="{{inviteModalOpen}}" hint-placeholder-val="{{false}}">
+    <div class="modal-scrim" onClick="{{closeInviteModal}}">
+      <div class="modal" onClick="{{stopClick}}">
+        <span class="ra-title-lg">Undang Anggota</span>
+        <div class="ra-input" style="display:flex;align-items:center;gap:8px;color:var(--ra-ink-300);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Cari nama agen…
+        </div>
+        <div style="display:flex;flex-direction:column;overflow-y:auto;">
+          <sc-for list="{{searchResults}}" as="s" hint-placeholder-count="3">
+            <div class="search-result-row">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex:none;">{{s.initials}}</div>
+              <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1" style="font-size:12.5px;">{{s.name}}</div><span class="ra-caption">{{s.area}}</span></div>
+              <button class="ra-btn ra-btn-primary ra-btn-sm">Undang</button>
+            </div>
+          </sc-for>
+        </div>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeInviteModal}}">Tutup</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasJoinRequestsProp":{"editor":"boolean","default":true,"section":"Skenario"},"hasSentInvitesProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { inviteModalOpen: false };
+    this.openInviteModal = this.openInviteModal.bind(this);
+    this.closeInviteModal = this.closeInviteModal.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openInviteModal(){ this.setState({ inviteModalOpen: true }); }
+  closeInviteModal(){ this.setState({ inviteModalOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  renderVals() {
+    const hasJoinRequests = this.props.hasJoinRequestsProp ?? true;
+    const hasSentInvites = this.props.hasSentInvitesProp ?? true;
+
+    const joinRequests = [
+      { name: 'Fajar Nugroho', initials: 'FN', date: '2 hari lalu' },
+      { name: 'Maya Kusuma', initials: 'MK', date: '5 hari lalu' }
+    ];
+    const sentInvites = [
+      { name: 'Andi Saputra', initials: 'AS', expires: '6 hari lagi' },
+      { name: 'Lestari Wulan', initials: 'LW', expires: '4 hari lagi' }
+    ];
+    const members = [
+      { name: 'Rian Saputra', initials: 'RS', joinedDate: '2 tahun lalu', roleBadge: 'ra-badge-info', roleLabel: 'Leader' },
+      { name: 'Dewi Anggraini', initials: 'DA', joinedDate: '8 bulan lalu', roleBadge: 'ra-badge-neutral', roleLabel: 'Member' },
+      { name: 'Bambang S.', initials: 'BS', joinedDate: '5 bulan lalu', roleBadge: 'ra-badge-neutral', roleLabel: 'Member' },
+      { name: 'Siti Rahma', initials: 'SR', joinedDate: '2 bulan lalu', roleBadge: 'ra-badge-neutral', roleLabel: 'Member' }
+    ];
+    const searchResults = [
+      { name: 'Hendra Wijaya', initials: 'HW', area: 'Depok, Jawa Barat' },
+      { name: 'Nadia Putri', initials: 'NP', area: 'Jakarta Selatan' }
+    ];
+
+    return {
+      openInviteModal: this.openInviteModal,
+      closeInviteModal: this.closeInviteModal,
+      stopClick: this.stopClick,
+      inviteModalOpen: this.state.inviteModalOpen ?? false,
+      hasJoinRequests, joinRequests,
+      hasSentInvites, noSentInvites: !hasSentInvites, sentInvites,
+      activeMemberCount: members.length,
+      members,
+      searchResults
+    };
+  }
+}
+</script>
+</body>
+</html>

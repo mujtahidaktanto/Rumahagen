@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Organisasi — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:240px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;white-space:nowrap;}
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;}
+  .nav-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;}
+
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+
+  .empty-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:0 40px;}
+  .empty-icon{width:72px;height:72px;border-radius:50%;background:var(--ra-blue-50);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;}
+
+  .org-banner{height:160px;border-radius:var(--ra-radius-lg);background:linear-gradient(135deg,var(--ra-blue-600),var(--ra-blue-900));position:relative;}
+  .org-head{display:flex;align-items:flex-end;gap:16px;margin-top:-40px;padding:0 8px;}
+  .org-logo{width:80px;height:80px;border-radius:var(--ra-radius-lg);background:#fff;border:4px solid #fff;box-shadow:var(--ra-shadow-2);display:flex;align-items:center;justify-content:center;color:var(--ra-blue-600);font-weight:800;font-size:24px;flex:none;}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:18px;display:flex;flex-direction:column;gap:6px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:22px;}
+  .member-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .member-row:last-child{border-bottom:none;}
+
+  .danger-zone{border:1px solid var(--ra-danger-100);background:var(--ra-danger-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .warn-banner{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);border-radius:var(--ra-radius-md);padding:16px 20px;display:flex;align-items:center;gap:14px;}
+
+  .modal-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:20;}
+  .modal{background:#fff;border-radius:var(--ra-radius-lg);padding:28px;width:440px;display:flex;flex-direction:column;gap:14px;}
+</style>
+</helmet>
+<div class="app">
+
+  <!-- NAV RAIL -->
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:34px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span class="ra-label-lg">Dashboard</span></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg><span class="ra-label-lg">Listing Saya</span></a>
+      <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg><span class="ra-label-lg">Pembelajaran</span></a>
+      <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><span class="ra-label-lg">Event</span></a>
+      <a class="nav-item is-active" href="M12-Organisasi-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg><span class="ra-label-lg">Organisasi</span></a>
+      <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg><span class="ra-label-lg">Komersial</span></a>
+      <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg><span class="ra-label-lg">AI Assistant</span></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span class="ra-label-lg">Profil Saya</span></a>
+    </div>
+    <div class="nav-bottom">
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none;">RS</div>
+      <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-1" style="color:#fff;">Rian Saputra</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;position:relative;">
+    <div class="topbar">
+      <h1 class="ra-title-lg">Organisasi</h1>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="ra-iconbtn" aria-label="Notifikasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></button>
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">RS</div>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE: no org -->
+    <sc-if value="{{isNoOrg}}" hint-placeholder-val="{{false}}">
+      <div class="empty-wrap">
+        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="34" height="34"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></div>
+        <h2 class="ra-title-lg">Anda Belum Tergabung ke Organisasi</h2>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);max-width:440px;">Organisasi membuat listing Anda tampil di bawah nama kantor dan memudahkan kolaborasi tim. Anda tetap bisa bekerja mandiri tanpa organisasi — ini opsional.</p>
+        <div style="display:flex;gap:12px;">
+          <a class="ra-btn ra-btn-primary" href="M12-Buat-Organisasi.dc.html">Buat Organisasi Baru</a>
+          <a class="ra-btn ra-btn-secondary" href="../00-Publik/M11-Discovery.dc.html">Cari Organisasi untuk Bergabung</a>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- HAS ORG -->
+    <sc-if value="{{hasOrg}}" hint-placeholder-val="{{true}}">
+      <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:28px 40px;display:flex;flex-direction:column;gap:20px;">
+
+        <sc-if value="{{isClosing}}" hint-placeholder-val="{{false}}">
+          <div class="warn-banner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-warning-600)" stroke-width="1.8" width="20" height="20" style="flex:none;"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9.5"/></svg>
+            <div style="flex:1;"><span class="ra-label-lg">Organisasi Sedang Dalam Proses Penutupan</span><p class="ra-body-md" style="margin:2px 0 0;color:var(--ra-ink-700);">Anggota masih bisa melihat organisasi ini, tapi tidak bisa menerima anggota/listing baru. Konfirmasi untuk menyelesaikan penutupan secara permanen.</p></div>
+            <sc-if value="{{isLeader}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-primary ra-btn-sm" style="flex:none;background:var(--ra-danger-600);" onClick="{{openConfirmModal}}">Konfirmasi Penutupan</button>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{isClosed}}" hint-placeholder-val="{{false}}">
+          <div class="warn-banner" style="background:var(--ra-ink-50);border-color:var(--ra-ink-100);">
+            <span class="ra-body-md">Organisasi ini sudah ditutup secara permanen — tidak ada aksi lebih lanjut yang tersedia.</span>
+          </div>
+        </sc-if>
+
+        <div class="org-banner"></div>
+        <div class="org-head">
+          <div class="org-logo">PJ</div>
+          <div style="flex:1;padding-bottom:4px;display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <h2 class="ra-title-lg" style="font-size:22px;">PT Properti Jaya Sejahtera</h2>
+              <span class="ra-badge ra-badge-info">Kantor Agen</span>
+              <span class="ra-badge {{roleBadge}}">{{roleLabel}}</span>
+            </div>
+            <span class="ra-body-md" style="color:var(--ra-ink-500);">Ruko Sunburst CBD, BSD City, Tangerang Selatan</span>
+          </div>
+          <sc-if value="{{isLeader}}" hint-placeholder-val="{{true}}">
+            <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M12-Kelola-Anggota.dc.html">Kelola Anggota</a>
+          </sc-if>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card"><span class="ra-caption">Anggota Aktif</span><span class="ra-headline">{{activeMemberCount}}</span></div>
+          <sc-if value="{{isLeader}}" hint-placeholder-val="{{true}}">
+            <div class="stat-card"><span class="ra-caption">Undangan Pending</span><span class="ra-headline">{{pendingInvitationsCount}}</span></div>
+          </sc-if>
+          <div class="stat-card"><span class="ra-caption">Listing Organisasi</span><span class="ra-headline">12</span></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <span class="ra-title-md">Anggota Tim</span>
+            <a class="ra-label-lg" style="color:var(--ra-blue-600);" href="M12-Kelola-Anggota.dc.html">Lihat semua</a>
+          </div>
+          <sc-for list="{{members}}" as="m" hint-placeholder-count="4">
+            <div class="member-row">
+              <div style="width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none;">{{m.initials}}</div>
+              <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1">{{m.name}}</div></div>
+              <span class="ra-badge {{m.roleBadge}}">{{m.roleLabel}}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div class="card">
+          <span class="ra-title-md" style="margin-bottom:6px;display:block;">Branding &amp; Informasi Publik</span>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:14px;">Logo, banner, deskripsi, website, dan sosial media bisa diperbarui kapan saja. Nama, jenis, alamat, dan nomor telepon organisasi <strong>terkunci permanen</strong> sejak dibuat.</p>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm">Edit Branding</button>
+        </div>
+
+        <sc-if value="{{isLeader}}" hint-placeholder-val="{{true}}">
+          <sc-if value="{{isActive}}" hint-placeholder-val="{{true}}">
+            <div class="danger-zone">
+              <div><span class="ra-label-lg" style="color:var(--ra-danger-600);">Tutup Organisasi</span><p class="ra-body-md" style="margin:2px 0 0;color:var(--ra-ink-700);">Tindakan 2 langkah — organisasi masuk status "closing" dulu, lalu perlu dikonfirmasi lagi untuk ditutup permanen.</p></div>
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:none;border-color:var(--ra-danger-600);color:var(--ra-danger-600);" onClick="{{openConfirmModal}}">Tutup Organisasi</button>
+            </div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{isMember}}" hint-placeholder-val="{{false}}">
+          <div class="card" style="border-color:var(--ra-danger-100);">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="ra-body-md" style="color:var(--ra-ink-700);">Anda member organisasi ini, bukan pemilik/leader.</span>
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="border-color:var(--ra-danger-600);color:var(--ra-danger-600);">Keluar dari Organisasi</button>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </sc-if>
+
+    <!-- CONFIRM MODAL -->
+    <sc-if value="{{modalOpen}}" hint-placeholder-val="{{false}}">
+      <div class="modal-scrim" onClick="{{closeConfirmModal}}">
+        <div class="modal" onClick="{{stopClick}}">
+          <span class="ra-title-lg">{{modalTitle}}</span>
+          <p class="ra-body-md" style="color:var(--ra-ink-700);">{{modalBody}}</p>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px;">
+            <button class="ra-btn ra-btn-secondary" onClick="{{closeConfirmModal}}">Batal</button>
+            <button class="ra-btn ra-btn-primary" style="background:var(--ra-danger-600);" onClick="{{closeConfirmModal}}">{{modalConfirmLabel}}</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"orgState":{"editor":"enum","default":"has_org","options":["no_org","has_org"],"section":"Skenario"},"viewerRole":{"editor":"enum","default":"leader","options":["leader","member"],"section":"Skenario"},"orgStatus":{"editor":"enum","default":"active","options":["active","closing","closed"],"section":"Skenario status organisasi"},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { modalOpen: false };
+    this.openConfirmModal = this.openConfirmModal.bind(this);
+    this.closeConfirmModal = this.closeConfirmModal.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openConfirmModal(){ this.setState({ modalOpen: true }); }
+  closeConfirmModal(){ this.setState({ modalOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  renderVals() {
+    const orgState = this.props.orgState ?? 'has_org';
+    const role = this.props.viewerRole ?? 'leader';
+    const status = this.props.orgStatus ?? 'active';
+    const isLeader = role === 'leader';
+
+    const members = [
+      { name: 'Rian Saputra', initials: 'RS', roleBadge: 'ra-badge-info', roleLabel: 'Leader' },
+      { name: 'Dewi Anggraini', initials: 'DA', roleBadge: 'ra-badge-neutral', roleLabel: 'Member' },
+      { name: 'Bambang S.', initials: 'BS', roleBadge: 'ra-badge-neutral', roleLabel: 'Member' },
+      { name: 'Siti Rahma', initials: 'SR', roleBadge: 'ra-badge-neutral', roleLabel: 'Member' }
+    ];
+
+    const modalTitle = status === 'active' ? 'Tutup Organisasi Ini?' : 'Konfirmasi Penutupan Permanen';
+    const modalBody = status === 'active'
+      ? 'Organisasi akan masuk status "closing" — anggota masih bisa melihatnya, tapi tidak bisa menerima anggota atau listing baru. Anda perlu konfirmasi sekali lagi untuk menutup permanen.'
+      : 'Tindakan ini permanen dan tidak bisa dibatalkan. Organisasi akan berstatus "closed" selamanya. Anggota tidak akan kehilangan listing/riwayat mereka, tapi organisasi tidak bisa dibuka kembali.';
+    const modalConfirmLabel = status === 'active' ? 'Ya, Tutup Organisasi' : 'Ya, Tutup Permanen';
+
+    return {
+      openConfirmModal: this.openConfirmModal,
+      closeConfirmModal: this.closeConfirmModal,
+      stopClick: this.stopClick,
+      modalOpen: this.state.modalOpen ?? false,
+      modalTitle, modalBody, modalConfirmLabel,
+      isNoOrg: orgState === 'no_org',
+      hasOrg: orgState === 'has_org',
+      isLeader,
+      isMember: !isLeader,
+      roleBadge: isLeader ? 'ra-badge-info' : 'ra-badge-neutral',
+      roleLabel: isLeader ? 'Anda: Leader' : 'Anda: Member',
+      isActive: status === 'active',
+      isClosing: status === 'closing',
+      isClosed: status === 'closed',
+      activeMemberCount: 4,
+      pendingInvitationsCount: 2,
+      members
+    };
+  }
+}
+</script>
+</body>
+</html>

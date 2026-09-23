@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Buat Organisasi — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);}
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .content{flex:1;overflow-y:auto;display:flex;justify-content:center;padding:36px 40px;}
+  .form-wrap{max-width:640px;width:100%;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+  .field-label{font-size:13px;font-weight:700;color:var(--ra-ink-900);}
+  .field-label .req{color:var(--ra-danger-600);}
+  .field-hint{font-size:12px;color:var(--ra-ink-500);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .textarea{min-height:90px;padding:10px 14px;border-radius:var(--ra-radius-sm);border:1.5px solid var(--ra-ink-100);font-family:var(--ra-font);font-size:14px;color:var(--ra-ink-900);}
+  .pick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+  .card-pick{border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px 10px;text-align:center;cursor:pointer;}
+  .card-pick.is-active{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+  .upload-box{border:1.5px dashed var(--ra-ink-200);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ra-ink-500);text-align:center;}
+  .immutable-warn{display:flex;align-items:flex-start;gap:10px;background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:14px 16px;margin-bottom:22px;}
+  .footer-bar{flex:none;height:76px;background:#fff;border-top:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:0 40px;}
+  .success-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;}
+  .success-icon{width:68px;height:68px;border-radius:50%;background:var(--ra-success-100);color:var(--ra-success-600);display:flex;align-items:center;justify-content:center;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;">
+      <span class="ra-title-md">Buat Organisasi</span>
+    </div>
+    <button class="ra-iconbtn" aria-label="Tutup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+
+  <sc-if value="{{isForm}}" hint-placeholder-val="{{true}}">
+  <div class="content">
+    <div class="form-wrap">
+
+      <div class="immutable-warn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-warning-600)" stroke-width="1.8" width="18" height="18" style="flex:none;margin-top:1px;"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9.5"/></svg>
+        <span class="ra-body-md">Nama, jenis, alamat, dan nomor telepon organisasi <strong>tidak bisa diubah lagi setelah dibuat</strong>. Pastikan sudah benar sebelum melanjutkan.</span>
+      </div>
+
+      <h2 class="ra-title-md" style="margin-bottom:14px;">Informasi Dasar</h2>
+      <div class="field"><span class="field-label">Nama Organisasi <span class="req">*</span> <span class="field-hint">— terkunci setelah dibuat</span></span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Contoh: PT Properti Jaya Sejahtera</div></div>
+
+      <div class="field">
+        <span class="field-label">Jenis Organisasi <span class="req">*</span> <span class="field-hint">— terkunci setelah dibuat</span></span>
+        <div class="pick-grid">
+          <div class="card-pick is-active"><span class="ra-label-lg" style="font-size:13px;">Agency</span></div>
+          <div class="card-pick"><span class="ra-label-lg" style="font-size:13px;">Kantor</span></div>
+          <div class="card-pick"><span class="ra-label-lg" style="font-size:13px;">Tim</span></div>
+          <div class="card-pick"><span class="ra-label-lg" style="font-size:13px;">Komunitas</span></div>
+        </div>
+      </div>
+
+      <div class="field"><span class="field-label">Alamat <span class="req">*</span> <span class="field-hint">— terkunci setelah dibuat</span></span><div class="textarea">Ruko Sunburst CBD, BSD City, Tangerang Selatan</div></div>
+      <div class="field"><span class="field-label">Nomor Telepon Kantor <span class="req">*</span> <span class="field-hint">— terkunci setelah dibuat</span></span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">(021) xxxx-xxxx</div></div>
+
+      <h2 class="ra-title-md" style="margin:28px 0 14px;">Branding &amp; Presentasi Publik <span class="ra-caption" style="font-weight:400;">— bisa diubah kapan saja</span></h2>
+
+      <div class="field">
+        <span class="field-label">Logo</span>
+        <div class="upload-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="24" height="24"><path d="M12 16V4M12 4l-5 5M12 4l5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span class="ra-caption">JPG/PNG, rasio 1:1 disarankan</span></div>
+      </div>
+      <div class="field">
+        <span class="field-label">Banner</span>
+        <div class="upload-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="24" height="24"><path d="M12 16V4M12 4l-5 5M12 4l5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span class="ra-caption">JPG/PNG, rasio lebar 3:1 disarankan</span></div>
+      </div>
+      <div class="field"><span class="field-label">Deskripsi</span><div class="textarea">Ceritakan tentang organisasi Anda…</div></div>
+      <div class="field-row">
+        <div class="field"><span class="field-label">Website</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">https://…</div></div>
+        <div class="field"><span class="field-label">Instagram</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">@namaorganisasi</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <button class="ra-btn ra-btn-secondary">Batalkan</button>
+    <sc-if value="{{isSubmitting}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary" disabled>Membuat…</button></sc-if>
+    <sc-if value="{{isNotSubmitting}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary">Buat Organisasi</button></sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{isSuccess}}" hint-placeholder-val="{{false}}">
+    <div class="success-wrap">
+      <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="34" height="34"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg></div>
+      <h1 class="ra-title-lg">Organisasi Berhasil Dibuat</h1>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);max-width:420px;">Anda otomatis menjadi Leader organisasi ini. Undang anggota tim untuk mulai berkolaborasi.</p>
+      <div style="display:flex;gap:12px;">
+        <a class="ra-btn ra-btn-secondary" href="M12-Organisasi-Dashboard.dc.html">Lihat Organisasi</a>
+        <a class="ra-btn ra-btn-primary" href="M12-Kelola-Anggota.dc.html">Undang Anggota</a>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"formState":{"editor":"enum","default":"idle","options":["idle","submitting","success"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const formState = this.props.formState ?? 'idle';
+    const isSuccess = formState === 'success';
+    const isSubmitting = formState === 'submitting';
+    return {
+      isForm: !isSuccess,
+      isSuccess,
+      isSubmitting,
+      isNotSubmitting: !isSubmitting
+    };
+  }
+}
+</script>
+</body>
+</html>
