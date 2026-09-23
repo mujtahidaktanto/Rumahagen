@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Direktori Pengguna — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .chip-row{display:flex;gap:8px;padding:2px;}
+  .u-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:10px;}
+  .role-pill{display:inline-flex;padding:3px 10px;border-radius:var(--ra-radius-pill);background:var(--ra-ink-50);color:var(--ra-ink-700);font-size:12px;font-weight:700;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
+  .sheet{width:100%;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--ra-shadow-3);}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <span class="ra-title-md" style="color:#fff;flex:1;">Direktori Pengguna</span>
+    <span class="ra-caption" style="color:rgba(255,255,255,.65);">{{viewerRoleLabel}}</span>
+  </div>
+
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;">
+
+    <div class="ra-scroll-x chip-row">
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+        <span class="ra-chip" aria-pressed="{{c.isActive}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">·{{c.count}}</span></span>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:48px 20px;color:var(--ra-ink-300);text-align:center;">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><circle cx="32" cy="22" r="10"/><path d="M12 54c0-11 9-18 20-18s20 7 20 18"/></svg>
+        <span class="ra-body-md">Tidak ada pengguna "{{activeFilterLabel}}"</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+      <sc-for list="{{filtered}}" as="u" hint-placeholder-count="6">
+        <div class="u-card">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none;">{{u.initials}}</div>
+            <div style="flex:1;min-width:0;">
+              <div class="ra-label-lg ra-truncate-1">{{u.name}}</div>
+              <div class="ra-caption ra-truncate-1">{{u.email}}</div>
+            </div>
+            <span class="ra-badge {{u.badgeClass}}"><span class="ra-dot"></span>{{u.status}}</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="role-pill">{{u.roleLabel}}</span>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <a href="#" class="ra-label-lg">Detail</a>
+              <sc-if value="{{u.canSuspend}}" hint-placeholder-val="{{false}}">
+                <button class="ra-btn ra-btn-danger ra-btn-sm" onClick="{{u.openSuspend}}">Suspend</button>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0;">
+        <span class="ra-caption">Menampilkan {{filtered.length}} dari 214</span>
+        <button class="ra-btn ra-btn-secondary ra-btn-sm">Muat Lebih Banyak</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- bottom sheet (mobile pattern replaces centered dialog) -->
+  <sc-if value="{{dialogOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialog}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--ra-danger-100);color:var(--ra-danger-600);display:flex;align-items:center;justify-content:center;flex:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M5.5 5.5l13 13"/></svg>
+          </div>
+          <div><h2 class="ra-title-md">Suspend akun {{dialogUserName}}?</h2></div>
+        </div>
+        <textarea class="ra-input" style="height:76px;padding:10px 14px;resize:none;" value="{{reason}}" onChange="{{handleReasonChange}}" placeholder="Alasan penangguhan (wajib diisi)"></textarea>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <button class="ra-btn ra-btn-danger" style="width:100%;" disabled="{{confirmDisabled}}">Suspend Akun</button>
+          <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialog}}">Batal</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"listState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { activeFilter: 'all', dialogOpen: false, dialogUserName: '', reason: '' };
+    this.handleReasonChange = this.handleReasonChange.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  pickFilter(key){ this.setState({ activeFilter: key }); }
+  openSuspend(user){ this.setState({ dialogOpen: true, dialogUserName: user.name, reason: '' }); }
+  closeDialog(){ this.setState({ dialogOpen: false, reason: '' }); }
+  handleReasonChange(e){ this.setState({ reason: e && e.target ? e.target.value : '' }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  renderVals() {
+    const viewerRole = this.props.viewerRole ?? 'admin';
+    const canManage = viewerRole === 'superadmin' || viewerRole === 'admin';
+    const users = [
+      { name: 'Dewi Anggraini', email: 'dewi.anggraini@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'DA' },
+      { name: 'Fajar Nugroho', email: 'fajar.nugroho@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'pending_review', status: 'pending_review', badgeClass: 'ra-badge-warning', initials: 'FN' },
+      { name: 'Siti Rahma', email: 'siti.rahma@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'suspended', status: 'suspended', badgeClass: 'ra-badge-danger', initials: 'SR' },
+      { name: 'Yusuf Hidayat', email: 'yusuf.hidayat@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'rejected', status: 'rejected', badgeClass: 'ra-badge-danger', initials: 'YH' },
+      { name: 'Rian Saputra', email: 'rian.saputra@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'RS' },
+      { name: 'Amelia Putri', email: 'amelia.putri@example.com', role: 'manager', roleLabel: 'Manager', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'AP' }
+    ];
+    const chipDefs = [
+      { key: 'all', label: 'Semua' }, { key: 'active', label: 'Aktif' },
+      { key: 'pending_review', label: 'Ditinjau' }, { key: 'suspended', label: 'Suspended' }, { key: 'rejected', label: 'Ditolak' }
+    ];
+    const activeFilter = this.state.activeFilter ?? 'all';
+    const countFor = (key) => key === 'all' ? users.length : users.filter(u => u.statusKey === key).length;
+    const chips = chipDefs.map(c => ({ key: c.key, label: c.label, count: countFor(c.key), isActive: c.key === activeFilter, pick: () => this.pickFilter(c.key) }));
+    const filteredBase = activeFilter === 'all' ? users : users.filter(u => u.statusKey === activeFilter);
+    const filtered = filteredBase.map(u => ({ ...u, canSuspend: canManage && u.role === 'agent' && u.statusKey === 'active', openSuspend: () => this.openSuspend(u) }));
+    const activeFilterLabel = (chipDefs.find(c => c.key === activeFilter) || {}).label ?? 'Semua';
+    const listState = this.props.listState ?? 'loaded';
+    const roleLabels = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' };
+    const reason = this.state.reason ?? '';
+    return {
+      chips, filtered, activeFilterLabel,
+      viewerRoleLabel: roleLabels[viewerRole] ?? 'Admin',
+      isEmpty: listState === 'empty',
+      isLoaded: listState === 'loaded',
+      dialogOpen: this.state.dialogOpen ?? false,
+      dialogUserName: this.state.dialogUserName ?? '',
+      reason,
+      confirmDisabled: reason.trim().length === 0,
+      handleReasonChange: this.handleReasonChange,
+      closeDialog: this.closeDialog,
+      stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>

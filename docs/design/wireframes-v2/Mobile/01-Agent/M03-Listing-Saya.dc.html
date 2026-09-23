@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Listing Saya — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .chip-row{display:flex;gap:8px;padding:2px;}
+  .card{display:flex;gap:12px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:12px;}
+  .thumb{width:84px;height:72px;border-radius:var(--ra-radius-sm);background:var(--ra-ink-100);flex:none;}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 20px;color:var(--ra-ink-300);text-align:center;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 18px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.75);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .ctx-row{display:flex;align-items:center;gap:10px;padding:12px 18px;margin:8px 12px 0;border-radius:var(--ra-radius-md);background:rgba(255,255,255,.08);}
+  .ctx-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+</style>
+</helmet>
+<div class="app" style="position:relative;">
+
+  <div class="topbar">
+    <button class="ra-iconbtn" style="margin-left:-8px;" onClick="{{openDrawer}}" aria-label="Buka navigasi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <span class="ra-title-md" style="flex:1;">Listing Saya</span>
+    <button class="ra-iconbtn" aria-label="Tambah listing" style="background:var(--ra-blue-600);color:#fff;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px;">
+
+    <div class="ra-scroll-x chip-row">
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="9">
+        <span class="ra-chip" aria-pressed="{{c.isActive}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">·{{c.count}}</span></span>
+      </sc-for>
+    </div>
+
+    <!-- clarifies: "Ditinjau" = post-publish moderation flag (staff-only), never a pre-publish gate -->
+    <sc-if value="{{showPendingReviewHint}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;align-items:flex-start;gap:10px;background:var(--ra-info-100);border:1px solid var(--ra-blue-200);border-radius:var(--ra-radius-md);padding:12px 14px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="var(--ra-info-600)" stroke="none"/></svg>
+        <span class="ra-body-md">Listing ini <strong>sudah tayang</strong>, sedang ditinjau ulang karena dugaan pelanggaran — bukan listing baru menunggu persetujuan.</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="ra-skel" style="height:96px;"></div>
+        <div class="ra-skel" style="height:96px;"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+      <div class="empty-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg>
+        <span class="ra-title-md">Gagal memuat listing</span>
+        <button class="ra-btn ra-btn-secondary ra-btn-sm">Coba Lagi</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+      <div class="empty-wrap">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M8 26 32 14l24 12"/><path d="M8 26v22a2 2 0 0 0 2 2h44a2 2 0 0 0 2-2V26"/><path d="M8 26l10 8h28l10-8"/></svg>
+        <span class="ra-title-md">Tidak ada listing "{{activeFilterLabel}}"</span>
+        <button class="ra-btn ra-btn-primary ra-btn-sm">Tambah Listing</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <sc-for list="{{filtered}}" as="item" hint-placeholder-count="4">
+          <div class="card">
+            <div class="thumb"></div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;">
+              <span class="ra-label-lg ra-truncate-2">{{item.title}}</span>
+              <span class="ra-caption ra-truncate-1">{{item.location}}</span>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px;">
+                <span class="ra-label-lg" style="color:var(--ra-blue-600);">{{item.price}}</span>
+                <span class="ra-badge {{item.badgeClass}}"><span class="ra-dot"></span>{{item.status}}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0;">
+        <span class="ra-caption">Menampilkan {{filtered.length}} dari 47</span>
+        <button class="ra-btn ra-btn-secondary ra-btn-sm">Muat Lebih Banyak</button>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <!-- drawer nav — identik dengan Dashboard, hanya highlight aktif berbeda -->
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDrawer}}"></div>
+    <div class="drawer">
+      <div class="drawer-head">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup navigasi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <button class="ctx-row" aria-label="Ganti konteks" style="border:none;text-align:left;">
+        <sc-if value="{{isPersonalContext}}" hint-placeholder-val="{{true}}">
+          <div class="ctx-avatar" style="background:var(--ra-blue-100);color:var(--ra-blue-600);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+          </div>
+        </sc-if>
+        <sc-if value="{{isOrgContext}}" hint-placeholder-val="{{false}}">
+          <div class="ctx-avatar" style="background:var(--ra-gold-100);color:var(--ra-gold-700);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>
+          </div>
+        </sc-if>
+        <div style="flex:1;min-width:0;">
+          <div class="ra-caption" style="color:rgba(255,255,255,.55);">Konteks aktif</div>
+          <div class="ra-label-lg ra-truncate-1" style="color:#fff;">{{contextLabel}}</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="flex:none;"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;">
+        <a class="nav-item" href="M08-Dashboard.dc.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+          Dashboard
+        </a>
+        <a class="nav-item is-active" href="M03-Listing-Saya.dc.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg>
+          Listing Saya
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg>
+          Pembelajaran
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+          Event
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>
+          Organisasi
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg>
+          Komersial
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>
+          AI Assistant
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+          Profil Saya
+        </a>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">RS</div>
+        <div><div class="ra-label-lg" style="color:#fff;">Rian Saputra</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div></div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"context":{"editor":"enum","default":"personal","options":["personal","org_a"],"section":"Context switcher"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { activeFilter: 'all', drawerOpen: false };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+  }
+  pickFilter(key){ this.setState({ activeFilter: key }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  renderVals() {
+    const listings = [
+      { title: 'Tanah Kavling Siap Bangun 200m² — Cluster Green Valley', location: 'Cibubur, Jakarta Timur', price: 'Rp 850 Jt', statusKey: 'draft', status: 'draft', badgeClass: 'ra-badge-neutral' },
+      { title: 'Ruko 3 Lantai Dekat Stasiun Commuter Line', location: 'Bekasi Timur', price: 'Rp 3,2 M', statusKey: 'pending_review', status: 'pending_review', badgeClass: 'ra-badge-warning' },
+      { title: 'Rumah Minimalis 2 Lantai Dekat Sekolah Internasional', location: 'BSD City, Tangerang Selatan', price: 'Rp 2,1 M', statusKey: 'published', status: 'published', badgeClass: 'ra-badge-success' },
+      { title: 'Apartemen 2BR Full Furnished View Kota', location: 'Jakarta Selatan', price: 'Rp 1,4 M', statusKey: 'published', status: 'published', badgeClass: 'ra-badge-success' },
+      { title: 'Apartemen Studio Furnished View Kota', location: 'Jakarta Selatan', price: 'Rp 650 Jt', statusKey: 'suspended', status: 'suspended', badgeClass: 'ra-badge-danger' },
+      { title: 'Gudang Industri 500m² Akses Truk Kontainer', location: 'Kawasan Industri Cikarang', price: 'Rp 5,6 M', statusKey: 'rejected', status: 'rejected', badgeClass: 'ra-badge-danger' },
+      { title: 'Rumah Cluster Syariah 1 Lantai', location: 'Depok, Jawa Barat', price: 'Rp 780 Jt', statusKey: 'sold', status: 'sold', badgeClass: 'ra-badge-info' },
+      { title: 'Kios Strategis Dekat Pasar Tradisional', location: 'Bogor, Jawa Barat', price: 'Rp 12 Jt/bln', statusKey: 'rented', status: 'rented', badgeClass: 'ra-badge-info' },
+      { title: 'Tanah Komersial Pinggir Jalan Raya', location: 'Bandung Barat', price: 'Rp 1,8 M', statusKey: 'expired', status: 'expired', badgeClass: 'ra-badge-neutral' }
+    ];
+    const chipDefs = [
+      { key: 'all', label: 'Semua' }, { key: 'draft', label: 'Draft' },
+      { key: 'pending_review', label: 'Ditinjau' }, { key: 'published', label: 'Dipublikasi' },
+      { key: 'suspended', label: 'Ditangguhkan' }, { key: 'rejected', label: 'Ditolak' },
+      { key: 'sold', label: 'Terjual' }, { key: 'rented', label: 'Disewa' }, { key: 'expired', label: 'Kedaluwarsa' }
+    ];
+    const activeFilter = this.state.activeFilter ?? 'all';
+    const countFor = (key) => key === 'all' ? listings.length : listings.filter(l => l.statusKey === key).length;
+    const chips = chipDefs.map(c => ({ key: c.key, label: c.label, count: countFor(c.key), isActive: c.key === activeFilter, pick: () => this.pickFilter(c.key) }));
+    const filtered = activeFilter === 'all' ? listings : listings.filter(l => l.statusKey === activeFilter);
+    const activeFilterLabel = (chipDefs.find(c => c.key === activeFilter) || {}).label ?? 'Semua';
+    const viewState = this.props.viewState ?? 'loaded';
+    return {
+      chips, filtered, activeFilterLabel,
+      showPendingReviewHint: activeFilter === 'pending_review',
+      isLoading: viewState === 'loading',
+      isError: viewState === 'error',
+      isEmpty: viewState === 'empty',
+      isLoaded: viewState === 'loaded',
+      drawerOpen: this.state.drawerOpen ?? false,
+      openDrawer: this.openDrawer,
+      closeDrawer: this.closeDrawer,
+      isPersonalContext: (this.props.context ?? 'personal') === 'personal',
+      isOrgContext: (this.props.context ?? 'personal') === 'org_a',
+      contextLabel: (this.props.context ?? 'personal') === 'personal' ? 'Personal' : 'PT Properti Jaya'
+    };
+  }
+}
+</script>
+</body>
+</html>

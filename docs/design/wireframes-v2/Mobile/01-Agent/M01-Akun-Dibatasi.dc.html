@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Akun Dibatasi — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;}
+  .stage{width:390px;height:844px;background:linear-gradient(165deg,var(--ra-blue-900) 0%,var(--ra-blue-600) 55%,var(--ra-gold-600) 135%);display:flex;align-items:center;justify-content:center;font-family:var(--ra-font);box-sizing:border-box;padding:20px;}
+  .card{width:100%;background:#fff;border-radius:var(--ra-radius-lg);box-shadow:var(--ra-shadow-3);padding:32px 24px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;}
+  .icon-ring{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</helmet>
+<div class="stage">
+
+  <sc-if value="{{isChecking}}" hint-placeholder-val="{{false}}">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;color:#fff;">
+      <div style="width:32px;height:32px;border-radius:50%;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin 0.8s linear infinite;"></div>
+      <span class="ra-body-md" style="color:#fff;">Memeriksa status sesi…</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isBlocked}}" hint-placeholder-val="{{true}}">
+    <div class="card">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:32px;width:auto;object-fit:contain;">
+
+      <div class="icon-ring" style="background:{{reasonBg}};color:{{reasonColor}};">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <h1 class="ra-title-lg">{{title}}</h1>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);">{{body}}</p>
+      </div>
+
+      <div class="ra-badge {{badgeClass}}"><span class="ra-dot"></span>{{statusLabel}}</div>
+
+      <p class="ra-caption">Alasan lebih rinci telah dikirim ke email terdaftar Anda.</p>
+
+      <div style="display:flex;flex-direction:column;gap:10px;width:100%;margin-top:6px;">
+        <button class="ra-btn ra-btn-primary" style="width:100%;">Hubungi Dukungan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;">Keluar dari Akun</button>
+      </div>
+
+      <a href="#" class="ra-caption">Pelajari kebijakan platform</a>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"reason":{"editor":"enum","default":"suspended","options":["suspended","rejected"],"section":"Skenario"},"isChecking":{"editor":"boolean","default":false,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const reason = this.props.reason ?? 'suspended';
+    const isChecking = this.props.isChecking ?? false;
+    const copy = {
+      suspended: {
+        title: 'Akun Ditangguhkan Sementara',
+        body: 'Akses akun ini ditangguhkan karena terindikasi melanggar kebijakan platform.',
+        statusLabel: 'suspended',
+        badgeClass: 'ra-badge-danger',
+        reasonBg: '#FCE7E7',
+        reasonColor: '#D23B3B'
+      },
+      rejected: {
+        title: 'Pendaftaran Akun Ditolak',
+        body: 'Verifikasi dokumen Anda belum memenuhi syarat platform.',
+        statusLabel: 'rejected',
+        badgeClass: 'ra-badge-danger',
+        reasonBg: '#FCE7E7',
+        reasonColor: '#D23B3B'
+      }
+    };
+    const c = copy[reason] ?? copy.suspended;
+    return { isChecking, isBlocked: !isChecking, ...c };
+  }
+}
+</script>
+</body>
+</html>

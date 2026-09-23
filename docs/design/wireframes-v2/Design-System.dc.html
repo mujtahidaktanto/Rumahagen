@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Design System — RumahAgen</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;background:var(--ra-surface);}
+  .sheet{width:1440px;box-sizing:border-box;padding:56px 64px 96px;display:flex;flex-direction:column;gap:56px;}
+  .sec{display:flex;flex-direction:column;gap:20px;}
+  .sec-head{display:flex;flex-direction:column;gap:4px;border-bottom:1px solid var(--ra-ink-100);padding-bottom:16px;}
+  .swatch-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;}
+  .swatch{border-radius:var(--ra-radius-md);overflow:hidden;border:1px solid var(--ra-ink-100);}
+  .swatch-fill{height:72px;}
+  .swatch-label{padding:10px 12px;background:#fff;display:flex;flex-direction:column;gap:2px;}
+  .type-row{display:flex;align-items:baseline;gap:24px;padding:16px 0;border-bottom:1px dashed var(--ra-ink-100);}
+  .type-row:last-child{border-bottom:none;}
+  .type-meta{width:220px;flex:none;}
+  .badge-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;}
+  .badge-group{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:12px;}
+  .badge-list{display:flex;flex-direction:column;gap:8px;}
+  .touch-demo{display:flex;align-items:center;gap:28px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:24px;}
+  .spacing-row{display:flex;align-items:flex-end;gap:20px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:24px;}
+  .spacing-item{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .spacing-bar{background:var(--ra-blue-500);border-radius:3px;width:24px;}
+</style>
+</helmet>
+<div class="sheet">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:46px;width:auto;object-fit:contain;">
+      <div style="width:1.5px;height:32px;background:var(--ra-ink-100);"></div>
+      <div>
+        <h1 class="ra-title-lg" style="margin:0;">Design System</h1>
+        <p class="ra-caption" style="margin:0;">Opsi 1 — Status &amp; Lifecycle Audit Fix · Material-inspired · v1.0</p>
+      </div>
+    </div>
+    <div class="ra-badge ra-badge-info"><span class="ra-dot"></span>Reference sheet — bukan layar aplikasi</div>
+  </div>
+
+  <!-- COLOR -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2 class="ra-headline">Warna</h2>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);">Diturunkan dari logo RumahAgen: biru (kepercayaan/profesional) dan emas (kemitraan/jabat tangan).</p>
+    </div>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-blue-900);"></div><div class="swatch-label"><span class="ra-label-lg">Blue 900</span><span class="ra-caption">#0B2E6B</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-blue-700);"></div><div class="swatch-label"><span class="ra-label-lg">Blue 700</span><span class="ra-caption">#0F3F9E</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-blue-600);"></div><div class="swatch-label"><span class="ra-label-lg">Blue 600 · Primary</span><span class="ra-caption">#1652C4</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-blue-100);"></div><div class="swatch-label"><span class="ra-label-lg">Blue 100</span><span class="ra-caption">#E8EFFC</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-gold-600);"></div><div class="swatch-label"><span class="ra-label-lg">Gold 600 · Accent</span><span class="ra-caption">#E08E1D</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-gold-100);"></div><div class="swatch-label"><span class="ra-label-lg">Gold 100</span><span class="ra-caption">#FDEDD3</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-ink-900);"></div><div class="swatch-label"><span class="ra-label-lg">Ink 900 · Teks utama</span><span class="ra-caption">#14181F</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-ink-500);"></div><div class="swatch-label"><span class="ra-label-lg">Ink 500 · Teks sekunder</span><span class="ra-caption">#5B6472</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-ink-100);"></div><div class="swatch-label"><span class="ra-label-lg">Ink 100 · Border</span><span class="ra-caption">#E2E6EC</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-success-600);"></div><div class="swatch-label"><span class="ra-label-lg">Success</span><span class="ra-caption">#1E8E5A</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-warning-600);"></div><div class="swatch-label"><span class="ra-label-lg">Warning</span><span class="ra-caption">#B4720A</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:var(--ra-danger-600);"></div><div class="swatch-label"><span class="ra-label-lg">Danger</span><span class="ra-caption">#D23B3B</span></div></div>
+    </div>
+  </div>
+
+  <!-- TYPE SCALE -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2 class="ra-headline">Typographic Scale</h2>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);">Plus Jakarta Sans — satu keluarga font, 9 tingkat, dipakai konsisten di semua layar.</p>
+    </div>
+    <div style="background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:8px 24px;">
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Display / 32·40 800</span></div><div class="ra-display">Temukan rumah impian Anda</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Headline / 24·32 700</span></div><div class="ra-headline">Listing Saya</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Title Large / 20·28 700</span></div><div class="ra-title-lg">Rumah Minimalis 2 Lantai di BSD</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Title Medium / 16·24 600</span></div><div class="ra-title-md">Status akun dan verifikasi</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Body Large / 16·24 400</span></div><div class="ra-body-lg">Listing Anda akan ditinjau tim kami dalam 1×24 jam kerja.</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Body Medium / 14·20 400</span></div><div class="ra-body-md">Jl. Kenanga Raya No. 12, BSD City, Tangerang Selatan</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Label Large / 14·20 600</span></div><div class="ra-label-lg">SIMPAN PERUBAHAN</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Label Medium / 12·16 700 caps</span></div><div class="ra-label-md">Published</div></div>
+      <div class="type-row"><div class="type-meta"><span class="ra-label-md" style="color:var(--ra-ink-300);">Caption / 12·16 400</span></div><div class="ra-caption">Diperbarui 2 jam lalu oleh Sistem</div></div>
+    </div>
+  </div>
+
+  <!-- STATUS BADGES — the actual audit-fix source of truth -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2 class="ra-headline">Status &amp; Lifecycle Badge — Sumber Kebenaran</h2>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);">Diselaraskan persis dengan CHECK constraint skema Supabase live (migration #0001–#0115). Setiap layar wajib pakai daftar ini — bukan status karangan.</p>
+    </div>
+    <div class="badge-grid">
+      <div class="badge-group">
+        <span class="ra-label-md" style="color:var(--ra-ink-300);">Listing · 8 status</span>
+        <div class="badge-list">
+          <span class="ra-badge ra-badge-neutral"><span class="ra-dot"></span>draft</span>
+          <span class="ra-badge ra-badge-warning"><span class="ra-dot"></span>pending_review</span>
+          <span class="ra-badge ra-badge-success"><span class="ra-dot"></span>published</span>
+          <span class="ra-badge ra-badge-danger"><span class="ra-dot"></span>suspended</span>
+          <span class="ra-badge ra-badge-danger"><span class="ra-dot"></span>rejected</span>
+          <span class="ra-badge ra-badge-info"><span class="ra-dot"></span>sold</span>
+          <span class="ra-badge ra-badge-info"><span class="ra-dot"></span>rented</span>
+          <span class="ra-badge ra-badge-neutral"><span class="ra-dot"></span>expired</span>
+        </div>
+        <span class="ra-caption">migration 0018+0086+0107 · pending_review = flag moderasi PASCA-publish oleh staf, bukan gate pre-publish (Agent selalu bebas self-publish) · lihat A2</span>
+      </div>
+      <div class="badge-group">
+        <span class="ra-label-md" style="color:var(--ra-ink-300);">Organization · 4 status</span>
+        <div class="badge-list">
+          <span class="ra-badge ra-badge-success"><span class="ra-dot"></span>active</span>
+          <span class="ra-badge ra-badge-warning"><span class="ra-dot"></span>closing</span>
+          <span class="ra-badge ra-badge-danger"><span class="ra-dot"></span>suspended</span>
+          <span class="ra-badge ra-badge-neutral"><span class="ra-dot"></span>closed</span>
+        </div>
+        <span class="ra-caption">migration 0005 + 0087 · lihat A3</span>
+      </div>
+      <div class="badge-group">
+        <span class="ra-label-md" style="color:var(--ra-ink-300);">Akun Pengguna · 4 status</span>
+        <div class="badge-list">
+          <span class="ra-badge ra-badge-success"><span class="ra-dot"></span>active</span>
+          <span class="ra-badge ra-badge-warning"><span class="ra-dot"></span>pending_review</span>
+          <span class="ra-badge ra-badge-danger"><span class="ra-dot"></span>suspended</span>
+          <span class="ra-badge ra-badge-danger"><span class="ra-dot"></span>rejected</span>
+        </div>
+        <span class="ra-caption">migration 0002 + 0082 + 0083 + 0108 · lihat C3–C5</span>
+      </div>
+      <div class="badge-group">
+        <span class="ra-label-md" style="color:var(--ra-ink-300);">Klaim Proyek Developer · 5 status</span>
+        <div class="badge-list">
+          <span class="ra-badge ra-badge-warning"><span class="ra-dot"></span>pending</span>
+          <span class="ra-badge ra-badge-success"><span class="ra-dot"></span>approved</span>
+          <span class="ra-badge ra-badge-danger"><span class="ra-dot"></span>rejected</span>
+          <span class="ra-badge ra-badge-danger"><span class="ra-dot"></span>revoked</span>
+          <span class="ra-badge ra-badge-neutral"><span class="ra-dot"></span>withdrawn</span>
+        </div>
+        <span class="ra-caption">migration 0035 + 0085 · lihat A4 (sudah sesuai)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS & CHIPS -->
+  <div class="sec">
+    <div class="sec-head"><h2 class="ra-headline">Komponen Aksi</h2></div>
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:24px;">
+      <button class="ra-btn ra-btn-primary">Simpan Perubahan</button>
+      <button class="ra-btn ra-btn-secondary">Batal</button>
+      <button class="ra-btn ra-btn-danger">Suspend Akun</button>
+      <button class="ra-btn ra-btn-ghost">Lewati</button>
+      <button class="ra-btn ra-btn-primary" disabled>Nonaktif</button>
+      <span class="ra-chip" aria-pressed="true">Semua <span class="ra-chip-count">·47</span></span>
+      <span class="ra-chip">Published <span class="ra-chip-count">·31</span></span>
+      <span class="ra-chip">Suspended <span class="ra-chip-count">·2</span></span>
+      <div class="ra-input" style="width:220px;display:flex;align-items:center;color:var(--ra-ink-300);">Cari listing…</div>
+    </div>
+  </div>
+
+  <!-- TOUCH TARGETS -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2 class="ra-headline">Aksesibilitas Aksional</h2>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);">Target sentuh minimum 44×44px (setara Material 48dp), jarak antar elemen klik minimum 8px, fokus keyboard selalu terlihat.</p>
+    </div>
+    <div class="touch-demo">
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--ra-blue-100);border:2px dashed var(--ra-blue-500);display:flex;align-items:center;justify-content:center;" class="ra-label-md">44</div>
+      <span class="ra-body-md">Target sentuh minimum — tombol ikon, checkbox, baris aksi tabel di mobile</span>
+      <div style="width:1.5px;height:40px;background:var(--ra-ink-100);"></div>
+      <div style="display:flex;gap:8px;"><div style="width:12px;height:44px;background:var(--ra-ink-100);border-radius:4px;"></div><span class="ra-label-md" style="align-self:center;">8px</span><div style="width:12px;height:44px;background:var(--ra-ink-100);border-radius:4px;"></div></div>
+      <span class="ra-body-md">Jarak minimum antar elemen yang bisa diklik berdekatan</span>
+    </div>
+  </div>
+
+  <!-- SPACING -->
+  <div class="sec">
+    <div class="sec-head"><h2 class="ra-headline">Spacing Scale</h2></div>
+    <div class="spacing-row">
+      <div class="spacing-item"><div class="spacing-bar" style="height:4px;"></div><span class="ra-caption">4</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:8px;"></div><span class="ra-caption">8</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:12px;"></div><span class="ra-caption">12</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:16px;"></div><span class="ra-caption">16</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:20px;"></div><span class="ra-caption">20</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:24px;"></div><span class="ra-caption">24</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:32px;"></div><span class="ra-caption">32</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:40px;"></div><span class="ra-caption">40</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:48px;"></div><span class="ra-caption">48</span></div>
+      <div class="spacing-item"><div class="spacing-bar" style="height:64px;"></div><span class="ra-caption">64</span></div>
+    </div>
+  </div>
+
+  <!-- BREAKPOINTS -->
+  <div class="sec">
+    <div class="sec-head"><h2 class="ra-headline">Breakpoints</h2></div>
+    <div style="display:flex;gap:16px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:24px;">
+      <div style="flex:1;"><div class="ra-label-lg">Mobile</div><div class="ra-caption">0–767px · nav jadi drawer + bottom sheet</div></div>
+      <div style="flex:1;"><div class="ra-label-lg">Tablet</div><div class="ra-caption">768–1023px · nav rail collapse otomatis</div></div>
+      <div style="flex:1;"><div class="ra-label-lg">Desktop</div><div class="ra-caption">1024–1439px · nav rail penuh, grid 2 kolom</div></div>
+      <div style="flex:1;"><div class="ra-label-lg">Desktop luas</div><div class="ra-caption">≥1440px · grid hingga 3 kolom, max-width konten 1280px</div></div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

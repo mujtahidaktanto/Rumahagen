@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Dashboard Agent — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;transition:width .18s ease;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;white-space:nowrap;}
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item svg{flex:none;}
+  .nav-label{opacity:var(--label-op,1);transition:opacity .12s ease;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;}
+  .nav-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;}
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .ctx-switch{display:flex;align-items:center;gap:8px;height:40px;padding:0 8px 0 4px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);background:#fff;cursor:pointer;max-width:190px;}
+  .ctx-switch:hover{border-color:var(--ra-ink-200);}
+  .ctx-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:6px;}
+  .widget{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);display:flex;flex-direction:column;overflow:hidden;}
+  .widget-head{padding:16px 20px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;}
+  .widget-body{padding:8px 8px;display:flex;flex-direction:column;}
+  .row{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:var(--ra-radius-sm);}
+  .row:hover{background:var(--ra-ink-50);}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;color:var(--ra-ink-300);text-align:center;}
+</style>
+</helmet>
+<div class="app">
+
+  <!-- NAV RAIL (collapsible — hide/show, never locked) -->
+  <div class="nav" style="width:{{navWidth}}px;">
+    <div class="nav-top">
+      <sc-if value="{{navExpanded}}" hint-placeholder-val="{{true}}">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:34px;width:auto;object-fit:contain;">
+      </sc-if>
+      <button class="ra-iconbtn" onClick="{{toggleNav}}" aria-label="Tampilkan/sembunyikan navigasi">
+        <sc-if value="{{navCollapsed}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M9 5l7 7-7 7"/></svg></sc-if>
+        <sc-if value="{{navExpanded}}" hint-placeholder-val="{{true}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></sc-if>
+      </button>
+    </div>
+    <!-- 8 destinasi persis sesuai STEP13-E §4.2 "Authenticated Agent navigation":
+         Listings, Learning/Learning Economy, Events, Organization context,
+         Commercial/Entitlements, Dashboard/Notifications, AI Assistant, Profile —
+         "Personal Context" direalisasikan sebagai Context Switcher di topbar (§5.3),
+         bukan baris nav terpisah. -->
+    <div class="nav-list">
+      <a class="nav-item is-active" href="M08-Dashboard.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">Dashboard</span>
+      </a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">Listing Saya</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">Pembelajaran</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">Event</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">Organisasi</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">Komersial</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">AI Assistant</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        <span class="nav-label" style="--label-op:{{labelOp}};">Profil Saya</span>
+      </a>
+    </div>
+    <div class="nav-bottom">
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none;">RS</div>
+      <sc-if value="{{navExpanded}}" hint-placeholder-val="{{true}}">
+        <div style="min-width:0;flex:1;">
+          <div class="ra-label-lg ra-truncate-1" style="color:#fff;">Rian Saputra</div>
+          <div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div class="topbar">
+      <h1 class="ra-title-lg">Dashboard</h1>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="ra-input" style="width:220px;display:flex;align-items:center;gap:8px;color:var(--ra-ink-300);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Cari…
+        </div>
+
+        <!-- Context Switcher (STEP13-E §5.3): Personal <-> tiap Organization yang diikuti.
+             Ganti context wajib refresh resource list/permitted actions/quota — TIDAK PERNAH
+             mengubah ownership atau role platform. -->
+        <button class="ctx-switch" aria-label="Ganti konteks">
+          <sc-if value="{{isPersonalContext}}" hint-placeholder-val="{{true}}">
+            <div class="ctx-avatar" style="background:var(--ra-blue-100);color:var(--ra-blue-600);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+            </div>
+          </sc-if>
+          <sc-if value="{{isOrgContext}}" hint-placeholder-val="{{false}}">
+            <div class="ctx-avatar" style="background:var(--ra-gold-100);color:var(--ra-gold-700);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>
+            </div>
+          </sc-if>
+          <span class="ra-label-lg ra-truncate-1" style="max-width:100px;">{{contextLabel}}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-ink-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex:none;"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+
+        <div style="position:relative;">
+          <button class="ra-iconbtn" aria-label="Notifikasi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+          </button>
+          <div style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--ra-danger-600);border:1.5px solid #fff;"></div>
+        </div>
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">RS</div>
+      </div>
+    </div>
+
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:32px 40px;display:flex;flex-direction:column;gap:24px;">
+
+      <!-- account status banner: PURELY informational — pending_review never restricts any feature
+           (verified against supabase/migrations/0082: has_permission() explicitly excludes pending_review
+           from any block, precisely so new agents keep full baseline access incl. publishing listings). -->
+      <sc-if value="{{showBanner}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;align-items:flex-start;gap:14px;background:var(--ra-info-100);border:1px solid var(--ra-blue-200);border-radius:var(--ra-radius-md);padding:16px 20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="var(--ra-info-600)" stroke="none"/></svg>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+            <span class="ra-label-lg">Verifikasi identitas Anda sedang ditinjau</span>
+            <span class="ra-body-md" style="color:var(--ra-ink-700);">Ini sekadar informasi — seluruh fitur tetap dapat Anda pakai seperti biasa, termasuk membuat dan mempublikasikan listing baru. Estimasi peninjauan 1×24 jam kerja.</span>
+          </div>
+          <span class="ra-badge ra-badge-info" style="flex:none;"><span class="ra-dot"></span>pending_review</span>
+        </div>
+      </sc-if>
+
+      <!-- stat cards -->
+      <div class="stat-grid">
+        <div class="stat-card"><span class="ra-caption">Total Listing Aktif</span><span class="ra-headline">18</span></div>
+        <div class="stat-card"><span class="ra-caption">Dilihat Bulan Ini</span><span class="ra-headline">2.140</span></div>
+        <div class="stat-card"><span class="ra-caption">Leads Baru</span><span class="ra-headline">9</span></div>
+        <div class="stat-card"><span class="ra-caption">Learning Points</span><span class="ra-headline">320</span></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:start;">
+
+        <!-- recent listings widget -->
+        <div class="widget">
+          <div class="widget-head">
+            <span class="ra-title-md">Listing Terbaru</span>
+            <a href="M03-Listing-Saya.dc.html" class="ra-label-lg">Lihat semua</a>
+          </div>
+          <div class="widget-body">
+            <sc-if value="{{listingsLoading}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;flex-direction:column;gap:8px;padding:12px;">
+                <div class="ra-skel" style="height:56px;"></div>
+                <div class="ra-skel" style="height:56px;"></div>
+                <div class="ra-skel" style="height:56px;"></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{listingsLoaded}}" hint-placeholder-val="{{true}}">
+              <sc-for list="{{listings}}" as="item" hint-placeholder-count="3">
+                <div class="row">
+                  <div style="width:52px;height:40px;border-radius:8px;background:var(--ra-ink-100);flex:none;"></div>
+                  <div style="min-width:0;flex:1;">
+                    <div class="ra-label-lg ra-truncate-1">{{item.title}}</div>
+                    <div class="ra-caption ra-truncate-1">{{item.location}}</div>
+                  </div>
+                  <span class="ra-badge {{item.badgeClass}}"><span class="ra-dot"></span>{{item.status}}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+          </div>
+        </div>
+
+        <!-- notifications widget with empty state demo -->
+        <div class="widget">
+          <div class="widget-head">
+            <span class="ra-title-md">Notifikasi</span>
+            <span class="ra-caption">2 belum dibaca</span>
+          </div>
+          <div class="widget-body">
+            <sc-if value="{{notifEmpty}}" hint-placeholder-val="{{false}}">
+              <div class="empty-wrap">
+                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="48" height="48"><path d="M8 26 32 14l24 12"/><path d="M8 26v22a2 2 0 0 0 2 2h44a2 2 0 0 0 2-2V26"/><path d="M8 26l10 8h28l10-8"/></svg>
+                <span class="ra-body-md">Belum ada notifikasi</span>
+                <span class="ra-caption">Aktivitas listing dan akun akan muncul di sini</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{hasNotif}}" hint-placeholder-val="{{true}}">
+              <div class="row"><div style="width:8px;height:8px;border-radius:50%;background:var(--ra-blue-600);flex:none;"></div><div style="flex:1;"><div class="ra-body-md">Listing "Rumah BSD" mendapat 3 leads baru</div><div class="ra-caption">12 menit lalu</div></div></div>
+              <div class="row"><div style="width:8px;height:8px;border-radius:50%;background:var(--ra-blue-600);flex:none;"></div><div style="flex:1;"><div class="ra-body-md">Verifikasi dokumen sedang ditinjau</div><div class="ra-caption">1 jam lalu</div></div></div>
+              <div class="row"><div style="width:8px;height:8px;border-radius:50%;background:transparent;flex:none;"></div><div style="flex:1;"><div class="ra-body-md" style="color:var(--ra-ink-500);">Learning Point +20 dari sesi "Negosiasi"</div><div class="ra-caption">Kemarin</div></div></div>
+            </sc-if>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accountState":{"editor":"enum","default":"pending_review","options":["active","pending_review"],"section":"Skenario akun"},"context":{"editor":"enum","default":"personal","options":["personal","org_a"],"section":"Context switcher"},"listingsLoading":{"editor":"boolean","default":false,"section":"Skenario widget"},"notifEmpty":{"editor":"boolean","default":false,"section":"Skenario widget"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { navCollapsed: false };
+    this.toggleNav = this.toggleNav.bind(this);
+  }
+  toggleNav(){
+    this.setState({ navCollapsed: !this.state.navCollapsed });
+  }
+  renderVals() {
+    const navCollapsed = this.state.navCollapsed ?? false;
+    const accountState = this.props.accountState ?? 'pending_review';
+    const listings = [
+      { title: 'Rumah Minimalis 2 Lantai — BSD City', location: 'Tangerang Selatan', status: 'published', badgeClass: 'ra-badge-success' },
+      { title: 'Ruko 3 Lantai Siap Pakai Dekat Stasiun', location: 'Bekasi Timur', status: 'pending_review', badgeClass: 'ra-badge-warning' },
+      { title: 'Apartemen Studio Furnished View Kota', location: 'Jakarta Selatan', status: 'suspended', badgeClass: 'ra-badge-danger' }
+    ];
+    const listingsLoading = this.props.listingsLoading ?? false;
+    const notifEmpty = this.props.notifEmpty ?? false;
+    const context = this.props.context ?? 'personal';
+    return {
+      navCollapsed,
+      navExpanded: !navCollapsed,
+      navWidth: navCollapsed ? 76 : 240,
+      labelOp: navCollapsed ? 0 : 1,
+      toggleNav: this.toggleNav,
+      showBanner: accountState === 'pending_review',
+      listingsLoading,
+      listingsLoaded: !listingsLoading,
+      listings,
+      notifEmpty,
+      hasNotif: !notifEmpty,
+      isPersonalContext: context === 'personal',
+      isOrgContext: context === 'org_a',
+      contextLabel: context === 'personal' ? 'Personal' : 'PT Properti Jaya'
+    };
+  }
+}
+</script>
+</body>
+</html>

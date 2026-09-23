@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Homepage — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:#fff;position:relative;}
+  .topbar{height:58px;position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .sec{padding:0 16px;}
+  .hero{background:linear-gradient(155deg,var(--ra-blue-800),var(--ra-blue-500));padding:24px 16px 22px;position:relative;overflow:hidden;}
+  .hero-photo{height:150px;border-radius:var(--ra-radius-lg);background:rgba(255,255,255,.14);margin-bottom:16px;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;}
+  .explore-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+  .explore-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 6px;border-radius:var(--ra-radius-md);border:1px solid var(--ra-ink-100);text-decoration:none;text-align:center;}
+  .explore-icon{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+  .prop-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;}
+  .prop-card{flex:none;width:240px;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;text-decoration:none;color:inherit;}
+  .prop-photo{height:130px;background:var(--ra-ink-100);position:relative;}
+  .type-tag{position:absolute;top:8px;left:8px;padding:3px 9px;border-radius:var(--ra-radius-pill);font-size:11px;font-weight:700;color:#fff;}
+  .fav-btn{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;border:none;}
+  .prop-body{padding:12px;display:flex;flex-direction:column;gap:5px;}
+  .panel{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;}
+  .panel-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;}
+  .announce-row{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--ra-ink-50);text-decoration:none;color:inherit;}
+  .announce-row:last-child{border-bottom:none;}
+  .tag-pill{flex:none;padding:3px 8px;border-radius:var(--ra-radius-pill);font-size:10px;font-weight:700;}
+  .course-card{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--ra-ink-50);}
+  .course-card:last-child{border-bottom:none;}
+  .course-thumb{width:76px;height:56px;border-radius:var(--ra-radius-sm);background:var(--ra-ink-100);flex:none;position:relative;}
+  .bottom-nav{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--ra-ink-100);display:flex;padding:6px 4px 8px;}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ra-ink-300);text-decoration:none;padding:4px 0;}
+  .bn-item.is-active{color:var(--ra-blue-600);}
+  .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:32px 16px 20px;}
+  .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13px;padding:5px 0;}
+
+  /* drawer */
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:30;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:#fff;z-index:31;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex:none;border-bottom:1px solid var(--ra-ink-100);}
+  .dnav-item{display:flex;align-items:center;gap:12px;height:46px;padding:0 16px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);text-decoration:none;font-weight:600;}
+  .dnav-item.is-active{background:var(--ra-blue-50);color:var(--ra-blue-600);}
+</style>
+</helmet>
+<div class="page">
+
+  <div class="topbar">
+    <button class="ra-iconbtn" style="margin-left:-8px;" onClick="{{openDrawer}}" aria-label="Buka menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;flex:1;">
+    <button class="ra-iconbtn" aria-label="Cari">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </button>
+    <sc-if value="{{isGuest}}" hint-placeholder-val="{{true}}">
+      <button class="ra-btn ra-btn-primary ra-btn-sm">Masuk</button>
+    </sc-if>
+    <sc-if value="{{isAgent}}" hint-placeholder-val="{{false}}">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">RS</div>
+    </sc-if>
+  </div>
+
+  <div class="hero">
+    <div class="hero-photo"></div>
+    <h1 class="ra-headline" style="color:#fff;font-size:22px;line-height:28px;">Temukan Properti, Temukan Peluang, Bersama RumahAgen</h1>
+    <p class="ra-body-md" style="color:rgba(255,255,255,.85);margin:8px 0 16px;">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar.</p>
+    <div class="ra-input" style="height:48px;display:flex;align-items:center;gap:8px;color:var(--ra-ink-300);background:#fff;margin-bottom:12px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Cari lokasi, tipe properti…
+    </div>
+    <div class="chip-row">
+      <span class="ra-chip" style="background:#fff;" aria-pressed="true">Rumah</span>
+      <span class="ra-chip" style="background:#fff;">Apartemen</span>
+      <span class="ra-chip" style="background:#fff;">Tanah</span>
+      <span class="ra-chip" style="background:#fff;">Ruko</span>
+    </div>
+  </div>
+
+  <div class="sec" style="padding-top:22px;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+      <h2 class="ra-title-lg">Jelajahi RumahAgen</h2>
+      <a href="#" class="ra-label-lg" style="font-size:13px;">Lihat semua</a>
+    </div>
+    <div class="explore-grid">
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Listing</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Agen</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Organisasi</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Developer</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Event</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Learning</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Learning Session</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M7 3h8l4 4v14H7Z"/><path d="M15 3v4h4"/><path d="M9 13h6M9 17h6"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Konten Publik</span></a>
+      <a class="explore-card" href="#"><div class="explore-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 11.5 11.5 3H19a2 2 0 0 1 2 2v7.5L12.5 21 3 11.5Z"/><circle cx="14.5" cy="8.5" r="1.4" fill="currentColor" stroke="none"/></svg></div><span class="ra-caption" style="font-weight:700;color:var(--ra-ink-900);">Promo</span></a>
+    </div>
+  </div>
+
+  <div class="sec" style="padding-top:26px;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+      <h2 class="ra-title-lg">Properti Pilihan</h2>
+      <a href="#" class="ra-label-lg" style="font-size:13px;">Semua</a>
+    </div>
+
+    <sc-if value="{{listingsLoading}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;gap:12px;">
+        <div class="ra-skel" style="width:240px;height:230px;flex:none;"></div>
+        <div class="ra-skel" style="width:240px;height:230px;flex:none;"></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{listingsEmpty}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:32px 20px;color:var(--ra-ink-300);text-align:center;">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M8 26 32 14l24 12"/><path d="M8 26v22a2 2 0 0 0 2 2h44a2 2 0 0 0 2-2V26"/><path d="M8 26l10 8h28l10-8"/></svg>
+        <span class="ra-body-md">Belum ada listing unggulan</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{listingsLoaded}}" hint-placeholder-val="{{true}}">
+      <div class="prop-scroll">
+        <sc-for list="{{featuredListings}}" as="p" hint-placeholder-count="4">
+          <a class="prop-card" href="#">
+            <div class="prop-photo">
+              <span class="type-tag" style="background:{{p.tagColor}};">{{p.tag}}</span>
+              <button class="fav-btn" aria-label="Simpan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 20s-7-4.4-9.5-8.8C1 8 2 4.5 5.5 4c2-.3 3.8.8 4.7 2.4C11 4.8 12.8 3.7 14.8 4 18.3 4.5 19.3 8 18 11.2 16.2 15.6 12 20 12 20Z"/></svg></button>
+            </div>
+            <div class="prop-body">
+              <span class="ra-label-lg ra-truncate-1">{{p.title}}</span>
+              <span class="ra-caption ra-truncate-1">{{p.location}}</span>
+              <span class="ra-label-lg" style="color:var(--ra-blue-600);">{{p.price}}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <div class="sec" style="padding-top:26px;">
+    <div class="panel">
+      <div class="panel-head"><span class="ra-title-md">Pengumuman &amp; Promo</span><a href="#" class="ra-label-lg" style="font-size:13px;">Semua</a></div>
+      <sc-for list="{{announcements}}" as="a" hint-placeholder-count="3">
+        <a class="announce-row" href="#">
+          <span class="tag-pill" style="background:{{a.tagBg}};color:{{a.tagColor}};">{{a.tagLabel}}</span>
+          <div style="flex:1;min-width:0;"><div class="ra-body-md ra-truncate-1">{{a.title}}</div><div class="ra-caption">{{a.date}}</div></div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <div class="sec" style="padding-top:18px;padding-bottom:8px;">
+    <div class="panel">
+      <div class="panel-head"><span class="ra-title-md">Tingkatkan Kompetensi</span><a href="#" class="ra-label-lg" style="font-size:13px;">Semua</a></div>
+      <sc-for list="{{courses}}" as="c" hint-placeholder-count="2">
+        <div class="course-card">
+          <div class="course-thumb"><span class="ra-badge ra-badge-success" style="position:absolute;top:5px;left:5px;">Gratis</span></div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+            <span class="ra-label-lg ra-truncate-1" style="font-size:13.5px;">{{c.title}}</span>
+            <span class="ra-caption">{{c.modules}} Modul · {{c.level}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div class="footer">
+    <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:22px;width:auto;object-fit:contain;margin-bottom:14px;">
+    <div class="footer-col"><a href="#">Syarat &amp; Ketentuan</a><a href="#">Kebijakan Privasi</a><a href="#">Pusat Bantuan</a><a href="#">Hubungi Kami</a></div>
+    <span class="ra-caption" style="color:rgba(255,255,255,.4);display:block;margin-top:14px;">© 2026 RumahAgen.com</span>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="bn-item is-active" href="M11-Homepage.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span class="ra-caption" style="font-size:11px;">Beranda</span></a>
+    <a class="bn-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="ra-caption" style="font-size:11px;">Cari</span></a>
+    <a class="bn-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><span class="ra-caption" style="font-size:11px;">Event</span></a>
+    <a class="bn-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg><span class="ra-caption" style="font-size:11px;">Learning</span></a>
+    <a class="bn-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span class="ra-caption" style="font-size:11px;">Akun</span></a>
+  </div>
+
+  <!-- drawer: 10 nav publik lengkap -->
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDrawer}}"></div>
+    <div class="drawer">
+      <div class="drawer-head">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;">
+        <button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;padding:10px;flex:1;overflow-y:auto;">
+        <a class="dnav-item is-active" href="M11-Homepage.dc.html">Beranda</a>
+        <a class="dnav-item" href="#">Listing</a>
+        <a class="dnav-item" href="#">Agen</a>
+        <a class="dnav-item" href="#">Organisasi</a>
+        <a class="dnav-item" href="#">Developer</a>
+        <a class="dnav-item" href="#">Event</a>
+        <a class="dnav-item" href="#">Learning</a>
+        <a class="dnav-item" href="#">Learning Session</a>
+        <a class="dnav-item" href="#">Konten Publik</a>
+        <a class="dnav-item" href="#">Promo</a>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid var(--ra-ink-100);display:flex;flex-direction:column;gap:10px;">
+        <sc-if value="{{isGuest}}" hint-placeholder-val="{{true}}">
+          <button class="ra-btn ra-btn-primary" style="width:100%;">Daftar</button>
+          <button class="ra-btn ra-btn-secondary" style="width:100%;">Masuk</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"visitorState":{"editor":"enum","default":"guest","options":["guest","agent"],"section":"Skenario"},"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  renderVals() {
+    const visitorState = this.props.visitorState ?? 'guest';
+    const listState = this.props.listState ?? 'loaded';
+
+    const featuredListingsRaw = [
+      { title: 'Rumah Minimalis Modern', location: 'Bogor, Jawa Barat', price: 'Rp 850.000.000', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
+      { title: 'Apartemen Strategis Furnished', location: 'Jakarta Selatan', price: 'Rp 5.000.000/bln', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' },
+      { title: 'Ruko Lokasi Premium', location: 'Bandung, Jawa Barat', price: 'Rp 2.500.000.000', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' }
+    ];
+
+    const announcements = [
+      { tagLabel: 'Promo', tagBg: 'var(--ra-danger-100)', tagColor: 'var(--ra-danger-600)', title: 'Promo Spesial Akhir Tahun dari developer pilihan', date: '1 Des 2026' },
+      { tagLabel: 'Event', tagBg: 'var(--ra-success-100)', tagColor: 'var(--ra-success-600)', title: 'RumahAgen Property Expo 2026', date: '25 Nov 2026' }
+    ];
+
+    const courses = [
+      { title: 'Dasar-dasar Pemasaran Properti', modules: 8, level: 'Pemula' },
+      { title: 'Teknik Negosiasi untuk Agen', modules: 6, level: 'Menengah' }
+    ];
+
+    return {
+      drawerOpen: this.state.drawerOpen ?? false,
+      openDrawer: this.openDrawer,
+      closeDrawer: this.closeDrawer,
+      isGuest: visitorState === 'guest',
+      isAgent: visitorState === 'agent',
+      listingsLoading: listState === 'loading',
+      listingsEmpty: listState === 'empty',
+      listingsLoaded: listState === 'loaded',
+      featuredListings: featuredListingsRaw,
+      announcements,
+      courses
+    };
+  }
+}
+</script>
+</body>
+</html>
