@@ -59,6 +59,7 @@ wireframes-v2/
 │   │   ├── M02-Profil-Saya.dc.html
 │   │   ├── M03-Listing-Saya.dc.html
 │   │   ├── M03-Create-Listing-Wizard.dc.html
+│   │   ├── M03-Listing-Detail.dc.html
 │   │   └── M08-Dashboard.dc.html
 │   ├── 02-Admin/
 │   │   └── M09-Direktori-Pengguna.dc.html
@@ -92,7 +93,7 @@ permission, migration, audit) jadi itu yang dipakai sebagai struktur folder, buk
 |---|---|---|---|
 | **Foundation** | `Design-System.dc.html`, `tokens.css` | ✅ Selesai | — |
 | **Fase A — Publik** | `00-Publik/M11-Homepage.dc.html`, `M11-Discovery.dc.html`, `M11-Detail-Listing.dc.html`, `M11-Detail-Agen-Desktop.dc.html`, `M11-Detail-Organisasi-Desktop.dc.html`, `M11-Detail-Developer-Project-Desktop.dc.html`, `M11-Detail-Event-Desktop.dc.html`, `M11-Detail-Learning-Desktop.dc.html`, `M11-Detail-Learning-Session-Desktop.dc.html`, `M11-Konten-Publik-Desktop.dc.html`, `M11-Konten-Publik-Detail-Desktop.dc.html`, `M11-Promo-Desktop.dc.html`, `M11-Promo-Detail-Desktop.dc.html`, `M01-Register-Desktop.dc.html`, `M01-OTP-Desktop.dc.html`, `M01-Login-Desktop.dc.html`, `M01-Recovery-Desktop.dc.html` (+ padanan Mobile) | ✅ Selesai — 10 dari 10 surface M11 spec §4.1 sudah punya wireframe | — |
-| **Fase B — Agent core** | `01-Agent/M08-Dashboard.dc.html`, `01-Agent/M03-Listing-Saya.dc.html`, `01-Agent/M01-Akun-Dibatasi.dc.html`, `01-Agent/M02-Profil-Saya.dc.html`, `01-Agent/M03-Create-Listing-Wizard.dc.html` | 🟡 Sebagian | M03-Listing-Detail, M12-Organisasi (dashboard/invite/create/close), M04-Pembelajaran, M05-Event |
+| **Fase B — Agent core** | `01-Agent/M08-Dashboard.dc.html`, `01-Agent/M03-Listing-Saya.dc.html`, `01-Agent/M01-Akun-Dibatasi.dc.html`, `01-Agent/M02-Profil-Saya.dc.html`, `01-Agent/M03-Create-Listing-Wizard.dc.html`, `01-Agent/M03-Listing-Detail.dc.html` | 🟡 Sebagian | M12-Organisasi (dashboard/invite/create/close), M04-Pembelajaran, M05-Event |
 | **Fase C — Agent fitur baru** | — | ⬜ Belum dimulai | M07-DBR-Calculator, M14-Komersial, M13-AI-Assistant-BYOK, M06-Klaim-Proyek — nol spec di STEP13, murni keputusan desain |
 | **Fase D — Admin** | `02-Admin/M09-Direktori-Pengguna.dc.html` | 🟡 Sebagian | M03-Moderasi-Listing, M09-Permission-Matrix, M09-Internal-Staff, M07-Bank-Master, M13-Provider-Catalogue, M04-Learning-Economy-Config, M15-Award-Appeal, M11-SEO, M09-Banners, M09-Notification-Templates, M14-Komersial-Admin |
 | **Fase E — Qualification/Award** | — | ⬜ Belum dimulai | M15-Title-Award-Presentation, M15-Evidence, M15-Evaluasi |

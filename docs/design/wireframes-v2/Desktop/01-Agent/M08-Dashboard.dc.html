@@ -31,7 +31,8 @@
   .widget{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);display:flex;flex-direction:column;overflow:hidden;}
   .widget-head{padding:16px 20px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;}
   .widget-body{padding:8px 8px;display:flex;flex-direction:column;}
-  .row{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:var(--ra-radius-sm);}
+  .row{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:var(--ra-radius-sm);text-decoration:none;color:inherit;}
+  a.row{display:flex;}
   .row:hover{background:var(--ra-ink-50);}
   .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;color:var(--ra-ink-300);text-align:center;}
 </style>
@@ -179,14 +180,14 @@
             </sc-if>
             <sc-if value="{{listingsLoaded}}" hint-placeholder-val="{{true}}">
               <sc-for list="{{listings}}" as="item" hint-placeholder-count="3">
-                <div class="row">
+                <a class="row" href="M03-Listing-Detail.dc.html">
                   <div style="width:52px;height:40px;border-radius:8px;background:var(--ra-ink-100);flex:none;"></div>
                   <div style="min-width:0;flex:1;">
                     <div class="ra-label-lg ra-truncate-1">{{item.title}}</div>
                     <div class="ra-caption ra-truncate-1">{{item.location}}</div>
                   </div>
                   <span class="ra-badge {{item.badgeClass}}"><span class="ra-dot"></span>{{item.status}}</span>
-                </div>
+                </a>
               </sc-for>
             </sc-if>
           </div>

@@ -15,7 +15,7 @@
   .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
   .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
   .chip-row{display:flex;gap:8px;padding:2px;}
-  .card{display:flex;gap:12px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:12px;}
+  .card{display:flex;gap:12px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:12px;text-decoration:none;color:inherit;}
   .thumb{width:84px;height:72px;border-radius:var(--ra-radius-sm);background:var(--ra-ink-100);flex:none;}
   .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 20px;color:var(--ra-ink-300);text-align:center;}
   .scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
@@ -81,7 +81,7 @@
     <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
       <div style="display:flex;flex-direction:column;gap:12px;">
         <sc-for list="{{filtered}}" as="item" hint-placeholder-count="4">
-          <div class="card">
+          <a class="card" href="M03-Listing-Detail.dc.html">
             <div class="thumb"></div>
             <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;">
               <span class="ra-label-lg ra-truncate-2">{{item.title}}</span>
@@ -91,7 +91,7 @@
                 <span class="ra-badge {{item.badgeClass}}"><span class="ra-dot"></span>{{item.status}}</span>
               </div>
             </div>
-          </div>
+          </a>
         </sc-for>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0;">

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Listing (Agent) — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);font-size:13px;}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+
+  .gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px;height:280px;border-radius:var(--ra-radius-lg);overflow:hidden;position:relative;}
+  .gallery-main{background:var(--ra-ink-100);}
+  .gallery-sub{display:grid;grid-template-rows:1fr 1fr;gap:8px;}
+  .gallery-sub div{background:var(--ra-ink-100);}
+  .unavailable-banner{position:absolute;inset:0;background:rgba(20,24,31,.55);display:flex;align-items:center;justify-content:center;}
+  .manage-media-btn{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,.95);}
+
+  .detail-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:22px;margin-bottom:20px;}
+  .lock-tag{display:inline-flex;align-items:center;gap:4px;color:var(--ra-ink-300);font-size:12px;}
+  .spec-table{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;}
+  .spec-table-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .amenity-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--ra-radius-pill);background:var(--ra-success-100);color:var(--ra-success-600);font-size:12.5px;font-weight:700;}
+
+  .stat-mini-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+  .stat-mini{text-align:center;padding:12px 4px;background:var(--ra-ink-50);border-radius:var(--ra-radius-sm);}
+
+  .refresh-card{background:var(--ra-blue-50);border:1px solid var(--ra-blue-200);}
+  .refresh-bar{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;margin:8px 0;}
+  .refresh-bar-fill{height:100%;background:var(--ra-blue-600);}
+
+  .lead-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .lead-row:last-child{border-bottom:none;}
+
+  .menu-pop{position:absolute;top:44px;right:0;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);box-shadow:var(--ra-shadow-2);padding:6px;width:220px;z-index:10;}
+  .menu-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);font-size:13.5px;font-weight:600;}
+  .menu-item:hover{background:var(--ra-ink-50);}
+  .menu-item.is-danger{color:var(--ra-danger-600);}
+</style>
+</helmet>
+<div class="app">
+
+  <!-- NAV RAIL (collapsed) -->
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item is-active" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="#" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="#" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="#" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="M03-Listing-Saya.dc.html">Listing Saya</a><span>/</span>
+        <span style="color:var(--ra-ink-900);">{{title}}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;position:relative;">
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M03-Create-Listing-Wizard.dc.html">Edit Listing</a>
+        <button class="ra-iconbtn" style="border:1.5px solid var(--ra-ink-100);" aria-label="Menu lainnya" onClick="{{toggleMenu}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg>
+        </button>
+        <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+          <div class="menu-pop">
+            <div class="menu-item">Tandai Terjual</div>
+            <div class="menu-item">Tandai Tersewa</div>
+            <div class="menu-item">Duplikat Listing</div>
+            <div class="menu-item is-danger">Hapus Listing</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:28px 40px;">
+
+      <!-- STATUS BANNERS -->
+      <sc-if value="{{isPendingReview}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;align-items:center;gap:12px;background:var(--ra-info-100);border:1px solid var(--ra-blue-200);border-radius:var(--ra-radius-md);padding:14px 18px;margin-bottom:18px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" width="18" height="18" style="flex:none;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/></svg>
+          <span class="ra-body-md">Sekadar informasi — listing ini sedang ditinjau tim kami pasca-publikasi. Tetap tayang normal, tidak ada fitur yang dibatasi.</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{isRejected}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;gap:4px;background:var(--ra-danger-100);border:1px solid var(--ra-danger-600);border-radius:var(--ra-radius-md);padding:14px 18px;margin-bottom:18px;">
+          <span class="ra-label-lg" style="color:var(--ra-danger-600);">Listing Ditolak</span>
+          <span class="ra-body-md">{{rejectionReason}}</span>
+          <a class="ra-label-lg" style="color:var(--ra-blue-600);margin-top:4px;" href="M03-Create-Listing-Wizard.dc.html">Perbaiki &amp; Ajukan Ulang →</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{isSuspended}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;gap:4px;background:var(--ra-danger-100);border:1px solid var(--ra-danger-600);border-radius:var(--ra-radius-md);padding:14px 18px;margin-bottom:18px;">
+          <span class="ra-label-lg" style="color:var(--ra-danger-600);">Listing Dibekukan Admin</span>
+          <span class="ra-body-md">Listing ini disembunyikan dari pencarian publik oleh tim moderasi. Hubungi Pusat Bantuan untuk info lebih lanjut.</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{isDraft}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);border-radius:var(--ra-radius-md);padding:14px 18px;margin-bottom:18px;">
+          <span class="ra-body-md">Listing ini masih draft dan belum tayang publik.</span>
+          <a class="ra-btn ra-btn-primary ra-btn-sm" href="M03-Create-Listing-Wizard.dc.html">Lanjutkan &amp; Terbitkan</a>
+        </div>
+      </sc-if>
+
+      <!-- GALLERY -->
+      <div class="gallery">
+        <div class="gallery-main"></div>
+        <div class="gallery-sub"><div></div><div></div></div>
+        <button class="ra-btn ra-btn-secondary ra-btn-sm manage-media-btn">Kelola Media</button>
+        <sc-if value="{{isUnavailable}}" hint-placeholder-val="{{false}}">
+          <div class="unavailable-banner"><span class="ra-badge {{unavailableBadge}}" style="font-size:15px;padding:8px 18px;"><span class="ra-dot"></span>{{unavailableLabel}}</span></div>
+        </sc-if>
+      </div>
+
+      <!-- TITLE ROW -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:20px 0;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <span class="ra-badge {{statusBadgeClass}}" style="align-self:flex-start;"><span class="ra-dot"></span>{{statusLabel}}</span>
+          <h1 class="ra-title-lg" style="font-size:22px;">{{title}}</h1>
+          <div style="display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
+            <span class="ra-body-md">{{address}}</span>
+            <sc-if value="{{isLocked}}" hint-placeholder-val="{{true}}">
+              <span class="lock-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Terkunci sejak publikasi pertama</span>
+            </sc-if>
+          </div>
+        </div>
+        <span class="ra-display" style="font-size:24px;color:var(--ra-blue-600);flex:none;">{{price}}</span>
+      </div>
+
+      <div class="detail-grid">
+        <div style="min-width:0;">
+
+          <div class="card">
+            <span class="ra-title-md" style="margin-bottom:12px;display:block;">Spesifikasi</span>
+            <div class="spec-table">
+              <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Tipe Properti</span><span class="ra-body-md" style="font-weight:700;">{{propertyType}}</span></div>
+              <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Luas Tanah</span><span class="ra-body-md" style="font-weight:700;">150 m²</span></div>
+              <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Luas Bangunan</span><span class="ra-body-md" style="font-weight:700;">120 m²</span></div>
+              <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Kamar Tidur</span><span class="ra-body-md" style="font-weight:700;">3</span></div>
+              <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Kamar Mandi</span><span class="ra-body-md" style="font-weight:700;">2</span></div>
+              <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Sertifikat</span><span class="ra-body-md" style="font-weight:700;">SHM</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <span class="ra-title-md" style="margin-bottom:10px;display:block;">Deskripsi</span>
+            <p class="ra-body-md" style="color:var(--ra-ink-700);line-height:24px;">Rumah minimalis modern 2 lantai dalam kondisi siap huni, lokasi strategis dekat sekolah internasional dan akses tol.</p>
+          </div>
+
+          <div class="card">
+            <span class="ra-title-md" style="margin-bottom:10px;display:block;">Fasilitas</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="amenity-chip">Carport 2 Mobil</span>
+              <span class="amenity-chip">Keamanan 24 Jam</span>
+              <span class="amenity-chip">Taman</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex;align-items:center;justify-content:between;justify-content:space-between;margin-bottom:10px;">
+              <span class="ra-title-md">Leads Masuk</span>
+              <span class="ra-caption">{{leadsCount}} total</span>
+            </div>
+            <sc-if value="{{hasLeads}}" hint-placeholder-val="{{true}}">
+              <sc-for list="{{leads}}" as="l" hint-placeholder-count="3">
+                <div class="lead-row">
+                  <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div>
+                  <div style="flex:1;"><div class="ra-body-md">{{l.source}}</div><span class="ra-caption">{{l.date}}</span></div>
+                  <span class="ra-badge {{l.badge}}">{{l.statusLabel}}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{noLeads}}" hint-placeholder-val="{{false}}">
+              <span class="ra-body-md" style="color:var(--ra-ink-500);">Belum ada leads masuk untuk listing ini.</span>
+            </sc-if>
+          </div>
+
+        </div>
+
+        <div>
+          <!-- STATS -->
+          <div class="card">
+            <span class="ra-title-md" style="margin-bottom:12px;display:block;">Statistik</span>
+            <div class="stat-mini-grid">
+              <div class="stat-mini"><div class="ra-title-md">{{viewCount}}</div><span class="ra-caption">Dilihat</span></div>
+              <div class="stat-mini"><div class="ra-title-md">{{ctaClickCount}}</div><span class="ra-caption">Klik CTA</span></div>
+              <div class="stat-mini"><div class="ra-title-md">{{leadsCount}}</div><span class="ra-caption">Leads</span></div>
+            </div>
+          </div>
+
+          <!-- REFRESH -->
+          <div class="card refresh-card">
+            <span class="ra-title-md" style="margin-bottom:8px;display:block;">Refresh Listing</span>
+            <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">Kuota hari ini</span><span class="ra-body-md" style="font-weight:700;">{{refreshUsed}}/5</span></div>
+            <div class="refresh-bar"><div class="refresh-bar-fill" style="width:{{refreshPct}}%;"></div></div>
+            <span class="ra-caption">Reset otomatis 00.00 WIB, tidak terbawa ke hari berikutnya. Maks 1× sukses per listing per hari.</span>
+
+            <sc-if value="{{canRefresh}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-primary" style="width:100%;margin-top:14px;">Refresh Sekarang</button>
+            </sc-if>
+            <sc-if value="{{refreshDoneToday}}" hint-placeholder-val="{{false}}">
+              <button class="ra-btn ra-btn-secondary" style="width:100%;margin-top:14px;" disabled>Sudah Di-refresh Hari Ini</button>
+            </sc-if>
+            <sc-if value="{{refreshQuotaEmpty}}" hint-placeholder-val="{{false}}">
+              <button class="ra-btn ra-btn-secondary" style="width:100%;margin-top:14px;" disabled>Kuota Refresh Harian Habis</button>
+            </sc-if>
+            <span class="ra-caption" style="display:block;margin-top:8px;">Terakhir di-refresh: {{lastRefreshedAt}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listingStatus":{"editor":"enum","default":"published","options":["draft","pending_review","published","sold","rented","expired","rejected","suspended"],"section":"Skenario status"},"refreshState":{"editor":"enum","default":"available","options":["available","done_today","quota_empty"],"section":"Skenario refresh"},"hasLeadsProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { menuOpen: false };
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
+  toggleMenu(){ this.setState({ menuOpen: !this.state.menuOpen }); }
+  renderVals() {
+    const status = this.props.listingStatus ?? 'published';
+    const refreshState = this.props.refreshState ?? 'available';
+    const hasLeadsData = this.props.hasLeadsProp ?? true;
+
+    const statusCopy = {
+      draft: { label: 'draft', badge: 'ra-badge-neutral' },
+      pending_review: { label: 'published · pending_review', badge: 'ra-badge-success' },
+      published: { label: 'published', badge: 'ra-badge-success' },
+      sold: { label: 'sold', badge: 'ra-badge-info' },
+      rented: { label: 'rented', badge: 'ra-badge-info' },
+      expired: { label: 'expired', badge: 'ra-badge-neutral' },
+      rejected: { label: 'rejected', badge: 'ra-badge-danger' },
+      suspended: { label: 'suspended', badge: 'ra-badge-danger' }
+    };
+    const unavailableCopyMap = {
+      sold: 'Sudah Terjual', rented: 'Sudah Disewa', expired: 'Sudah Kedaluwarsa',
+      rejected: 'Ditolak — Belum Tayang', suspended: 'Dibekukan Admin', draft: 'Belum Diterbitkan'
+    };
+    const isUnavailable = !['published', 'pending_review'].includes(status);
+    const c = statusCopy[status] ?? statusCopy.published;
+
+    const leads = [
+      { source: 'WhatsApp — dari pencarian publik', date: '2 jam lalu', status: 'new', badge: 'ra-badge-info', statusLabel: 'Baru' },
+      { source: 'WhatsApp — dari profil agen', date: 'Kemarin', status: 'contacted', badge: 'ra-badge-warning', statusLabel: 'Dihubungi' },
+      { source: 'Telepon langsung', date: '3 hari lalu', status: 'converted', badge: 'ra-badge-success', statusLabel: 'Konversi' }
+    ];
+
+    return {
+      toggleMenu: this.toggleMenu,
+      menuOpen: this.state.menuOpen ?? false,
+      title: 'Rumah Minimalis 2 Lantai BSD City',
+      address: 'Jl. Kenanga Raya No. 12, Serpong, Tangerang Selatan',
+      price: 'Rp 850.000.000',
+      propertyType: 'Rumah',
+      statusLabel: c.label,
+      statusBadgeClass: c.badge,
+      isUnavailable,
+      unavailableLabel: unavailableCopyMap[status] ?? '',
+      unavailableBadge: status === 'rejected' || status === 'suspended' ? 'ra-badge-danger' : 'ra-badge-info',
+      isDraft: status === 'draft',
+      isPendingReview: status === 'pending_review',
+      isRejected: status === 'rejected',
+      isSuspended: status === 'suspended',
+      rejectionReason: 'Foto listing tidak sesuai kondisi properti sebenarnya. Mohon unggah ulang foto terbaru.',
+      isLocked: status !== 'draft',
+      viewCount: 214,
+      ctaClickCount: 18,
+      leadsCount: 3,
+      hasLeads: hasLeadsData,
+      noLeads: !hasLeadsData,
+      leads,
+      refreshUsed: refreshState === 'quota_empty' ? 5 : (refreshState === 'done_today' ? 3 : 2),
+      refreshPct: refreshState === 'quota_empty' ? 100 : (refreshState === 'done_today' ? 60 : 40),
+      canRefresh: refreshState === 'available',
+      refreshDoneToday: refreshState === 'done_today',
+      refreshQuotaEmpty: refreshState === 'quota_empty',
+      lastRefreshedAt: refreshState === 'available' ? 'Kemarin, 14.30 WIB' : 'Hari ini, 09.15 WIB'
+    };
+  }
+}
+</script>
+</body>
+</html>

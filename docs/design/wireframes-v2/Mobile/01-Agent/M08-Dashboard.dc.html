@@ -18,7 +18,7 @@
   .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;}
   .widget{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;}
   .widget-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;}
-  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;}
   .scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
   .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
   .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
@@ -67,14 +67,14 @@
     <div class="widget">
       <div class="widget-head"><span class="ra-title-md">Listing Terbaru</span><a href="M03-Listing-Saya.dc.html" class="ra-label-lg">Semua</a></div>
       <sc-for list="{{listings}}" as="item" hint-placeholder-count="3">
-        <div class="row" style="border-top:1px solid var(--ra-ink-50);">
+        <a class="row" style="border-top:1px solid var(--ra-ink-50);" href="M03-Listing-Detail.dc.html">
           <div style="width:44px;height:36px;border-radius:8px;background:var(--ra-ink-100);flex:none;"></div>
           <div style="min-width:0;flex:1;">
             <div class="ra-label-lg ra-truncate-1">{{item.title}}</div>
             <div class="ra-caption ra-truncate-1">{{item.location}}</div>
           </div>
           <span class="ra-badge {{item.badgeClass}}"><span class="ra-dot"></span>{{item.status}}</span>
-        </div>
+        </a>
       </sc-for>
     </div>
 
