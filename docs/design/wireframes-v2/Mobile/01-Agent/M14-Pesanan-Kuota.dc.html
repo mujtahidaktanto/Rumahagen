@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Pesanan & Kuota Saya — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+
+  .main{flex:1;overflow-y:auto;padding:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;margin-bottom:16px;}
+  .entitlement-grid{display:flex;flex-direction:column;gap:10px;}
+  .ent-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-sm);padding:12px;display:flex;align-items:center;justify-content:space-between;}
+
+  .order-row{padding:12px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .order-row:last-child{border-bottom:none;}
+  .order-top{display:flex;align-items:center;gap:10px;}
+
+  .empty-box{padding:28px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M14-Katalog-Komersial.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md">Pesanan & Kuota</span>
+    <a class="iconbtn" href="M14-Katalog-Komersial.dc.html" aria-label="Beli Add-on" style="margin-left:auto;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 5v14M5 12h14"/></svg></a>
+  </div>
+
+  <div class="main">
+
+    <div class="card">
+      <span class="ra-title-md" style="display:block;margin-bottom:12px;">Kuota & Entitlement Aktif</span>
+      <div class="entitlement-grid">
+        <sc-for list="{{entitlements}}" as="e" hint-placeholder-count="3">
+          <div class="ent-card">
+            <div>
+              <span class="ra-label-lg" style="display:block;">{{e.label}}</span>
+              <span class="ra-caption">dari {{e.granted}} · {{e.expiryLabel}}</span>
+            </div>
+            <span class="ra-title-lg">{{e.remaining}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <span class="ra-title-md">Riwayat Pesanan</span>
+        <span class="ra-caption">{{orders.length}}</span>
+      </div>
+      <sc-if value="{{hasOrders}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{orders}}" as="o" hint-placeholder-count="4">
+          <div class="order-row">
+            <div class="order-top">
+              <div style="flex:1;min-width:0;">
+                <div class="ra-body-sm ra-truncate-1">{{o.addonName}}</div>
+                <span class="ra-caption">{{o.placedAt}} · {{o.amount}}</span>
+              </div>
+              <span class="ra-badge {{o.statusBadge}}">{{o.statusLabel}}</span>
+            </div>
+            <sc-if value="{{o.canPay}}" hint-placeholder-val="{{false}}">
+              <a class="ra-btn ra-btn-primary ra-btn-sm" style="width:100%;margin-top:8px;" href="#">Bayar Sekarang</a>
+            </sc-if>
+            <sc-if value="{{o.canCancel}}" hint-placeholder-val="{{false}}">
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;margin-top:8px;" onClick="{{o.onCancel}}">Batalkan</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{noOrders}}" hint-placeholder-val="{{false}}">
+        <div class="empty-box">
+          <span class="ra-body-sm">Belum ada pesanan.</span>
+          <a class="ra-btn ra-btn-primary ra-btn-sm" href="M14-Katalog-Komersial.dc.html">Jelajahi Katalog</a>
+        </div>
+      </sc-if>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasOrdersProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { cancelledIds: {} };
+    this.cancelOrder = this.cancelOrder.bind(this);
+  }
+  cancelOrder(id){ this.setState({ cancelledIds: { ...this.state.cancelledIds, [id]: true } }); }
+
+  renderVals() {
+    const hasOrders = this.props.hasOrdersProp ?? true;
+    const cancelledIds = this.state.cancelledIds || {};
+
+    const entitlements = [
+      { label: 'Refresh Listing', remaining: 32, granted: 50, expiryLabel: 'S/d 20 Okt 2026' },
+      { label: 'Slot Listing Tambahan', remaining: 18, granted: 25, expiryLabel: 'Selama akun aktif' },
+      { label: 'Paket Kombo (Sep)', remaining: 0, granted: 30, expiryLabel: 'Berakhir 15 Sep' }
+    ];
+
+    const orderStatusMap = {
+      pending: { badge: 'ra-badge-warning', label: 'Menunggu' },
+      confirmed: { badge: 'ra-badge-success', label: 'Terkonfirmasi' },
+      cancelled: { badge: 'ra-badge-neutral', label: 'Dibatalkan' },
+      expired: { badge: 'ra-badge-danger', label: 'Kedaluwarsa' }
+    };
+    const orderDefs = [
+      { id: 'o1', addonName: 'Paket 50 Refresh', placedAt: '20 Sep 2026', amount: 'Rp 75.000', status: 'confirmed' },
+      { id: 'o2', addonName: 'Paket Listing Tambahan XL', placedAt: '22 Sep 2026', amount: 'Rp 280.000', status: 'pending' },
+      { id: 'o3', addonName: 'Paket Starter Bulanan', placedAt: '15 Sep 2026', amount: 'Rp 120.000', status: 'expired' }
+    ];
+    const orders = orderDefs.map(o => {
+      const status = cancelledIds[o.id] ? 'cancelled' : o.status;
+      const sm = orderStatusMap[status];
+      return {
+        addonName: o.addonName, placedAt: o.placedAt, amount: o.amount,
+        statusBadge: sm.badge, statusLabel: sm.label,
+        canPay: status === 'pending',
+        canCancel: status === 'pending',
+        onCancel: () => this.cancelOrder(o.id)
+      };
+    });
+
+    return {
+      entitlements,
+      hasOrders, noOrders: !hasOrders, orders
+    };
+  }
+}
+</script>
+</body>
+</html>

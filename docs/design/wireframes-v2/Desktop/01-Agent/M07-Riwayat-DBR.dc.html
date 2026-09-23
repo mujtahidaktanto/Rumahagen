@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Riwayat Simulasi DBR — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+
+  .main{flex:1;overflow-y:auto;padding:28px 40px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:22px;margin-bottom:20px;max-width:900px;}
+
+  .sim-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--ra-ink-50);cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;}
+  .sim-row:last-child{border-bottom:none;}
+  .sim-icon{width:44px;height:44px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+
+  .empty-box{padding:40px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);max-width:900px;}
+
+  .detail-wrap{max-width:640px;}
+  .gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 0;}
+  .gauge-num{font-size:40px;font-weight:800;color:var(--ra-ink-900);}
+  .gauge-bar{width:100%;height:10px;border-radius:5px;background:var(--ra-ink-100);overflow:hidden;margin-top:10px;}
+  .gauge-fill{height:100%;}
+  .result-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .result-row:last-child{border-bottom:none;}
+  .prospect-inline{display:flex;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--ra-ink-100);}
+
+  .modal-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:20;}
+  .modal{background:#fff;border-radius:var(--ra-radius-lg);padding:26px;width:480px;display:flex;flex-direction:column;gap:14px;}
+  .link-box{display:flex;align-items:center;gap:8px;background:var(--ra-ink-50);border-radius:var(--ra-radius-sm);padding:10px 12px;}
+  .link-box span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:12px;color:var(--ra-ink-700);}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;position:relative;">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="M08-Dashboard.dc.html">Dashboard</a><span>/</span>
+        <sc-if value="{{isListView}}" hint-placeholder-val="{{true}}">
+          <span class="ra-label-lg" style="color:var(--ra-ink-900);">Riwayat Simulasi DBR</span>
+        </sc-if>
+        <sc-if value="{{isDetailView}}" hint-placeholder-val="{{false}}">
+          <a href="#" onClick="{{backToList}}">Riwayat Simulasi DBR</a><span>/</span>
+          <span class="ra-label-lg" style="color:var(--ra-ink-900);">Detail</span>
+        </sc-if>
+      </div>
+      <a class="ra-btn ra-btn-primary ra-btn-sm" href="M07-Kalkulator-DBR.dc.html">+ Simulasi Baru</a>
+    </div>
+
+    <div class="main">
+
+      <sc-if value="{{isListView}}" hint-placeholder-val="{{true}}">
+        <div class="card">
+          <sc-if value="{{hasSims}}" hint-placeholder-val="{{true}}">
+            <sc-for list="{{sims}}" as="s" hint-placeholder-count="4">
+              <button class="sim-row" onClick="{{s.onOpen}}">
+                <div class="sim-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="12" y="8" width="40" height="48" rx="3" transform="scale(0.5)"/><path d="M4 4h16v16H4z"/></svg></div>
+                <div style="flex:1;min-width:0;">
+                  <div class="ra-body-md ra-truncate-1">{{s.prospectLabel}}</div>
+                  <span class="ra-caption">{{s.propertyPrice}} · {{s.bankName}} · {{s.date}}</span>
+                </div>
+                <span class="ra-badge {{s.badge}}">{{s.dbrPercent}}% · {{s.label}}</span>
+              </button>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{noSims}}" hint-placeholder-val="{{false}}">
+            <div class="empty-box">
+              <span class="ra-body-md">Belum ada simulasi DBR.</span>
+              <a class="ra-btn ra-btn-primary ra-btn-sm" href="M07-Kalkulator-DBR.dc.html">Mulai Hitung DBR</a>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isDetailView}}" hint-placeholder-val="{{false}}">
+        <div class="detail-wrap">
+          <div class="card">
+            <div class="gauge-wrap">
+              <span class="ra-caption">DBR (Debt to Burden Ratio)</span>
+              <span class="gauge-num" style="color:{{detail.eligibilityColor}};">{{detail.dbrPercent}}%</span>
+              <div class="gauge-bar"><div class="gauge-fill" style="width:{{detail.gaugeWidth}}%;background:{{detail.eligibilityColor}};"></div></div>
+              <span class="ra-badge {{detail.eligibilityBadge}}" style="margin-top:12px;">{{detail.eligibilityLabel}}</span>
+              <span class="ra-caption" style="margin-top:6px;">Ambang bank: {{detail.thresholdUsed}}% · Disimulasikan {{detail.date}}</span>
+            </div>
+
+            <div class="result-row"><span class="ra-body-sm">Prospek</span><span class="ra-label-lg">{{detail.prospectLabel}}</span></div>
+            <div class="result-row"><span class="ra-body-sm">Plafon Pinjaman</span><span class="ra-label-lg">{{detail.loanAmount}}</span></div>
+            <div class="result-row"><span class="ra-body-sm">Cicilan/Bulan</span><span class="ra-label-lg">{{detail.monthlyInstallment}}</span></div>
+            <div class="result-row"><span class="ra-body-sm">Bank</span><span class="ra-label-lg">{{detail.bankName}}</span></div>
+
+            <div style="display:flex;gap:10px;margin-top:16px;">
+              <a class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" href="#">Ekspor PDF</a>
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{openShareModal}}">Bagikan</button>
+            </div>
+
+            <sc-if value="{{detail.needsProspect}}" hint-placeholder-val="{{true}}">
+              <sc-if value="{{showProspectForm}}" hint-placeholder-val="{{false}}">
+                <div class="prospect-inline">
+                  <span class="ra-label-lg">Simpan sebagai Prospek</span>
+                  <input class="ra-input" type="text" placeholder="Nama prospek">
+                  <input class="ra-input" type="text" placeholder="Nomor WhatsApp prospek">
+                  <button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{saveProspect}}">Simpan</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{hideProspectForm}}" hint-placeholder-val="{{true}}">
+                <button class="ra-btn ra-btn-secondary" style="width:100%;margin-top:10px;" onClick="{{toggleProspectForm}}">+ Simpan sebagai Prospek</button>
+              </sc-if>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+
+    <sc-if value="{{shareModalOpen}}" hint-placeholder-val="{{false}}">
+      <div class="modal-scrim" onClick="{{closeShareModal}}">
+        <div class="modal" onClick="{{stopClick}}">
+          <span class="ra-title-lg">Bagikan Hasil Simulasi</span>
+          <span class="ra-body-sm" style="color:var(--ra-ink-500);">Prospek bisa melihat hasil ini tanpa perlu login. Anda bisa mencabut akses kapan saja.</span>
+          <sc-if value="{{isShared}}" hint-placeholder-val="{{false}}">
+            <div class="link-box">
+              <span>{{shareLink}}</span>
+              <button class="ra-btn ra-btn-secondary ra-btn-sm">Salin</button>
+            </div>
+            <button class="ra-btn ra-btn-danger" onClick="{{revokeShare}}">Cabut Akses Share</button>
+          </sc-if>
+          <sc-if value="{{isNotShared}}" hint-placeholder-val="{{true}}">
+            <button class="ra-btn ra-btn-primary" onClick="{{createShare}}">Buat Link Share</button>
+          </sc-if>
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeShareModal}}">Tutup</button>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasSimsProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      view: 'list',
+      selectedIdx: 0,
+      showProspectForm: false,
+      shareModalOpen: false,
+      shared: false
+    };
+    this.openDetail = this.openDetail.bind(this);
+    this.backToList = this.backToList.bind(this);
+    this.toggleProspectForm = this.toggleProspectForm.bind(this);
+    this.saveProspect = this.saveProspect.bind(this);
+    this.openShareModal = this.openShareModal.bind(this);
+    this.closeShareModal = this.closeShareModal.bind(this);
+    this.createShare = this.createShare.bind(this);
+    this.revokeShare = this.revokeShare.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openDetail(i){ this.setState({ view: 'detail', selectedIdx: i, showProspectForm: false, shared: false }); }
+  backToList(e){ if (e && e.preventDefault) e.preventDefault(); this.setState({ view: 'list' }); }
+  toggleProspectForm(){ this.setState({ showProspectForm: true }); }
+  saveProspect(){ this.setState({ showProspectForm: false }); }
+  openShareModal(){ this.setState({ shareModalOpen: true }); }
+  closeShareModal(){ this.setState({ shareModalOpen: false }); }
+  createShare(){ this.setState({ shared: true }); }
+  revokeShare(){ this.setState({ shared: false, shareModalOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  get simDefs(){
+    return [
+      { prospectLabel: 'Budi Santoso', propertyPrice: 'Rp 500jt', bankName: 'Bank Central Nasional', date: '20 Sep 2026', dbrPercent: 32.4, threshold: 35, loanAmount: 'Rp 400.000.000', monthlyInstallment: 'Rp 3.826.000', needsProspect: false },
+      { prospectLabel: 'Anonim', propertyPrice: 'Rp 850jt', bankName: 'Bank Rakyat Nusantara', date: '18 Sep 2026', dbrPercent: 41.2, threshold: 30, loanAmount: 'Rp 680.000.000', monthlyInstallment: 'Rp 6.502.000', needsProspect: true },
+      { prospectLabel: 'Siti Aminah', propertyPrice: 'Rp 320jt', bankName: 'Bank Mandiri Sejahtera', date: '12 Sep 2026', dbrPercent: 22.8, threshold: 40, loanAmount: 'Rp 256.000.000', monthlyInstallment: 'Rp 2.180.000', needsProspect: false },
+      { prospectLabel: 'Anonim', propertyPrice: 'Rp 1,2M', bankName: 'Bank Danamas Indonesia', date: '5 Sep 2026', dbrPercent: 29.6, threshold: 35, loanAmount: 'Rp 960.000.000', monthlyInstallment: 'Rp 8.940.000', needsProspect: true }
+    ];
+  }
+
+  renderVals() {
+    const hasSims = this.props.hasSimsProp ?? true;
+    const simDefs = this.simDefs;
+    const eligibilityMap = {
+      layak: { label: 'Layak', badge: 'ra-badge-success', color: 'var(--ra-success-600)' },
+      perlu_review: { label: 'Perlu Review', badge: 'ra-badge-warning', color: 'var(--ra-warning-600)' },
+      tidak_layak: { label: 'Tidak Layak', badge: 'ra-badge-danger', color: 'var(--ra-danger-600)' }
+    };
+    const classify = (pct, threshold) => pct <= threshold ? 'layak' : (pct <= threshold + 10 ? 'perlu_review' : 'tidak_layak');
+
+    const sims = simDefs.map((s, i) => {
+      const elig = classify(s.dbrPercent, s.threshold);
+      const em = eligibilityMap[elig];
+      return {
+        prospectLabel: s.prospectLabel, propertyPrice: s.propertyPrice, bankName: s.bankName, date: s.date,
+        dbrPercent: s.dbrPercent, badge: em.badge, label: em.label,
+        onOpen: () => this.openDetail(i)
+      };
+    });
+
+    const idx = this.state.selectedIdx ?? 0;
+    const d = simDefs[idx];
+    const elig = classify(d.dbrPercent, d.threshold);
+    const em = eligibilityMap[elig];
+
+    return {
+      isListView: this.state.view === 'list',
+      isDetailView: this.state.view === 'detail',
+      hasSims, noSims: !hasSims, sims,
+      backToList: this.backToList,
+      detail: {
+        prospectLabel: d.prospectLabel, dbrPercent: d.dbrPercent,
+        gaugeWidth: Math.min(d.dbrPercent * 2, 100),
+        eligibilityLabel: em.label, eligibilityBadge: em.badge, eligibilityColor: em.color,
+        thresholdUsed: d.threshold, date: d.date,
+        loanAmount: d.loanAmount, monthlyInstallment: d.monthlyInstallment, bankName: d.bankName,
+        needsProspect: d.needsProspect
+      },
+      showProspectForm: this.state.showProspectForm ?? false,
+      hideProspectForm: !(this.state.showProspectForm ?? false),
+      toggleProspectForm: this.toggleProspectForm,
+      saveProspect: this.saveProspect,
+      shareModalOpen: this.state.shareModalOpen ?? false,
+      openShareModal: this.openShareModal,
+      closeShareModal: this.closeShareModal,
+      isShared: this.state.shared ?? false,
+      isNotShared: !(this.state.shared ?? false),
+      shareLink: 'https://rumahagen.id/dbr/shared/2e310408-7a1a',
+      createShare: this.createShare,
+      revokeShare: this.revokeShare,
+      stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>

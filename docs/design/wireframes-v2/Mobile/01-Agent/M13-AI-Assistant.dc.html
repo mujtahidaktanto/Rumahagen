@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>AI Assistant — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:10px;padding:0 12px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+  .conn-select{display:flex;align-items:center;gap:6px;height:34px;padding:0 10px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);background:#fff;flex:1;min-width:0;}
+
+  .chat-area{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;}
+
+  .bubble-row{display:flex;gap:10px;}
+  .bubble-row.is-user{flex-direction:row-reverse;}
+  .bubble-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;font-size:11px;font-weight:700;}
+  .bubble{max-width:260px;padding:10px 14px;border-radius:var(--ra-radius-md);}
+  .bubble.is-assistant{background:#fff;border:1px solid var(--ra-ink-100);border-top-left-radius:2px;}
+  .bubble.is-user{background:var(--ra-blue-600);color:#fff;border-top-right-radius:2px;}
+
+  .composer{flex:none;padding:10px 12px 14px;display:flex;gap:8px;align-items:flex-end;background:#fff;border-top:1px solid var(--ra-ink-100);}
+  .composer-input{flex:1;min-height:42px;max-height:100px;border-radius:var(--ra-radius-md);border:1.5px solid var(--ra-ink-100);padding:10px 14px;font-family:var(--ra-font);font-size:14px;resize:none;}
+  .composer-input:focus-visible{outline:none;border-color:var(--ra-blue-500);}
+
+  .empty-box{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--ra-ink-500);text-align:center;padding:32px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M08-Dashboard.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <sc-if value="{{hasActiveConn}}" hint-placeholder-val="{{true}}">
+      <button class="conn-select">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13" style="color:var(--ra-gold-600);flex:none;"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>
+        <span class="ra-label-lg ra-truncate-1">{{activeConnName}}</span>
+      </button>
+    </sc-if>
+    <sc-if value="{{noActiveConn}}" hint-placeholder-val="{{false}}">
+      <span class="ra-title-md">AI Assistant</span>
+    </sc-if>
+    <a class="iconbtn" href="M13-Koneksi-AI.dc.html" aria-label="Kelola Koneksi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></a>
+  </div>
+
+  <sc-if value="{{noActiveConn}}" hint-placeholder-val="{{false}}">
+    <div class="empty-box">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" width="48" height="48"><path d="M32 4 36.8 25.2 58 32 36.8 38.8 32 60 27.2 38.8 6 32 27.2 25.2 32 4Z"/></svg>
+      <span class="ra-body-sm">Anda belum punya koneksi AI yang aktif. Hubungkan provider AI dulu.</span>
+      <a class="ra-btn ra-btn-primary ra-btn-sm" href="M13-Koneksi-AI.dc.html">Hubungkan Provider AI</a>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{hasActiveConn}}" hint-placeholder-val="{{true}}">
+    <div class="chat-area">
+      <sc-if value="{{isEmptyChat}}" hint-placeholder-val="{{true}}">
+        <div style="text-align:center;padding:24px 8px;color:var(--ra-ink-500);">
+          <span class="ra-body-sm">Tanyakan apa saja seputar listing atau strategi closing.</span>
+        </div>
+      </sc-if>
+      <sc-for list="{{messages}}" as="m">
+        <div class="bubble-row {{m.rowClass}}">
+          <div class="bubble-avatar" style="background:{{m.avatarBg}};color:{{m.avatarColor}};">{{m.avatarLabel}}</div>
+          <div class="bubble {{m.bubbleClass}}"><span class="ra-body-sm">{{m.text}}</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div class="composer">
+      <textarea class="composer-input" placeholder="Tulis pesan…"></textarea>
+      <button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{sendMessage}}">Kirim</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasActiveConnProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { sentOnce: false };
+    this.sendMessage = this.sendMessage.bind(this);
+  }
+  sendMessage(){
+    if (this.state.sentOnce) return;
+    this.setState({ sentOnce: true });
+  }
+
+  renderVals() {
+    const hasActiveConn = this.props.hasActiveConnProp ?? true;
+    const sentOnce = this.state.sentOnce ?? false;
+
+    const messages = sentOnce ? [
+      { rowClass: 'is-user', avatarBg: 'var(--ra-blue-100)', avatarColor: 'var(--ra-blue-600)', avatarLabel: 'RS', bubbleClass: 'is-user', text: 'Bantu buatkan deskripsi rumah 2 lantai BSD, 3 KT, 850 juta.' },
+      { rowClass: '', avatarBg: 'var(--ra-gold-100)', avatarColor: 'var(--ra-gold-700)', avatarLabel: 'AI', bubbleClass: 'is-assistant', text: '"Hunian nyaman 2 lantai di BSD! 3 kamar tidur luas, tata ruang modern. Harga 850 juta, nego santai. Hubungi saya untuk survei!"' }
+    ] : [];
+
+    return {
+      hasActiveConn, noActiveConn: !hasActiveConn,
+      activeConnName: 'Google Gemini',
+      isEmptyChat: !sentOnce,
+      messages,
+      sendMessage: this.sendMessage
+    };
+  }
+}
+</script>
+</body>
+</html>

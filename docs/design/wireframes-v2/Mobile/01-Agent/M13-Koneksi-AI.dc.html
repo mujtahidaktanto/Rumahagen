@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Koneksi AI Saya — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+
+  .main{flex:1;overflow-y:auto;padding:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;}
+
+  .conn-row{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--ra-ink-50);flex-wrap:wrap;}
+  .conn-row:last-child{border-bottom:none;}
+  .conn-icon{width:40px;height:40px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+
+  .empty-box{padding:32px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+
+  .modal-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:flex-end;z-index:20;}
+  .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;display:flex;flex-direction:column;gap:12px;max-height:85%;overflow-y:auto;}
+  .provider-grid{display:flex;flex-direction:column;gap:8px;}
+  .provider-card{border:1.5px solid var(--ra-ink-200);border-radius:var(--ra-radius-sm);padding:12px 14px;cursor:pointer;}
+  .provider-card.is-selected{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+  .field{margin-bottom:14px;}
+  .field label{display:block;margin-bottom:6px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M08-Dashboard.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md">Koneksi AI Saya</span>
+    <a class="iconbtn" href="M13-AI-Assistant.dc.html" aria-label="AI Assistant" style="margin-left:auto;"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg></a>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <div style="margin-bottom:14px;">
+        <span class="ra-title-md" style="display:block;">Bring Your Own Key</span>
+        <span class="ra-caption">API key milik Anda sendiri, RumahAgen tidak menanggung biaya provider.</span>
+      </div>
+
+      <sc-if value="{{hasConnections}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{connections}}" as="c" hint-placeholder-count="3">
+          <div class="conn-row">
+            <div class="conn-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg></div>
+            <div style="flex:1;min-width:0;">
+              <div class="ra-body-sm">{{c.providerName}}</div>
+              <span class="ra-caption">{{c.billingLabel}}</span>
+            </div>
+            <span class="ra-badge {{c.statusBadge}}">{{c.statusLabel}}</span>
+            <sc-if value="{{c.canTest}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" onClick="{{c.onTest}}">Test Koneksi</button>
+            </sc-if>
+            <sc-if value="{{c.canDisconnect}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" onClick="{{c.onDisconnect}}">Putuskan</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{noConnections}}" hint-placeholder-val="{{false}}">
+        <div class="empty-box">
+          <span class="ra-body-sm">Belum ada koneksi AI.</span>
+          <button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{openAddModal}}">Tambah Koneksi</button>
+        </div>
+      </sc-if>
+    </div>
+
+    <button class="ra-btn ra-btn-primary" style="width:100%;margin-top:16px;" onClick="{{openAddModal}}">+ Tambah Koneksi</button>
+  </div>
+
+  <sc-if value="{{addModalOpen}}" hint-placeholder-val="{{false}}">
+    <div class="modal-scrim" onClick="{{closeAddModal}}">
+      <div class="modal" onClick="{{stopClick}}">
+        <span class="ra-title-md">Tambah Koneksi AI</span>
+
+        <div class="field">
+          <label class="ra-label-md">Pilih Provider</label>
+          <div class="provider-grid">
+            <sc-for list="{{providers}}" as="p">
+              <div class="provider-card {{p.selectedClass}}" onClick="{{p.onSelect}}">
+                <span class="ra-label-lg" style="display:block;">{{p.name}}</span>
+                <span class="ra-caption">{{p.billingLabel}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <span class="ra-caption">{{selectedProvider.usageNote}}</span>
+
+        <div class="field">
+          <label class="ra-label-md">API Key</label>
+          <input class="ra-input" type="password" placeholder="Tempel API key di sini">
+        </div>
+
+        <sc-if value="{{selectedProvider.needsExtra}}" hint-placeholder-val="{{false}}">
+          <div class="field">
+            <label class="ra-label-md">Identifier Publik <span class="ra-caption">(opsional)</span></label>
+            <input class="ra-input" type="text" placeholder="mis. Cloud Name">
+          </div>
+          <div class="field">
+            <label class="ra-label-md">Secondary Key <span class="ra-caption">(opsional)</span></label>
+            <input class="ra-input" type="password" placeholder="mis. API Secret">
+          </div>
+        </sc-if>
+
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{createConnection}}">Hubungkan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeAddModal}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasConnectionsProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      addModalOpen: false,
+      selectedProviderIdx: 0,
+      testedIds: {},
+      disconnectedIds: {}
+    };
+    this.openAddModal = this.openAddModal.bind(this);
+    this.closeAddModal = this.closeAddModal.bind(this);
+    this.selectProvider = this.selectProvider.bind(this);
+    this.createConnection = this.createConnection.bind(this);
+    this.testConnection = this.testConnection.bind(this);
+    this.disconnectConnection = this.disconnectConnection.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openAddModal(){ this.setState({ addModalOpen: true }); }
+  closeAddModal(){ this.setState({ addModalOpen: false }); }
+  selectProvider(i){ this.setState({ selectedProviderIdx: i }); }
+  createConnection(){ this.setState({ addModalOpen: false }); }
+  testConnection(id){ this.setState({ testedIds: { ...this.state.testedIds, [id]: true } }); }
+  disconnectConnection(id){ this.setState({ disconnectedIds: { ...this.state.disconnectedIds, [id]: true } }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  get providerDefs(){
+    return [
+      { name: 'OpenAI', billingLabel: 'Berbayar', usageNote: 'Butuh API key berbayar dari platform.openai.com.', needsExtra: false },
+      { name: 'Google Gemini', billingLabel: 'Ada tingkat gratis', usageNote: 'Gemini punya kuota gratis harian dari Google AI Studio.', needsExtra: false },
+      { name: 'Anthropic Claude', billingLabel: 'Trial lalu berbayar', usageNote: 'Kredit trial terbatas, lalu perlu isi saldo.', needsExtra: false },
+      { name: 'Cloudinary (Media AI)', billingLabel: 'Ada tingkat gratis', usageNote: 'Butuh Cloud Name + API Secret selain API key.', needsExtra: true }
+    ];
+  }
+
+  renderVals() {
+    const hasConnections = this.props.hasConnectionsProp ?? true;
+    const testedIds = this.state.testedIds || {};
+    const disconnectedIds = this.state.disconnectedIds || {};
+
+    const statusMap = {
+      unverified: { badge: 'ra-badge-warning', label: 'Belum Diverifikasi' },
+      active: { badge: 'ra-badge-success', label: 'Aktif' },
+      disconnected: { badge: 'ra-badge-neutral', label: 'Terputus' },
+      invalid: { badge: 'ra-badge-danger', label: 'Tidak Valid' },
+      disabled: { badge: 'ra-badge-danger', label: 'Dinonaktifkan Admin' },
+      revoked: { badge: 'ra-badge-neutral', label: 'Dicabut' }
+    };
+
+    const connDefs = [
+      { id: 'k1', providerName: 'Google Gemini', billingLabel: 'Ada tingkat gratis', status: 'active' },
+      { id: 'k2', providerName: 'OpenAI', billingLabel: 'Berbayar', status: 'unverified' }
+    ];
+    const connections = connDefs.map(c => {
+      const status = testedIds[c.id] ? 'active' : (disconnectedIds[c.id] ? 'disconnected' : c.status);
+      const sm = statusMap[status];
+      return {
+        providerName: c.providerName, billingLabel: c.billingLabel,
+        statusBadge: sm.badge, statusLabel: sm.label,
+        canTest: status === 'unverified',
+        onTest: () => this.testConnection(c.id),
+        canDisconnect: status === 'active' || status === 'unverified',
+        onDisconnect: () => this.disconnectConnection(c.id)
+      };
+    });
+
+    const providerDefs = this.providerDefs;
+    const idx = this.state.selectedProviderIdx ?? 0;
+    const providers = providerDefs.map((p, i) => ({
+      name: p.name, billingLabel: p.billingLabel,
+      selectedClass: i === idx ? 'is-selected' : '',
+      onSelect: () => this.selectProvider(i)
+    }));
+
+    return {
+      hasConnections, noConnections: !hasConnections, connections,
+      addModalOpen: this.state.addModalOpen ?? false,
+      openAddModal: this.openAddModal,
+      closeAddModal: this.closeAddModal,
+      providers,
+      selectedProvider: providerDefs[idx],
+      createConnection: this.createConnection,
+      stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>

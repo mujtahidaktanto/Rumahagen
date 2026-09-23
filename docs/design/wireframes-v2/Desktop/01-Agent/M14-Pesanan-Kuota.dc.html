@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Pesanan & Kuota Saya — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+  .main{flex:1;overflow-y:auto;padding:28px 40px;}
+
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:22px;margin-bottom:20px;max-width:1000px;}
+  .entitlement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+  .ent-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-sm);padding:14px;}
+
+  .order-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .order-row:last-child{border-bottom:none;}
+
+  .empty-box{padding:36px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item is-active" href="M14-Katalog-Komersial.dc.html" aria-label="Komersial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg></a>
+      <a class="nav-item" href="M13-Koneksi-AI.dc.html" aria-label="AI Assistant"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;position:relative;">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="M14-Katalog-Komersial.dc.html">Komersial</a><span>/</span>
+        <span class="ra-label-lg" style="color:var(--ra-ink-900);">Pesanan & Kuota Saya</span>
+      </div>
+      <a class="ra-btn ra-btn-primary ra-btn-sm" href="M14-Katalog-Komersial.dc.html">+ Beli Add-on</a>
+    </div>
+
+    <div class="main">
+
+      <div class="card">
+        <span class="ra-title-md" style="display:block;margin-bottom:14px;">Kuota & Entitlement Aktif</span>
+        <div class="entitlement-grid">
+          <sc-for list="{{entitlements}}" as="e" hint-placeholder-count="3">
+            <div class="ent-card">
+              <span class="ra-label-lg" style="display:block;">{{e.label}}</span>
+              <span class="ra-headline" style="display:block;margin:6px 0;">{{e.remaining}}</span>
+              <span class="ra-caption">dari {{e.granted}} · {{e.expiryLabel}}</span>
+              <div style="margin-top:8px;"><span class="ra-badge {{e.statusBadge}}">{{e.statusLabel}}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <span class="ra-title-md">Riwayat Pesanan</span>
+          <span class="ra-caption">{{orders.length}} pesanan</span>
+        </div>
+        <sc-if value="{{hasOrders}}" hint-placeholder-val="{{true}}">
+          <sc-for list="{{orders}}" as="o" hint-placeholder-count="4">
+            <div class="order-row">
+              <div style="flex:1;min-width:0;">
+                <div class="ra-body-md ra-truncate-1">{{o.addonName}}</div>
+                <span class="ra-caption">{{o.orderNumber}} · {{o.placedAt}} · {{o.amount}}</span>
+              </div>
+              <span class="ra-badge {{o.statusBadge}}">{{o.statusLabel}}</span>
+              <sc-if value="{{o.canPay}}" hint-placeholder-val="{{false}}">
+                <a class="ra-btn ra-btn-primary ra-btn-sm" href="#">Bayar Sekarang</a>
+              </sc-if>
+              <sc-if value="{{o.canCancel}}" hint-placeholder-val="{{false}}">
+                <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{o.onCancel}}">Batalkan</button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{noOrders}}" hint-placeholder-val="{{false}}">
+          <div class="empty-box">
+            <span class="ra-body-md">Belum ada pesanan.</span>
+            <a class="ra-btn ra-btn-primary ra-btn-sm" href="M14-Katalog-Komersial.dc.html">Jelajahi Katalog</a>
+          </div>
+        </sc-if>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasOrdersProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { cancelledIds: {} };
+    this.cancelOrder = this.cancelOrder.bind(this);
+  }
+  cancelOrder(id){ this.setState({ cancelledIds: { ...this.state.cancelledIds, [id]: true } }); }
+
+  renderVals() {
+    const hasOrders = this.props.hasOrdersProp ?? true;
+    const cancelledIds = this.state.cancelledIds || {};
+
+    const entitlements = [
+      { label: 'Refresh Listing', remaining: 32, granted: 50, expiryLabel: 'Berlaku s/d 20 Okt 2026', statusBadge: 'ra-badge-success', statusLabel: 'active' },
+      { label: 'Slot Listing Tambahan', remaining: 18, granted: 25, expiryLabel: 'Selama akun aktif', statusBadge: 'ra-badge-success', statusLabel: 'active' },
+      { label: 'Paket Kombo (Sep)', remaining: 0, granted: 30, expiryLabel: 'Berakhir 15 Sep 2026', statusBadge: 'ra-badge-neutral', statusLabel: 'expired' }
+    ];
+
+    const orderStatusMap = {
+      pending: { badge: 'ra-badge-warning', label: 'Menunggu Pembayaran' },
+      confirmed: { badge: 'ra-badge-success', label: 'Terkonfirmasi' },
+      cancelled: { badge: 'ra-badge-neutral', label: 'Dibatalkan' },
+      expired: { badge: 'ra-badge-danger', label: 'Kedaluwarsa' }
+    };
+    const orderDefs = [
+      { id: 'o1', addonName: 'Paket 50 Refresh', orderNumber: 'ORD-20260920-0098', placedAt: '20 Sep 2026', amount: 'Rp 75.000', status: 'confirmed' },
+      { id: 'o2', addonName: 'Paket Listing Tambahan XL', orderNumber: 'ORD-20260922-0140', placedAt: '22 Sep 2026', amount: 'Rp 280.000', status: 'pending' },
+      { id: 'o3', addonName: 'Paket Starter Bulanan', orderNumber: 'ORD-20260915-0071', placedAt: '15 Sep 2026', amount: 'Rp 120.000', status: 'expired' }
+    ];
+    const orders = orderDefs.map(o => {
+      const status = cancelledIds[o.id] ? 'cancelled' : o.status;
+      const sm = orderStatusMap[status];
+      return {
+        addonName: o.addonName, orderNumber: o.orderNumber, placedAt: o.placedAt, amount: o.amount,
+        statusBadge: sm.badge, statusLabel: sm.label,
+        canPay: status === 'pending',
+        canCancel: status === 'pending',
+        onCancel: () => this.cancelOrder(o.id)
+      };
+    });
+
+    return {
+      entitlements,
+      hasOrders, noOrders: !hasOrders, orders
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>AI Assistant — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .conn-select{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);background:#fff;cursor:pointer;}
+
+  .chat-area{flex:1;overflow-y:auto;padding:24px 0;display:flex;flex-direction:column;align-items:center;}
+  .chat-col{width:100%;max-width:720px;display:flex;flex-direction:column;gap:16px;padding:0 24px;}
+
+  .bubble-row{display:flex;gap:12px;}
+  .bubble-row.is-user{flex-direction:row-reverse;}
+  .bubble-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;font-size:12px;font-weight:700;}
+  .bubble{max-width:520px;padding:12px 16px;border-radius:var(--ra-radius-md);}
+  .bubble.is-assistant{background:#fff;border:1px solid var(--ra-ink-100);border-top-left-radius:2px;}
+  .bubble.is-user{background:var(--ra-blue-600);color:#fff;border-top-right-radius:2px;}
+
+  .composer{flex:none;padding:16px 24px 24px;display:flex;justify-content:center;}
+  .composer-inner{width:100%;max-width:720px;display:flex;gap:10px;align-items:flex-end;}
+  .composer-input{flex:1;min-height:48px;max-height:140px;border-radius:var(--ra-radius-md);border:1.5px solid var(--ra-ink-100);padding:12px 16px;font-family:var(--ra-font);font-size:14px;resize:none;}
+  .composer-input:focus-visible{outline:none;border-color:var(--ra-blue-500);}
+
+  .empty-box{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--ra-ink-500);text-align:center;padding:40px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item is-active" href="M13-AI-Assistant.dc.html" aria-label="AI Assistant"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div class="topbar">
+      <h1 class="ra-title-lg">AI Assistant</h1>
+      <sc-if value="{{hasActiveConn}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="conn-select">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15" style="color:var(--ra-gold-600);"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>
+            <span class="ra-label-lg">{{activeConnName}}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-ink-500)" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M13-Koneksi-AI.dc.html">Kelola Koneksi</a>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{noActiveConn}}" hint-placeholder-val="{{false}}">
+      <div class="empty-box">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" width="52" height="52"><path d="M32 4 36.8 25.2 58 32 36.8 38.8 32 60 27.2 38.8 6 32 27.2 25.2 32 4Z"/></svg>
+        <span class="ra-body-md" style="max-width:340px;">Anda belum punya koneksi AI yang aktif. Hubungkan provider AI (BYOK) dulu untuk mulai memakai AI Assistant.</span>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M13-Koneksi-AI.dc.html">Hubungkan Provider AI</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{hasActiveConn}}" hint-placeholder-val="{{true}}">
+      <div class="chat-area">
+        <div class="chat-col">
+          <sc-if value="{{isEmptyChat}}" hint-placeholder-val="{{true}}">
+            <div style="text-align:center;padding:40px 0;color:var(--ra-ink-500);">
+              <span class="ra-body-md">Tanyakan apa saja seputar listing, deskripsi properti, atau strategi closing — AI Assistant siap membantu.</span>
+            </div>
+          </sc-if>
+          <sc-for list="{{messages}}" as="m">
+            <div class="bubble-row {{m.rowClass}}">
+              <div class="bubble-avatar" style="background:{{m.avatarBg}};color:{{m.avatarColor}};">{{m.avatarLabel}}</div>
+              <div class="bubble {{m.bubbleClass}}"><span class="ra-body-md">{{m.text}}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="composer">
+        <div class="composer-inner">
+          <textarea class="composer-input" placeholder="Tulis pesan ke AI Assistant…"></textarea>
+          <button class="ra-btn ra-btn-primary" onClick="{{sendMessage}}">Kirim</button>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasActiveConnProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { sentOnce: false };
+    this.sendMessage = this.sendMessage.bind(this);
+  }
+  sendMessage(){
+    if (this.state.sentOnce) return;
+    this.setState({ sentOnce: true });
+  }
+
+  renderVals() {
+    const hasActiveConn = this.props.hasActiveConnProp ?? true;
+    const sentOnce = this.state.sentOnce ?? false;
+
+    const messages = sentOnce ? [
+      { rowClass: 'is-user', avatarBg: 'var(--ra-blue-100)', avatarColor: 'var(--ra-blue-600)', avatarLabel: 'RS', bubbleClass: 'is-user', text: 'Bantu buatkan deskripsi menarik untuk rumah 2 lantai di BSD, 3 kamar tidur, harga 850 juta.' },
+      { rowClass: '', avatarBg: 'var(--ra-gold-100)', avatarColor: 'var(--ra-gold-700)', avatarLabel: 'AI', bubbleClass: 'is-assistant', text: '"Hunian nyaman 2 lantai di kawasan BSD yang berkembang pesat! Dengan 3 kamar tidur luas dan tata ruang modern, rumah ini cocok untuk keluarga muda. Harga 850 juta — nego santai, DP fleksibel. Hubungi saya untuk jadwal survei!"' }
+    ] : [];
+
+    return {
+      hasActiveConn, noActiveConn: !hasActiveConn,
+      activeConnName: 'Google Gemini',
+      isEmptyChat: !sentOnce,
+      messages,
+      sendMessage: this.sendMessage
+    };
+  }
+}
+</script>
+</body>
+</html>

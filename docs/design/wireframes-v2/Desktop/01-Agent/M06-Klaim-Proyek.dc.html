@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Klaim Proyek — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+
+  .main{flex:1;overflow-y:auto;padding:28px 40px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:22px;max-width:900px;}
+
+  .claim-row{padding:16px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .claim-row:last-child{border-bottom:none;}
+  .claim-head{display:flex;align-items:center;gap:14px;}
+  .claim-icon{width:48px;height:48px;border-radius:var(--ra-radius-sm);background:var(--ra-ink-100);flex:none;background-size:cover;background-position:center;}
+
+  .kit-panel{margin-top:12px;margin-left:62px;padding:12px 14px;background:var(--ra-ink-50);border-radius:var(--ra-radius-sm);display:flex;flex-direction:column;gap:8px;}
+  .kit-item{display:flex;align-items:center;gap:10px;}
+  .kit-item svg{flex:none;color:var(--ra-blue-600);}
+
+  .empty-box{padding:40px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);max-width:900px;}
+
+  .modal-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:20;}
+  .modal{background:#fff;border-radius:var(--ra-radius-lg);padding:26px;width:440px;display:flex;flex-direction:column;gap:14px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;position:relative;">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="M08-Dashboard.dc.html">Dashboard</a><span>/</span>
+        <span class="ra-label-lg" style="color:var(--ra-ink-900);">Klaim Proyek</span>
+      </div>
+      <a class="ra-btn ra-btn-secondary ra-btn-sm" href="../00-Publik/desktop-discovery.dc.html">Jelajahi Proyek Developer</a>
+    </div>
+
+    <div class="main">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <span class="ra-title-md">Proyek yang Saya Klaim</span>
+          <span class="ra-caption">{{claims.length}} klaim</span>
+        </div>
+
+        <sc-if value="{{hasClaims}}" hint-placeholder-val="{{true}}">
+          <sc-for list="{{claims}}" as="c" hint-placeholder-count="3">
+            <div class="claim-row">
+              <div class="claim-head">
+                <div class="claim-icon"></div>
+                <div style="flex:1;min-width:0;">
+                  <div class="ra-body-md ra-truncate-1">{{c.projectName}}</div>
+                  <span class="ra-caption">{{c.location}} · {{c.categoryLabel}} · Diklaim {{c.claimedAt}}</span>
+                </div>
+                <span class="ra-badge {{c.statusBadge}}">{{c.statusLabel}}</span>
+                <sc-if value="{{c.canWithdraw}}" hint-placeholder-val="{{true}}">
+                  <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{c.onWithdraw}}">Batalkan Klaim</button>
+                </sc-if>
+                <sc-if value="{{c.canViewKit}}" hint-placeholder-val="{{false}}">
+                  <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{c.onToggleKit}}">{{c.kitToggleLabel}}</button>
+                </sc-if>
+              </div>
+
+              <sc-if value="{{c.kitOpen}}" hint-placeholder-val="{{false}}">
+                <div class="kit-panel">
+                  <sc-for list="{{c.kitFiles}}" as="f">
+                    <a class="kit-item" href="#">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h6"/></svg>
+                      <span class="ra-body-sm">{{f.name}}</span>
+                      <span class="ra-caption">{{f.typeLabel}}</span>
+                    </a>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{noClaims}}" hint-placeholder-val="{{false}}">
+          <div class="empty-box">
+            <span class="ra-body-md">Anda belum mengklaim proyek developer apapun.</span>
+            <span class="ra-caption">Klaim proyek dari halaman detail proyek untuk mulai memasarkannya sebagai listing Anda.</span>
+            <a class="ra-btn ra-btn-primary ra-btn-sm" href="../00-Publik/desktop-discovery.dc.html">Jelajahi Proyek Developer</a>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{withdrawModalOpen}}" hint-placeholder-val="{{false}}">
+      <div class="modal-scrim" onClick="{{closeWithdrawModal}}">
+        <div class="modal" onClick="{{stopClick}}">
+          <span class="ra-title-lg">Batalkan Klaim?</span>
+          <span class="ra-body-sm" style="color:var(--ra-ink-500);">Anda akan membatalkan klaim atas "{{withdrawTarget}}". Anda bisa mengklaim ulang proyek ini kapan saja.</span>
+          <div style="display:flex;gap:10px;justify-content:flex-end;">
+            <button class="ra-btn ra-btn-secondary" onClick="{{closeWithdrawModal}}">Batal</button>
+            <button class="ra-btn ra-btn-danger" onClick="{{confirmWithdraw}}">Ya, Batalkan Klaim</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasClaimsProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { withdrawModalOpen: false, withdrawTarget: '', withdrawnIds: {}, kitOpenIds: {} };
+    this.openWithdrawModal = this.openWithdrawModal.bind(this);
+    this.closeWithdrawModal = this.closeWithdrawModal.bind(this);
+    this.confirmWithdraw = this.confirmWithdraw.bind(this);
+    this.toggleKit = this.toggleKit.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openWithdrawModal(id, name){ this.setState({ withdrawModalOpen: true, withdrawTarget: name, pendingId: id }); }
+  closeWithdrawModal(){ this.setState({ withdrawModalOpen: false }); }
+  confirmWithdraw(){
+    const id = this.pendingId;
+    this.setState({ withdrawModalOpen: false, withdrawnIds: { ...this.state.withdrawnIds, [id]: true } });
+  }
+  toggleKit(id){
+    const cur = this.state.kitOpenIds || {};
+    this.setState({ kitOpenIds: { ...cur, [id]: !cur[id] } });
+  }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  renderVals() {
+    const hasClaims = this.props.hasClaimsProp ?? true;
+    const withdrawnIds = this.state.withdrawnIds || {};
+    const kitOpenIds = this.state.kitOpenIds || {};
+
+    const statusMap = {
+      pending: { badge: 'ra-badge-info', label: 'Menunggu Review' },
+      approved: { badge: 'ra-badge-success', label: 'Disetujui' },
+      rejected: { badge: 'ra-badge-danger', label: 'Ditolak' },
+      revoked: { badge: 'ra-badge-neutral', label: 'Dicabut Developer' },
+      withdrawn: { badge: 'ra-badge-neutral', label: 'Dibatalkan' }
+    };
+    const kitFiles = [
+      { name: 'Brosur-GreenValley-2026.pdf', typeLabel: 'Brosur' },
+      { name: 'Price-List-GreenValley-Sep2026.pdf', typeLabel: 'Daftar Harga' }
+    ];
+
+    const claimDefs = [
+      { id: 'c1', projectName: 'Green Valley Residence', location: 'BSD, Tangerang Selatan', categoryLabel: 'Primary', claimedAt: '18 Sep 2026', status: 'approved' },
+      { id: 'c2', projectName: 'Menara Kertajaya Apartemen', location: 'Surabaya Timur', categoryLabel: 'Primary', claimedAt: '20 Sep 2026', status: 'pending' },
+      { id: 'c3', projectName: 'Cluster Harmoni Residence', location: 'Bekasi', categoryLabel: 'Secondary', claimedAt: '10 Sep 2026', status: 'rejected' }
+    ];
+    const claims = claimDefs.map(c => {
+      const status = withdrawnIds[c.id] ? 'withdrawn' : c.status;
+      const sm = statusMap[status];
+      const canViewKit = status === 'approved';
+      const kitOpen = !!kitOpenIds[c.id];
+      return {
+        projectName: c.projectName, location: c.location, categoryLabel: c.categoryLabel, claimedAt: c.claimedAt,
+        statusBadge: sm.badge, statusLabel: sm.label,
+        canWithdraw: status === 'pending',
+        onWithdraw: () => this.openWithdrawModal(c.id, c.projectName),
+        canViewKit,
+        kitToggleLabel: kitOpen ? 'Sembunyikan Kit' : 'Lihat Marketing Kit',
+        onToggleKit: () => this.toggleKit(c.id),
+        kitOpen,
+        kitFiles
+      };
+    });
+
+    return {
+      hasClaims, noClaims: !hasClaims, claims,
+      withdrawModalOpen: this.state.withdrawModalOpen ?? false,
+      withdrawTarget: this.state.withdrawTarget ?? '',
+      closeWithdrawModal: this.closeWithdrawModal,
+      confirmWithdraw: this.confirmWithdraw,
+      stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Klaim Proyek — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+
+  .main{flex:1;overflow-y:auto;padding:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;}
+
+  .claim-row{padding:14px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .claim-row:last-child{border-bottom:none;}
+  .claim-head{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  .claim-icon{width:42px;height:42px;border-radius:var(--ra-radius-sm);background:var(--ra-ink-100);flex:none;}
+
+  .kit-panel{margin-top:10px;padding:12px;background:var(--ra-ink-50);border-radius:var(--ra-radius-sm);display:flex;flex-direction:column;gap:8px;}
+  .kit-item{display:flex;align-items:center;gap:10px;}
+  .kit-item svg{flex:none;color:var(--ra-blue-600);}
+
+  .empty-box{padding:32px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+
+  .modal-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:flex-end;z-index:20;}
+  .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;display:flex;flex-direction:column;gap:12px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M08-Dashboard.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md">Klaim Proyek</span>
+    <a class="iconbtn" href="../00-Publik/mobile-discovery.dc.html" aria-label="Jelajahi" style="margin-left:auto;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <span class="ra-title-md">Proyek Diklaim</span>
+        <span class="ra-caption">{{claims.length}}</span>
+      </div>
+
+      <sc-if value="{{hasClaims}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{claims}}" as="c" hint-placeholder-count="3">
+          <div class="claim-row">
+            <div class="claim-head">
+              <div class="claim-icon"></div>
+              <div style="flex:1;min-width:0;">
+                <div class="ra-body-sm ra-truncate-1">{{c.projectName}}</div>
+                <span class="ra-caption">{{c.location}} · {{c.claimedAt}}</span>
+              </div>
+              <span class="ra-badge {{c.statusBadge}}">{{c.statusLabel}}</span>
+            </div>
+            <sc-if value="{{c.canWithdraw}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;margin-top:10px;" onClick="{{c.onWithdraw}}">Batalkan Klaim</button>
+            </sc-if>
+            <sc-if value="{{c.canViewKit}}" hint-placeholder-val="{{false}}">
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;margin-top:10px;" onClick="{{c.onToggleKit}}">{{c.kitToggleLabel}}</button>
+            </sc-if>
+            <sc-if value="{{c.kitOpen}}" hint-placeholder-val="{{false}}">
+              <div class="kit-panel">
+                <sc-for list="{{c.kitFiles}}" as="f">
+                  <a class="kit-item" href="#">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h6"/></svg>
+                    <span class="ra-body-sm ra-truncate-1">{{f.name}}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{noClaims}}" hint-placeholder-val="{{false}}">
+        <div class="empty-box">
+          <span class="ra-body-sm">Anda belum mengklaim proyek developer apapun.</span>
+          <a class="ra-btn ra-btn-primary ra-btn-sm" href="../00-Publik/mobile-discovery.dc.html">Jelajahi Proyek</a>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{withdrawModalOpen}}" hint-placeholder-val="{{false}}">
+    <div class="modal-scrim" onClick="{{closeWithdrawModal}}">
+      <div class="modal" onClick="{{stopClick}}">
+        <span class="ra-title-md">Batalkan Klaim?</span>
+        <span class="ra-body-sm" style="color:var(--ra-ink-500);">Anda akan membatalkan klaim atas "{{withdrawTarget}}".</span>
+        <button class="ra-btn ra-btn-danger" style="width:100%;" onClick="{{confirmWithdraw}}">Ya, Batalkan Klaim</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeWithdrawModal}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasClaimsProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { withdrawModalOpen: false, withdrawTarget: '', withdrawnIds: {}, kitOpenIds: {} };
+    this.openWithdrawModal = this.openWithdrawModal.bind(this);
+    this.closeWithdrawModal = this.closeWithdrawModal.bind(this);
+    this.confirmWithdraw = this.confirmWithdraw.bind(this);
+    this.toggleKit = this.toggleKit.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openWithdrawModal(id, name){ this.setState({ withdrawModalOpen: true, withdrawTarget: name, pendingId: id }); }
+  closeWithdrawModal(){ this.setState({ withdrawModalOpen: false }); }
+  confirmWithdraw(){
+    const id = this.pendingId;
+    this.setState({ withdrawModalOpen: false, withdrawnIds: { ...this.state.withdrawnIds, [id]: true } });
+  }
+  toggleKit(id){
+    const cur = this.state.kitOpenIds || {};
+    this.setState({ kitOpenIds: { ...cur, [id]: !cur[id] } });
+  }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  renderVals() {
+    const hasClaims = this.props.hasClaimsProp ?? true;
+    const withdrawnIds = this.state.withdrawnIds || {};
+    const kitOpenIds = this.state.kitOpenIds || {};
+
+    const statusMap = {
+      pending: { badge: 'ra-badge-info', label: 'Menunggu' },
+      approved: { badge: 'ra-badge-success', label: 'Disetujui' },
+      rejected: { badge: 'ra-badge-danger', label: 'Ditolak' },
+      revoked: { badge: 'ra-badge-neutral', label: 'Dicabut' },
+      withdrawn: { badge: 'ra-badge-neutral', label: 'Dibatalkan' }
+    };
+    const kitFiles = [
+      { name: 'Brosur-GreenValley-2026.pdf' },
+      { name: 'Price-List-GreenValley-Sep2026.pdf' }
+    ];
+
+    const claimDefs = [
+      { id: 'c1', projectName: 'Green Valley Residence', location: 'BSD, Tangsel', claimedAt: '18 Sep 2026', status: 'approved' },
+      { id: 'c2', projectName: 'Menara Kertajaya Apartemen', location: 'Surabaya Timur', claimedAt: '20 Sep 2026', status: 'pending' },
+      { id: 'c3', projectName: 'Cluster Harmoni Residence', location: 'Bekasi', claimedAt: '10 Sep 2026', status: 'rejected' }
+    ];
+    const claims = claimDefs.map(c => {
+      const status = withdrawnIds[c.id] ? 'withdrawn' : c.status;
+      const sm = statusMap[status];
+      const canViewKit = status === 'approved';
+      const kitOpen = !!kitOpenIds[c.id];
+      return {
+        projectName: c.projectName, location: c.location, claimedAt: c.claimedAt,
+        statusBadge: sm.badge, statusLabel: sm.label,
+        canWithdraw: status === 'pending',
+        onWithdraw: () => this.openWithdrawModal(c.id, c.projectName),
+        canViewKit,
+        kitToggleLabel: kitOpen ? 'Sembunyikan Kit' : 'Lihat Marketing Kit',
+        onToggleKit: () => this.toggleKit(c.id),
+        kitOpen,
+        kitFiles
+      };
+    });
+
+    return {
+      hasClaims, noClaims: !hasClaims, claims,
+      withdrawModalOpen: this.state.withdrawModalOpen ?? false,
+      withdrawTarget: this.state.withdrawTarget ?? '',
+      closeWithdrawModal: this.closeWithdrawModal,
+      confirmWithdraw: this.confirmWithdraw,
+      stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>
