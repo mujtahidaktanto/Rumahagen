@@ -2385,3 +2385,210 @@ akun uji dihapus lewat Admin API, diverifikasi `0` baris tersisa.
 **Ini menutup SELURUH admin-surface gap dari audit M01-M15** (bersama
 Internal Staff User Management, Listing Moderation Queue, dan Agent
 Suspend di atas).
+
+## `0110`-`0113` — M12 Organization CRUD: create/detail/branding/search/dashboard/member-leave-remove/close/activity-log
+
+Menutup temuan TERBESAR dari audit endpoint agen/user M01-M15 (audit
+terpisah dari admin-surface di atas — mencakup SELURUH 239 endpoint
+terkunci STEP11-A, bukan cuma console admin): API-156/157/158/159/160/
+166/167/168 (M12). Tabel `organizations`/`organization_members` dan RLS
+`organizations_manage`/`organization_members_manage` sudah ada sejak
+migration `0005`/`0007` — fitur TURUNANNYA (invitations/join-requests,
+`0050`; quota/entitlements) sudah dibangun DI ATASNYA — TAPI tidak ada
+SATU PUN route yang menyentuh tabel `organizations` itu sendiri sebelum
+batch ini: organisasi tidak pernah bisa dibuat/dilihat/di-branding/
+dicari/ditutup lewat HTTP sama sekali.
+
+Sumber utama: `STEP11-B6_ORGANIZATION_MEMBERSHIP_INVITATION_API_
+SYNCHRONIZATION` §7-13/§19 (jauh lebih detail dari Gate `PRE-00-N`
+sendiri) + `PRE-00-N_M12_ORGANIZATION_MEMBERSHIP_AUTHORITY_GATE` §6-7.
+
+### Tidak ada permission baru — ikuti master matrix, bukan prosa B6
+
+B6 menulis "Eligible **Agent** creates an Organization and becomes Lead",
+tapi `STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv` (satu-satunya baris
+M12: "Manage within authorized context") memberi scope `OWN` ke SEMUA
+role non-staff (Manager/Agent/Developer Partner/Buyer/Instruktur), PERSIS
+sama dengan RLS `organizations_manage` (`created_by=auth.uid()` OR staf)
+yang sudah ada sejak `0007`. Diikuti master matrix (otoritas RBAC final
+di proyek ini), bukan prosa B6 — precedent yang sama dipakai berkali-kali
+di sesi ini. **Diverifikasi nyata**: Buyer berhasil membuat organisasi
+(`201`), bukan cuma Agent.
+
+### `0110_m12_organization_crud_gap.sql`
+
+- **Auto-leader-membership**: trigger `create_organization_leader_
+  membership` (`AFTER INSERT ON organizations`, `SECURITY DEFINER` --
+  pembuat organisasi belum punya baris `organization_members` apa pun
+  saat trigger ini jalan, pola sama seperti `handle_auth_user_sync`/0096)
+  otomatis menambahkan pembuat sebagai `role='leader'`, `status='active'`.
+- **"CLOSED is irreversible"** (B6 §12): `enforce_organization_lifecycle_
+  rules()` (`0087`, `CREATE OR REPLACE`) ditambah satu guard di awal —
+  `IF OLD.status = 'closed' THEN RAISE EXCEPTION` — SEBELUM pengecekan
+  apa pun, berlaku bahkan untuk Superadmin lewat SQL langsung.
+  **Diverifikasi nyata**: percobaan `PATCH` langsung via service-role SQL
+  untuk mengembalikan organisasi `closed` ke `active` → ditolak trigger.
+- **Self-leave untuk member biasa** (B6 §9, "Member controls own leave"):
+  policy baru `organization_members_self_leave`
+  (`agent_id = auth.uid()`) — sebelumnya `organization_members_manage`
+  HANYA leader-aktif/staf, member biasa tidak pernah bisa keluar sendiri
+  sama sekali (celah nyata, bukan disengaja). Dibatasi trigger
+  `enforce_organization_member_self_leave` ke transisi `active->left`
+  milik baris sendiri saja — leader/staf tidak dibatasi trigger ini.
+- **Lead Exit → CLOSING** (B6 §13/`PRE-00-N` §7, LOCKED, "no Lead
+  Transfer/successor/auto-promotion"): trigger baru `trg_org_closing_on_
+  lead_exit` (`AFTER UPDATE ON organization_members`, `SECURITY DEFINER`)
+  — begitu baris `role='leader'` `status` berubah dari `active` ke
+  `left`/`removed`, `organizations.status` otomatis pindah ke `closing`.
+  **Diverifikasi nyata**.
+- **Visibilitas publik untuk discovery** (API-159 search perlu organisasi
+  bisa DITEMUKAN sebelum jadi member): policy baru `organizations_
+  select_active_public` (`status='active'`, siapa pun) — RLS HANYA
+  menggerbangi BARIS, kurasi KOLOM privat (address/contact_phone/
+  social_media) tetap tanggung jawab kode route ("must not expose private
+  Organization information", B6 §8).
+
+### `0111` — fix: accepted invitation tidak pernah menjadi membership
+
+**Ditemukan saat menyiapkan pengujian batch 0110**: B6 §10 mengunci
+"Accepted invitation becomes membership" secara eksplisit, TAPI `0050`
+hanya menyediakan tabel + trigger anti-self-approval — TIDAK PERNAH ada
+kode yang benar-benar menulis baris `organization_members` saat
+`organization_invitations.status` jadi `'accepted'`. Tanpa fix ini,
+SELURUH alur undangan/join-request yang sudah dibangun sejak `0050` (POST
+invitations/join-requests + PUT accept) secara fisik TIDAK PERNAH
+menghasilkan member baru — accept selalu "berhasil" (`200 OK`) tapi
+orangnya tidak pernah benar-benar jadi anggota. Trigger baru
+`create_membership_on_invitation_accepted` (`SECURITY DEFINER` — pada
+alur `leader_invite`, yang accept adalah AGENT yang diundang, bukan
+leader, jadi belum tentu punya hak INSERT ke `organization_members`
+lewat RLS biasa) — `INSERT ... ON CONFLICT (organization_id, agent_id) DO
+UPDATE` supaya mantan member yang `left`/`removed` lalu diundang lagi
+bereaktivasi, bukan menabrak UNIQUE constraint (`0005`).
+
+### `0112` — fix: infinite recursion RLS pada UPDATE organization_members
+
+**Ditemukan saat menguji nyata leave/remove member** — SETIAP UPDATE ke
+`organization_members` gagal `42P17 "infinite recursion detected in
+policy"`. Root cause: `organization_members_manage` (`0007`) menulis
+pengecekan leader-aktif sebagai subquery INLINE ke tabel yang SAMA
+(`EXISTS (SELECT 1 FROM organization_members om WHERE ...)`) — subquery
+itu sendiri tunduk RLS tabel yang sama (termasuk policy ini sendiri),
+menciptakan evaluasi sirkular. Bug ini DORMAN sejak `0007` — tidak
+pernah ketahuan karena tidak ada route apa pun yang benar-benar
+melakukan UPDATE ke `organization_members` sebelum batch ini (leave/
+remove member baru pertama kali dibangun di sini). Fix: ganti subquery
+inline dengan helper `is_org_leader()` yang SUDAH ADA (`0050`,
+`SECURITY DEFINER` — bypass RLS untuk query internalnya sendiri,
+menghilangkan sirkularitas), kondisi logis identik, bukan perubahan
+perilaku.
+
+### `0113` — fix: trigger self-leave memblokir reaktivasi lewat accept
+
+**Ditemukan saat menguji ulang re-invite pada mantan member**: trigger
+`create_membership_on_invitation_accepted` (`0111`) mereaktivasi baris
+`left->active` lewat `UPDATE`, tapi UPDATE itu TETAP memicu `BEFORE
+UPDATE` trigger `enforce_organization_member_self_leave` (`0110`) di
+tabel yang sama — `SECURITY DEFINER` membuat operasinya bypass RLS,
+TAPI TIDAK membuatnya bypass TRIGGER tabel (dua mekanisme berbeda).
+`auth.uid()` di dalam trigger tetap terbaca sebagai agent yang meng-
+accept (bukan leader/staf) — trigger self-leave menolak karena transisi
+`left->active` bukan `active->left` yang ia izinkan. Fix: pola SAMA
+seperti `rumahagen.refresh_in_progress` (`0018`) — flag sesi transaksi
+lokal (`rumahagen.org_membership_sync_in_progress`) di-set oleh trigger
+accept SEBELUM menulis, dibaca trigger self-leave sebagai jalur bypass
+paling awal.
+
+### Desain closure: DUA panggilan `DELETE` ke endpoint locked yang SAMA
+
+B6 §12 mengunci alur self-service DUA LANGKAH (Close lalu Confirm) PLUS
+OTP-gated confirmation dari QIR/Business Rules — TAPI "exact current API
+v2.1 closure-confirm/OTP route is not evidenced" (CONTROLLED ROUTE GAP
+yang didokumentasikan B6 sendiri, bukan diciptakan di sini). Direalisasi
+sebagai DUA PANGGILAN berurutan ke `DELETE /organizations/{id}` yang SAMA
+persis: panggilan pertama saat `status='active'` → `'closing'` ("Close"),
+panggilan kedua saat `status='closing'` → `'closed'` ("Confirm"). Tanpa
+OTP (tidak dievidensi route-nya). Otorisasi dicek EKSPLISIT di kode
+(`created_by` atau Superadmin/Admin — Manager SENGAJA tidak termasuk,
+konsisten `organizations_manage`) supaya pemanggil tanpa hak dapat `403`
+yang jelas, bukan `409` generik yang tercampur dengan race condition
+sungguhan.
+
+### File baru
+
+- `lib/validation/organizations.ts` — `createOrganizationSchema`,
+  `updateOrganizationBrandingSchema` (dibatasi field presentasi saja —
+  "Do not invent `/organizations/{id}/settings`", B6 §15 — organization_
+  name/address/contact_phone/organization_type SENGAJA immutable pasca-
+  create lewat HTTP), `searchOrganizationsQuerySchema`.
+- `app/api/organizations/route.ts` — POST (create + auto-leader).
+- `app/api/organizations/[id]/route.ts` — GET (detail, kurasi kolom untuk
+  non-member) + DELETE (closure dua-langkah).
+- `app/api/organizations/[id]/branding/route.ts` — PUT.
+- `app/api/organizations/search/route.ts` — GET (publik, kolom kurasi).
+- `app/api/organizations/[id]/dashboard/route.ts` — GET (member-only;
+  `pending_invitations_count` HANYA untuk leader/staf — konten TIDAK
+  dievidensi Core, keputusan rekayasa agregat ringkas dari tabel yang
+  sudah ada, tanpa kolom/tabel baru).
+- `app/api/organizations/[id]/activity-log/route.ts` — GET (member-only;
+  MEMBACA `audit_logs` yang sudah ada difilter `organization_id`, BUKAN
+  mekanisme logging kedua — "not a duplicate M09 administrative audit
+  subsystem", B6 §19; admin client dipakai SETELAH `is_org_member()`
+  dicek eksplisit, karena `audit_logs_select` RLS sendiri staff-only).
+- `app/api/organization-members/[id]/route.ts` — DELETE (leave kalau
+  `agent_id` = pemanggil sendiri, remove kalau leader/staf mengeluarkan
+  member lain — soft, kolom `left_at` yang sudah ada sejak `0005`, bukan
+  hard delete).
+
+### Yang SENGAJA TIDAK dibangun (evidenced sebagai CONTROLLED GAP oleh B6 sendiri, bukan terlewat)
+
+- `GET /organizations/{id}/members` (member list/view) — "Dedicated
+  Member View/List current route is not evidenced" (B6 §9).
+- Invitation Revoke, Join Request Cancel — rute tidak dievidensi (B6
+  §10-11).
+- OTP closure-confirm route — tidak dievidensi (B6 §12, lihat di atas).
+- `/organizations/{id}/settings`, Organization Documents CRUD,
+  Organization public content/announcement CRUD — B6 §15-17 eksplisit
+  "No route is invented" untuk ketiganya.
+- Organization Suspend/Restore/Forced Close (endpoint enforcement
+  terpisah dari closure self-service) — B6 §18 eksplisit "No enforcement
+  endpoint is invented"; nilai `suspended` (`0087`) tetap ada di CHECK
+  constraint dan tetap bisa diaktifkan staf lewat SQL langsung, hanya
+  tidak ada route HTTP untuknya.
+- "Prohibited new member/invite/listing/commercial creation during
+  CLOSING" (B6 §12 poin 8) — TIDAK ditegakkan di batch ini untuk
+  listing/commercial (lintas-modul M03/M14, di luar cakupan); untuk
+  invitation/join-request BARU, RLS `organization_invitations_insert`
+  (`0050`) belum dicek ulang terhadap status organisasi — residual yang
+  diketahui, bukan diam-diam diabaikan.
+
+Diuji nyata end-to-end dengan 8 akun (superadmin/admin/manager/agent1-4/
+buyer1) mencakup SELURUH siklus: create (Agent DAN Buyer, keduanya
+`201`) dengan auto-leader-membership; GET detail (member = full row,
+outsider = kolom kurasi tanpa address/contact_phone); search anonim
+(kolom kurasi, organisasi `closing`/`closed` otomatis hilang dari hasil);
+branding (leader `200`, non-member `403`, Manager `403`); invite→accept→
+membership sungguhan terbentuk (dashboard `active_member_count` naik);
+dashboard (leader lihat `pending_invitations_count`, member biasa tidak);
+activity-log (member `200` lihat riwayat, outsider `403`); member self-
+leave (`200` status `left`, leave lagi → `404` RLS-invisible karena
+`is_org_member()` mensyaratkan `active`); re-invite mantan member →
+reaktivasi (`200`, fix `0113` terbukti); leader force-remove (`200`
+status `removed`); Lead Exit memicu `closing` otomatis (`200` + fix
+`0110` terbukti lewat query langsung); closure dua-langkah penuh
+(`active`→`closing`→`closed`→`409` di panggilan ketiga); percobaan SQL
+langsung membalik `closed` → ditolak trigger (fix `0110` terbukti);
+Manager mencoba close organisasi orang lain → `403`; Superadmin close
+organisasi orang lain → `200` (jalur staf terbukti terpisah dari jalur
+creator). Seluruh 8 organisasi uji (+ member/invitation turunannya lewat
+CASCADE) dan 16 akun uji (dua putaran pengujian) dihapus total,
+diverifikasi `0` baris tersisa.
+
+### Sisa temuan dari audit endpoint agen/user M01-M15 (belum dibangun, di luar batch ini)
+
+- `POST /listings/from-project/{project_id}` (M03/M06) — klaim project
+  developer yang di-approve tidak pernah menghasilkan listing.
+- `PUT /leads/{id}/status` (M03) — lead cuma bisa dilihat, tidak pernah
+  bisa diubah statusnya.
+- `POST /developer-partners/events` (M05) — Developer Partner tidak
+  punya permission ATAU route untuk membuat event.
