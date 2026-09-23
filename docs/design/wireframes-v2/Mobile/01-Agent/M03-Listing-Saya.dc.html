@@ -34,9 +34,9 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
     <span class="ra-title-md" style="flex:1;">Listing Saya</span>
-    <button class="ra-iconbtn" aria-label="Tambah listing" style="background:var(--ra-blue-600);color:#fff;">
+    <a class="ra-iconbtn" aria-label="Tambah listing" style="background:var(--ra-blue-600);color:#fff;" href="M03-Create-Listing-Wizard.dc.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>
-    </button>
+    </a>
   </div>
 
   <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px;">
@@ -74,7 +74,7 @@
       <div class="empty-wrap">
         <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M8 26 32 14l24 12"/><path d="M8 26v22a2 2 0 0 0 2 2h44a2 2 0 0 0 2-2V26"/><path d="M8 26l10 8h28l10-8"/></svg>
         <span class="ra-title-md">Tidak ada listing "{{activeFilterLabel}}"</span>
-        <button class="ra-btn ra-btn-primary ra-btn-sm">Tambah Listing</button>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M03-Create-Listing-Wizard.dc.html">Tambah Listing</a>
       </div>
     </sc-if>
 

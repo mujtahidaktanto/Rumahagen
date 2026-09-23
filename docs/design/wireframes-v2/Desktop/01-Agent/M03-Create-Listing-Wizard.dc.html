@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Buat Listing — Wizard — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);}
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .body-row{flex:1;display:flex;min-height:0;}
+
+  .stepper{width:264px;flex:none;background:#fff;border-right:1px solid var(--ra-ink-100);padding:24px 16px;overflow-y:auto;}
+  .step-item{display:flex;align-items:flex-start;gap:12px;padding:10px 8px;border-radius:var(--ra-radius-sm);}
+  .step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--ra-ink-100);color:var(--ra-ink-500);}
+  .step-dot.is-done{background:var(--ra-success-600);color:#fff;}
+  .step-dot.is-current{background:var(--ra-blue-600);color:#fff;}
+  .step-label{font-size:13.5px;font-weight:600;color:var(--ra-ink-500);padding-top:3px;}
+  .step-label.is-current{color:var(--ra-ink-900);font-weight:800;}
+  .step-connector{width:1px;height:20px;background:var(--ra-ink-100);margin-left:21px;}
+
+  .content{flex:1;overflow-y:auto;padding:32px 48px;}
+  .content-inner{max-width:680px;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+  .field-label{font-size:13px;font-weight:700;color:var(--ra-ink-900);}
+  .field-label .req{color:var(--ra-danger-600);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  .textarea{min-height:100px;padding:10px 14px;border-radius:var(--ra-radius-sm);border:1.5px solid var(--ra-ink-100);font-family:var(--ra-font);font-size:14px;color:var(--ra-ink-900);}
+  .select{display:flex;align-items:center;justify-content:space-between;}
+  .card-pick{border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;}
+  .card-pick.is-active{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+  .pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .pick-grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+  .amenity-chip{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);font-size:13px;font-weight:700;color:var(--ra-ink-700);cursor:pointer;}
+  .amenity-chip[aria-pressed="true"]{background:var(--ra-blue-600);border-color:var(--ra-blue-600);color:#fff;}
+  .upload-box{border:1.5px dashed var(--ra-ink-200);border-radius:var(--ra-radius-md);padding:32px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ra-ink-500);text-align:center;}
+  .media-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px;}
+  .media-thumb{height:88px;border-radius:var(--ra-radius-sm);background:var(--ra-ink-100);position:relative;display:flex;align-items:center;justify-content:center;}
+  .cover-badge{position:absolute;top:5px;left:5px;background:var(--ra-blue-600);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--ra-radius-pill);}
+  .switch-row{display:flex;align-items:center;gap:10px;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);flex:none;cursor:pointer;}
+  .switch[aria-checked="true"]{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:var(--ra-shadow-1);}
+  .switch[aria-checked="true"] .switch-knob{left:22px;}
+
+  .preview-block{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:18px 20px;margin-bottom:14px;}
+  .preview-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .kv-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .kv-row:last-child{border-bottom:none;}
+
+  .footer-bar{flex:none;height:80px;background:#fff;border-top:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;padding:0 48px;}
+
+  .success-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;}
+  .success-icon{width:72px;height:72px;border-radius:50%;background:var(--ra-success-100);color:var(--ra-success-600);display:flex;align-items:center;justify-content:center;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;">
+      <span class="ra-title-md">Buat Listing Baru</span>
+    </div>
+    <sc-if value="{{isWizard}}" hint-placeholder-val="{{true}}">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="ra-caption">Langkah {{stepNum}} dari 9</span>
+        <button class="ra-iconbtn" aria-label="Tutup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{isWizard}}" hint-placeholder-val="{{true}}">
+  <div class="body-row">
+
+    <!-- STEPPER -->
+    <div class="stepper">
+      <sc-for list="{{steps}}" as="st" hint-placeholder-count="9">
+        <div class="step-item">
+          <div class="step-dot {{st.dotClass}}">
+            <sc-if value="{{st.isDone}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="13" height="13"><path d="M5 13l4 4L19 7"/></svg></sc-if>
+            <sc-if value="{{st.isNotDone}}" hint-placeholder-val="{{true}}">{{st.num}}</sc-if>
+          </div>
+          <span class="step-label {{st.labelClass}}">{{st.label}}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+      <div class="content-inner">
+
+        <!-- STEP 1: CONTEXT -->
+        <sc-if value="{{isStep1}}" hint-placeholder-val="{{true}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Mulai Listing Baru</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Beri judul singkat dan tentukan atas nama siapa listing ini diterbitkan.</p>
+          <div class="field"><span class="field-label">Judul Listing <span class="req">*</span></span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Contoh: Rumah Minimalis 2 Lantai BSD City</div></div>
+          <div class="field">
+            <span class="field-label">Konteks Kepemilikan <span class="req">*</span></span>
+            <div class="pick-grid">
+              <div class="card-pick is-active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-blue-600)" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                <div><div class="ra-label-lg">Personal</div><span class="ra-caption">Milik akun Anda sendiri</span></div>
+              </div>
+              <div class="card-pick">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>
+                <div><div class="ra-label-lg">Organisasi</div><span class="ra-caption">Tampil di bawah nama kantor</span></div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 2: CATEGORY & TRANSACTION -->
+        <sc-if value="{{isStep2}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Kategori &amp; Transaksi</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Tentukan jenis properti dan cara transaksinya.</p>
+          <div class="field">
+            <span class="field-label">Kategori <span class="req">*</span></span>
+            <div class="pick-grid">
+              <div class="card-pick is-active"><div><div class="ra-label-lg">Primary</div><span class="ra-caption">Properti baru dari developer</span></div></div>
+              <div class="card-pick"><div><div class="ra-label-lg">Secondary</div><span class="ra-caption">Properti bekas / dijual ulang</span></div></div>
+            </div>
+          </div>
+          <div class="field">
+            <span class="field-label">Jenis Transaksi <span class="req">*</span></span>
+            <div class="pick-grid">
+              <div class="card-pick is-active"><div><div class="ra-label-lg">Dijual</div></div></div>
+              <div class="card-pick"><div><div class="ra-label-lg">Disewakan</div></div></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 3: LOCATION -->
+        <sc-if value="{{isStep3}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Lokasi</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Alamat lengkap membantu properti tampil akurat di peta pencarian.</p>
+          <div class="field"><span class="field-label">Alamat Lengkap <span class="req">*</span></span><div class="textarea">Jl. Kenanga Raya No. 12, Cluster Anggrek</div></div>
+          <div class="field-row-3">
+            <div class="field"><span class="field-label">Provinsi <span class="req">*</span></span><div class="ra-input select">Banten <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            <div class="field"><span class="field-label">Kota/Kabupaten <span class="req">*</span></span><div class="ra-input select">Tangerang Selatan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            <div class="field"><span class="field-label">Kecamatan <span class="req">*</span></span><div class="ra-input select">Serpong <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          </div>
+          <div class="field"><span class="field-label">Area/Kompleks (opsional)</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Contoh: BSD City</div></div>
+          <div class="field">
+            <span class="field-label">Titik Peta (opsional)</span>
+            <div style="height:160px;border-radius:var(--ra-radius-md);background:var(--ra-ink-100);display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);">Peta — tandai lokasi</div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 4: PROPERTY DETAILS -->
+        <sc-if value="{{isStep4}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Detail Properti</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Spesifikasi fisik properti.</p>
+          <div class="field"><span class="field-label">Tipe Properti <span class="req">*</span></span>
+            <div class="pick-grid-3">
+              <div class="amenity-chip" aria-pressed="true">Rumah</div>
+              <div class="amenity-chip">Apartemen</div>
+              <div class="amenity-chip">Ruko</div>
+              <div class="amenity-chip">Tanah</div>
+              <div class="amenity-chip">Gudang</div>
+              <div class="amenity-chip">Kavling</div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field"><span class="field-label">Luas Tanah (m²)</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">150</div></div>
+            <div class="field"><span class="field-label">Luas Bangunan (m²)</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">120</div></div>
+          </div>
+          <div class="field-row-3">
+            <div class="field"><span class="field-label">Kamar Tidur</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">3</div></div>
+            <div class="field"><span class="field-label">Kamar Mandi</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">2</div></div>
+            <div class="field"><span class="field-label">Jumlah Lantai</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">2</div></div>
+          </div>
+          <div class="field-row-3">
+            <div class="field"><span class="field-label">Kapasitas Carport</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">2</div></div>
+            <div class="field"><span class="field-label">Daya Listrik (VA)</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">2200</div></div>
+            <div class="field"><span class="field-label">Tahun Dibangun</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">2020</div></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><span class="field-label">Sumber Air</span><div class="ra-input select">PDAM <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            <div class="field"><span class="field-label">Perabotan</span><div class="ra-input select">Unfurnished <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          </div>
+          <div class="field">
+            <span class="field-label">Fasilitas</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="amenity-chip" aria-pressed="true">Carport</span>
+              <span class="amenity-chip" aria-pressed="true">Keamanan 24 Jam</span>
+              <span class="amenity-chip">Taman</span>
+              <span class="amenity-chip">Kolam Renang</span>
+              <span class="amenity-chip">+ Tambah</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 5: PRICE -->
+        <sc-if value="{{isStep5}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Harga</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Tentukan harga dan satuannya.</p>
+          <div class="field-row">
+            <div class="field"><span class="field-label">Harga (Rp) <span class="req">*</span></span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">850.000.000</div></div>
+            <div class="field"><span class="field-label">Satuan</span><div class="ra-input select">Total <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          </div>
+          <div class="switch-row"><div class="switch" aria-checked="true"><div class="switch-knob"></div></div><span class="ra-label-lg">Harga bisa dinegosiasi</span></div>
+        </sc-if>
+
+        <!-- STEP 6: LEGAL -->
+        <sc-if value="{{isStep6}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Legalitas</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Informasi legal membangun kepercayaan calon pembeli.</p>
+          <div class="field"><span class="field-label">Jenis Sertifikat</span>
+            <div class="pick-grid-3">
+              <div class="amenity-chip" aria-pressed="true">SHM</div><div class="amenity-chip">HGB</div><div class="amenity-chip">Girik</div>
+              <div class="amenity-chip">PPJB</div><div class="amenity-chip">Strata Title</div><div class="amenity-chip">Lainnya</div>
+            </div>
+          </div>
+          <div class="switch-row" style="margin-bottom:16px;"><div class="switch" aria-checked="true"><div class="switch-knob"></div></div><span class="ra-label-lg">Sertifikat bisa dibalik nama</span></div>
+          <div class="field"><span class="field-label">Status IMB</span>
+            <div class="pick-grid-3">
+              <div class="amenity-chip" aria-pressed="true">Ada</div><div class="amenity-chip">Tidak Ada</div><div class="amenity-chip">Dalam Proses</div>
+            </div>
+          </div>
+          <div class="switch-row"><div class="switch" aria-checked="true"><div class="switch-knob"></div></div><span class="ra-label-lg">Saya menyatakan properti ini bebas sengketa</span></div>
+        </sc-if>
+
+        <!-- STEP 7: MEDIA -->
+        <sc-if value="{{isStep7}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Media</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Unggah foto, video, atau virtual tour. Foto pertama jadi sampul.</p>
+          <div class="upload-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="32" height="32"><path d="M12 16V4M12 4l-5 5M12 4l5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            <span class="ra-label-lg">Tarik file ke sini atau klik untuk unggah</span>
+            <span class="ra-caption">Foto (JPG/PNG), Video (MP4), atau tautan Virtual Tour — maks 20 file</span>
+          </div>
+          <div class="media-grid">
+            <div class="media-thumb"><span class="cover-badge">Sampul</span></div>
+            <div class="media-thumb"></div>
+            <div class="media-thumb"></div>
+            <div class="media-thumb" style="border:1.5px dashed var(--ra-ink-200);background:transparent;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 5v14M5 12h14"/></svg></div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 8: CONTACT -->
+        <sc-if value="{{isStep8}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Kontak &amp; Deskripsi</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Bagaimana calon pembeli bisa menghubungi Anda, dan ceritakan properti ini.</p>
+          <div class="field"><span class="field-label">Nomor WhatsApp <span class="req">*</span></span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">0812-xxxx-xxxx</div></div>
+          <div class="field"><span class="field-label">Deskripsi Listing</span><div class="textarea" style="min-height:140px;">Rumah minimalis modern 2 lantai, kondisi siap huni…</div></div>
+          <div class="field"><span class="field-label">Meta Title SEO (opsional)</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Maks 70 karakter</div></div>
+          <div class="field"><span class="field-label">Meta Description SEO (opsional)</span><div class="textarea" style="min-height:60px;color:var(--ra-ink-300);">Maks 160 karakter</div></div>
+        </sc-if>
+
+        <!-- STEP 9: PREVIEW -->
+        <sc-if value="{{isStep9}}" hint-placeholder-val="{{false}}">
+          <h1 class="ra-title-lg" style="margin-bottom:6px;">Preview &amp; Terbitkan</h1>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:24px;">Periksa kembali sebelum menerbitkan. Listing langsung tayang tanpa menunggu moderasi.</p>
+
+          <div class="preview-block">
+            <div class="preview-block-head"><span class="ra-title-md">Konteks &amp; Kategori</span><button class="ra-label-lg" style="border:none;background:none;color:var(--ra-blue-600);">Ubah</button></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Judul</span><span class="ra-body-md" style="font-weight:700;">Rumah Minimalis 2 Lantai BSD City</span></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Konteks</span><span class="ra-body-md" style="font-weight:700;">Personal</span></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Kategori / Transaksi</span><span class="ra-body-md" style="font-weight:700;">Secondary · Dijual</span></div>
+          </div>
+          <div class="preview-block">
+            <div class="preview-block-head"><span class="ra-title-md">Lokasi &amp; Properti</span><button class="ra-label-lg" style="border:none;background:none;color:var(--ra-blue-600);">Ubah</button></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Alamat</span><span class="ra-body-md" style="font-weight:700;">Jl. Kenanga Raya No. 12, Serpong</span></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Spesifikasi</span><span class="ra-body-md" style="font-weight:700;">Rumah · 3 KT · 2 KM · LT 150 · LB 120</span></div>
+          </div>
+          <div class="preview-block">
+            <div class="preview-block-head"><span class="ra-title-md">Harga &amp; Legalitas</span><button class="ra-label-lg" style="border:none;background:none;color:var(--ra-blue-600);">Ubah</button></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Harga</span><span class="ra-body-md" style="font-weight:700;">Rp 850.000.000 (nego)</span></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Sertifikat</span><span class="ra-body-md" style="font-weight:700;">SHM · Bisa dibalik nama</span></div>
+          </div>
+          <div class="preview-block">
+            <div class="preview-block-head"><span class="ra-title-md">Media &amp; Kontak</span><button class="ra-label-lg" style="border:none;background:none;color:var(--ra-blue-600);">Ubah</button></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Media terunggah</span><span class="ra-body-md" style="font-weight:700;">3 foto</span></div>
+            <div class="kv-row"><span class="ra-body-md" style="color:var(--ra-ink-500);">WhatsApp</span><span class="ra-body-md" style="font-weight:700;">0812-xxxx-xxxx</span></div>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:10px;background:var(--ra-info-100);border-radius:var(--ra-radius-md);padding:14px 16px;margin-top:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" width="18" height="18" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="var(--ra-info-600)" stroke="none"/></svg>
+            <span class="ra-body-md">Listing langsung tayang publik setelah diterbitkan — tidak ada antrean moderasi sebelum tampil.</span>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER NAV -->
+  <div class="footer-bar">
+    <sc-if value="{{canGoBack}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary">← Kembali</button></sc-if>
+    <sc-if value="{{cannotGoBack}}" hint-placeholder-val="{{true}}"><span></span></sc-if>
+    <sc-if value="{{isLastStep}}" hint-placeholder-val="{{false}}">
+      <sc-if value="{{isSubmitting}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary" disabled>Menerbitkan…</button></sc-if>
+      <sc-if value="{{isNotSubmitting}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary">Terbitkan Listing</button></sc-if>
+    </sc-if>
+    <sc-if value="{{isNotLastStep}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary">Lanjut →</button></sc-if>
+  </div>
+  </sc-if>
+
+  <!-- SUCCESS STATE -->
+  <sc-if value="{{isSuccess}}" hint-placeholder-val="{{false}}">
+    <div class="success-wrap">
+      <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg></div>
+      <h1 class="ra-title-lg">Listing Berhasil Diterbitkan</h1>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);max-width:420px;">"Rumah Minimalis 2 Lantai BSD City" sudah tayang publik dan bisa ditemukan di pencarian.</p>
+      <div style="display:flex;gap:12px;">
+        <a class="ra-btn ra-btn-secondary" href="M03-Listing-Saya.dc.html">Lihat Listing Saya</a>
+        <a class="ra-btn ra-btn-primary" href="../00-Publik/M11-Detail-Listing.dc.html">Lihat di Halaman Publik</a>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"previewStep":{"editor":"enum","default":"1","options":["1","2","3","4","5","6","7","8","9"],"section":"Skenario langkah"},"wizardState":{"editor":"enum","default":"in_progress","options":["in_progress","submitting","success"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const step = parseInt(this.props.previewStep ?? '1', 10);
+    const wizardState = this.props.wizardState ?? 'in_progress';
+    const isSuccess = wizardState === 'success';
+    const isSubmitting = wizardState === 'submitting';
+
+    const labels = ['Context', 'Kategori & Transaksi', 'Lokasi', 'Detail Properti', 'Harga', 'Legalitas', 'Media', 'Kontak', 'Preview'];
+    const steps = labels.map((label, i) => {
+      const num = i + 1;
+      const isDone = num < step;
+      const isCurrent = num === step;
+      return {
+        num,
+        label,
+        isDone,
+        isNotDone: !isDone,
+        dotClass: isDone ? 'is-done' : (isCurrent ? 'is-current' : ''),
+        labelClass: isCurrent ? 'is-current' : ''
+      };
+    });
+
+    return {
+      isWizard: !isSuccess,
+      isSuccess,
+      isSubmitting,
+      isNotSubmitting: !isSubmitting,
+      stepNum: step,
+      steps,
+      isStep1: step === 1, isStep2: step === 2, isStep3: step === 3,
+      isStep4: step === 4, isStep5: step === 5, isStep6: step === 6,
+      isStep7: step === 7, isStep8: step === 8, isStep9: step === 9,
+      isLastStep: step === 9,
+      isNotLastStep: step !== 9,
+      canGoBack: step > 1,
+      cannotGoBack: step === 1
+    };
+  }
+}
+</script>
+</body>
+</html>
