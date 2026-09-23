@@ -2119,3 +2119,120 @@ direferensikan `listings.agent_id` (`ON DELETE RESTRICT`) oleh listing uji
 `test-listing-tier2` lain, di luar cakupan pembersihan fitur ini. Data uji
 milik tes ini sendiri (4 akun qa-iu-*) dihapus total dan diverifikasi
 `0` baris tersisa.
+
+## `0107` — Listing Moderation Queue: `GET /admin/listings/pending`, `PUT .../{id}/approve`, `PUT .../{id}/reject` (admin-surface gap #1, M03)
+
+Menutup gap #1 (bagian kedua) dari audit admin-surface M01-M15 — API-036/
+037/038 (M03 Admin Listing Review, STEP11-A), dikonfirmasi eksplisit oleh
+user: **BUKAN gate pre-publish** ("agen yang berhak publish listing"),
+melainkan **manual review PASCA-publish** untuk kasus seperti gambar
+listing yang sudah live ternyata melanggar aturan.
+
+### Bukan gate publish — Core sendiri sudah eksplisit soal ini
+
+STEP11-A §4 mencatat API-036/037/038 sebagai "Preserve existing admin
+review route; NOT a normal Listing Publish gate" / "exceptional/
+administrative capability only ... not normal publish authority". Ini
+konsisten dengan Gate `PRE-00-E_M03_LISTING_REFRESH_GATE` §6-9 yang sudah
+menutup alur normal M03 sebagai `DRAFT -> PUBLISH -> PUBLISHED` tanpa
+`PENDING_REVIEW` sama sekali (migration `0018`) — nilai `pending_review`/
+`rejected` di CHECK constraint listings SENGAJA tetap ada sejak `0018`
+("untuk dipakai domain otoritatif lain di masa depan"). Batch ini adalah
+domain otoritatif itu.
+
+### Cara listing MASUK ke `pending_review` — tidak ada endpoint "flag" baru
+
+Tidak ada endpoint baru untuk memindahkan listing published ke
+`pending_review` — staf (Superadmin/Admin/Manager) memakai
+`PATCH /listings/{id}/status` yang SUDAH ADA (API-028), karena RLS
+`listings_update` (`0090`) sudah mengizinkan staf mencapai baris listing
+siapa pun lewat permission `m03.listing.suspend` (scope 'all' sejak
+`0086`), dan sebelum batch ini tidak ada IF block trigger yang
+menggerbangi transisi ke/dari `pending_review` sama sekali.
+
+### `0107_fix_listings_pending_review_self_unflag.sql` — celah ditemukan SEBELUM endpoint baru sempat dipakai
+
+**Ditemukan saat merancang alur end-to-end**, sebelum satu pun endpoint
+baru dites: karena trigger `enforce_listing_lifecycle_rules` (0018/0086)
+tidak pernah menggerbangi transisi ke/dari `pending_review`, begitu staf
+menandai listing seorang Agent sebagai `pending_review`, Agent PEMILIK
+listing itu bisa langsung memanggil `PATCH /listings/{id}/status` yang
+sama untuk mengembalikannya ke `published` SENDIRI — mereka tetap punya
+`m03.listing.publish` scope `'own'` untuk listing miliknya, dan tidak ada
+apa pun yang memeriksa status LAMA sebelum publish. Ini sepenuhnya
+meniadakan tujuan seluruh fitur moderasi: Agent bisa self-un-flag tanpa
+review staf.
+
+**Diverifikasi nyata SEBELUM fix**: Agent `PATCH /listings/{id}/status
+{"status":"published"}` pada listing miliknya sendiri yang sedang
+`pending_review` -> `200 OK`, kembali published tanpa staf terlibat sama
+sekali.
+
+**Fix**: tambah IF block baru di `enforce_listing_lifecycle_rules()`,
+SIMETRIS dengan pola `suspended` yang sudah ada (0086) — transisi ke/dari
+`pending_review` (arah manapun) kini JUGA butuh `m03.listing.suspend`
+(staff-only, Agent tidak pernah diberi permission ini). Konsekuensi:
+transisi `pending_review -> published` (approve) sekarang butuh KEDUA
+permission (`suspend` untuk keluar antrian moderasi, `publish` untuk
+benar-benar publish) — lihat asimetri Manager/Admin di bawah.
+
+**Diverifikasi nyata SETELAH fix**: Agent yang sama mencoba hal yang sama
+-> `403 FORBIDDEN`, pesan persis "transisi ke/dari pending_review butuh
+permission m03.listing.suspend".
+
+### Asimetri approve: Superadmin/Admin bisa, Manager tidak — BUKAN bug
+
+Master matrix (`0009`) memberi `m03.listing.publish` HANYA ke Superadmin
+(all), Admin (all), dan Agent (own) — Manager TIDAK PERNAH diberi
+permission ini sama sekali. Setelah fix `0107`, "approve" (transisi ke
+`published`) menembus DUA gate: `m03.listing.suspend` (Manager punya) DAN
+`m03.listing.publish` (Manager TIDAK punya). Hasilnya: Manager bisa
+melihat antrian dan me-REJECT, tapi tidak bisa APPROVE — ditolak trigger
+dengan 403 yang sama persis seperti Agent biasa mencoba publish tanpa
+izin. Ini bukan bug endpoint, melainkan konsekuensi jujur dari matrix
+otorisasi yang sudah ada: Manager punya wewenang moderasi/enforcement,
+tapi otoritas mem-PUBLISH tetap eksklusif Superadmin/Admin/Agent-pemilik.
+Diverifikasi nyata (lihat hasil tes di bawah).
+
+### File baru
+
+- `lib/api/require-permission.ts` — helper generik `requirePermission()`
+  (RPC `has_permission()` tanpa owner_id, pola sama seperti
+  `require-superadmin.ts` tapi untuk permission code apa pun). Dipakai di
+  ketiga route di bawah dengan `m03.listing.suspend` supaya GET/PUT ini
+  benar-benar staf-only secara eksplisit — tanpa ini, RLS SELECT listings
+  yang sudah longgar untuk staf akan tetap membiarkan Agent memanggil
+  path "/admin/" ini dan melihat listing miliknya sendiri yang sedang
+  di-review (RLS `agent_id=auth.uid()`), padahal semantiknya adalah
+  konsol staf.
+- `lib/validation/listings.ts` — `rejectListingSchema` (`rejection_reason`
+  opsional, dipakai ulang dari kolom yang sudah ada sejak `0018`).
+- `app/api/admin/listings/pending/route.ts` — GET, daftar `pending_review`
+  (paginated), staf-only.
+- `app/api/admin/listings/[id]/approve/route.ts` — PUT, prasyarat status
+  `pending_review` (404 kalau listing tidak ada, 409 kalau status bukan
+  `pending_review`), UPDATE ke `published`, audit log
+  `m03.listing.approve`.
+- `app/api/admin/listings/[id]/reject/route.ts` — PUT, prasyarat sama,
+  UPDATE ke `rejected` + `rejection_reason` opsional, audit log
+  `m03.listing.reject`.
+
+Diuji nyata end-to-end dengan 4 role (superadmin/admin/manager/agent):
+Agent publish listing sendiri -> berhasil (alur normal tidak berubah);
+Superadmin flag ke `pending_review` -> berhasil; **Agent self-unflag ->
+403 (fix 0107 terbukti)**; Agent GET `/admin/listings/pending` -> 403
+(gate staf eksplisit terbukti); Manager/Admin/Superadmin GET -> 200,
+listing sama-sama terlihat ketiganya; **Manager PUT approve -> 403
+(asimetri publish terbukti)**; Admin PUT approve -> 200, kembali
+`published`; Manager flag ulang ke `pending_review` -> berhasil (Manager
+BISA flag, hanya tidak bisa approve); Manager PUT reject dengan
+`rejection_reason` -> 200, status `rejected` + alasan tersimpan persis;
+PUT approve pada listing yang sudah `rejected` -> 409 CONFLICT (guard
+prasyarat status terbukti); GET pending setelahnya -> listing yang
+di-reject benar-benar hilang dari antrian; tanpa sesi -> 403 (konsisten
+dengan pola `requireSuperadmin()`/`requirePermission()` yang sudah ada di
+seluruh proyek — RPC `has_permission()` mengembalikan `false`, bukan error
+autentikasi, untuk pemanggil anonim). Audit log `m03.listing.approve`+
+`m03.listing.reject` yang tercipta dari tes ini dan listing uji itu
+sendiri dihapus total; 4 akun uji dihapus lewat Admin API dan
+diverifikasi `0` baris tersisa.

@@ -89,6 +89,15 @@ export const listingStatusSchema = z.object({
 });
 export type ListingStatusInput = z.infer<typeof listingStatusSchema>;
 
+// PUT /admin/listings/{id}/reject — API-038 (M03 Admin Listing Review,
+// STEP11-A, admin-surface gap #1). rejection_reason dipakai ulang dari
+// kolom yang sudah ada (0018) -- tetap optional, sama seperti
+// listingStatusSchema di atas.
+export const rejectListingSchema = z.object({
+  rejection_reason: z.string().max(1000).optional(),
+});
+export type RejectListingInput = z.infer<typeof rejectListingSchema>;
+
 // GET /listings — filter dasar (bukan full geo-search seperti API-039
 // properties/search yang butuh tabel/infra terpisah, di luar scope batch ini).
 export const listListingsQuerySchema = z.object({
