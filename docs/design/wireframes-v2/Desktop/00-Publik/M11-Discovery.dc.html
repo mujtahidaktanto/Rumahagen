@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Discovery Listing — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:1440px;box-sizing:border-box;background:var(--ra-surface);min-height:900px;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+  .header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .header-row{height:76px;display:flex;align-items:center;gap:28px;}
+  .pub-nav{display:flex;align-items:center;gap:4px;flex:1;}
+  .pub-nav a{display:flex;align-items:center;gap:3px;height:40px;padding:0 11px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);text-decoration:none;font-size:13.5px;font-weight:600;white-space:nowrap;}
+  .pub-nav a:hover{background:var(--ra-ink-50);color:var(--ra-blue-600);}
+  .pub-nav a.is-active{color:var(--ra-blue-600);background:var(--ra-blue-50);}
+
+  .search-bar{background:#fff;border-bottom:1px solid var(--ra-ink-100);padding:20px 0;}
+  .type-tabs{display:flex;gap:8px;margin-bottom:14px;}
+
+  .body-grid{display:grid;grid-template-columns:264px 1fr;gap:24px;align-items:start;padding:28px 0 56px;}
+  .filter-panel{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:22px;position:sticky;top:96px;}
+  .filter-group{display:flex;flex-direction:column;gap:10px;}
+  .filter-group-title{font-size:13px;font-weight:700;color:var(--ra-ink-900);}
+  .check-row{display:flex;align-items:center;gap:10px;}
+  .check-row input{width:18px;height:18px;accent-color:var(--ra-blue-600);}
+  .num-pill{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:36px;padding:0 10px;border-radius:var(--ra-radius-sm);border:1.5px solid var(--ra-ink-100);font-size:13px;font-weight:700;color:var(--ra-ink-700);cursor:pointer;}
+  .num-pill[aria-pressed="true"]{background:var(--ra-blue-600);border-color:var(--ra-blue-600);color:#fff;}
+
+  .result-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .sort-select{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:var(--ra-radius-sm);border:1.5px solid var(--ra-ink-100);background:#fff;font-size:13px;font-weight:600;color:var(--ra-ink-700);cursor:pointer;}
+
+  .result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}
+  .prop-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;background:#fff;}
+  .prop-photo{height:170px;background:var(--ra-ink-100);position:relative;flex:none;}
+  .type-tag{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:var(--ra-radius-pill);font-size:11px;font-weight:700;color:#fff;}
+  .fav-btn{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:var(--ra-ink-700);border:none;}
+  .prop-body{padding:14px;display:flex;flex-direction:column;gap:6px;}
+
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:64px 20px;color:var(--ra-ink-300);text-align:center;grid-column:1 / -1;}
+
+  .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;}
+  .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13.5px;padding:5px 0;}
+  .footer-col a:hover{color:#fff;}
+  .store-btn{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;border:1.5px solid rgba(255,255,255,.2);border-radius:var(--ra-radius-sm);color:#fff;font-size:12px;}
+</style>
+</helmet>
+<div class="page">
+
+  <!-- ===== HEADER (Global Public Shell — salinan persis dari M11-Homepage) ===== -->
+  <div class="header">
+    <div class="wrap header-row">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:32px;width:auto;object-fit:contain;">
+      <nav class="pub-nav">
+        <a href="M11-Homepage.dc.html">Beranda</a>
+        <a class="is-active" href="M11-Discovery.dc.html">Listing</a>
+        <a href="#">Agen</a>
+        <a href="#">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="#">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="#">Event</a>
+        <a href="#">Learning</a>
+        <a href="#">Learning Session</a>
+        <a href="#">Konten Publik</a>
+        <a href="#">Promo</a>
+      </nav>
+      <button class="ra-iconbtn" aria-label="Cari">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="ra-btn ra-btn-secondary ra-btn-sm">Masuk</button>
+        <button class="ra-btn ra-btn-primary ra-btn-sm">Daftar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SEARCH BAR ===== -->
+  <div class="search-bar">
+    <div class="wrap">
+      <div class="type-tabs">
+        <sc-for list="{{typeTabs}}" as="t" hint-placeholder-count="5">
+          <span class="ra-chip" aria-pressed="{{t.isActive}}" onClick="{{t.pick}}">{{t.label}}</span>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div class="ra-input" style="flex:1;display:flex;align-items:center;gap:8px;color:var(--ra-ink-300);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Cari lokasi, nama proyek, atau kata kunci…
+        </div>
+        <button class="ra-btn ra-btn-primary">Cari</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BODY: filter + hasil ===== -->
+  <div class="wrap body-grid">
+
+    <!-- filter sidebar -->
+    <aside class="filter-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span class="ra-title-md">Filter</span>
+        <button class="ra-label-lg" style="color:var(--ra-blue-600);background:none;border:none;cursor:pointer;">Reset</button>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-title">Tipe Properti</span>
+        <label class="check-row"><input type="checkbox" checked><span class="ra-body-md">Rumah</span></label>
+        <label class="check-row"><input type="checkbox"><span class="ra-body-md">Apartemen</span></label>
+        <label class="check-row"><input type="checkbox"><span class="ra-body-md">Ruko</span></label>
+        <label class="check-row"><input type="checkbox"><span class="ra-body-md">Tanah</span></label>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-title">Rentang Harga</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="ra-input" style="height:38px;padding:0 10px;font-size:13px;color:var(--ra-ink-300);flex:1;">Rp Min</div>
+          <span class="ra-caption">–</span>
+          <div class="ra-input" style="height:38px;padding:0 10px;font-size:13px;color:var(--ra-ink-300);flex:1;">Rp Max</div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-title">Kamar Tidur</span>
+        <div style="display:flex;gap:8px;">
+          <span class="num-pill">1+</span>
+          <span class="num-pill" aria-pressed="true">2+</span>
+          <span class="num-pill">3+</span>
+          <span class="num-pill">4+</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-title">Kamar Mandi</span>
+        <div style="display:flex;gap:8px;">
+          <span class="num-pill">1+</span>
+          <span class="num-pill">2+</span>
+          <span class="num-pill">3+</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-title">Fasilitas</span>
+        <label class="check-row"><input type="checkbox"><span class="ra-body-md">Kolam Renang</span></label>
+        <label class="check-row"><input type="checkbox"><span class="ra-body-md">Keamanan 24 Jam</span></label>
+        <label class="check-row"><input type="checkbox"><span class="ra-body-md">Carport</span></label>
+      </div>
+
+      <button class="ra-btn ra-btn-primary" style="width:100%;">Terapkan Filter</button>
+    </aside>
+
+    <!-- hasil -->
+    <div>
+      <div class="result-head">
+        <span class="ra-body-md" style="color:var(--ra-ink-500);"><strong style="color:var(--ra-ink-900);">{{resultCount}}</strong> properti ditemukan</span>
+        <div class="sort-select">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M8 3v14M8 17l-4-4M8 17l4-4"/><path d="M16 21V7M16 7l4 4M16 7l-4 4"/></svg>
+          Terbaru
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+        <div class="result-grid">
+          <div class="ra-skel" style="height:280px;"></div>
+          <div class="ra-skel" style="height:280px;"></div>
+          <div class="ra-skel" style="height:280px;"></div>
+          <div class="ra-skel" style="height:280px;"></div>
+          <div class="ra-skel" style="height:280px;"></div>
+          <div class="ra-skel" style="height:280px;"></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+        <div class="empty-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg>
+          <span class="ra-title-md">Gagal memuat hasil pencarian</span>
+          <span class="ra-body-md">Periksa koneksi internet Anda, lalu coba lagi.</span>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm">Coba Lagi</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+        <div class="empty-wrap">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="52" height="52"><circle cx="27" cy="27" r="16"/><path d="M38 38l14 14"/></svg>
+          <span class="ra-title-md">Tidak ada properti yang cocok dengan filter Anda</span>
+          <span class="ra-body-md">Coba longgarkan filter, misalnya perluas rentang harga atau kurangi jumlah kamar.</span>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm">Reset Filter</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+        <div class="result-grid">
+          <sc-for list="{{listings}}" as="p" hint-placeholder-count="6">
+            <a class="prop-card" href="M11-Detail-Listing.dc.html">
+              <div class="prop-photo">
+                <span class="type-tag" style="background:{{p.tagColor}};">{{p.tag}}</span>
+                <button class="fav-btn" aria-label="Simpan ke favorit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 20s-7-4.4-9.5-8.8C1 8 2 4.5 5.5 4c2-.3 3.8.8 4.7 2.4C11 4.8 12.8 3.7 14.8 4 18.3 4.5 19.3 8 18 11.2 16.2 15.6 12 20 12 20Z"/></svg>
+                </button>
+              </div>
+              <div class="prop-body">
+                <span class="ra-label-lg ra-truncate-2" style="min-height:40px;">{{p.title}}</span>
+                <div style="display:flex;align-items:center;gap:5px;color:var(--ra-ink-500);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
+                  <span class="ra-caption ra-truncate-1">{{p.location}}</span>
+                </div>
+                <span class="ra-title-md" style="color:var(--ra-blue-600);">{{p.price}}</span>
+                <div style="display:flex;align-items:center;gap:12px;color:var(--ra-ink-500);margin-top:2px;">
+                  <sc-if value="{{p.hasBeds}}" hint-placeholder-val="{{true}}">
+                    <div style="display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18v2M21 18v2"/></svg><span class="ra-caption">{{p.beds}}</span></div>
+                    <div style="display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z"/></svg><span class="ra-caption">{{p.baths}}</span></div>
+                  </sc-if>
+                  <div style="display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h3M4 15h3M21 9h-3M21 15h-3"/></svg><span class="ra-caption">{{p.area}}</span></div>
+                </div>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 0 0;">
+          <span class="ra-caption">Menampilkan {{listings.length}} dari {{resultCount}} properti</span>
+          <button class="ra-btn ra-btn-secondary">Muat Lebih Banyak</button>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+
+  <!-- ===== FOOTER (salinan persis) ===== -->
+  <div class="footer">
+    <div class="wrap footer-grid">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <p class="ra-body-md" style="color:rgba(255,255,255,.55);max-width:260px;">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.</p>
+        <div style="display:flex;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);"></div>
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);"></div>
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);"></div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <span class="ra-label-md" style="color:rgba(255,255,255,.4);">Jelajahi</span>
+        <a href="#">Listing</a><a href="#">Agen</a><a href="#">Organisasi</a><a href="#">Developer</a><a href="#">Event</a>
+      </div>
+      <div class="footer-col">
+        <span class="ra-label-md" style="color:rgba(255,255,255,.4);">Learning</span>
+        <a href="#">Learning</a><a href="#">Learning Session</a><a href="#">Konten Publik</a><a href="#">Promo</a>
+      </div>
+      <div class="footer-col">
+        <span class="ra-label-md" style="color:rgba(255,255,255,.4);">Bantuan</span>
+        <a href="#">Pusat Bantuan</a><a href="#">Syarat &amp; Ketentuan</a><a href="#">Kebijakan Privasi</a><a href="#">Hubungi Kami</a>
+      </div>
+      <div class="footer-col">
+        <span class="ra-label-md" style="color:rgba(255,255,255,.4);">Download Aplikasi</span>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <div class="store-btn">Segera hadir di Google Play</div>
+          <div class="store-btn">Segera hadir di App Store</div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap" style="padding:20px 0;">
+      <span class="ra-caption" style="color:rgba(255,255,255,.4);">© 2026 RumahAgen.com — Seluruh hak cipta dilindungi.</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"resultState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { activeType: 'properti' };
+  }
+  pickType(key){ this.setState({ activeType: key }); }
+  renderVals() {
+    const resultState = this.props.resultState ?? 'loaded';
+    const activeType = this.state.activeType ?? 'properti';
+    const typeDefs = [
+      { key: 'properti', label: 'Properti' },
+      { key: 'agen', label: 'Agen' },
+      { key: 'organisasi', label: 'Organisasi' },
+      { key: 'developer', label: 'Developer' },
+      { key: 'event', label: 'Event' }
+    ];
+    const typeTabs = typeDefs.map(t => ({ ...t, isActive: t.key === activeType, pick: () => this.pickType(t.key) }));
+
+    const listingsRaw = [
+      { title: 'Rumah Minimalis Modern 2 Lantai Dekat Sekolah', location: 'Bogor, Jawa Barat', price: 'Rp 850.000.000', beds: 3, baths: 2, area: '120 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
+      { title: 'Apartemen Strategis Full Furnished', location: 'Jakarta Selatan', price: 'Rp 5.000.000/bln', beds: 2, baths: 1, area: '60 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' },
+      { title: 'Ruko Lokasi Premium 3 Lantai', location: 'Bandung, Jawa Barat', price: 'Rp 2.500.000.000', beds: 2, baths: 2, area: '150 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
+      { title: 'Tanah Kavling Siap Bangun Cluster Elite', location: 'Surabaya, Jawa Timur', price: 'Rp 1.200.000.000', beds: null, baths: null, area: '300 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
+      { title: 'Rumah Cluster Syariah 1 Lantai', location: 'Depok, Jawa Barat', price: 'Rp 780.000.000', beds: 2, baths: 1, area: '90 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
+      { title: 'Apartemen Studio View Kota', location: 'Jakarta Barat', price: 'Rp 3.500.000/bln', beds: 1, baths: 1, area: '35 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' }
+    ];
+    const listings = listingsRaw.map(p => ({ ...p, hasBeds: p.beds !== null }));
+
+    return {
+      typeTabs,
+      resultCount: 47,
+      isLoading: resultState === 'loading',
+      isError: resultState === 'error',
+      isEmpty: resultState === 'empty',
+      isLoaded: resultState === 'loaded',
+      listings
+    };
+  }
+}
+</script>
+</body>
+</html>
