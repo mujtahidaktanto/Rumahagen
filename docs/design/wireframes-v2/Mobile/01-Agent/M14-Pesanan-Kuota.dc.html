@@ -43,11 +43,14 @@
       <div class="entitlement-grid">
         <sc-for list="{{entitlements}}" as="e" hint-placeholder-count="3">
           <div class="ent-card">
-            <div>
-              <span class="ra-label-lg" style="display:block;">{{e.label}}</span>
+            <div style="min-width:0;">
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                <span class="ra-label-lg">{{e.label}}</span>
+                <span class="ra-badge {{e.statusBadge}}">{{e.statusLabel}}</span>
+              </div>
               <span class="ra-caption">dari {{e.granted}} · {{e.expiryLabel}}</span>
             </div>
-            <span class="ra-title-lg">{{e.remaining}}</span>
+            <span class="ra-title-lg" style="flex:none;">{{e.remaining}}</span>
           </div>
         </sc-for>
       </div>
@@ -101,11 +104,25 @@ class Component extends DCLogic {
     const hasOrders = this.props.hasOrdersProp ?? true;
     const cancelledIds = this.state.cancelledIds || {};
 
-    const entitlements = [
-      { label: 'Refresh Listing', remaining: 32, granted: 50, expiryLabel: 'S/d 20 Okt 2026' },
-      { label: 'Slot Listing Tambahan', remaining: 18, granted: 25, expiryLabel: 'Selama akun aktif' },
-      { label: 'Paket Kombo (Sep)', remaining: 0, granted: 30, expiryLabel: 'Berakhir 15 Sep' }
+    // commercial_entitlements.lifecycle_status CHECK: pending/active/expired/
+    // revoked/consumed/reversed (0019, diperluas 0079/0081).
+    const entitlementStatusMap = {
+      pending: { badge: 'ra-badge-warning', label: 'Menunggu' },
+      active: { badge: 'ra-badge-success', label: 'Aktif' },
+      expired: { badge: 'ra-badge-neutral', label: 'Kedaluwarsa' },
+      revoked: { badge: 'ra-badge-danger', label: 'Dicabut' },
+      consumed: { badge: 'ra-badge-neutral', label: 'Habis' },
+      reversed: { badge: 'ra-badge-danger', label: 'Dibatalkan' }
+    };
+    const entitlementDefs = [
+      { label: 'Refresh Listing', remaining: 32, granted: 50, expiryLabel: 'S/d 20 Okt 2026', status: 'active' },
+      { label: 'Slot Listing Tambahan', remaining: 18, granted: 25, expiryLabel: 'Selama akun aktif', status: 'active' },
+      { label: 'Paket Kombo (Sep)', remaining: 0, granted: 30, expiryLabel: 'Berakhir 15 Sep', status: 'expired' }
     ];
+    const entitlements = entitlementDefs.map(e => {
+      const esm = entitlementStatusMap[e.status];
+      return { label: e.label, remaining: e.remaining, granted: e.granted, expiryLabel: e.expiryLabel, statusBadge: esm.badge, statusLabel: esm.label };
+    });
 
     const orderStatusMap = {
       pending: { badge: 'ra-badge-warning', label: 'Menunggu' },

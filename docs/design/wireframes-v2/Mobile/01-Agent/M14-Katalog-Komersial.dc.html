@@ -70,7 +70,8 @@
           </div>
           <div class="field" style="margin-top:6px;">
             <label class="ra-label-md">Total Pembayaran</label>
-            <input class="ra-input" type="text" value="{{selectedAddon.price}}">
+            <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-900);font-weight:700;background:var(--ra-ink-50);">{{selectedAddon.price}}</div>
+            <span class="ra-caption">Harga ditentukan platform, nominal final dikonfirmasi di halaman pembayaran.</span>
           </div>
           <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{createOrder}}">Buat Pesanan</button>
           <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeBuyModal}}">Batal</button>

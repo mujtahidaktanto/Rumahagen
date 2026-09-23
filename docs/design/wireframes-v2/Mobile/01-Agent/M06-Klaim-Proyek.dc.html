@@ -63,7 +63,7 @@
             <sc-if value="{{c.canWithdraw}}" hint-placeholder-val="{{true}}">
               <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;margin-top:10px;" onClick="{{c.onWithdraw}}">Batalkan Klaim</button>
             </sc-if>
-            <sc-if value="{{c.canViewKit}}" hint-placeholder-val="{{false}}">
+            <sc-if value="{{c.canViewKit}}" hint-placeholder-val="{{true}}">
               <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;margin-top:10px;" onClick="{{c.onToggleKit}}">{{c.kitToggleLabel}}</button>
             </sc-if>
             <sc-if value="{{c.kitOpen}}" hint-placeholder-val="{{false}}">
@@ -148,7 +148,9 @@ class Component extends DCLogic {
     const claims = claimDefs.map(c => {
       const status = withdrawnIds[c.id] ? 'withdrawn' : c.status;
       const sm = statusMap[status];
-      const canViewKit = status === 'approved';
+      // RLS marketing_kit_select (0035): SEMUA Agent boleh lihat marketing kit
+      // proyek apa pun, tidak digerbangi status klaim.
+      const canViewKit = true;
       const kitOpen = !!kitOpenIds[c.id];
       return {
         projectName: c.projectName, location: c.location, claimedAt: c.claimedAt,

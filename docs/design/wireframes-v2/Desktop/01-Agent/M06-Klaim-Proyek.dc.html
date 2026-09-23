@@ -84,7 +84,7 @@
                 <sc-if value="{{c.canWithdraw}}" hint-placeholder-val="{{true}}">
                   <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{c.onWithdraw}}">Batalkan Klaim</button>
                 </sc-if>
-                <sc-if value="{{c.canViewKit}}" hint-placeholder-val="{{false}}">
+                <sc-if value="{{c.canViewKit}}" hint-placeholder-val="{{true}}">
                   <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{c.onToggleKit}}">{{c.kitToggleLabel}}</button>
                 </sc-if>
               </div>
@@ -176,7 +176,12 @@ class Component extends DCLogic {
     const claims = claimDefs.map(c => {
       const status = withdrawnIds[c.id] ? 'withdrawn' : c.status;
       const sm = statusMap[status];
-      const canViewKit = status === 'approved';
+      // RLS marketing_kit_select (0035) mengizinkan SEMUA Agent (current_role_code()
+      // IN admin/manager/agent) melihat marketing kit proyek APA PUN, tidak
+      // digerbangi status klaim sama sekali -- jadi tombol ini tampil terlepas
+      // dari status klaim, TERMASUK saat klaim sudah dibatalkan (marketing kit
+      // adalah materi publik-untuk-agent, bukan benefit eksklusif pemegang klaim).
+      const canViewKit = true;
       const kitOpen = !!kitOpenIds[c.id];
       return {
         projectName: c.projectName, location: c.location, categoryLabel: c.categoryLabel, claimedAt: c.claimedAt,
