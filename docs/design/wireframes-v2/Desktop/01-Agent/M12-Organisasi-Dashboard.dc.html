@@ -105,6 +105,14 @@
             <span class="ra-body-md">Organisasi ini sudah ditutup secara permanen — tidak ada aksi lebih lanjut yang tersedia.</span>
           </div>
         </sc-if>
+        <!-- suspended = enforcement state staff-only (Gate PRE-00-N §6, migration 0087) --
+             leader TIDAK bisa set/unset sendiri, jadi tidak ada tombol aksi di sini sama sekali. -->
+        <sc-if value="{{isSuspended}}" hint-placeholder-val="{{false}}">
+          <div class="warn-banner" style="background:var(--ra-danger-100);border-color:var(--ra-danger-600);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" width="20" height="20" style="flex:none;"><circle cx="12" cy="12" r="9.5"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <div style="flex:1;"><span class="ra-label-lg" style="color:var(--ra-danger-600);">Organisasi Dibekukan Tim RumahAgen</span><p class="ra-body-md" style="margin:2px 0 0;color:var(--ra-ink-700);">Aktivitas organisasi ini dihentikan sementara oleh admin platform. Anggota tidak bisa mengelola listing/undangan baru sampai status ini dicabut staf. Hubungi dukungan RumahAgen untuk informasi lebih lanjut.</p></div>
+          </div>
+        </sc-if>
 
         <div class="org-banner"></div>
         <div class="org-head">
@@ -186,7 +194,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"orgState":{"editor":"enum","default":"has_org","options":["no_org","has_org"],"section":"Skenario"},"viewerRole":{"editor":"enum","default":"leader","options":["leader","member"],"section":"Skenario"},"orgStatus":{"editor":"enum","default":"active","options":["active","closing","closed"],"section":"Skenario status organisasi"},"$preview":{"width":1440,"height":1100}}'>
+<script type="text/x-dc" data-dc-script data-props='{"orgState":{"editor":"enum","default":"has_org","options":["no_org","has_org"],"section":"Skenario"},"viewerRole":{"editor":"enum","default":"leader","options":["leader","member"],"section":"Skenario"},"orgStatus":{"editor":"enum","default":"active","options":["active","closing","closed","suspended"],"section":"Skenario status organisasi"},"$preview":{"width":1440,"height":1100}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -232,6 +240,7 @@ class Component extends DCLogic {
       isActive: status === 'active',
       isClosing: status === 'closing',
       isClosed: status === 'closed',
+      isSuspended: status === 'suspended',
       activeMemberCount: 4,
       pendingInvitationsCount: 2,
       members

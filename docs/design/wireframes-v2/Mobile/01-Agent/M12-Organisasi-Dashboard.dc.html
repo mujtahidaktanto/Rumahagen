@@ -62,6 +62,25 @@
       </div>
     </sc-if>
 
+    <sc-if value="{{isClosed}}" hint-placeholder-val="{{false}}">
+      <div class="sec" style="padding-bottom:0;">
+        <div class="warn-banner" style="background:var(--ra-ink-50);border-color:var(--ra-ink-100);">
+          <span class="ra-body-md" style="font-size:12.5px;">Organisasi ini sudah ditutup secara permanen — tidak ada aksi lebih lanjut.</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- suspended = enforcement state staff-only (Gate PRE-00-N §6, 0087) --
+         leader TIDAK bisa set/unset sendiri, tidak ada tombol aksi. -->
+    <sc-if value="{{isSuspended}}" hint-placeholder-val="{{false}}">
+      <div class="sec" style="padding-bottom:0;">
+        <div class="warn-banner" style="background:var(--ra-danger-100);border-color:var(--ra-danger-600);">
+          <span class="ra-label-lg" style="font-size:13px;color:var(--ra-danger-600);">Organisasi Dibekukan Tim RumahAgen</span>
+          <span class="ra-body-md" style="font-size:12.5px;">Aktivitas dihentikan sementara oleh admin platform. Hubungi dukungan RumahAgen untuk info lebih lanjut.</span>
+        </div>
+      </div>
+    </sc-if>
+
     <div class="org-banner"></div>
     <div class="org-head">
       <div class="org-logo">PJ</div>
@@ -143,7 +162,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"orgState":{"editor":"enum","default":"has_org","options":["no_org","has_org"],"section":"Skenario"},"viewerRole":{"editor":"enum","default":"leader","options":["leader","member"],"section":"Skenario"},"orgStatus":{"editor":"enum","default":"active","options":["active","closing","closed"],"section":"Skenario status organisasi"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"orgState":{"editor":"enum","default":"has_org","options":["no_org","has_org"],"section":"Skenario"},"viewerRole":{"editor":"enum","default":"leader","options":["leader","member"],"section":"Skenario"},"orgStatus":{"editor":"enum","default":"active","options":["active","closing","closed","suspended"],"section":"Skenario status organisasi"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -187,6 +206,8 @@ class Component extends DCLogic {
       roleBadge: isLeader ? 'ra-badge-info' : 'ra-badge-neutral',
       roleLabel: isLeader ? 'Anda: Leader' : 'Anda: Member',
       isActive: status === 'active',
+      isClosed: status === 'closed',
+      isSuspended: status === 'suspended',
       isClosing: status === 'closing',
       activeMemberCount: 4,
       pendingInvitationsCount: 2,
