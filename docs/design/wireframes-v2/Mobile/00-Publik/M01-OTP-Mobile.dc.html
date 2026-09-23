@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Verifikasi OTP — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .stage{width:390px;height:844px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;text-align:center;gap:18px;}
+  .icon-ring{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+  .otp-row{display:flex;gap:8px;}
+  .otp-box{width:44px;height:50px;border-radius:var(--ra-radius-sm);border:1.5px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--ra-ink-900);}
+  .otp-box.filled{border-color:var(--ra-blue-500);background:var(--ra-blue-50);}
+  .otp-box.err{border-color:var(--ra-danger-600);background:var(--ra-danger-100);}
+</style>
+</helmet>
+<div class="stage">
+  <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;">
+
+  <sc-if value="{{isSuccess}}" hint-placeholder-val="{{false}}">
+    <div class="icon-ring" style="background:var(--ra-success-100);color:var(--ra-success-600);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>
+    </div>
+    <h1 class="ra-title-lg">Verifikasi Berhasil</h1>
+    <p class="ra-body-md" style="color:var(--ra-ink-500);">Akun Anda sudah aktif. Selamat bergabung di RumahAgen.</p>
+    <button class="ra-btn ra-btn-primary" style="width:100%;">Masuk ke Dashboard</button>
+  </sc-if>
+
+  <sc-if value="{{isForm}}" hint-placeholder-val="{{true}}">
+    <div class="icon-ring" style="background:var(--ra-blue-100);color:var(--ra-blue-600);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="M9 12l2 2 4-4"/></svg>
+    </div>
+    <h1 class="ra-title-lg">Verifikasi Nomor WhatsApp</h1>
+    <p class="ra-body-md" style="color:var(--ra-ink-500);">Kode 6 digit dikirim ke <strong style="color:var(--ra-ink-900);">+62 812-3456-7890</strong></p>
+
+    <div class="otp-row">
+      <div class="otp-box {{boxClass}}">{{d1}}</div>
+      <div class="otp-box {{boxClass}}">{{d2}}</div>
+      <div class="otp-box {{boxClass}}">{{d3}}</div>
+      <div class="otp-box {{boxClass}}">{{d4}}</div>
+      <div class="otp-box {{boxClass}}">{{d5}}</div>
+      <div class="otp-box {{boxClass}}">{{d6}}</div>
+    </div>
+
+    <sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+      <span class="ra-body-md" style="color:var(--ra-danger-600);">Kode salah atau sudah kedaluwarsa.</span>
+    </sc-if>
+
+    <button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{verifyDisabled}}">
+      <sc-if value="{{isVerifying}}" hint-placeholder-val="{{false}}">Memverifikasi…</sc-if>
+      <sc-if value="{{notVerifying}}" hint-placeholder-val="{{true}}">Verifikasi</sc-if>
+    </button>
+
+    <sc-if value="{{canResend}}" hint-placeholder-val="{{false}}">
+      <button style="background:none;border:none;color:var(--ra-blue-600);font-weight:700;font-size:13px;">Kirim Ulang Kode</button>
+    </sc-if>
+    <sc-if value="{{isCountingDown}}" hint-placeholder-val="{{true}}">
+      <span class="ra-caption">Kirim ulang kode dalam 00:45</span>
+    </sc-if>
+    <a href="M01-Register-Mobile.dc.html" class="ra-caption">Ubah nomor WhatsApp / email</a>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stage":{"editor":"enum","default":"form","options":["form","verifying","error","success"],"section":"Skenario"},"resendReady":{"editor":"boolean","default":false,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const stage = this.props.stage ?? 'form';
+    const resendReady = this.props.resendReady ?? false;
+    const isError = stage === 'error';
+    const digits = isError ? ['4','8','1','2','0','9'] : ['4','8','1','2','0',''];
+    return {
+      isForm: stage !== 'success',
+      isSuccess: stage === 'success',
+      isVerifying: stage === 'verifying',
+      notVerifying: stage !== 'verifying',
+      isError,
+      boxClass: isError ? 'err' : 'filled',
+      d1: digits[0], d2: digits[1], d3: digits[2], d4: digits[3], d5: digits[4], d6: digits[5],
+      verifyDisabled: stage === 'verifying',
+      canResend: resendReady,
+      isCountingDown: !resendReady
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -90,8 +90,8 @@
       <!-- pengunjung vs agent login: header kanan berubah, konten lain tetap -->
       <sc-if value="{{isGuest}}" hint-placeholder-val="{{true}}">
         <div style="display:flex;align-items:center;gap:10px;">
-          <button class="ra-btn ra-btn-secondary ra-btn-sm">Masuk</button>
-          <button class="ra-btn ra-btn-primary ra-btn-sm">Daftar</button>
+          <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M01-Login-Desktop.dc.html">Masuk</a>
+          <a class="ra-btn ra-btn-primary ra-btn-sm" href="M01-Register-Desktop.dc.html">Daftar</a>
         </div>
       </sc-if>
       <sc-if value="{{isAgent}}" hint-placeholder-val="{{false}}">

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Register — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .stage{width:1440px;height:900px;display:flex;overflow:hidden;background:#fff;}
+  .brand-panel{width:480px;flex:none;background:linear-gradient(160deg,var(--ra-blue-900) 0%,var(--ra-blue-600) 55%,var(--ra-gold-600) 140%);display:flex;flex-direction:column;justify-content:space-between;padding:48px;color:#fff;}
+  .form-panel{flex:1;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:40px;}
+  .form-card{width:100%;max-width:420px;display:flex;flex-direction:column;gap:18px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-label{font-size:13px;font-weight:700;color:var(--ra-ink-900);}
+  .field-error{font-size:12px;color:var(--ra-danger-600);}
+  .input-icon-wrap{position:relative;}
+  .input-icon-wrap .ra-input{width:100%;padding-right:44px;}
+  .eye-btn{position:absolute;right:6px;top:6px;width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-500);display:flex;align-items:center;justify-content:center;}
+  .divider{display:flex;align-items:center;gap:12px;color:var(--ra-ink-300);font-size:12px;}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--ra-ink-100);}
+  .oauth-btn{display:flex;align-items:center;justify-content:center;gap:10px;height:48px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);background:#fff;font-weight:700;font-size:14px;color:var(--ra-ink-700);width:100%;}
+  .benefit-row{display:flex;align-items:flex-start;gap:12px;}
+</style>
+</helmet>
+<div class="stage">
+
+  <!-- BRAND PANEL -->
+  <div class="brand-panel">
+    <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:34px;width:auto;object-fit:contain;filter:brightness(0) invert(1);">
+    <div style="display:flex;flex-direction:column;gap:24px;">
+      <h1 class="ra-headline" style="color:#fff;font-size:26px;">Bergabung jadi Agent Properti profesional</h1>
+      <div class="benefit-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>
+        <span class="ra-body-md" style="color:rgba(255,255,255,.88);">Pasang listing tanpa batas, kelola leads dalam satu dashboard</span>
+      </div>
+      <div class="benefit-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>
+        <span class="ra-body-md" style="color:rgba(255,255,255,.88);">Akses materi pembelajaran &amp; sertifikasi dari para ahli</span>
+      </div>
+      <div class="benefit-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>
+        <span class="ra-body-md" style="color:rgba(255,255,255,.88);">Bergabung dengan organisasi &amp; komunitas agent terpercaya</span>
+      </div>
+    </div>
+    <span class="ra-caption" style="color:rgba(255,255,255,.6);">© 2026 RumahAgen.com</span>
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+    <div class="form-card">
+      <div>
+        <h2 class="ra-headline">Buat Akun Baru</h2>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:6px;">Sudah punya akun? <a href="M01-Login-Desktop.dc.html">Masuk di sini</a></p>
+      </div>
+
+      <sc-if value="{{showServerError}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;gap:10px;background:var(--ra-danger-100);border:1px solid #F3C6C6;border-radius:var(--ra-radius-md);padding:12px 14px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="flex:none;"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg>
+          <span class="ra-body-md" style="color:var(--ra-ink-900);">Email sudah terdaftar. Coba masuk, atau gunakan email lain.</span>
+        </div>
+      </sc-if>
+
+      <div class="field">
+        <span class="field-label">Nama Lengkap</span>
+        <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Sesuai KTP</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Email</span>
+        <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">nama@email.com</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Nomor WhatsApp</span>
+        <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">08xx-xxxx-xxxx</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Password</span>
+        <div class="input-icon-wrap">
+          <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Minimal 8 karakter</div>
+          <button class="eye-btn" aria-label="Tampilkan password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6"/></svg></button>
+        </div>
+      </div>
+
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+        <input type="checkbox" style="width:18px;height:18px;margin-top:1px;accent-color:var(--ra-blue-600);flex:none;">
+        <span class="ra-body-md" style="color:var(--ra-ink-700);">Saya setuju dengan <a href="#">Syarat &amp; Ketentuan</a> dan <a href="#">Kebijakan Privasi</a> RumahAgen</span>
+      </label>
+
+      <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;" disabled="{{submitDisabled}}">
+        <sc-if value="{{isSubmitting}}" hint-placeholder-val="{{false}}">Memproses…</sc-if>
+        <sc-if value="{{isIdle}}" hint-placeholder-val="{{true}}">Daftar Sekarang</sc-if>
+      </button>
+
+      <div class="divider">atau</div>
+
+      <button class="oauth-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M16 7l3 3M13 10l2.5 2.5"/></svg>
+        Lanjutkan dengan Google
+      </button>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"formState":{"editor":"enum","default":"idle","options":["idle","submitting","error"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const formState = this.props.formState ?? 'idle';
+    return {
+      isIdle: formState === 'idle',
+      isSubmitting: formState === 'submitting',
+      showServerError: formState === 'error',
+      submitDisabled: formState === 'submitting'
+    };
+  }
+}
+</script>
+</body>
+</html>

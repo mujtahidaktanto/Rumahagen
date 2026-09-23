@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Pemulihan Password — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;}
+  .stage{width:1440px;height:900px;background:var(--ra-surface);display:flex;align-items:center;justify-content:center;font-family:var(--ra-font);}
+  .card{width:460px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);box-shadow:var(--ra-shadow-2);padding:40px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;}
+  .icon-ring{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+  .field{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;}
+  .field-label{font-size:13px;font-weight:700;color:var(--ra-ink-900);}
+  .input-icon-wrap{position:relative;width:100%;}
+  .input-icon-wrap .ra-input{width:100%;padding-right:44px;}
+  .eye-btn{position:absolute;right:6px;top:6px;width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-500);display:flex;align-items:center;justify-content:center;}
+</style>
+</helmet>
+<div class="stage">
+  <div class="card">
+    <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:36px;width:auto;object-fit:contain;">
+
+    <!-- STAGE 1: request -->
+    <sc-if value="{{isRequest}}" hint-placeholder-val="{{true}}">
+      <div class="icon-ring" style="background:var(--ra-blue-100);color:var(--ra-blue-600);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+      </div>
+      <div>
+        <h1 class="ra-headline">Lupa Password?</h1>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:6px;">Masukkan email terdaftar Anda — kami akan mengirim link untuk membuat password baru.</p>
+      </div>
+      <div class="field">
+        <span class="field-label">Email</span>
+        <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">nama@email.com</div>
+      </div>
+      <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Kirim Link Reset</button>
+      <a href="M01-Login-Desktop.dc.html" class="ra-caption">← Kembali ke Masuk</a>
+    </sc-if>
+
+    <!-- STAGE 2: sent -->
+    <sc-if value="{{isSent}}" hint-placeholder-val="{{false}}">
+      <div class="icon-ring" style="background:var(--ra-success-100);color:var(--ra-success-600);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>
+      </div>
+      <div>
+        <h1 class="ra-headline">Cek Email Anda</h1>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:6px;">Kami mengirim link reset password ke <strong style="color:var(--ra-ink-900);">rian.saputra@email.com</strong>. Link berlaku 1 jam.</p>
+      </div>
+      <button class="ra-btn ra-btn-secondary" style="width:100%;">Buka Aplikasi Email</button>
+      <span class="ra-caption">Tidak menerima email? <a href="#">Kirim ulang</a></span>
+      <a href="M01-Login-Desktop.dc.html" class="ra-caption">← Kembali ke Masuk</a>
+    </sc-if>
+
+    <!-- STAGE 3: reset (dari link email) -->
+    <sc-if value="{{isReset}}" hint-placeholder-val="{{false}}">
+      <div class="icon-ring" style="background:var(--ra-blue-100);color:var(--ra-blue-600);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </div>
+      <div>
+        <h1 class="ra-headline">Buat Password Baru</h1>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:6px;">Password baru harus berbeda dari password sebelumnya.</p>
+      </div>
+      <div class="field">
+        <span class="field-label">Password Baru</span>
+        <div class="input-icon-wrap">
+          <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Minimal 8 karakter</div>
+          <button class="eye-btn" aria-label="Tampilkan password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6"/></svg></button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">Konfirmasi Password Baru</span>
+        <div class="input-icon-wrap">
+          <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Ulangi password baru</div>
+          <button class="eye-btn" aria-label="Tampilkan password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6"/></svg></button>
+        </div>
+      </div>
+      <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Simpan Password Baru</button>
+    </sc-if>
+
+    <!-- STAGE 4: reset success -->
+    <sc-if value="{{isResetSuccess}}" hint-placeholder-val="{{false}}">
+      <div class="icon-ring" style="background:var(--ra-success-100);color:var(--ra-success-600);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>
+      </div>
+      <div>
+        <h1 class="ra-headline">Password Berhasil Diubah</h1>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:6px;">Gunakan password baru Anda untuk masuk mulai sekarang.</p>
+      </div>
+      <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Masuk Sekarang</button>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stage":{"editor":"enum","default":"request","options":["request","sent","reset","reset_success"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const stage = this.props.stage ?? 'request';
+    return {
+      isRequest: stage === 'request',
+      isSent: stage === 'sent',
+      isReset: stage === 'reset',
+      isResetSuccess: stage === 'reset_success'
+    };
+  }
+}
+</script>
+</body>
+</html>

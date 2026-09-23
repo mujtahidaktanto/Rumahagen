@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Login — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:#fff;}
+  .hero-strip{background:linear-gradient(160deg,var(--ra-blue-900) 0%,var(--ra-blue-600) 60%,var(--ra-gold-600) 150%);padding:36px 20px 40px;display:flex;flex-direction:column;gap:6px;}
+  .sec{padding:20px;display:flex;flex-direction:column;gap:16px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-label{font-size:13px;font-weight:700;color:var(--ra-ink-900);}
+  .input-icon-wrap{position:relative;}
+  .input-icon-wrap .ra-input{width:100%;padding-right:44px;}
+  .eye-btn{position:absolute;right:6px;top:6px;width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-500);display:flex;align-items:center;justify-content:center;}
+  .divider{display:flex;align-items:center;gap:12px;color:var(--ra-ink-300);font-size:12px;}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--ra-ink-100);}
+  .oauth-btn{display:flex;align-items:center;justify-content:center;gap:10px;height:48px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);background:#fff;font-weight:700;font-size:14px;color:var(--ra-ink-700);width:100%;}
+</style>
+</helmet>
+<div class="page">
+
+  <div class="hero-strip">
+    <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;filter:brightness(0) invert(1);margin-bottom:14px;">
+    <h1 class="ra-title-lg" style="color:#fff;">Selamat Datang Kembali</h1>
+    <p class="ra-body-md" style="color:rgba(255,255,255,.85);">Masuk untuk kelola listing dan leads Anda</p>
+  </div>
+
+  <div class="sec">
+    <p class="ra-body-md" style="color:var(--ra-ink-500);">Belum punya akun? <a href="M01-Register-Mobile.dc.html">Daftar Sekarang</a></p>
+
+    <sc-if value="{{showError}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;gap:10px;background:var(--ra-danger-100);border:1px solid #F3C6C6;border-radius:var(--ra-radius-md);padding:12px 14px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="17" height="17" style="flex:none;"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg>
+        <span class="ra-body-md">Email atau password salah.</span>
+      </div>
+    </sc-if>
+
+    <div class="field"><span class="field-label">Email atau Nomor HP</span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">nama@email.com</div></div>
+    <div class="field">
+      <span class="field-label">Password</span>
+      <div class="input-icon-wrap">
+        <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">••••••••</div>
+        <button class="eye-btn" aria-label="Tampilkan password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.6"/></svg></button>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <label style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" style="width:18px;height:18px;accent-color:var(--ra-blue-600);">
+        <span class="ra-body-md">Ingat saya</span>
+      </label>
+      <a href="M01-Recovery-Mobile.dc.html" class="ra-label-lg" style="font-size:13px;">Lupa Password?</a>
+    </div>
+
+    <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;" disabled="{{submitDisabled}}">
+      <sc-if value="{{isSubmitting}}" hint-placeholder-val="{{false}}">Memproses…</sc-if>
+      <sc-if value="{{isIdle}}" hint-placeholder-val="{{true}}">Masuk</sc-if>
+    </button>
+
+    <div class="divider">atau</div>
+
+    <button class="oauth-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M16 7l3 3M13 10l2.5 2.5"/></svg>
+      Lanjutkan dengan Google
+    </button>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"formState":{"editor":"enum","default":"idle","options":["idle","submitting","error"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const formState = this.props.formState ?? 'idle';
+    return {
+      isIdle: formState === 'idle',
+      isSubmitting: formState === 'submitting',
+      showError: formState === 'error',
+      submitDisabled: formState === 'submitting'
+    };
+  }
+}
+</script>
+</body>
+</html>
