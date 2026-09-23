@@ -98,7 +98,7 @@
     <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
       <div class="list-col">
         <sc-for list="{{listings}}" as="p" hint-placeholder-count="6">
-          <a class="prop-card" href="M11-Detail-Listing.dc.html">
+          <a class="prop-card" href="{{resultHref}}">
             <div class="prop-photo"><span class="type-tag" style="background:{{p.tagColor}};">{{p.tag}}</span></div>
             <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
               <span class="ra-label-lg ra-truncate-2" style="font-size:13.5px;">{{p.title}}</span>
@@ -164,12 +164,12 @@
       <div style="display:flex;flex-direction:column;gap:2px;padding:10px;flex:1;overflow-y:auto;">
         <a class="dnav-item" href="M11-Homepage.dc.html">Beranda</a>
         <a class="dnav-item is-active" href="M11-Discovery.dc.html">Listing</a>
-        <a class="dnav-item" href="#">Agen</a>
-        <a class="dnav-item" href="#">Organisasi</a>
-        <a class="dnav-item" href="#">Developer</a>
-        <a class="dnav-item" href="#">Event</a>
-        <a class="dnav-item" href="#">Learning</a>
-        <a class="dnav-item" href="#">Learning Session</a>
+        <a class="dnav-item" href="M11-Discovery.dc.html">Agen</a>
+        <a class="dnav-item" href="M11-Discovery.dc.html">Organisasi</a>
+        <a class="dnav-item" href="M11-Discovery.dc.html">Developer</a>
+        <a class="dnav-item" href="M11-Discovery.dc.html">Event</a>
+        <a class="dnav-item" href="M11-Detail-Learning-Mobile.dc.html">Learning</a>
+        <a class="dnav-item" href="M11-Detail-Learning-Session-Mobile.dc.html">Learning Session</a>
         <a class="dnav-item" href="#">Konten Publik</a>
         <a class="dnav-item" href="#">Promo</a>
       </div>
@@ -219,6 +219,13 @@ class Component extends DCLogic {
       { title: 'Tanah Kavling Siap Bangun', location: 'Surabaya, Jawa Timur', price: 'Rp 1.200.000.000', meta: '300 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' }
     ];
 
+    const resultHrefMap = {
+      properti: 'M11-Detail-Listing.dc.html',
+      agen: 'M11-Detail-Agen-Mobile.dc.html',
+      developer: 'M11-Detail-Developer-Project-Mobile.dc.html',
+      event: 'M11-Detail-Event-Mobile.dc.html'
+    };
+
     return {
       drawerOpen: this.state.drawerOpen ?? false,
       openDrawer: this.openDrawer,
@@ -230,6 +237,7 @@ class Component extends DCLogic {
       isAgent: visitorState === 'agent',
       typeTabs,
       resultCount: 47,
+      resultHref: resultHrefMap[activeType] ?? resultHrefMap.properti,
       isLoading: resultState === 'loading',
       isEmpty: resultState === 'empty',
       isLoaded: resultState === 'loaded',

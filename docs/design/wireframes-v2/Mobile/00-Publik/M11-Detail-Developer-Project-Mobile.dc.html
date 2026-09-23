@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Developer/Project — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:#fff;position:relative;}
+  .gallery{height:240px;background:var(--ra-ink-100);position:relative;}
+  .gtb-btn{position:absolute;top:12px;left:14px;width:38px;height:38px;border-radius:50%;background:rgba(20,24,31,.55);color:#fff;display:flex;align-items:center;justify-content:center;border:none;}
+  .gallery-count{position:absolute;right:12px;bottom:12px;background:rgba(20,24,31,.72);color:#fff;padding:5px 12px;border-radius:var(--ra-radius-pill);font-size:12px;font-weight:700;}
+  .unavailable-banner{position:absolute;inset:0;background:rgba(20,24,31,.55);display:flex;align-items:center;justify-content:center;}
+  .sec{padding:18px 16px;}
+  .spec-row{display:flex;gap:14px;flex-wrap:wrap;padding:14px 16px;border-top:1px solid var(--ra-ink-100);border-bottom:1px solid var(--ra-ink-100);}
+  .spec-item{display:flex;align-items:center;gap:6px;color:var(--ra-ink-700);}
+  .trust-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--ra-radius-pill);background:var(--ra-success-100);color:var(--ra-success-600);font-size:12px;font-weight:700;}
+  .spec-table-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--ra-ink-100);}
+  .map-box{height:140px;border-radius:var(--ra-radius-md);background:var(--ra-ink-100);display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .partner-panel{background:var(--ra-gold-100);border:1px solid var(--ra-gold-200);border-radius:var(--ra-radius-lg);padding:16px;display:flex;flex-direction:column;gap:8px;margin:0 16px;}
+  .bottom-cta{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--ra-ink-100);padding:10px 16px calc(10px + env(safe-area-inset-bottom));}
+</style>
+</helmet>
+<div class="page">
+
+  <div class="gallery">
+    <button class="gtb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="gallery-count">1 / {{mediaCount}}</div>
+    <sc-if value="{{isUnavailable}}" hint-placeholder-val="{{false}}">
+      <div class="unavailable-banner"><span class="ra-badge {{unavailableBadge}}" style="font-size:13px;"><span class="ra-dot"></span>{{unavailableLabel}}</span></div>
+    </sc-if>
+  </div>
+
+  <div class="ra-scroll" style="max-height:calc(844px - 240px - 74px);overflow-y:auto;">
+
+    <div class="sec" style="display:flex;flex-direction:column;gap:6px;padding-bottom:0;">
+      <div style="display:flex;gap:6px;"><span class="ra-badge ra-badge-info">{{categoryLabel}}</span><span class="ra-badge ra-badge-neutral">{{transactionLabel}}</span></div>
+      <h1 class="ra-title-lg">{{projectName}}</h1>
+      <span class="ra-body-md" style="color:var(--ra-ink-500);">{{location}}</span>
+      <span class="ra-headline" style="color:var(--ra-blue-600);font-size:20px;">{{priceRange}}</span>
+      <span class="ra-caption">{{availabilityLabel}}</span>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="17" height="17"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/></svg><span class="ra-body-md">{{bedrooms}} KT</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="17" height="17"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z"/></svg><span class="ra-body-md">{{bathrooms}} KM</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="17" height="17"><rect x="4" y="4" width="16" height="16" rx="2"/></svg><span class="ra-body-md">LB {{buildingArea}} m²</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="17" height="17"><path d="M3 3v18h18"/></svg><span class="ra-body-md">LT {{landArea}} m²</span></div>
+    </div>
+
+    <div class="sec">
+      <h2 class="ra-title-md" style="margin-bottom:8px;">Deskripsi</h2>
+      <p class="ra-body-md" style="color:var(--ra-ink-700);line-height:22px;">{{description}}</p>
+    </div>
+
+    <div class="sec" style="padding-top:0;">
+      <h2 class="ra-title-md" style="margin-bottom:8px;">Legalitas &amp; Kepercayaan</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="trust-chip">Sertifikat {{certificateLabel}}</span>
+        <span class="trust-chip">IMB {{imbLabel}}</span>
+        <sc-if value="{{disputeFree}}" hint-placeholder-val="{{true}}"><span class="trust-chip">Bebas Sengketa</span></sc-if>
+      </div>
+    </div>
+
+    <div class="sec" style="padding-top:0;">
+      <h2 class="ra-title-md" style="margin-bottom:8px;">Spesifikasi Detail</h2>
+      <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Tahun Dibangun</span><span class="ra-body-md" style="font-weight:700;">{{yearBuilt}}</span></div>
+      <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Perabotan</span><span class="ra-body-md" style="font-weight:700;">{{furnishingLabel}}</span></div>
+      <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Sumber Air</span><span class="ra-body-md" style="font-weight:700;">{{waterSourceLabel}}</span></div>
+    </div>
+
+    <div class="sec" style="padding-top:0;">
+      <h2 class="ra-title-md" style="margin-bottom:8px;">Lokasi</h2>
+      <div class="map-box"><span class="ra-caption">Peta lokasi — placeholder</span></div>
+    </div>
+
+    <div class="sec" style="padding-top:0;display:flex;align-items:center;gap:10px;border-top:1px solid var(--ra-ink-100);">
+      <div style="width:44px;height:44px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none;">{{devInitials}}</div>
+      <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1">{{devName}}</div><span class="ra-caption">Developer Partner</span></div>
+    </div>
+
+    <sc-if value="{{isAgentViewer}}" hint-placeholder-val="{{true}}">
+      <div class="sec" style="padding-top:0;">
+        <div class="partner-panel">
+          <span class="ra-label-lg" style="color:var(--ra-gold-700);">Info Kemitraan Agen</span>
+          <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">Skema Komisi</span><span class="ra-body-md" style="font-weight:700;">{{commissionScheme}}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">Komisi Tambahan</span><span class="ra-body-md" style="font-weight:700;">{{extraCommission}}</span></div>
+          <sc-if value="{{isExclusive}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-warning" style="align-self:flex-start;">Eksklusif Per Wilayah</span></sc-if>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{isGuestViewer}}" hint-placeholder-val="{{false}}">
+      <div class="sec" style="padding-top:0;">
+        <div class="partner-panel" style="background:var(--ra-blue-50);border-color:var(--ra-blue-200);">
+          <span class="ra-label-lg" style="color:var(--ra-blue-700);">Anda Seorang Agen?</span>
+          <p class="ra-body-md">Masuk sebagai agen untuk melihat skema komisi.</p>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <div class="bottom-cta">
+    <sc-if value="{{isAgentViewer}}" hint-placeholder-val="{{true}}">
+      <button class="ra-btn ra-btn-primary" style="width:100%;">Klaim Proyek Ini</button>
+    </sc-if>
+    <sc-if value="{{isGuestViewer}}" hint-placeholder-val="{{false}}">
+      <a class="ra-btn ra-btn-primary" style="width:100%;" href="M01-Login-Mobile.dc.html">Masuk sebagai Agen</a>
+    </sc-if>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"projectStatus":{"editor":"enum","default":"active","options":["active","coming_soon","sold_out","inactive"],"section":"Skenario"},"viewerState":{"editor":"enum","default":"agent","options":["guest","agent"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const status = this.props.projectStatus ?? 'active';
+    const viewer = this.props.viewerState ?? 'agent';
+
+    const statusCopy = {
+      coming_soon: { label: 'Segera Hadir', badge: 'ra-badge-info' },
+      sold_out: { label: 'Unit Habis', badge: 'ra-badge-neutral' },
+      inactive: { label: 'Tidak Aktif', badge: 'ra-badge-danger' }
+    };
+    const isUnavailable = status !== 'active';
+    const c = statusCopy[status] ?? { label: '', badge: '' };
+    const availabilityMap = {
+      active: 'Tersedia 24 unit', coming_soon: 'Pre-launching', sold_out: 'Seluruh unit terjual', inactive: 'Penjualan dihentikan'
+    };
+
+    return {
+      projectName: 'Cluster Kanaya Residence',
+      categoryLabel: 'Primary', transactionLabel: 'Dijual',
+      location: 'Serpong, Tangerang Selatan',
+      priceRange: 'Rp 1,2 M – 1,8 M',
+      availabilityLabel: availabilityMap[status] ?? '',
+      mediaCount: 18,
+      isUnavailable, unavailableLabel: c.label, unavailableBadge: c.badge,
+      bedrooms: 3, bathrooms: 2, buildingArea: 90, landArea: 120,
+      description: 'Cluster residensial modern dengan 24 unit siap huni, konsep smart-home ready dan taman komunal.',
+      certificateLabel: 'SHM', imbLabel: 'Sudah Ada', disputeFree: true,
+      yearBuilt: 2025, furnishingLabel: 'Unfurnished', waterSourceLabel: 'PDAM',
+      devInitials: 'KG', devName: 'PT Kanaya Group Developer',
+      isAgentViewer: viewer === 'agent', isGuestViewer: viewer === 'guest',
+      commissionScheme: '2.5% dari harga jual',
+      extraCommission: 'Bonus Rp 5 Jt / unit',
+      isExclusive: true
+    };
+  }
+}
+</script>
+</body>
+</html>

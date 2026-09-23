@@ -62,12 +62,12 @@
       <nav class="pub-nav">
         <a href="M11-Homepage.dc.html">Beranda</a>
         <a class="is-active" href="M11-Discovery.dc.html">Listing</a>
-        <a href="#">Agen</a>
-        <a href="#">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
-        <a href="#">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
-        <a href="#">Event</a>
-        <a href="#">Learning</a>
-        <a href="#">Learning Session</a>
+        <a href="M11-Discovery.dc.html">Agen</a>
+        <a href="M11-Discovery.dc.html">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Event</a>
+        <a href="M11-Detail-Learning-Desktop.dc.html">Learning</a>
+        <a href="M11-Detail-Learning-Session-Desktop.dc.html">Learning Session</a>
         <a href="#">Konten Publik</a>
         <a href="#">Promo</a>
       </nav>
@@ -198,7 +198,7 @@
       <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
         <div class="result-grid">
           <sc-for list="{{listings}}" as="p" hint-placeholder-count="6">
-            <a class="prop-card" href="M11-Detail-Listing.dc.html">
+            <a class="prop-card" href="{{resultHref}}">
               <div class="prop-photo">
                 <span class="type-tag" style="background:{{p.tagColor}};">{{p.tag}}</span>
                 <button class="fav-btn" aria-label="Simpan ke favorit">
@@ -247,11 +247,11 @@
       </div>
       <div class="footer-col">
         <span class="ra-label-md" style="color:rgba(255,255,255,.4);">Jelajahi</span>
-        <a href="#">Listing</a><a href="#">Agen</a><a href="#">Organisasi</a><a href="#">Developer</a><a href="#">Event</a>
+        <a href="#">Listing</a><a href="M11-Discovery.dc.html">Agen</a><a href="M11-Discovery.dc.html">Organisasi</a><a href="M11-Discovery.dc.html">Developer</a><a href="M11-Discovery.dc.html">Event</a>
       </div>
       <div class="footer-col">
         <span class="ra-label-md" style="color:rgba(255,255,255,.4);">Learning</span>
-        <a href="#">Learning</a><a href="#">Learning Session</a><a href="#">Konten Publik</a><a href="#">Promo</a>
+        <a href="M11-Detail-Learning-Desktop.dc.html">Learning</a><a href="M11-Detail-Learning-Session-Desktop.dc.html">Learning Session</a><a href="#">Konten Publik</a><a href="#">Promo</a>
       </div>
       <div class="footer-col">
         <span class="ra-label-md" style="color:rgba(255,255,255,.4);">Bantuan</span>
@@ -301,9 +301,18 @@ class Component extends DCLogic {
     ];
     const listings = listingsRaw.map(p => ({ ...p, hasBeds: p.beds !== null }));
 
+    const resultHrefMap = {
+      properti: 'M11-Detail-Listing.dc.html',
+      agen: 'M11-Detail-Agen-Desktop.dc.html',
+      organisasi: 'M11-Detail-Organisasi-Desktop.dc.html',
+      developer: 'M11-Detail-Developer-Project-Desktop.dc.html',
+      event: 'M11-Detail-Event-Desktop.dc.html'
+    };
+
     return {
       typeTabs,
       resultCount: 47,
+      resultHref: resultHrefMap[activeType] ?? resultHrefMap.properti,
       isLoading: resultState === 'loading',
       isError: resultState === 'error',
       isEmpty: resultState === 'empty',

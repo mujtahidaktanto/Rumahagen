@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Developer/Project — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:1440px;box-sizing:border-box;background:#fff;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+  .header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .header-row{height:76px;display:flex;align-items:center;gap:28px;}
+  .pub-nav{display:flex;align-items:center;gap:4px;flex:1;}
+  .pub-nav a{display:flex;align-items:center;gap:3px;height:40px;padding:0 11px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);text-decoration:none;font-size:13.5px;font-weight:600;white-space:nowrap;}
+  .pub-nav a:hover{background:var(--ra-ink-50);color:var(--ra-blue-600);}
+  .pub-nav a.is-active{color:var(--ra-blue-600);background:var(--ra-blue-50);}
+
+  .breadcrumb{padding:16px 0 0;display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);font-size:13px;}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--ra-blue-600);}
+
+  .gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px;height:420px;margin-top:16px;border-radius:var(--ra-radius-lg);overflow:hidden;position:relative;}
+  .gallery-main{background:var(--ra-ink-100);}
+  .gallery-sub{display:grid;grid-template-rows:1fr 1fr;gap:8px;}
+  .gallery-sub div{background:var(--ra-ink-100);}
+  .gallery-count{position:absolute;right:16px;bottom:16px;background:rgba(20,24,31,.72);color:#fff;padding:8px 16px;border-radius:var(--ra-radius-pill);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;}
+  .unavailable-banner{position:absolute;inset:0;background:rgba(20,24,31,.55);display:flex;align-items:center;justify-content:center;}
+
+  .title-row{display:flex;align-items:flex-start;justify-content:space-between;padding:24px 0 0;gap:24px;}
+  .spec-row{display:flex;gap:24px;padding:20px 0;border-top:1px solid var(--ra-ink-100);border-bottom:1px solid var(--ra-ink-100);margin-top:20px;flex-wrap:wrap;}
+  .spec-item{display:flex;align-items:center;gap:8px;color:var(--ra-ink-700);}
+
+  .detail-grid{display:grid;grid-template-columns:1fr 340px;gap:32px;padding:32px 0 56px;align-items:start;}
+  .trust-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--ra-radius-pill);background:var(--ra-success-100);color:var(--ra-success-600);font-size:13px;font-weight:700;}
+  .spec-table{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;}
+  .spec-table-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--ra-ink-100);}
+  .map-box{height:220px;border-radius:var(--ra-radius-md);background:var(--ra-ink-100);display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+
+  .dev-card{position:sticky;top:96px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:22px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--ra-shadow-2);}
+  .partner-panel{background:var(--ra-gold-100);border:1px solid var(--ra-gold-200);border-radius:var(--ra-radius-lg);padding:20px;display:flex;flex-direction:column;gap:10px;}
+
+  .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;margin-top:8px;}
+  .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13.5px;padding:5px 0;}
+</style>
+</helmet>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="wrap header-row">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:32px;width:auto;object-fit:contain;">
+      <nav class="pub-nav">
+        <a href="M11-Homepage.dc.html">Beranda</a>
+        <a href="M11-Discovery.dc.html">Listing</a>
+        <a href="M11-Discovery.dc.html">Agen</a>
+        <a href="M11-Discovery.dc.html">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a class="is-active" href="M11-Discovery.dc.html">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Event</a>
+        <a href="#">Learning</a>
+        <a href="#">Learning Session</a>
+        <a href="#">Konten Publik</a>
+        <a href="#">Promo</a>
+      </nav>
+      <button class="ra-iconbtn" aria-label="Cari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M01-Login-Desktop.dc.html">Masuk</a>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M01-Register-Desktop.dc.html">Daftar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <div class="breadcrumb">
+      <a href="M11-Homepage.dc.html">Beranda</a><span>/</span>
+      <a href="M11-Discovery.dc.html">Developer</a><span>/</span>
+      <span style="color:var(--ra-ink-900);">{{projectName}}</span>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="gallery">
+      <div class="gallery-main"></div>
+      <div class="gallery-sub"><div></div><div></div></div>
+      <div class="gallery-count">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M4 8a2 2 0 0 1 2-2h1.2l1-1.6h7.6l1 1.6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        Lihat semua {{mediaCount}} media
+      </div>
+      <sc-if value="{{isUnavailable}}" hint-placeholder-val="{{false}}">
+        <div class="unavailable-banner">
+          <span class="ra-badge {{unavailableBadge}}" style="font-size:16px;padding:10px 22px;"><span class="ra-dot"></span>{{unavailableLabel}}</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- TITLE -->
+    <div class="title-row">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:8px;">
+          <span class="ra-badge ra-badge-info">{{categoryLabel}}</span>
+          <span class="ra-badge ra-badge-neutral">{{transactionLabel}}</span>
+        </div>
+        <h1 class="ra-headline">{{projectName}}</h1>
+        <div style="display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
+          <span class="ra-body-md">{{location}}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;">
+        <span class="ra-display" style="font-size:26px;color:var(--ra-blue-600);">{{priceRange}}</span>
+        <span class="ra-caption">{{availabilityLabel}}</span>
+      </div>
+    </div>
+
+    <!-- SPECS -->
+    <div class="spec-row">
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="19" height="19"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18v2M21 18v2"/></svg><span class="ra-body-md">{{bedrooms}} KT</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="19" height="19"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z"/></svg><span class="ra-body-md">{{bathrooms}} KM</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="19" height="19"><rect x="4" y="4" width="16" height="16" rx="2"/></svg><span class="ra-body-md">LB {{buildingArea}} m²</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="19" height="19"><path d="M3 3v18h18"/></svg><span class="ra-body-md">LT {{landArea}} m²</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="19" height="19"><rect x="3" y="3" width="18" height="18" rx="2"/></svg><span class="ra-body-md">{{floors}} Lantai</span></div>
+      <div class="spec-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="19" height="19"><path d="M4 12h16"/></svg><span class="ra-body-md">Carport {{carport}}</span></div>
+    </div>
+
+    <!-- BODY -->
+    <div class="detail-grid">
+      <div style="display:flex;flex-direction:column;gap:32px;min-width:0;">
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:12px;">Deskripsi</h2>
+          <p class="ra-body-lg" style="color:var(--ra-ink-700);line-height:26px;">{{description}}</p>
+        </div>
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:12px;">Legalitas &amp; Kepercayaan</h2>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <span class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>Sertifikat {{certificateLabel}}</span>
+            <sc-if value="{{certTransferred}}" hint-placeholder-val="{{true}}">
+              <span class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>Sertifikat Bisa Dibalik Nama</span>
+            </sc-if>
+            <span class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>IMB {{imbLabel}}</span>
+            <sc-if value="{{disputeFree}}" hint-placeholder-val="{{true}}">
+              <span class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg>Bebas Sengketa</span>
+            </sc-if>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:12px;">Spesifikasi Detail</h2>
+          <div class="spec-table">
+            <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Tahun Dibangun</span><span class="ra-body-md" style="font-weight:700;">{{yearBuilt}}</span></div>
+            <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Perabotan</span><span class="ra-body-md" style="font-weight:700;">{{furnishingLabel}}</span></div>
+            <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Sumber Air</span><span class="ra-body-md" style="font-weight:700;">{{waterSourceLabel}}</span></div>
+            <div class="spec-table-item"><span class="ra-body-md" style="color:var(--ra-ink-500);">Daya Listrik</span><span class="ra-body-md" style="font-weight:700;">{{electricalPower}} VA</span></div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:12px;">Lokasi</h2>
+          <div class="map-box"><span class="ra-body-md">Peta lokasi — placeholder</span></div>
+        </div>
+
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- DEVELOPER CARD -->
+        <div class="dev-card">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:52px;height:52px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex:none;">{{devInitials}}</div>
+            <div style="min-width:0;">
+              <div class="ra-title-md ra-truncate-1">{{devName}}</div>
+              <div class="ra-caption ra-truncate-1">Developer Partner</div>
+            </div>
+          </div>
+          <button class="ra-btn ra-btn-primary" style="width:100%;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.5-.7L3 21l1.8-5.4A8.4 8.4 0 1 1 21 11.5Z"/></svg>
+            Chat via WhatsApp
+          </button>
+        </div>
+
+        <!-- AGENT PARTNERSHIP PANEL -->
+        <sc-if value="{{isAgentViewer}}" hint-placeholder-val="{{true}}">
+          <div class="partner-panel">
+            <span class="ra-label-lg" style="color:var(--ra-gold-700);">Info Kemitraan Agen</span>
+            <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">Skema Komisi</span><span class="ra-body-md" style="font-weight:700;">{{commissionScheme}}</span></div>
+            <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">Komisi Tambahan</span><span class="ra-body-md" style="font-weight:700;">{{extraCommission}}</span></div>
+            <sc-if value="{{isExclusive}}" hint-placeholder-val="{{false}}">
+              <span class="ra-badge ra-badge-warning" style="align-self:flex-start;">Eksklusif Per Wilayah</span>
+            </sc-if>
+            <button class="ra-btn ra-btn-primary" style="width:100%;margin-top:4px;">Klaim Proyek Ini</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{isGuestViewer}}" hint-placeholder-val="{{false}}">
+          <div class="partner-panel" style="background:var(--ra-blue-50);border-color:var(--ra-blue-200);">
+            <span class="ra-label-lg" style="color:var(--ra-blue-700);">Anda Seorang Agen?</span>
+            <p class="ra-body-md" style="color:var(--ra-ink-700);">Masuk sebagai agen untuk melihat skema komisi dan klaim proyek ini.</p>
+            <a class="ra-btn ra-btn-primary" style="width:100%;" href="M01-Login-Desktop.dc.html">Masuk sebagai Agen</a>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="wrap footer-grid">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <p class="ra-body-md" style="color:rgba(255,255,255,.55);max-width:260px;">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.</p>
+      </div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Jelajahi</span><a href="M11-Discovery.dc.html">Listing</a><a href="M11-Discovery.dc.html">Agen</a><a href="M11-Discovery.dc.html">Organisasi</a><a href="M11-Discovery.dc.html">Developer</a><a href="M11-Discovery.dc.html">Event</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Learning</span><a href="#">Learning</a><a href="#">Learning Session</a><a href="#">Konten Publik</a><a href="#">Promo</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Bantuan</span><a href="#">Pusat Bantuan</a><a href="#">Syarat &amp; Ketentuan</a><a href="#">Kebijakan Privasi</a><a href="#">Hubungi Kami</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Download Aplikasi</span></div>
+    </div>
+    <div class="wrap" style="padding:20px 0;"><span class="ra-caption" style="color:rgba(255,255,255,.4);">© 2026 RumahAgen.com</span></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"projectStatus":{"editor":"enum","default":"active","options":["active","coming_soon","sold_out","inactive"],"section":"Skenario"},"viewerState":{"editor":"enum","default":"agent","options":["guest","agent"],"section":"Skenario"},"$preview":{"width":1440,"height":2000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const status = this.props.projectStatus ?? 'active';
+    const viewer = this.props.viewerState ?? 'agent';
+
+    const statusCopy = {
+      coming_soon: { label: 'Segera Hadir', badge: 'ra-badge-info' },
+      sold_out: { label: 'Unit Habis Terjual', badge: 'ra-badge-neutral' },
+      inactive: { label: 'Proyek Tidak Aktif', badge: 'ra-badge-danger' }
+    };
+    const isUnavailable = status !== 'active';
+    const c = statusCopy[status] ?? { label: '', badge: '' };
+    const availabilityMap = {
+      active: 'Tersedia 24 unit',
+      coming_soon: 'Pre-launching — segera dibuka',
+      sold_out: 'Seluruh unit terjual',
+      inactive: 'Penjualan dihentikan sementara'
+    };
+
+    return {
+      projectName: 'Cluster Kanaya Residence',
+      categoryLabel: 'Primary',
+      transactionLabel: 'Dijual',
+      location: 'Serpong, Tangerang Selatan',
+      priceRange: 'Rp 1,2 M – 1,8 M',
+      availabilityLabel: availabilityMap[status] ?? '',
+      mediaCount: 18,
+      isUnavailable,
+      unavailableLabel: c.label,
+      unavailableBadge: c.badge,
+      bedrooms: 3,
+      bathrooms: 2,
+      buildingArea: 90,
+      landArea: 120,
+      floors: 2,
+      carport: '1 Mobil',
+      description: 'Cluster residensial modern dengan 24 unit siap huni, mengusung konsep smart-home ready dan taman komunal di tengah cluster. Lokasi strategis 5 menit dari akses tol Serpong.',
+      certificateLabel: 'SHM',
+      certTransferred: true,
+      imbLabel: 'Sudah Ada',
+      disputeFree: true,
+      yearBuilt: 2025,
+      furnishingLabel: 'Unfurnished',
+      waterSourceLabel: 'PDAM',
+      electricalPower: '2.200',
+      devInitials: 'KG',
+      devName: 'PT Kanaya Group Developer',
+      isAgentViewer: viewer === 'agent',
+      isGuestViewer: viewer === 'guest',
+      commissionScheme: '2.5% dari harga jual',
+      extraCommission: 'Bonus Rp 5 Jt / unit closing bulan ini',
+      isExclusive: true
+    };
+  }
+}
+</script>
+</body>
+</html>

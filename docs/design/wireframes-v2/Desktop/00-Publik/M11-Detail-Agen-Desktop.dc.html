@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Agen — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:1440px;box-sizing:border-box;background:#fff;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+  .header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .header-row{height:76px;display:flex;align-items:center;gap:28px;}
+  .pub-nav{display:flex;align-items:center;gap:4px;flex:1;}
+  .pub-nav a{display:flex;align-items:center;gap:3px;height:40px;padding:0 11px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);text-decoration:none;font-size:13.5px;font-weight:600;white-space:nowrap;}
+  .pub-nav a:hover{background:var(--ra-ink-50);color:var(--ra-blue-600);}
+  .pub-nav a.is-active{color:var(--ra-blue-600);background:var(--ra-blue-50);}
+
+  .breadcrumb{padding:16px 0 0;display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);font-size:13px;}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--ra-blue-600);}
+
+  .hero{display:flex;align-items:flex-start;gap:24px;padding:24px 0;border-bottom:1px solid var(--ra-ink-100);}
+  .avatar-xl{width:96px;height:96px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:32px;flex:none;}
+  .stat-row{display:flex;gap:28px;padding:18px 0;}
+  .stat-item{display:flex;flex-direction:column;gap:2px;}
+
+  .detail-grid{display:grid;grid-template-columns:1fr 340px;gap:32px;padding:32px 0 56px;align-items:start;}
+  .spec-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--ra-radius-pill);background:var(--ra-blue-50);color:var(--ra-blue-600);font-size:13px;font-weight:700;}
+  .contact-card{position:sticky;top:96px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:22px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--ra-shadow-2);}
+  .review-item{padding:16px 0;border-bottom:1px solid var(--ra-ink-100);display:flex;flex-direction:column;gap:8px;}
+  .similar-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  .prop-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;}
+  .prop-photo{height:120px;background:var(--ra-ink-100);flex:none;}
+  .prop-body{padding:12px;display:flex;flex-direction:column;gap:5px;}
+  .empty-box{padding:64px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--ra-ink-500);}
+
+  .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;margin-top:8px;}
+  .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13.5px;padding:5px 0;}
+</style>
+</helmet>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="wrap header-row">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:32px;width:auto;object-fit:contain;">
+      <nav class="pub-nav">
+        <a href="M11-Homepage.dc.html">Beranda</a>
+        <a href="M11-Discovery.dc.html">Listing</a>
+        <a class="is-active" href="M11-Discovery.dc.html">Agen</a>
+        <a href="M11-Discovery.dc.html">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Event</a>
+        <a href="#">Learning</a>
+        <a href="#">Learning Session</a>
+        <a href="#">Konten Publik</a>
+        <a href="#">Promo</a>
+      </nav>
+      <button class="ra-iconbtn" aria-label="Cari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M01-Login-Desktop.dc.html">Masuk</a>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M01-Register-Desktop.dc.html">Daftar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <div class="breadcrumb">
+      <a href="M11-Homepage.dc.html">Beranda</a><span>/</span>
+      <a href="M11-Discovery.dc.html">Agen</a><span>/</span>
+      <span style="color:var(--ra-ink-900);">{{fullName}}</span>
+    </div>
+
+    <!-- PROFIL TIDAK PUBLIK (empty state) -->
+    <sc-if value="{{isPrivate}}" hint-placeholder-val="{{false}}">
+      <div class="empty-box" style="margin-top:24px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="40" height="40"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="M3 3l18 18"/></svg>
+        <h2 class="ra-title-lg">Profil Agen Tidak Publik</h2>
+        <p class="ra-body-md">Agen ini memilih untuk tidak menampilkan profilnya secara publik. Coba jelajahi agen lain di halaman pencarian.</p>
+        <a class="ra-btn ra-btn-primary" href="M11-Discovery.dc.html">Cari Agen Lain</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isPublic}}" hint-placeholder-val="{{true}}">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="avatar-xl">{{initials}}</div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <h1 class="ra-headline">{{fullName}}</h1>
+          <sc-if value="{{isVerified}}" hint-placeholder-val="{{true}}">
+            <span class="ra-badge ra-badge-info"><span class="ra-dot"></span>Terverifikasi</span>
+          </sc-if>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
+          <span class="ra-body-md">{{coverageArea}}</span>
+          <span class="ra-caption">·</span>
+          <a href="M11-Detail-Organisasi-Desktop.dc.html" class="ra-body-md">{{officeName}}</a>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <sc-for list="{{specializations}}" as="s" hint-placeholder-count="3">
+            <span class="spec-chip">{{s.label}}</span>
+          </sc-for>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item"><span class="ra-title-lg">{{soldCount}}</span><span class="ra-caption">Listing Terjual</span></div>
+          <div class="stat-item"><span class="ra-title-lg">{{rentedCount}}</span><span class="ra-caption">Listing Tersewa</span></div>
+          <div class="stat-item">
+            <div style="display:flex;align-items:center;gap:5px;">
+              <svg viewBox="0 0 24 24" fill="var(--ra-gold-500)" width="16" height="16"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.3l7.1-.7L12 2Z"/></svg>
+              <span class="ra-title-lg">{{ratingAvg}}</span>
+            </div>
+            <span class="ra-caption">{{reviewCount}} ulasan</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="detail-grid">
+      <div style="display:flex;flex-direction:column;gap:32px;min-width:0;">
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:12px;">Tentang</h2>
+          <p class="ra-body-lg" style="color:var(--ra-ink-700);line-height:26px;">{{bio}}</p>
+        </div>
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:12px;">Portofolio Listing</h2>
+          <sc-if value="{{hasListings}}" hint-placeholder-val="{{true}}">
+            <div class="similar-grid">
+              <sc-for list="{{portfolioListings}}" as="p" hint-placeholder-count="3">
+                <a class="prop-card" href="M11-Detail-Listing.dc.html">
+                  <div class="prop-photo"></div>
+                  <div class="prop-body">
+                    <span class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{p.title}}</span>
+                    <span class="ra-title-md" style="color:var(--ra-blue-600);font-size:14px;">{{p.price}}</span>
+                  </div>
+                </a>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{noListings}}" hint-placeholder-val="{{false}}">
+            <div class="empty-box"><span class="ra-body-md">Belum ada listing aktif dari agen ini.</span></div>
+          </sc-if>
+        </div>
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:4px;">Ulasan ({{reviewCount}})</h2>
+          <sc-if value="{{hasReviews}}" hint-placeholder-val="{{true}}">
+            <sc-for list="{{reviews}}" as="r" hint-placeholder-count="3">
+              <div class="review-item">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span class="ra-label-lg">{{r.reviewerName}}</span>
+                  <div style="display:flex;align-items:center;gap:3px;">
+                    <svg viewBox="0 0 24 24" fill="var(--ra-gold-500)" width="13" height="13"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.3l7.1-.7L12 2Z"/></svg>
+                    <span class="ra-body-md" style="font-weight:700;">{{r.rating}}</span>
+                  </div>
+                </div>
+                <p class="ra-body-md" style="color:var(--ra-ink-700);">{{r.comment}}</p>
+              </div>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{noReviews}}" hint-placeholder-val="{{false}}">
+            <div class="empty-box"><span class="ra-body-md">Belum ada ulasan untuk agen ini.</span></div>
+          </sc-if>
+        </div>
+
+      </div>
+
+      <!-- CONTACT CARD -->
+      <div class="contact-card">
+        <span class="ra-label-md" style="color:var(--ra-ink-500);">Hubungi Agen</span>
+        <sc-if value="{{contactPublic}}" hint-placeholder-val="{{true}}">
+          <button class="ra-btn ra-btn-primary" style="width:100%;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.5-.7L3 21l1.8-5.4A8.4 8.4 0 1 1 21 11.5Z"/></svg>
+            Chat via WhatsApp
+          </button>
+        </sc-if>
+        <sc-if value="{{contactHidden}}" hint-placeholder-val="{{false}}">
+          <p class="ra-body-md" style="color:var(--ra-ink-500);">Kontak langsung tidak tersedia. Hubungi lewat organisasi agen ini.</p>
+          <a class="ra-btn ra-btn-secondary" style="width:100%;" href="M11-Detail-Organisasi-Desktop.dc.html">Lihat Organisasi</a>
+        </sc-if>
+        <div style="border-top:1px solid var(--ra-ink-100);padding-top:14px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;"><span class="ra-caption">No. Lisensi</span><span class="ra-body-md" style="font-weight:700;">{{licenseNumber}}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span class="ra-caption">Kantor</span><span class="ra-body-md" style="font-weight:700;">{{officeName}}</span></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="wrap footer-grid">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <p class="ra-body-md" style="color:rgba(255,255,255,.55);max-width:260px;">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.</p>
+      </div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Jelajahi</span><a href="M11-Discovery.dc.html">Listing</a><a href="M11-Discovery.dc.html">Agen</a><a href="M11-Discovery.dc.html">Organisasi</a><a href="M11-Discovery.dc.html">Developer</a><a href="M11-Discovery.dc.html">Event</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Learning</span><a href="#">Learning</a><a href="#">Learning Session</a><a href="#">Konten Publik</a><a href="#">Promo</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Bantuan</span><a href="#">Pusat Bantuan</a><a href="#">Syarat &amp; Ketentuan</a><a href="#">Kebijakan Privasi</a><a href="#">Hubungi Kami</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Download Aplikasi</span></div>
+    </div>
+    <div class="wrap" style="padding:20px 0;"><span class="ra-caption" style="color:rgba(255,255,255,.4);">© 2026 RumahAgen.com</span></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"profileVisibility":{"editor":"enum","default":"public","options":["public","private"],"section":"Skenario"},"contactVisibility":{"editor":"enum","default":"public","options":["public","hidden"],"section":"Skenario"},"hasPortfolio":{"editor":"boolean","default":true,"section":"Skenario"},"hasReviewData":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const visibility = this.props.profileVisibility ?? 'public';
+    const contact = this.props.contactVisibility ?? 'public';
+    const hasPortfolio = this.props.hasPortfolio ?? true;
+    const hasReviewData = this.props.hasReviewData ?? true;
+
+    const specializations = [
+      { label: 'Rumah Tapak' }, { label: 'Apartemen' }, { label: 'KPR Konsultasi' }
+    ];
+    const portfolioListings = [
+      { title: 'Rumah Cluster Syariah 1 Lantai', price: 'Rp 780 Jt' },
+      { title: 'Rumah Modern Dekat Tol', price: 'Rp 920 Jt' },
+      { title: 'Apartemen Studio Furnished', price: 'Rp 450 Jt' }
+    ];
+    const reviews = [
+      { reviewerName: 'Dewi A.', rating: 5, comment: 'Sangat responsif dan membantu proses KPR sampai selesai.' },
+      { reviewerName: 'Bambang S.', rating: 4, comment: 'Komunikatif, hanya sedikit lambat konfirmasi jadwal survei.' },
+      { reviewerName: 'Rina W.', rating: 5, comment: 'Rekomendasi properti sesuai budget, prosesnya cepat.' }
+    ];
+
+    return {
+      isPrivate: visibility === 'private',
+      isPublic: visibility === 'public',
+      fullName: 'Rian Saputra',
+      initials: 'RS',
+      isVerified: true,
+      coverageArea: 'BSD City & Sekitarnya',
+      officeName: 'PT Properti Jaya Sejahtera',
+      soldCount: 34,
+      rentedCount: 12,
+      ratingAvg: '4.8',
+      reviewCount: 126,
+      bio: 'Agen properti berpengalaman 6 tahun dengan fokus di kawasan BSD City dan sekitarnya. Membantu ratusan keluarga menemukan rumah idaman serta pendampingan proses KPR dari awal hingga akad.',
+      licenseNumber: 'AREBI-2024-08123',
+      specializations,
+      contactPublic: contact === 'public',
+      contactHidden: contact === 'hidden',
+      hasListings: hasPortfolio,
+      noListings: !hasPortfolio,
+      portfolioListings,
+      hasReviews: hasReviewData,
+      noReviews: !hasReviewData,
+      reviews
+    };
+  }
+}
+</script>
+</body>
+</html>

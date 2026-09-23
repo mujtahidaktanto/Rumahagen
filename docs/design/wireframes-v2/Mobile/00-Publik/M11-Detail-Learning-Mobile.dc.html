@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Learning — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:#fff;position:relative;}
+  .cover{height:160px;background:linear-gradient(135deg,#5B2CB0,var(--ra-blue-900));position:relative;}
+  .gtb-btn{position:absolute;top:12px;left:14px;width:38px;height:38px;border-radius:50%;background:rgba(20,24,31,.5);color:#fff;display:flex;align-items:center;justify-content:center;border:none;}
+  .unavailable-banner{position:absolute;inset:0;background:rgba(20,24,31,.6);display:flex;align-items:center;justify-content:center;}
+  .sec{padding:18px 16px;}
+  .lesson-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);margin-bottom:8px;}
+  .lesson-num{width:28px;height:28px;border-radius:50%;background:var(--ra-ink-50);color:var(--ra-ink-500);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none;}
+  .lesson-icon{width:28px;height:28px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-50);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+  .session-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:12px;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;margin-bottom:8px;}
+  .bottom-cta{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--ra-ink-100);padding:10px 16px calc(10px + env(safe-area-inset-bottom));}
+</style>
+</helmet>
+<div class="page">
+
+  <div class="cover">
+    <button class="gtb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <sc-if value="{{isUnavailable}}" hint-placeholder-val="{{false}}">
+      <div class="unavailable-banner"><span class="ra-badge {{unavailableBadge}}" style="font-size:13px;"><span class="ra-dot"></span>{{unavailableLabel}}</span></div>
+    </sc-if>
+  </div>
+
+  <div class="ra-scroll" style="max-height:calc(844px - 160px - 74px);overflow-y:auto;">
+
+    <div class="sec" style="display:flex;flex-direction:column;gap:6px;">
+      <span class="ra-badge ra-badge-info" style="align-self:flex-start;">{{categoryLabel}}</span>
+      <h1 class="ra-title-lg">{{courseTitle}}</h1>
+      <p class="ra-body-md" style="color:var(--ra-ink-700);">{{description}}</p>
+    </div>
+
+    <sc-if value="{{hasPrerequisite}}" hint-placeholder-val="{{true}}">
+      <div class="sec" style="padding-top:0;">
+        <div style="background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-warning-600)" stroke-width="1.8" width="16" height="16"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9.5"/></svg>
+          <span class="ra-body-md" style="color:var(--ra-warning-600);">Wajib selesaikan <strong>{{prerequisiteTitle}}</strong> dulu.</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <div class="sec" style="padding-top:0;">
+      <h2 class="ra-title-md" style="margin-bottom:10px;">Kurikulum ({{lessonCount}} materi)</h2>
+      <sc-for list="{{lessons}}" as="l" hint-placeholder-count="5">
+        <div class="lesson-item">
+          <div class="lesson-num">{{l.number}}</div>
+          <div class="lesson-icon">
+            <sc-if value="{{l.isVideo}}" hint-placeholder-val="{{true}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M21 8l-4 3 4 3V8Z"/></svg></sc-if>
+            <sc-if value="{{l.isPdf}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M6 2h9l5 5v15H6V2Z"/></svg></sc-if>
+            <sc-if value="{{l.isSlide}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><rect x="3" y="4" width="18" height="14" rx="2"/></svg></sc-if>
+          </div>
+          <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{l.title}}</div><span class="ra-caption">{{l.typeLabel}}</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{hasSessions}}" hint-placeholder-val="{{true}}">
+      <div class="sec" style="padding-top:0;">
+        <h2 class="ra-title-md" style="margin-bottom:10px;">Learning Session Terkait</h2>
+        <sc-for list="{{relatedSessions}}" as="s" hint-placeholder-count="2">
+          <a class="session-card" href="M11-Detail-Learning-Session-Mobile.dc.html">
+            <div style="width:36px;height:36px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 3"/></svg></div>
+            <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{s.title}}</div><span class="ra-caption">{{s.schedule}}</span></div>
+            <span class="ra-badge {{s.badge}}">{{s.statusLabel}}</span>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <div class="sec" style="padding-top:0;display:flex;justify-content:space-between;">
+      <span class="ra-caption">Nilai Kelulusan: {{passingGrade}}</span>
+      <span class="ra-caption">{{lessonCount}} materi</span>
+    </div>
+
+  </div>
+
+  <div class="bottom-cta">
+    <sc-if value="{{isAgentViewer}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="width:100%;">Mulai Belajar</button></sc-if>
+    <sc-if value="{{isGuestViewer}}" hint-placeholder-val="{{false}}"><a class="ra-btn ra-btn-primary" style="width:100%;" href="M01-Login-Mobile.dc.html">Masuk untuk Mulai Belajar</a></sc-if>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"courseStatus":{"editor":"enum","default":"published","options":["draft","published","archived"],"section":"Skenario status"},"viewerState":{"editor":"enum","default":"agent","options":["guest","agent"],"section":"Skenario"},"hasPrereq":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const status = this.props.courseStatus ?? 'published';
+    const viewer = this.props.viewerState ?? 'agent';
+    const hasPrereq = this.props.hasPrereq ?? true;
+
+    const statusCopy = {
+      draft: { label: 'Belum Dipublikasikan', badge: 'ra-badge-neutral' },
+      archived: { label: 'Sudah Diarsipkan', badge: 'ra-badge-neutral' }
+    };
+    const isUnavailable = status !== 'published';
+    const c = statusCopy[status] ?? { label: '', badge: '' };
+
+    const typeLabelMap = { video: 'Video', pdf: 'Dokumen PDF', slide: 'Slide' };
+    const lessons = [
+      { title: 'Pengantar Analisis DBR', type: 'video' },
+      { title: 'Simulasi Perhitungan DBR', type: 'slide' },
+      { title: 'Studi Kasus Penolakan KPR', type: 'video' },
+      { title: 'Materi & Regulasi OJK', type: 'pdf' },
+      { title: 'Kuis Evaluasi Akhir', type: 'slide' }
+    ].map((l, i) => ({
+      number: i + 1, title: l.title, typeLabel: typeLabelMap[l.type],
+      isVideo: l.type === 'video', isPdf: l.type === 'pdf', isSlide: l.type === 'slide'
+    }));
+
+    const relatedSessions = [
+      { title: 'Live Q&A DBR Batch Oktober', schedule: '18 Okt 2026', status: 'scheduled', badge: 'ra-badge-info', statusLabel: 'Terjadwal' },
+      { title: 'Rekaman Batch September', schedule: 'On-demand', status: 'ended', badge: 'ra-badge-neutral', statusLabel: 'Selesai' }
+    ];
+
+    return {
+      courseTitle: 'Financial & KPR: Dasar Analisis DBR',
+      categoryLabel: 'Financial & KPR',
+      description: 'Pelajari cara menghitung DBR calon pembeli untuk memprediksi kelayakan KPR.',
+      isUnavailable, unavailableLabel: c.label, unavailableBadge: c.badge,
+      hasPrerequisite: hasPrereq, prerequisiteTitle: 'Sales Skill: Dasar Negosiasi',
+      lessonCount: lessons.length, lessons,
+      hasSessions: true, relatedSessions,
+      passingGrade: '70',
+      isAgentViewer: viewer === 'agent', isGuestViewer: viewer === 'guest'
+    };
+  }
+}
+</script>
+</body>
+</html>

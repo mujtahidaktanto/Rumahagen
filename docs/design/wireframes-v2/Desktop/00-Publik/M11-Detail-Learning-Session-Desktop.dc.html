@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Learning Session — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:1440px;box-sizing:border-box;background:#fff;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+  .header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .header-row{height:76px;display:flex;align-items:center;gap:28px;}
+  .pub-nav{display:flex;align-items:center;gap:4px;flex:1;}
+  .pub-nav a{display:flex;align-items:center;gap:3px;height:40px;padding:0 11px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);text-decoration:none;font-size:13.5px;font-weight:600;white-space:nowrap;}
+  .pub-nav a:hover{background:var(--ra-ink-50);color:var(--ra-blue-600);}
+  .pub-nav a.is-active{color:var(--ra-blue-600);background:var(--ra-blue-50);}
+
+  .breadcrumb{padding:16px 0 0;display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);font-size:13px;}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--ra-blue-600);}
+
+  .cover{height:260px;border-radius:var(--ra-radius-lg);background:linear-gradient(135deg,#0F3F9E,#0B2E6B);margin-top:16px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .live-pill{position:absolute;top:16px;left:16px;background:var(--ra-danger-600);color:#fff;padding:6px 14px;border-radius:var(--ra-radius-pill);font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:ra-pulse 1.4s ease-in-out infinite;}
+  .unavailable-banner{position:absolute;inset:0;background:rgba(20,24,31,.6);display:flex;align-items:center;justify-content:center;}
+
+  .detail-grid{display:grid;grid-template-columns:1fr 340px;gap:32px;padding:32px 0 56px;align-items:start;}
+  .link-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;}
+
+  .join-card{position:sticky;top:96px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:22px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--ra-shadow-2);}
+  .restricted-box{padding:64px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--ra-ink-500);}
+
+  .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;margin-top:8px;}
+  .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13.5px;padding:5px 0;}
+</style>
+</helmet>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="wrap header-row">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:32px;width:auto;object-fit:contain;">
+      <nav class="pub-nav">
+        <a href="M11-Homepage.dc.html">Beranda</a>
+        <a href="M11-Discovery.dc.html">Listing</a>
+        <a href="M11-Discovery.dc.html">Agen</a>
+        <a href="M11-Discovery.dc.html">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Event</a>
+        <a href="#">Learning</a>
+        <a class="is-active" href="#">Learning Session</a>
+        <a href="#">Konten Publik</a>
+        <a href="#">Promo</a>
+      </nav>
+      <button class="ra-iconbtn" aria-label="Cari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M01-Login-Desktop.dc.html">Masuk</a>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M01-Register-Desktop.dc.html">Daftar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <div class="breadcrumb">
+      <a href="M11-Homepage.dc.html">Beranda</a><span>/</span>
+      <span>Learning Session</span><span>/</span>
+      <span style="color:var(--ra-ink-900);">{{sessionTitle}}</span>
+    </div>
+
+    <!-- RESTRICTED (visibility gate) -->
+    <sc-if value="{{isRestricted}}" hint-placeholder-val="{{false}}">
+      <div class="restricted-box" style="margin-top:24px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="40" height="40"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <h2 class="ra-title-lg">Sesi Ini Bersifat Terbatas</h2>
+        <p class="ra-body-md">{{restrictedReason}}</p>
+        <a class="ra-btn ra-btn-primary" href="M01-Login-Desktop.dc.html">Masuk untuk Cek Akses</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isAccessible}}" hint-placeholder-val="{{true}}">
+
+    <div class="cover">
+      <sc-if value="{{isLive}}" hint-placeholder-val="{{false}}">
+        <span class="live-pill"><span class="live-dot"></span>LIVE SEKARANG</span>
+      </sc-if>
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5" width="56" height="56"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M21 8l-4 3 4 3V8Z"/></svg>
+      <sc-if value="{{isUnavailable}}" hint-placeholder-val="{{false}}">
+        <div class="unavailable-banner">
+          <span class="ra-badge {{unavailableBadge}}" style="font-size:16px;padding:10px 22px;"><span class="ra-dot"></span>{{unavailableLabel}}</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;padding:24px 0 0;">
+      <div style="display:flex;gap:8px;">
+        <span class="ra-badge ra-badge-info">{{sessionTypeLabel}}</span>
+        <span class="ra-badge {{visibilityBadge}}">{{visibilityLabel}}</span>
+      </div>
+      <h1 class="ra-headline">{{sessionTitle}}</h1>
+      <div style="display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 3"/></svg>
+        <span class="ra-body-md">{{scheduleText}}</span>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="detail-grid" style="margin-top:12px;">
+      <div style="display:flex;flex-direction:column;gap:24px;min-width:0;">
+
+        <sc-if value="{{hasCourseLink}}" hint-placeholder-val="{{true}}">
+          <a class="link-card" href="M11-Detail-Learning-Desktop.dc.html">
+            <div style="width:40px;height:40px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg></div>
+            <div><div class="ra-label-lg">Bagian dari: {{courseTitle}}</div><span class="ra-caption">Lihat kurikulum lengkap course</span></div>
+          </a>
+        </sc-if>
+        <sc-if value="{{hasOrgLink}}" hint-placeholder-val="{{true}}">
+          <a class="link-card" href="M11-Detail-Organisasi-Desktop.dc.html">
+            <div style="width:40px;height:40px;border-radius:var(--ra-radius-sm);background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M3 21V9l9-6 9 6v12"/></svg></div>
+            <div><div class="ra-label-lg">Diselenggarakan oleh {{orgName}}</div><span class="ra-caption">Lihat profil organisasi</span></div>
+          </a>
+        </sc-if>
+        <sc-if value="{{hasEventLink}}" hint-placeholder-val="{{false}}">
+          <a class="link-card" href="M11-Detail-Event-Desktop.dc.html">
+            <div style="width:40px;height:40px;border-radius:var(--ra-radius-sm);background:var(--ra-success-100);color:var(--ra-success-600);display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
+            <div><div class="ra-label-lg">Bagian dari event: {{eventTitle}}</div><span class="ra-caption">Lihat detail event</span></div>
+          </a>
+        </sc-if>
+
+        <div>
+          <h2 class="ra-title-lg" style="margin-bottom:12px;">Tentang Sesi Ini</h2>
+          <p class="ra-body-lg" style="color:var(--ra-ink-700);line-height:26px;">{{description}}</p>
+        </div>
+      </div>
+
+      <!-- JOIN CARD -->
+      <div class="join-card">
+        <sc-if value="{{isScheduled}}" hint-placeholder-val="{{true}}">
+          <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Daftar Sesi Ini</button>
+          <span class="ra-caption" style="text-align:center;">Mulai {{scheduleText}}</span>
+        </sc-if>
+        <sc-if value="{{isLive}}" hint-placeholder-val="{{false}}">
+          <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;background:var(--ra-danger-600);">Gabung Sekarang</button>
+        </sc-if>
+        <sc-if value="{{isEndedOnDemand}}" hint-placeholder-val="{{false}}">
+          <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Tonton Rekaman</button>
+        </sc-if>
+        <sc-if value="{{isEndedOther}}" hint-placeholder-val="{{false}}">
+          <button class="ra-btn ra-btn-secondary" style="width:100%;height:48px;" disabled>Sesi Telah Berakhir</button>
+        </sc-if>
+        <sc-if value="{{isCancelled}}" hint-placeholder-val="{{false}}">
+          <button class="ra-btn ra-btn-secondary" style="width:100%;height:48px;" disabled>Sesi Dibatalkan</button>
+        </sc-if>
+        <sc-if value="{{isFailed}}" hint-placeholder-val="{{false}}">
+          <button class="ra-btn ra-btn-secondary" style="width:100%;height:48px;" disabled>Sesi Gagal Dilaksanakan</button>
+        </sc-if>
+
+        <div style="border-top:1px solid var(--ra-ink-100);padding-top:14px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;"><span class="ra-caption">Tipe Sesi</span><span class="ra-body-md" style="font-weight:700;">{{sessionTypeLabel}}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span class="ra-caption">Visibilitas</span><span class="ra-body-md" style="font-weight:700;">{{visibilityLabel}}</span></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="wrap footer-grid">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <p class="ra-body-md" style="color:rgba(255,255,255,.55);max-width:260px;">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.</p>
+      </div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Jelajahi</span><a href="M11-Discovery.dc.html">Listing</a><a href="M11-Discovery.dc.html">Agen</a><a href="M11-Discovery.dc.html">Organisasi</a><a href="M11-Discovery.dc.html">Developer</a><a href="M11-Discovery.dc.html">Event</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Learning</span><a href="#">Learning</a><a href="#">Learning Session</a><a href="#">Konten Publik</a><a href="#">Promo</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Bantuan</span><a href="#">Pusat Bantuan</a><a href="#">Syarat &amp; Ketentuan</a><a href="#">Kebijakan Privasi</a><a href="#">Hubungi Kami</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Download Aplikasi</span></div>
+    </div>
+    <div class="wrap" style="padding:20px 0;"><span class="ra-caption" style="color:rgba(255,255,255,.4);">© 2026 RumahAgen.com</span></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"sessionStatus":{"editor":"enum","default":"scheduled","options":["draft","scheduled","live","ended","cancelled","failed"],"section":"Skenario status"},"sessionType":{"editor":"enum","default":"interactive","options":["broadcast","interactive","on_demand"],"section":"Skenario"},"sessionVisibility":{"editor":"enum","default":"public","options":["public","organization","partner","private"],"section":"Skenario"},"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const status = this.props.sessionStatus ?? 'scheduled';
+    const type = this.props.sessionType ?? 'interactive';
+    const visibility = this.props.sessionVisibility ?? 'public';
+
+    const isRestricted = visibility !== 'public';
+    const restrictedReasonMap = {
+      organization: 'Sesi ini hanya untuk anggota organisasi tertentu. Masuk dengan akun agen untuk memeriksa akses Anda.',
+      partner: 'Sesi ini hanya untuk mitra developer partner. Masuk dengan akun partner untuk memeriksa akses Anda.',
+      private: 'Sesi ini bersifat privat dan hanya bisa diakses peserta yang diundang langsung.'
+    };
+
+    const typeLabelMap = { broadcast: 'Broadcast', interactive: 'Interaktif', on_demand: 'On-Demand' };
+    const statusCopy = {
+      draft: { label: 'Sesi Belum Dipublikasikan', badge: 'ra-badge-neutral' },
+      cancelled: { label: 'Sesi Dibatalkan', badge: 'ra-badge-neutral' },
+      failed: { label: 'Sesi Gagal Dilaksanakan', badge: 'ra-badge-danger' }
+    };
+    const isUnavailable = status === 'draft' || status === 'cancelled' || status === 'failed';
+    const c = statusCopy[status] ?? { label: '', badge: '' };
+
+    return {
+      isRestricted,
+      isAccessible: !isRestricted,
+      restrictedReason: restrictedReasonMap[visibility] ?? '',
+      sessionTitle: 'Sesi Live Q&A: Strategi Analisis DBR',
+      sessionTypeLabel: typeLabelMap[type],
+      visibilityLabel: visibility === 'public' ? 'Publik' : visibility === 'organization' ? 'Organisasi' : visibility === 'partner' ? 'Partner' : 'Privat',
+      visibilityBadge: visibility === 'public' ? 'ra-badge-success' : 'ra-badge-neutral',
+      scheduleText: 'Sabtu, 18 Oktober 2026 · 19.00 WIB',
+      isUnavailable,
+      unavailableLabel: c.label,
+      unavailableBadge: c.badge,
+      isLive: status === 'live',
+      hasCourseLink: true,
+      courseTitle: 'Financial & KPR: Dasar Analisis DBR',
+      hasOrgLink: true,
+      orgName: 'RumahAgen Academy',
+      hasEventLink: false,
+      eventTitle: '',
+      description: 'Sesi tanya-jawab langsung bersama trainer bersertifikat untuk membahas studi kasus analisis DBR peserta, membedah simulasi perhitungan, dan tips lolos verifikasi bank.',
+      isScheduled: status === 'scheduled',
+      isEndedOnDemand: status === 'ended' && type === 'on_demand',
+      isEndedOther: status === 'ended' && type !== 'on_demand',
+      isCancelled: status === 'cancelled',
+      isFailed: status === 'failed'
+    };
+  }
+}
+</script>
+</body>
+</html>
