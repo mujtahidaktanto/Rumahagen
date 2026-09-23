@@ -2907,3 +2907,66 @@ temuan BARU (36 fungsi `SECURITY DEFINER` anon-executable yang muncul
 sudah ada sejak sebelum batch ini, pola project-wide yang konsisten,
 bukan regresi dari perubahan ini). Data uji (1 bank, 1 simulasi DBR)
 dihapus total, diverifikasi `0` baris tersisa.
+
+## `0119` — Batch keamanan: 4 fungsi/trigger LAIN dengan pola NULL-bypass yang SAMA persis dengan `0118`
+
+Setelah `0118` menutup NULL-bypass di `share_dbr_simulation()`/`revoke_
+dbr_simulation_share()`, di-grep seluruh 118 migration untuk pola guard
+yang SAMA (`IF NOT public.is_superadmin() THEN RAISE EXCEPTION`, tanpa
+`ELSE` fallback) — ditemukan 4 lokasi lain, diminta pengguna untuk
+diperbaiki sekaligus dalam batch terpisah ini.
+
+**Dicek dulu, bukan diasumsikan**: `has_permission()` (`0006`, dipakai
+HAMPIR SEMUA RLS project) TIDAK kena pola ini — fungsi itu punya `ELSE
+RETURN FALSE` eksplisit di ujung rantai `IF/ELSIF`-nya, jadi caller
+dengan `auth.uid()` tak dikenal selalu fail CLOSED lewat jalur itu. Bug
+ini murni terbatas pada segelintir fungsi/trigger custom yang memanggil
+`is_superadmin()` LANGSUNG sebagai satu-satunya guard, tanpa `ELSE`.
+
+**Reachability berbeda-beda per fungsi** (dicek satu-satu, bukan
+diasumsikan sama):
+- `configure_refresh_allowance()` (`0019`, M14) dan `grant_learning_
+  points_from_purchase()` (`0025`, M14→M04) — **SAMA SEKALI TIDAK
+  digerbangi RLS** (komentar migration `0019` sendiri eksplisit:
+  "TIDAK ADA policy INSERT/UPDATE/DELETE... perketat ke jalur fungsi
+  SECURITY DEFINER saja"). `is_superadmin()` di dalamnya ADALAH
+  satu-satunya gerbang — bug ini reachable LANGSUNG oleh siapa pun
+  dengan `auth.uid()` tak dikenal, tanpa syarat tambahan apa pun.
+- `enforce_partnership_result_validation_superadmin_only()` (`0024`,
+  M04) — trigger di belakang RLS UPDATE yang sudah memanggil `has_
+  permission()` (aman) untuk hampir semua jalur; diperbaiki untuk
+  defense-in-depth yang konsisten.
+- `enforce_organization_invitation_no_self_accept()` (`0050`, M12) —
+  RLS `organization_invitations_update` punya klausa tambahan `agent_id
+  = auth.uid()` yang TIDAK lewat `has_permission()` sama sekali, jadi
+  guard `is_superadmin()` di trigger ini adalah lapisan proteksi NYATA
+  (bukan cuma redundan) untuk skenario `auth.uid()` yatim yang PERSIS
+  match `agent_id`/`leader_id` baris undangan itu.
+
+**Fix seragam**: `COALESCE(public.is_superadmin(), false)` di keempatnya
+— `NULL` diperlakukan sebagai "bukan superadmin" (fail CLOSED), bukan
+"entah" yang ternyata diperlakukan sebagai lolos oleh PL/pgSQL.
+
+Diuji nyata untuk 2 fungsi paling parah (yang reachable langsung tanpa
+RLS): `auth.uid()` disimulasikan sebagai UUID acak tak dikenal (`set_
+config('request.jwt.claims', ...)`) →
+- `configure_refresh_allowance('<agent lain>', 999)` → **sebelum fix**:
+  berhasil (bug — siapa pun bisa mengatur ulang jatah refresh harian
+  agent lain jadi 999). **Setelah fix**: `RAISE EXCEPTION` "butuh
+  permission... scope Superadmin".
+- `grant_learning_points_from_purchase('<user lain>', 1000000, ...)` →
+  **sebelum fix**: berhasil (bug — siapa pun bisa menghadiahkan 1 juta
+  Learning Point gratis ke akun mana pun). **Setelah fix**: `RAISE
+  EXCEPTION` "hanya Superadmin bisa memanggil".
+
+2 fungsi lain (`0024`/`0050`) diverifikasi lewat `pg_get_functiondef`
+(kode fungsi live mengandung `COALESCE(public.is_superadmin(), false)`
+persis seperti migration ini) — tidak diuji lewat skenario baris data
+penuh karena butuh fixture lintas-tabel (partnership result/organization
+invitation dengan kepemilikan spesifik) yang tidak menambah keyakinan
+berarti di atas kesamaan mekanis 1:1 dengan pola yang sudah dibuktikan
+di 2 fungsi pertama dan di `0118`.
+
+`get_advisors(type: security)` dicek lagi setelah migration ini — nihil
+temuan baru. Data uji dibersihkan, `request.jwt.claims` di-`RESET` ke
+kondisi sesi normal.
