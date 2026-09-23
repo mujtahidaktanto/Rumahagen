@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Konten Publik — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:var(--ra-surface);position:relative;}
+  .topbar{height:58px;position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tb-btn{width:38px;height:38px;border-radius:50%;background:var(--ra-ink-50);display:flex;align-items:center;justify-content:center;border:none;flex:none;}
+  .search-bar{background:#fff;padding:14px 16px 16px;border-bottom:1px solid var(--ra-ink-100);}
+  .list-col{padding:16px;display:flex;flex-direction:column;gap:12px;}
+  .art-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;text-decoration:none;color:inherit;background:#fff;display:flex;gap:12px;align-items:flex-start;}
+  .art-icon{width:36px;height:36px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:48px 20px;color:var(--ra-ink-300);text-align:center;}
+</style>
+</helmet>
+<div class="page">
+
+  <div class="topbar">
+    <button class="tb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="ra-title-md">Pusat Bantuan</span>
+  </div>
+
+  <div class="search-bar">
+    <div class="ra-input" style="height:44px;display:flex;align-items:center;gap:8px;color:var(--ra-ink-300);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Cari topik bantuan…
+    </div>
+  </div>
+
+  <div class="ra-scroll" style="max-height:calc(844px - 58px - 76px);overflow-y:auto;">
+
+    <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+      <div class="list-col">
+        <div class="ra-skel" style="height:80px;"></div>
+        <div class="ra-skel" style="height:80px;"></div>
+        <div class="ra-skel" style="height:80px;"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+      <div class="empty-wrap">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M14 10a4 4 0 0 1 4-4h20l12 12v36a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V10Z"/><path d="M38 6v12h12"/></svg>
+        <span class="ra-body-md">Tidak ada artikel yang cocok</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+      <div class="list-col">
+        <sc-for list="{{articles}}" as="a" hint-placeholder-count="6">
+          <a class="art-card" href="M11-Konten-Publik-Detail-Mobile.dc.html">
+            <div class="art-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M6 2h9l5 5v15H6V2Z"/><path d="M15 2v5h5"/></svg></div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+              <span class="ra-label-lg ra-truncate-2" style="font-size:13.5px;">{{a.title}}</span>
+              <span class="ra-caption ra-truncate-1">{{a.excerpt}}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const listState = this.props.listState ?? 'loaded';
+
+    const articles = [
+      { title: 'Syarat & Ketentuan Penggunaan Platform', excerpt: 'Ketentuan yang mengikat setiap pengguna RumahAgen.' },
+      { title: 'Kebijakan Privasi', excerpt: 'Bagaimana kami mengumpulkan dan melindungi data pribadi Anda.' },
+      { title: 'Cara Klaim Proyek Developer', excerpt: 'Panduan langkah demi langkah untuk agen.' },
+      { title: 'Kode Etik Agen RumahAgen', excerpt: 'Standar perilaku profesional agen terdaftar.' },
+      { title: 'Panduan Verifikasi Akun & Lisensi', excerpt: 'Dokumen dan proses verifikasi identitas agen.' },
+      { title: 'Hubungi Kami', excerpt: 'Kontak dukungan pelanggan dan saluran pengaduan.' }
+    ];
+
+    return {
+      isLoading: listState === 'loading',
+      isEmpty: listState === 'empty',
+      isLoaded: listState === 'loaded',
+      articles
+    };
+  }
+}
+</script>
+</body>
+</html>

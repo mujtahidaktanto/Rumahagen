@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Konten Publik — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:#fff;position:relative;}
+  .topbar{height:58px;position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tb-btn{width:38px;height:38px;border-radius:50%;background:var(--ra-ink-50);display:flex;align-items:center;justify-content:center;border:none;flex:none;}
+  .sec{padding:18px 16px;}
+  .prose p{font-size:14.5px;line-height:24px;color:var(--ra-ink-700);margin:0 0 16px;}
+  .prose h2{font-size:16px;font-weight:800;color:var(--ra-ink-900);margin:24px 0 10px;}
+  .related-list{display:flex;flex-direction:column;gap:2px;}
+  .side-link{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--ra-ink-100);text-decoration:none;color:var(--ra-ink-700);font-size:13.5px;font-weight:600;}
+  .empty-box{padding:56px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+</style>
+</helmet>
+<div class="page">
+
+  <div class="topbar">
+    <button class="tb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="ra-title-md ra-truncate-1">{{title}}</span>
+  </div>
+
+  <sc-if value="{{isNotFound}}" hint-placeholder-val="{{false}}">
+    <div class="empty-box" style="margin-top:24px;">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><circle cx="27" cy="27" r="16"/><path d="M38 38l14 14"/></svg>
+      <h2 class="ra-title-md">Halaman Tidak Ditemukan</h2>
+      <p class="ra-body-md">Artikel ini mungkin sudah dipindahkan atau belum dipublikasikan.</p>
+      <a class="ra-btn ra-btn-primary" href="M11-Konten-Publik-Mobile.dc.html">Kembali ke Pusat Bantuan</a>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isFound}}" hint-placeholder-val="{{true}}">
+  <div class="ra-scroll" style="max-height:calc(844px - 58px);overflow-y:auto;">
+
+    <div class="sec" style="padding-bottom:0;display:flex;flex-direction:column;gap:6px;">
+      <h1 class="ra-title-lg">{{title}}</h1>
+      <span class="ra-caption">Terakhir diperbarui {{updatedAt}}</span>
+    </div>
+
+    <div class="sec prose">
+      <p>{{introParagraph}}</p>
+      <h2>{{sectionTitle1}}</h2>
+      <p>{{bodyParagraph1}}</p>
+      <h2>{{sectionTitle2}}</h2>
+      <p>{{bodyParagraph2}}</p>
+    </div>
+
+    <div class="sec" style="padding-top:0;border-top:1px solid var(--ra-ink-100);">
+      <span class="ra-label-lg" style="color:var(--ra-ink-500);">Artikel Lainnya</span>
+      <div class="related-list" style="margin-top:6px;">
+        <sc-for list="{{relatedArticles}}" as="r" hint-placeholder-count="4">
+          <a class="side-link" href="M11-Konten-Publik-Detail-Mobile.dc.html">
+            {{r.title}}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M9 5l7 7-7 7"/></svg>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"pageState":{"editor":"enum","default":"found","options":["found","not_found"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pageState = this.props.pageState ?? 'found';
+
+    const relatedArticles = [
+      { title: 'Kebijakan Privasi' },
+      { title: 'Kode Etik Agen RumahAgen' },
+      { title: 'Panduan Verifikasi Akun & Lisensi' },
+      { title: 'Hubungi Kami' }
+    ];
+
+    return {
+      isFound: pageState === 'found',
+      isNotFound: pageState === 'not_found',
+      title: 'Syarat & Ketentuan Penggunaan Platform',
+      updatedAt: '12 Sep 2026',
+      introParagraph: 'Dokumen ini mengatur hak dan kewajiban setiap pengguna platform RumahAgen, baik agen maupun pengguna publik.',
+      sectionTitle1: '1. Ketentuan Umum',
+      bodyParagraph1: 'Dengan mendaftar dan menggunakan platform RumahAgen, pengguna dianggap telah membaca, memahami, dan menyetujui seluruh syarat dan ketentuan yang berlaku.',
+      sectionTitle2: '2. Kewajiban Agen Terdaftar',
+      bodyParagraph2: 'Setiap agen wajib memberikan informasi listing yang akurat dan mematuhi kode etik profesi yang ditetapkan RumahAgen.',
+      relatedArticles
+    };
+  }
+}
+</script>
+</body>
+</html>

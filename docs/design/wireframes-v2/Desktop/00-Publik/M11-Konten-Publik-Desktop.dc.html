@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Konten Publik — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:1440px;box-sizing:border-box;background:var(--ra-surface);}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+  .header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .header-row{height:76px;display:flex;align-items:center;gap:28px;}
+  .pub-nav{display:flex;align-items:center;gap:4px;flex:1;}
+  .pub-nav a{display:flex;align-items:center;gap:3px;height:40px;padding:0 11px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);text-decoration:none;font-size:13.5px;font-weight:600;white-space:nowrap;}
+  .pub-nav a:hover{background:var(--ra-ink-50);color:var(--ra-blue-600);}
+  .pub-nav a.is-active{color:var(--ra-blue-600);background:var(--ra-blue-50);}
+
+  .hero{background:linear-gradient(180deg,var(--ra-blue-50) 0%,#fff 100%);padding:48px 0 36px;}
+
+  .cat-row{display:flex;gap:10px;padding:24px 0 0;flex-wrap:wrap;}
+
+  .content-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:28px 0 56px;}
+  .art-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;text-decoration:none;color:inherit;background:#fff;display:flex;flex-direction:column;gap:10px;}
+  .art-card:hover{border-color:var(--ra-blue-200);box-shadow:var(--ra-shadow-2);}
+  .art-icon{width:40px;height:40px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:64px 20px;color:var(--ra-ink-300);text-align:center;grid-column:1 / -1;}
+
+  .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;}
+  .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13.5px;padding:5px 0;}
+</style>
+</helmet>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="wrap header-row">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:32px;width:auto;object-fit:contain;">
+      <nav class="pub-nav">
+        <a href="M11-Homepage.dc.html">Beranda</a>
+        <a href="M11-Discovery.dc.html">Listing</a>
+        <a href="M11-Discovery.dc.html">Agen</a>
+        <a href="M11-Discovery.dc.html">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Event</a>
+        <a href="M11-Detail-Learning-Desktop.dc.html">Learning</a>
+        <a href="M11-Detail-Learning-Session-Desktop.dc.html">Learning Session</a>
+        <a class="is-active" href="M11-Konten-Publik-Desktop.dc.html">Konten Publik</a>
+        <a href="#">Promo</a>
+      </nav>
+      <button class="ra-iconbtn" aria-label="Cari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M01-Login-Desktop.dc.html">Masuk</a>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M01-Register-Desktop.dc.html">Daftar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap" style="display:flex;flex-direction:column;gap:16px;align-items:flex-start;">
+      <h1 class="ra-display" style="font-size:32px;">Pusat Bantuan &amp; Informasi</h1>
+      <p class="ra-body-lg" style="color:var(--ra-ink-500);max-width:560px;">Panduan, kebijakan, dan syarat penggunaan platform RumahAgen — semua dalam satu tempat.</p>
+      <div class="ra-input" style="width:480px;display:flex;align-items:center;gap:8px;color:var(--ra-ink-300);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        Cari topik bantuan…
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+      <div class="content-grid">
+        <div class="ra-skel" style="height:140px;"></div>
+        <div class="ra-skel" style="height:140px;"></div>
+        <div class="ra-skel" style="height:140px;"></div>
+        <div class="ra-skel" style="height:140px;"></div>
+        <div class="ra-skel" style="height:140px;"></div>
+        <div class="ra-skel" style="height:140px;"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+      <div class="content-grid">
+        <div class="empty-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg>
+          <span class="ra-title-md">Gagal memuat konten</span>
+          <span class="ra-body-md">Periksa koneksi internet Anda, lalu coba lagi.</span>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm">Coba Lagi</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+      <div class="content-grid">
+        <div class="empty-wrap">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="52" height="52"><path d="M14 10a4 4 0 0 1 4-4h20l12 12v36a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V10Z"/><path d="M38 6v12h12"/></svg>
+          <span class="ra-title-md">Tidak ada artikel yang cocok</span>
+          <span class="ra-body-md">Coba kata kunci lain, atau hubungi tim kami langsung.</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+      <div class="content-grid">
+        <sc-for list="{{articles}}" as="a" hint-placeholder-count="6">
+          <a class="art-card" href="M11-Konten-Publik-Detail-Desktop.dc.html">
+            <div class="art-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M6 2h9l5 5v15H6V2Z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+            </div>
+            <span class="ra-title-md ra-truncate-2" style="min-height:44px;">{{a.title}}</span>
+            <span class="ra-body-md ra-truncate-2" style="color:var(--ra-ink-500);min-height:40px;">{{a.excerpt}}</span>
+            <span class="ra-caption">Diperbarui {{a.updatedAt}}</span>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="wrap footer-grid">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <p class="ra-body-md" style="color:rgba(255,255,255,.55);max-width:260px;">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.</p>
+      </div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Jelajahi</span><a href="M11-Discovery.dc.html">Listing</a><a href="M11-Discovery.dc.html">Agen</a><a href="M11-Discovery.dc.html">Organisasi</a><a href="M11-Discovery.dc.html">Developer</a><a href="M11-Discovery.dc.html">Event</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Learning</span><a href="M11-Detail-Learning-Desktop.dc.html">Learning</a><a href="M11-Detail-Learning-Session-Desktop.dc.html">Learning Session</a><a href="M11-Konten-Publik-Desktop.dc.html">Konten Publik</a><a href="#">Promo</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Bantuan</span><a href="M11-Konten-Publik-Desktop.dc.html">Pusat Bantuan</a><a href="M11-Konten-Publik-Detail-Desktop.dc.html">Syarat &amp; Ketentuan</a><a href="M11-Konten-Publik-Detail-Desktop.dc.html">Kebijakan Privasi</a><a href="M11-Konten-Publik-Detail-Desktop.dc.html">Hubungi Kami</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Download Aplikasi</span></div>
+    </div>
+    <div class="wrap" style="padding:20px 0;"><span class="ra-caption" style="color:rgba(255,255,255,.4);">© 2026 RumahAgen.com</span></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const listState = this.props.listState ?? 'loaded';
+
+    const articles = [
+      { title: 'Syarat & Ketentuan Penggunaan Platform', excerpt: 'Ketentuan yang mengikat setiap pengguna RumahAgen, agen maupun pembeli.', updatedAt: '12 Sep 2026' },
+      { title: 'Kebijakan Privasi', excerpt: 'Bagaimana kami mengumpulkan, menyimpan, dan melindungi data pribadi Anda.', updatedAt: '12 Sep 2026' },
+      { title: 'Cara Klaim Proyek Developer', excerpt: 'Panduan langkah demi langkah bagi agen untuk mengklaim proyek dari developer partner.', updatedAt: '5 Sep 2026' },
+      { title: 'Kode Etik Agen RumahAgen', excerpt: 'Standar perilaku profesional yang wajib dipatuhi seluruh agen terdaftar.', updatedAt: '28 Agu 2026' },
+      { title: 'Panduan Verifikasi Akun & Lisensi', excerpt: 'Dokumen yang dibutuhkan dan proses verifikasi identitas agen.', updatedAt: '20 Agu 2026' },
+      { title: 'Hubungi Kami', excerpt: 'Kontak dukungan pelanggan, jam operasional, dan saluran pengaduan resmi.', updatedAt: '15 Agu 2026' }
+    ];
+
+    return {
+      isLoading: listState === 'loading',
+      isError: listState === 'error',
+      isEmpty: listState === 'empty',
+      isLoaded: listState === 'loaded',
+      articles
+    };
+  }
+}
+</script>
+</body>
+</html>
