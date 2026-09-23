@@ -2584,10 +2584,87 @@ creator). Seluruh 8 organisasi uji (+ member/invitation turunannya lewat
 CASCADE) dan 16 akun uji (dua putaran pengujian) dihapus total,
 diverifikasi `0` baris tersisa.
 
+## `POST /listings/from-project/{project_id}` — Approved Claim → Agent-owned Listing (API-034, tanpa migration baru)
+
+Menutup gap agen/user #1 (dari sisa 4 temuan di atas): Gate
+`PRE-00-H_M06_DEVELOPER_PROJECT_MARKETING_CLAIM_GATE` §19-24 mengunci
+kontrak "Approved Claim → Agent-owned Listing Initialization" secara
+SANGAT detail (termasuk field mapping lengkap), tapi TIDAK PERNAH
+diimplementasi — sebelum route ini, klaim project developer yang sudah
+`approved` tidak pernah menghasilkan listing apa pun; Agent "claim"
+project tapi tidak pernah dapat listing untuk dijual/dipasarkan.
+
+### Hard-gate (§21): Approved Claim + milik pemanggil sendiri
+
+"Project existence alone is not sufficient to authorize Listing creation
+from Project" — dicek EKSPLISIT di kode (bukan RLS baru, karena ini
+aturan LINTAS-TABEL `agent_project_claims` + `developer_projects` →
+`listings`, bukan RLS satu-tabel biasa): `agent_project_claims` milik
+pemanggil untuk project ini harus `status='approved'`, else `403`.
+RLS `listings_insert` (`0018`, `m03.listing.create` scope `'own'`) tetap
+jadi penegak akhir untuk INSERT `listings` itu sendiri — tidak ada
+permission baru.
+
+### Field mapping (§22): 24 kolom identik, dikonfirmasi migration 0034 sendiri
+
+Migration `0034` (developer_projects) SUDAH mendokumentasikan sendiri
+bahwa 24 kolom detail propertinya (province_id s.d. dispute_free_
+declared) "diisi TYPE/CONSTRAINT identik dengan listings" — field
+mapping jadi mekanis, bukan tebakan. Pengecualian:
+
+- `name` → `title`, `location` → `address` (agent boleh override
+  keduanya lewat body — kalau project tidak punya `location`, `address`
+  WAJIB dikirim, `422` kalau tidak).
+- `price_min` → `price` (project cuma punya RANGE `price_min`/
+  `price_max`, listing butuh SATU nilai — keputusan rekayasa: pakai
+  harga awal/starting price, bukan `price_max`, konsisten praktik
+  "mulai dari" untuk listing berbasis project).
+- `whatsapp_number` WAJIB dari body — satu-satunya "Agent-owned field"
+  eksplisit di Gate §22 yang tidak ada sama sekali di `developer_
+  projects`.
+- `status` listing baru SELALU `draft` (default kolom) — "Claim approval
+  != Listing Publish authority" (§19), Agent tetap harus publish
+  terpisah lewat `PATCH /listings/{id}/status` yang sudah ada.
+
+### Media inheritance (§23): disalin, bukan referensi hidup
+
+"Approved Claim permits Project Media to be inherited into the resulting
+Listing media context" — baris `developer_project_media` (photo/video)
+DISALIN ke `listing_photos`/`listing_videos` milik listing baru pada
+request yang sama (bukan link/referensi) — "No authority leakage": salinan
+di listing murni milik Agent sejak saat itu (§24, edit Agent tidak
+memutasi Project sumbernya).
+
+### Boleh dipanggil berkali-kali dari klaim yang sama
+
+Tidak ada pembatasan "satu listing per klaim" yang dievidensi — `agent_
+project_claims` UNIQUE per (agent,project), tapi `unit_availability` di
+project menyiratkan project bisa punya banyak unit tersedia. Endpoint
+ini SENGAJA boleh dipanggil berkali-kali dari klaim `approved` yang sama
+untuk menginisialisasi listing berbeda (mis. unit A, unit B) — diuji
+nyata.
+
+### File baru
+
+- `lib/validation/listings.ts` — tambahan `createListingFromProjectSchema`
+  (`whatsapp_number` wajib, `title`/`address` opsional).
+- `app/api/listings/from-project/[project_id]/route.ts` — POST.
+
+Diuji nyata end-to-end: Agent tanpa klaim → `403`; Agent dengan klaim
+`pending` (belum di-approve) → `403`; setelah Superadmin approve klaim →
+Agent tanpa `whatsapp_number` di body → `422`; Agent dengan body lengkap
+→ `201`, SELURUH field termapping benar (title=nama project, price=
+price_min, address=location, land_area/building_area/bedrooms/bathrooms
+tersalin persis, `developer_project_id` terisi FK yang sejak `0018`
+memang disiapkan untuk ini, `status='draft'`); `listing_photos`/
+`listing_videos` berisi persis salinan URL dari `developer_project_media`;
+panggilan KEDUA dari klaim yang sama dengan `title` custom → `201`,
+listing kedua independen (unit berbeda dari project yang sama). Seluruh
+data uji (2 listing, 1 project, 1 developer partner, 1 klaim, 3 akun)
+dihapus total, diverifikasi `0` baris tersisa.
+
 ### Sisa temuan dari audit endpoint agen/user M01-M15 (belum dibangun, di luar batch ini)
 
-- `POST /listings/from-project/{project_id}` (M03/M06) — klaim project
-  developer yang di-approve tidak pernah menghasilkan listing.
 - `PUT /leads/{id}/status` (M03) — lead cuma bisa dilihat, tidak pernah
   bisa diubah statusnya.
 - `POST /developer-partners/events` (M05) — Developer Partner tidak

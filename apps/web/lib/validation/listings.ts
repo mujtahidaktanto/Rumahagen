@@ -89,6 +89,18 @@ export const listingStatusSchema = z.object({
 });
 export type ListingStatusInput = z.infer<typeof listingStatusSchema>;
 
+// POST /listings/from-project/{project_id} (API-034 — M03/M06, Gate
+// PRE-00-H §20-22). `whatsapp_number` WAJIB (kolom "Agent-owned" per Gate
+// §22, tidak ada di developer_projects sama sekali). `title`/`address`
+// opsional -- override manual, default diambil dari project (name/
+// location) kalau tidak dikirim.
+export const createListingFromProjectSchema = z.object({
+  whatsapp_number: z.string().min(1).max(20),
+  title: z.string().min(1).max(200).optional(),
+  address: z.string().min(1).max(500).optional(),
+});
+export type CreateListingFromProjectInput = z.infer<typeof createListingFromProjectSchema>;
+
 // PUT /admin/listings/{id}/reject — API-038 (M03 Admin Listing Review,
 // STEP11-A, admin-surface gap #1). rejection_reason dipakai ulang dari
 // kolom yang sudah ada (0018) -- tetap optional, sama seperti
