@@ -2308,3 +2308,80 @@ Admin suspend agent1 -> 200; Admin suspend agent1 LAGI (sudah suspended)
 end-to-end, bukan cuma status tersimpan di kolom); Superadmin suspend
 agent2 -> 200 (jalur Superadmin tetap utuh). Audit log yang tercipta dan
 5 akun uji dihapus total, diverifikasi `0` baris tersisa.
+
+## `0109` — M04 Learning Economy Configuration: `GET/PUT /admin/learning/configuration`
+
+Menutup gap TERAKHIR dari audit admin-surface M01-M15 — API-074/075 (M04,
+STEP11-A, "CURRENT PRESERVE"). **Bukan** endpoint yang sama dengan
+`/admin/learning/activities` (API-076/077/078, sudah dibangun sejak
+`0058` — itu CRUD konten Activity, bukan "configuration").
+
+### Zero skema fisik dievidensi — konten benar-benar tidak ada di Core
+
+Dicek menyeluruh: STEP10-D data dictionary TIDAK punya entity
+`LEARNING_CONFIG`/`LEARNING_ECONOMY_CONFIG` apa pun, tidak ada satu pun
+nama kolom/rate/threshold "learning economy" di seluruh korpus. Satu-
+satunya evidence adalah OTORISASI (bukan skema) di
+`PRE-00-F_M04_LEARNING_GATE` §19 "LEARNING ECONOMY CONFIGURATION"
+(`Q-M04-E-01A` View, `Q-M04-E-01B` Manage) — baris ini TIDAK ada di
+`STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv` 50-baris frozen, pola SAMA
+PERSIS seperti `m04.learning_point.*` (0023) dan `m04.learning_activity.*`
+(0058) yang JUGA ADD-NEW lewat Gate yang sama, bukan lewat master matrix.
+2 permission BARU di-mint di sini, scope PERSIS meniru Gate:
+
+```
+m04.learning_economy_configuration.view   → Superadmin=BYPASS, Admin=ALL, Manager=ALL, Instructor=OWN, sisanya=NONE
+m04.learning_economy_configuration.manage → Superadmin=BYPASS, Admin=ALL, Manager=ALL, sisanya=NONE (Instructor TIDAK termasuk)
+```
+
+### Keputusan skema: key-value generik, meniru `system_configs` (0011)
+
+Tidak ada nama field yang dievidensi (beda dari `dbr_config`/0008 atau
+`seo_config`/0097 yang field-nya memang dievidensi eksplisit) — jadi
+`learning_economy_configs` dibuat dengan bentuk PERSIS sama seperti
+`system_configs`: `config_key`/`config_value`/`updated_by`/`updated_at`.
+Tabel TERPISAH dari `system_configs` sendiri karena RBAC-nya BEDA
+(Manager+Admin=ALL di sini vs `system_configs` yang Superadmin-only).
+Endpoint terkunci sebagai SATU path tanpa `{key}` (beda dari
+`/admin/config/system/{key}` yang per-key) — GET mengembalikan SEMUA
+baris sekaligus, PUT upsert SATU pasangan `config_key`/`config_value` per
+panggilan lewat body.
+
+### Catatan "Instructor = OWN" — di-seed exact, tapi efektif no-op
+
+Di-seed PERSIS sesuai Gate (`PRESERVE_EXACT`, konsisten pola migration
+lain) — TAPI tabel ini adalah konfigurasi GLOBAL tanpa kolom `owner_id`
+apa pun. `has_permission(action, p_owner_id)` untuk scope `'own'` SELALU
+`FALSE` tanpa `owner_id` yang cocok (`0006`), dan tidak ada `owner_id`
+yang bermakna untuk baris config global — route tidak pernah memanggil
+`has_permission` dengan `owner_id` apa pun untuk kasus ini. Konsekuensi:
+baris permission Instructor ini SECARA PRAKTIS tidak pernah lolos lewat
+endpoint admin ini, konsisten dengan SETIAP endpoint `/admin/*` lain di
+seluruh proyek yang staff-only (Superadmin/Admin/Manager). Nilai scope
+tetap di-seed exact match Gate untuk audit/traceability, bukan dihapus
+diam-diam. **Diverifikasi nyata**: Instructor GET -> `200` array kosong
+(bukan error — RLS SELECT hanya memfilter baris, tidak melempar 403);
+Instructor PUT -> `403`.
+
+### File baru
+
+- `lib/validation/learning-points.ts` — tambahan
+  `learningEconomyConfigUpsertSchema` (`config_key`/`config_value`).
+- `app/api/admin/learning/configuration/route.ts` — GET (semua baris) +
+  PUT (upsert satu key).
+
+Diuji nyata dengan 5 role (superadmin/admin/manager/agent/instructor):
+Agent GET SEBELUM ada config apa pun -> `200` array kosong; Agent PUT ->
+`403`; Instructor PUT -> `403`; Instructor GET -> `200` kosong (own-scope
+no-op terbukti); tanpa sesi GET -> `200` kosong (bukan error, RLS
+memfilter diam-diam); Superadmin PUT membuat key baru -> `200`; Admin GET
+-> melihat key yang baru dibuat; Manager PUT mengubah value key yang
+sama -> `200`, `updated_by` berubah ke Manager; Manager GET -> value
+baru persisten; **Agent GET SETELAH config ada -> tetap `200` array
+kosong** (membuktikan RLS benar-benar memfilter berdasarkan permission,
+bukan cuma kebetulan tabel kosong). Baris config uji dihapus total, 5
+akun uji dihapus lewat Admin API, diverifikasi `0` baris tersisa.
+
+**Ini menutup SELURUH admin-surface gap dari audit M01-M15** (bersama
+Internal Staff User Management, Listing Moderation Queue, dan Agent
+Suspend di atas).

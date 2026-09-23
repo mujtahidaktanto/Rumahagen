@@ -13,3 +13,13 @@ export const learningPointAdjustmentSchema = z.object({
   reason: z.string().optional(),
 });
 export type LearningPointAdjustmentInput = z.infer<typeof learningPointAdjustmentSchema>;
+
+// GET/PUT /admin/learning/configuration (API-074/075) -- key-value generik
+// (public.learning_economy_configs, migration 0109), tidak ada field
+// bernama yang dievidensi Core -- lihat header migration 0109 untuk alasan
+// lengkap.
+export const learningEconomyConfigUpsertSchema = z.object({
+  config_key: z.string().min(1).max(100),
+  config_value: z.string().max(255).nullable(),
+});
+export type LearningEconomyConfigUpsertInput = z.infer<typeof learningEconomyConfigUpsertSchema>;
