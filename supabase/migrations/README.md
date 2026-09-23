@@ -2236,3 +2236,75 @@ autentikasi, untuk pemanggil anonim). Audit log `m03.listing.approve`+
 `m03.listing.reject` yang tercipta dari tes ini dan listing uji itu
 sendiri dihapus total; 4 akun uji dihapus lewat Admin API dan
 diverifikasi `0` baris tersisa.
+
+## `0108` — Agent Suspend: `PUT /admin/agents/{id}/suspend` (admin-surface gap #1, bagian ketiga, M02)
+
+Menutup gap #1 (bagian ketiga) dari audit admin-surface M01-M15 — API-024
+(M02, STEP11-A, "CURRENT PRESERVE"). Sebelum batch ini TIDAK ADA jalur
+HTTP sama sekali untuk mengubah `users.status` milik user lain kecuali
+Superadmin (RLS `users_update_admin`, `0104`) — Admin/Manager tidak bisa
+menyentuh baris user lain sama sekali di tabel `users`. Mekanisme
+"suspend" itu sendiri SUDAH ADA dan fully-enforced sejak `0082`
+(`has_permission()` SELALU `FALSE` untuk akun `suspended`, apa pun
+rolenya) — yang belum ada murni jalur HTTP untuk memicunya.
+
+### Tidak ada baris "Agent Suspend" di master matrix — preseden mana yang diikuti?
+
+`STEP12-01_ROLE_PERMISSION_MASTER_MATRIX.csv` hanya punya SATU baris M02
+(Profile Photo) — tidak ada baris untuk suspend agent sama sekali,
+konsisten dengan `m03.listing.suspend` (`0086`) dan `organizations`
+suspend (`0087`) yang JUGA ADD-NEW di luar matrix awal. Dua preseden itu
+BERBEDA otorisasinya: listing suspend = Superadmin+Admin+Manager (lewat
+permission code `m03.listing.suspend`), organization suspend =
+Superadmin+Admin SAJA (lewat direct role check, eksplisit "supaya tidak
+campur konvensi dalam satu tabel").
+
+**Keputusan**: ikuti preseden `organizations` (0087), BUKAN `listings`
+(0086) — Superadmin+Admin SAJA, direct role check, TANPA permission code
+baru. Alasan: tabel `users` SENDIRI sudah konsisten sejak awal membedakan
+Superadmin+Admin dari Manager tanpa permission code (`users_select_
+self_or_admin`/0007 dan `users_update_admin`/0104 SAMA-SAMA hanya
+Superadmin+Admin) — mengikuti konvensi yang SUDAH ADA di tabel yang sama,
+bukan mencampur pola permission-code M03 ke tabel yang belum pernah
+memakainya.
+
+### Satu arah saja — persis kontrak yang dikunci Core
+
+RLS/trigger baru HANYA mengizinkan transisi `active -> suspended` untuk
+target ber-role Agent oleh Admin — tidak ada endpoint "reactivate"/
+"unsuspend" yang dievidensi Core, jadi tidak dibuat jalur baliknya untuk
+Admin. Superadmin tetap punya kuasa penuh (termasuk reaktivasi) lewat
+`users_update_admin` (0104) yang sudah ada — tidak ada jalan buntu.
+
+### `0108_add_agent_suspend_capability.sql`
+
+- RLS baru `users_update_admin_agent_suspend`: Admin (`current_role_code()
+  = 'admin'`) bisa mencapai baris mana pun yang `role_id` = role Agent
+  untuk UPDATE. Superadmin tidak diulang di sini (sudah tercakup
+  `users_update_admin`).
+- Trigger `enforce_users_protected_columns` (0100/0101) di-`CREATE OR
+  REPLACE` — blok `status` dipisah dari blok `role_id/id/deleted_at/
+  created_at` supaya bisa diberi SATU pengecualian sempit: Admin, target
+  ber-role Agent, DAN transisi PERSIS `active -> suspended` (bukan ke
+  status lain, bukan dari status lain). Kolom lain (role_id/id/dst.) tetap
+  terkunci mutlak seperti sebelumnya.
+
+### File baru
+
+- `app/api/admin/agents/[id]/suspend/route.ts` — PUT. Dicek eksplisit di
+  kode (RPC `is_superadmin()` lalu `current_role_code()`) supaya pesan
+  403/404/409 jelas, RLS+trigger 0108 tetap penegak keras di lapisan DB.
+  Prasyarat: target harus ber-role `agent` (404 kalau bukan) dan
+  berstatus `active` (409 kalau sudah `suspended`/status lain). Audit log
+  `m02.agent.suspend`.
+
+Diuji nyata dengan 5 akun (superadmin/admin/manager/agent1/agent2):
+Manager mencoba suspend -> 403; Agent2 mencoba suspend Agent lain
+(self-service) -> 403; tanpa sesi -> 403; Admin mencoba suspend akun
+Manager (bukan Agent) -> 404 (batas semantik "hanya Agent" terbukti);
+Admin suspend agent1 -> 200; Admin suspend agent1 LAGI (sudah suspended)
+-> 409; **agent1 yang sudah suspended mencoba membuat listing -> 403**
+(membuktikan enforcement `has_permission()`/0082 benar-benar efektif
+end-to-end, bukan cuma status tersimpan di kolom); Superadmin suspend
+agent2 -> 200 (jalur Superadmin tetap utuh). Audit log yang tercipta dan
+5 akun uji dihapus total, diverifikasi `0` baris tersisa.
