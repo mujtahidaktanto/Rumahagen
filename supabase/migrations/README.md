@@ -1869,3 +1869,158 @@ ubah `status` baris miliknya sendiri → berhasil, membuktikan bypass
 `is_superadmin()` tetap berfungsi untuk skenario user session asli (bukan
 cuma admin database). Seluruh data uji (2 auth user) dihapus dan
 diverifikasi kosong.
+
+## `0102` — Fix bug: Permission Preset salah membatasi target role ke Agent-saja untuk semua actor
+
+Ditemukan dari pertanyaan user ("bukankah Superadmin bebas preset semua
+role, Manager hanya boleh preset Agent?") saat membahas gap
+`PUT /admin/users/{id}/role` — dicek langsung ke sumber otoritatif
+`STEP12-B_PERMISSION_PRESET_SYNCHRONIZATION` (sebelumnya tidak terbaca,
+masih dalam bentuk zip, baru diekstrak sesi ini).
+
+### Bug yang ditemukan
+
+Trigger `enforce_preset_target_role_is_agent` (`0004`) memaksa
+`permission_presets.target_role_id` SELALU `'agent'`, **untuk siapa pun
+termasuk Superadmin**. Migration `0004` mengutip ini sebagai "PP-001:
+Preset HANYA berlaku untuk role Agent" — ternyata salah baca sumbernya.
+`STEP12-B_PRESET_ROLE_TRACEABILITY_MATRIX.csv` yang sebenarnya:
+
+| Kontrol | Target Role | Siapa boleh |
+|---|---|---|
+| PP-001 | Agent | Superadmin (full) + **Manager** (Create/Edit/Delete/Assign) |
+| PP-002 | Role lain (Admin/Buyer/Developer Partner/Instructor) | "No preset management for [role lain]; **Superadmin governance remains**" |
+| PP-003 | Superadmin | Full preset governance |
+
+PP-001 HANYA membatasi **Manager** ke Agent-saja — bukan larangan
+universal. RLS `permission_presets_manage` (`0007`) SEBENARNYA SUDAH BENAR
+sejak awal (`is_superadmin() OR (manager AND target_role_id=agent)`) —
+kesalahannya murni di trigger `0004` yang membatalkan niat RLS itu dengan
+memaksa SEMUA orang (termasuk Superadmin yang RLS-nya sudah `ALL`) ke
+Agent saja.
+
+### `0102_fix_permission_preset_target_role_restriction.sql`
+
+`CREATE OR REPLACE FUNCTION` (tidak mengedit `0004` yang sudah applied) —
+guard `auth.uid() IS NULL OR is_superadmin()` (pola sama seperti `0101`)
+menambah pengecualian: Superadmin (dan akses SQL/service-role langsung)
+lolos untuk target role apa pun; Manager tetap dibatasi ke Agent-saja
+(sudah cukup ditegakkan RLS, tidak diduplikasi di trigger).
+
+Diuji nyata dengan JWT sungguhan untuk kedua role: Superadmin buat preset
+target role **Admin** → **berhasil (201)**, sebelumnya mustahil sama
+sekali; Manager coba hal yang sama → **ditolak (400)** dengan pesan jelas;
+Manager buat preset target **Agent** → tetap berhasil (201, perilaku lama
+tidak berubah); SQL langsung target role Admin → berhasil (bypass
+`auth.uid() IS NULL` bekerja); trigger `enforce_preset_assignee_matches_
+target_role` (tidak disentuh migration ini) dikonfirmasi TETAP menolak
+assignment preset ke user yang role-nya tidak cocok — membuktikan
+perbaikan ini tidak melonggarkan aturan lain yang tidak terkait. Data uji
+(2 auth user, 3 permission preset, 1 preset item) dihapus total dan
+diverifikasi kosong.
+
+## `0103`-`0106` + 4 route baru — Permission Matrix Console (gap #2)
+
+Menutup gap #2 dari audit admin-surface M01-M15 (`STEP11-A` master
+inventory): `GET/PUT /admin/permissions/matrix` (API-144/146),
+`GET/PUT /admin/permissions/matrix/agent` (API-145/147), dan
+`PUT /admin/users/{id}/role` (API-148) — ketiganya sebelumnya 0% dibangun,
+satu-satunya cara mengelola role/permission adalah SQL langsung.
+
+Otorisasi dikonfirmasi user secara eksplisit sebelum dibangun: Agent/
+Developer Partner TIDAK punya akses lihat/edit sama sekali; Superadmin +
+Manager bisa EDIT preset; Admin HANYA VIEW.
+
+**Tiga bug RLS/trigger ditemukan lewat testing nyata sepanjang jalan** —
+semuanya sudah ada sejak migration lama (0004/0007), baru ketahuan sekarang
+karena baru kali ini ada endpoint HTTP nyata yang benar-benar memanggilnya:
+
+### `0103_fix_permission_matrix_rls_gaps.sql`
+- **Bug 1 (silent failure)**: `role_permissions_manager_modify_agent_rows`
+  (0007) memanggil `has_permission('m10.agent_permission_rows.modify')`
+  TANPA `owner_id`, padahal permission itu di-seed scope `'own'` untuk
+  Manager — `has_permission()` untuk scope `'own'` tanpa `owner_id` SELALU
+  `FALSE` (0006). Policy ini TIDAK PERNAH benar-benar meloloskan Manager
+  sejak pertama dibuat. Diverifikasi nyata: Manager PATCH baris Agent di
+  `role_permissions` → `200 OK` tapi **0 baris berubah** (RLS diam-diam
+  menyaring, bukan error eksplisit). Diperbaiki: hapus panggilan
+  `has_permission()` yang salah pasang, cukup cek `current_role_code()` +
+  `role_id` target langsung.
+- **Bug 2 (Admin tidak bisa lihat preset sama sekali)**:
+  `permission_presets`/`permission_preset_items`/`user_permission_presets`
+  hanya punya policy `FOR ALL` (Superadmin+Manager) — Admin tidak pernah
+  bisa SELECT, kontradiksi `STEP12-B` §2 sendiri ("Admin: no preset
+  management; governed **visibility** is distinct from management").
+  Ditambah policy SELECT terpisah memakai `has_permission
+  ('m10.role_permission_matrix.view')` — permission yang SAMA yang sudah
+  menggerbangi visibilitas `role_permissions`, tidak ada permission baru.
+
+### `0104_add_users_update_admin_policy.sql`
+Ditemukan saat membangun `PUT /admin/users/{id}/role`: `users_update_self`
+(0007) hanya izinkan `id = auth.uid()` — Superadmin TIDAK BISA update
+baris user LAIN sama sekali, bahkan setelah trigger
+`enforce_users_protected_columns` (0100/0101) diberi bypass
+`is_superadmin()` (trigger itu menjawab "kolom mana boleh berubah", RLS
+yang menjawab "baris siapa yang bisa disentuh"). Diverifikasi nyata:
+Superadmin sesi asli PATCH `role_id` user lain → `200 OK` tapi 0 baris
+berubah. Policy baru `users_update_admin`: Superadmin boleh UPDATE baris
+user siapa pun (kolom tetap dibatasi trigger yang sudah ada).
+
+### `0105_cleanup_stale_permission_preset_on_role_change.sql`
+Trigger `enforce_preset_assignee_matches_target_role` (0004) hanya menjaga
+kecocokan role SAAT preset di-assign — tidak ada apa pun yang menjaga ke
+ARAH SEBALIKNYA (role user berubah belakangan). Tanpa ini, promosi Agent
+yang sedang punya preset aktif ke Manager akan meninggalkan assignment
+yang menunjuk preset `target_role_id='agent'` padahal role user sekarang
+`'manager'` — melanggar `STEP12-B` §3. Trigger baru pada
+`AFTER UPDATE OF role_id ON users`: kalau preset yang sedang di-assign
+tidak lagi cocok dengan role baru, baris `user_permission_presets` dihapus
+otomatis (user kembali ke Role Default Matrix) — promosi TETAP berhasil,
+bukan diblokir.
+
+### `0106_fix_preset_assignee_trigger_security_definer.sql`
+**Ditemukan lewat tes nyata assign preset SEBAGAI MANAGER** (baru pertama
+kali ada INSERT nyata ke `user_permission_presets` di seluruh riwayat
+proyek): `enforce_preset_assignee_matches_target_role` (0004) TIDAK
+`SECURITY DEFINER` — `SELECT role_id FROM public.users` di dalamnya tunduk
+RLS `users_select_self_or_admin` yang HANYA izinkan
+`id=auth.uid() OR Superadmin OR Admin` — **Manager tidak termasuk**.
+Akibatnya `v_user_role_id` selalu `NULL` untuk assignment yang dilakukan
+Manager, `NULL IS DISTINCT FROM <target>` selalu `TRUE` → trigger SELALU
+menolak dengan pesan "role tidak cocok", **padahal rolenya benar-benar
+cocok**. Diverifikasi nyata: Manager assign preset ke Agent asli (role
+memang cocok) tetap ditolak — root cause bukan validasi bisnis gagal,
+tapi SELECT internal trigger yang diam-diam kosong. Diperbaiki: tandai
+`SECURITY DEFINER` (pola sama seperti `handle_auth_user_sync`/
+`log_audit_event` — baca lintas-tabel untuk validasi, bukan mengekspos
+data ke caller).
+
+### Route baru
+- `app/api/admin/permissions/matrix/route.ts` — GET (grid semua role,
+  dikelompokkan) + PUT (upsert satu sel `role_id`×`permission_id`).
+- `app/api/admin/permissions/matrix/agent/route.ts` — GET (daftar preset
+  target Agent + item + assignment) + PUT (`preset_id` diisi=edit,
+  dikosongkan=buat baru — menutup 2 kapabilitas STEP12-B sebut perlu
+  "Create"/"Edit" lewat SATU locked path, bukan mengarang endpoint baru).
+  **Bug ditemukan+diperbaiki saat build**: resolusi UUID role `'agent'`
+  awalnya lewat client bersesi biasa — RLS `roles_select` tidak lolos
+  untuk Agent, membuat GET oleh Agent gagal dengan `INTERNAL_ERROR` yang
+  membingungkan alih-alih list kosong; dipindah ke admin client (UUID role
+  bukan data rahasia, RLS sesungguhnya tetap di query `permission_presets`).
+- `app/api/admin/users/[id]/permission-preset/route.ts` — GET+PUT
+  (ADD-NEW, STEP12-B sebut "Assign/Replace" perlu tapi tidak mengunci ID
+  endpoint pasti — ekstensi minimal dari pola `/admin/users/{id}/role`
+  yang sudah locked; `preset_id: null` = unassign).
+- `app/api/admin/users/[id]/role/route.ts` — PUT, Superadmin-only.
+
+Diuji nyata end-to-end dengan 4 role sekaligus (superadmin/admin/manager/
+agent), sesuai batas yang diminta user: Agent GET matrix/preset → kosong
+(tanpa error); Admin GET → berhasil, PUT/assign/role-change → 403 di
+semuanya (view-only murni); Manager PUT matrix baris Agent → berhasil,
+baris Admin → 403; Manager create/edit preset Agent → berhasil; Manager
+assign preset ke Agent asli → berhasil (setelah fix 0106); Superadmin
+ubah role Agent→Admin sambil preset masih ter-assign → berhasil DAN
+assignment lama otomatis terhapus (fix 0105 terbukti); unauthenticated →
+kosong/403 di semua endpoint. Seluruh data uji (4 auth user, 1 preset)
+dihapus total dan diverifikasi kosong, `role_permissions` yang sempat
+diubah untuk tes dikembalikan ke nilai semula.

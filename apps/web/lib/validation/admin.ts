@@ -67,3 +67,49 @@ export const seoConfigUpdateSchema = z.object({
   sitemap_enabled: z.boolean().optional(),
 });
 export type SeoConfigUpdateInput = z.infer<typeof seoConfigUpdateSchema>;
+
+// PUT /admin/permissions/matrix — API-146 (M10). Upsert satu sel
+// role_id×permission_id di role_permissions (baseline). RLS 0007/0103
+// membedakan Superadmin (semua role) vs Manager (hanya baris role Agent).
+export const permissionMatrixCellUpdateSchema = z.object({
+  role_id: z.string().uuid(),
+  permission_id: z.string().uuid(),
+  granted_scope: z.enum(["all", "own", "none"]),
+});
+export type PermissionMatrixCellUpdateInput = z.infer<typeof permissionMatrixCellUpdateSchema>;
+
+// PUT /admin/permissions/matrix/agent — API-147 (M10). Upsert preset
+// (permission_presets, migration 0004) yang target_role_id-nya SELALU
+// Agent (trigger enforce_preset_target_role_is_agent, 0004/0102) —
+// `preset_id` diisi untuk edit preset yang sudah ada, dikosongkan untuk
+// membuat preset baru.
+export const agentPermissionPresetUpsertSchema = z.object({
+  preset_id: z.string().uuid().optional(),
+  name: z.string().min(1).max(150),
+  items: z
+    .array(
+      z.object({
+        permission_id: z.string().uuid(),
+        granted_scope: z.enum(["all", "own", "none"]),
+      }),
+    )
+    .min(1),
+});
+export type AgentPermissionPresetUpsertInput = z.infer<typeof agentPermissionPresetUpsertSchema>;
+
+// PUT /admin/users/{id}/permission-preset — ADD-NEW (STEP12-B menyebut
+// "Assign/Replace" sebagai kapabilitas yang dibutuhkan tapi tidak mengunci
+// endpoint pastinya; ekstensi minimal dari pola /admin/users/{id}/role
+// yang sudah dikunci STEP11-A). `preset_id: null` melepas assignment.
+export const assignPermissionPresetSchema = z.object({
+  preset_id: z.string().uuid().nullable(),
+});
+export type AssignPermissionPresetInput = z.infer<typeof assignPermissionPresetSchema>;
+
+// PUT /admin/users/{id}/role — API-148 (M10). Superadmin-only (RLS
+// users_update_admin, 0104) — perubahan role adalah operasi paling
+// sensitif di seluruh model otorisasi.
+export const updateUserRoleSchema = z.object({
+  role_id: z.string().uuid(),
+});
+export type UpdateUserRoleInput = z.infer<typeof updateUserRoleSchema>;
