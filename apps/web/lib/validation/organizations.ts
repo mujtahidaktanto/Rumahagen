@@ -47,3 +47,13 @@ export const searchOrganizationsQuerySchema = z.object({
   organization_type: organizationTypeEnum.optional(),
 });
 export type SearchOrganizationsQuery = z.infer<typeof searchOrganizationsQuerySchema>;
+
+// POST /organizations/{id}/close-otp/confirm -- langkah "Confirm" penutupan
+// Organisasi (STEP13-A v3.7 M12: "irreversible after successful OTP gate").
+// Tidak ada field `email` -- email diambil dari sesi pemanggil sendiri
+// (server-side), bukan dipercaya dari body, supaya OTP selalu dicek
+// terhadap identitas yang benar-benar sedang login.
+export const confirmOrganizationCloseSchema = z.object({
+  token: z.string().min(6).max(8),
+});
+export type ConfirmOrganizationCloseInput = z.infer<typeof confirmOrganizationCloseSchema>;

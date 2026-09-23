@@ -9,19 +9,23 @@
 // expose private Organization information", B6 §8/§10) dilakukan di sini,
 // bukan di RLS.
 //
-// DELETE: alur self-service DUA LANGKAH yang dikunci Core (Close lalu
-// Confirm, PRE-00-N §6/B6 §12) direalisasikan sebagai DUA PANGGILAN
-// berurutan ke endpoint locked yang SAMA -- panggilan pertama saat
-// status='active' memindahkan ke 'closing' ("Close"), panggilan kedua saat
-// status='closing' memindahkan ke 'closed' ("Confirm"). OTP-gated
-// confirmation yang disebut QIR/Business Rules TIDAK dievidensi punya
-// route API v2.1 apa pun ("exact current API v2.1 closure-confirm/OTP
-// route is not evidenced", B6 §12) -- jadi TIDAK dibangun di sini,
-// konsisten CONTROLLED ROUTE GAP yang didokumentasikan B6 sendiri.
+// DELETE: langkah PERTAMA dari alur dua-langkah yang dikunci Core (Close
+// lalu Confirm, PRE-00-N §6/B6 §12) -- memindahkan status='active' ke
+// 'closing' ("Close"). Langkah KEDUA ("Confirm") TIDAK lagi lewat endpoint
+// ini -- PRD terkunci (STEP13-A v3.7, bagian M12) eksplisit menyebut
+// "Closure is irreversible after successful OTP gate and server-side state
+// transition", jadi Confirm sekarang WAJIB lewat
+// POST /organizations/{id}/close-otp (kirim OTP) lalu
+// POST /organizations/{id}/close-otp/confirm (verifikasi OTP + eksekusi
+// transisi 'closing' -> 'closed'). Ini menutup CONTROLLED ROUTE GAP yang
+// tadinya didokumentasikan di sini -- OTP dikirim/diverifikasi lewat
+// Supabase Auth signInWithOtp/verifyOtp (mekanisme email-OTP yang SUDAH
+// ada, ADR-018 melarang provider/layanan baru), bukan sistem OTP baru.
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
 import { createClient } from "@/lib/supabase/server";
+import { assertCanCloseOrganization } from "@/lib/organizations/authorize-close";
 
 const PUBLIC_FIELDS = [
   "id",
@@ -75,32 +79,24 @@ export const DELETE = withApiHandler({ requireIdempotencyKey: true }, async (ctx
   // 403 yang jelas -- tanpa ini, UPDATE yang di-block RLS dan race
   // condition sungguhan sama-sama menghasilkan `data` null, tidak bisa
   // dibedakan.
-  if (org.created_by !== ctx.userId) {
-    const { data: isSuperadmin, error: saErr } = await supabase.rpc("is_superadmin");
-    if (saErr) throw saErr;
-    if (!isSuperadmin) {
-      const { data: roleCode, error: roleErr } = await supabase.rpc("current_role_code");
-      if (roleErr) throw roleErr;
-      if (roleCode !== "admin") {
-        throw new ApiError("FORBIDDEN", "Hanya pembuat organisasi (leader) atau Superadmin/Admin yang bisa menutup organisasi ini.");
-      }
-    }
-  }
+  await assertCanCloseOrganization(supabase, org, ctx.userId);
 
-  let nextStatus: string;
-  if (org.status === "active") {
-    nextStatus = "closing";
-  } else if (org.status === "closing") {
-    nextStatus = "closed";
-  } else if (org.status === "closed") {
+  if (org.status === "closing") {
+    throw new ApiError(
+      "CONFLICT",
+      "Organisasi sudah di tahap 'closing' -- selesaikan lewat POST /organizations/{id}/close-otp lalu /close-otp/confirm (OTP wajib untuk langkah Confirm).",
+    );
+  }
+  if (org.status === "closed") {
     throw new ApiError("CONFLICT", "Organisasi sudah closed -- status ini final, tidak bisa diubah lagi.");
-  } else {
-    throw new ApiError("CONFLICT", `Organisasi berstatus '${org.status}' -- penutupan hanya berlaku dari 'active' (Close) atau 'closing' (Confirm).`);
+  }
+  if (org.status !== "active") {
+    throw new ApiError("CONFLICT", `Organisasi berstatus '${org.status}' -- penutupan (Close) hanya berlaku dari status 'active'.`);
   }
 
   const { data, error } = await supabase
     .from("organizations")
-    .update({ status: nextStatus })
+    .update({ status: "closing" })
     .eq("id", ctx.params.id)
     .eq("status", org.status)
     .select()

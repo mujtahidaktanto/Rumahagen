@@ -2970,3 +2970,97 @@ di 2 fungsi pertama dan di `0118`.
 `get_advisors(type: security)` dicek lagi setelah migration ini — nihil
 temuan baru. Data uji dibersihkan, `request.jwt.claims` di-`RESET` ke
 kondisi sesi normal.
+
+## M12 Organization Close OTP Gate: `POST /organizations/{id}/close-otp`, `POST .../close-otp/confirm` (tanpa migration baru)
+
+Menutup gap yang ditemukan saat deep-scan PRD terkunci sebelum Fase C
+wireframe (pertanyaan pengguna soal syarat KTP untuk M12/M14 — jawabannya
+BUKAN KTP, tapi investigasi lanjutan atas PRD sumber v3.7 langsung
+menemukan kalimat terkunci di bagian M12: *"Closure is irreversible after
+successful OTP gate and server-side state transition"* — requirement
+NYATA yang belum ada route-nya sama sekali; `app/api/organizations/[id]/
+route.ts` sebelumnya secara eksplisit mendokumentasikan ini sebagai
+CONTROLLED ROUTE GAP karena kontrak API v2.1 persisnya tidak dievidensi).
+
+**Desain**: alur Close-lalu-Confirm (PRE-00-N §6/B6 §12) tadinya
+direalisasikan sebagai DUA panggilan berurutan ke `DELETE /organizations/
+{id}` yang SAMA (active→closing, lalu closing→closed) TANPA OTP sama
+sekali di langkah kedua. Sekarang:
+1. `DELETE /organizations/{id}` — HANYA melakukan langkah "Close"
+   (active→closing). Dipanggil saat status masih `closing` → `409
+   CONFLICT` yang eksplisit mengarahkan ke alur baru di bawah (bukan lagi
+   diam-diam mengeksekusi Confirm tanpa OTP).
+2. `POST /organizations/{id}/close-otp` — mengirim kode OTP 6 digit ke
+   email PEMANGGIL sendiri (aktor yang menjalankan aksi ireversibel ini,
+   BUKAN email Organisasi/Lead lain — konsisten dengan makna "konfirmasi
+   kamu benar-benar kamu"). Lewat `supabase.auth.signInWithOtp({email,
+   shouldCreateUser:false})`.
+3. `POST /organizations/{id}/close-otp/confirm` — body `{ token }`
+   (bukan `email`, sengaja — email diambil dari sesi server-side supaya
+   OTP selalu dicek terhadap identitas yang benar-benar login, tidak
+   dipercaya dari body). Verifikasi lewat `supabase.auth.verifyOtp({
+   email, token, type:'email'})`; HANYA jika valid, transisi
+   closing→closed dieksekusi DALAM request yang sama (bukan dua step
+   server terpisah) supaya tidak ada celah antara "OTP valid" dan
+   "status benar-benar berubah".
+
+**Kenapa reuse Supabase Auth OTP, bukan sistem OTP baru**: ADR-018
+(Core Technical Decisions, LOCKED) melarang "no new backend service,
+database engine, cache vendor, queue worker, session vendor, AI
+platform or other core platform". `signInWithOtp`/`verifyOtp(type:
+'email')` adalah mekanisme email-OTP yang SUDAH ada dan SUDAH terpakai
+(pola identik `app/api/auth/verify-otp` & `resend-otp` milik M01,
+`lib/api/auth-error.ts` di-reuse apa adanya, bukan dibuat ulang).
+Alternatif yang dipertimbangkan dan ditolak: `reauthenticate()` +
+`updateUser({nonce})` — dicek lewat SDK type defs (`@supabase/auth-js`),
+ternyata nonce-nya HANYA bisa dikonfirmasi bersamaan dengan mutasi
+password/email/phone sungguhan (tidak ada endpoint verifikasi nonce
+generik tanpa mutasi), jadi tidak cocok untuk gate "konfirmasi tanpa
+mengubah apa pun" ini.
+
+Otorisasi (siapa boleh menutup) diekstrak ke `lib/organizations/
+authorize-close.ts` (`assertCanCloseOrganization`) supaya SATU sumber
+aturan dipakai identik di ketiga route (Close, request OTP, confirm OTP)
+— bukan disalin ulang beda-beda (R-02).
+
+**Diuji nyata end-to-end** lewat server `next dev` sungguhan (bukan
+simulasi) dengan throwaway test user + throwaway Organization:
+Close (active→closing) → panggil `DELETE` lagi saat `closing` → **409**
+mengarahkan ke close-otp (bukan lagi diam-diam Confirm) → `POST close-otp`
+ke alamat `@rumahagen.com` (domain terverifikasi Resend) → **200**
+`otp_sent:true`, email SUNGGUHAN terkirim (dikonfirmasi lewat Resend
+sent-log) → confirm dengan kode SALAH → **422** `VALIDATION_ERROR`, status
+Organisasi TETAP `closing` (dikonfirmasi query langsung, bukan cuma
+respons API) → confirm dengan kode BENAR (diekstrak lewat Admin API
+`generate_link` yang meng-overwrite token pending untuk email yang sama —
+teknik SAMA persis yang dipakai `0096` untuk M01, "Admin API generate_link
+dipakai HANYA untuk membuktikan kode OTP... identik dengan yang bisa
+dipakai verifyOtp()") → **200**, status Organisasi jadi `closed` → confirm
+ULANG dengan kode yang sama → **409** (Organisasi sudah closed) DAN
+diverifikasi terpisah lewat mekanisme mentah (bukan lewat route) bahwa
+kode OTP GoTrue sendiri memang single-use (percobaan verifikasi kode yang
+sama dua kali → percobaan kedua ditolak `otp_expired`, independen dari
+gate status Organisasi). Data uji (1 auth user, 1 Organization) dihapus
+total. `get_advisors(type:security)` dicek — nihil temuan baru (36 fungsi
+anon-executable yang muncul sudah ada sejak sebelum perubahan ini, bukan
+regresi).
+
+**GAP OPERASIONAL YANG TERSISA (butuh aksi manual di Supabase Dashboard,
+sama seperti langkah "Confirm signup" M01 yang sudah pernah dilakukan
+pengguna)**: email SUNGGUHAN yang terkirim untuk `signInWithOtp` memakai
+template **"Magic Link"** Supabase, dan template itu (berbeda dari
+"Confirm signup" yang SUDAH diubah ke format kode `{{ .Token }}`) MASIH
+memakai format tautan-klik (`{{ .ConfirmationURL }}` via PKCE code) —
+dikonfirmasi nyata lewat isi email asli yang terkirim ke `@rumahagen.com`
+selama pengujian ini ("Follow the link below to sign in... [Sign in]",
+BUKAN kode 6 digit). Backend ini (`verifyOtp(type:'email')`) SUDAH benar
+menerima kode 6 digit apa pun caranya didapat (dibuktikan test di atas),
+tapi user AKHIR tidak akan melihat kode itu di email sampai template
+"Magic Link" diubah dengan cara SAMA seperti "Confirm signup": Supabase
+Dashboard → Authentication → Email Templates → Magic Link → ganti isi
+jadi menampilkan `{{ .Token }}` besar, bukan tombol/tautan
+`{{ .ConfirmationURL }}`. Wireframe M12 (`08-organisasi.dc.html`) akan
+dibangun mengasumsikan pengguna MENGETIK kode 6 digit — langkah Dashboard
+ini WAJIB diselesaikan sebelum fitur ini benar-benar bisa dipakai
+end-to-end oleh pengguna asli, persis seperti Google OAuth/template
+signup yang didokumentasikan di `0096`.

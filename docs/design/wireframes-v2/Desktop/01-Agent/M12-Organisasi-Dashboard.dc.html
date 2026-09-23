@@ -182,12 +182,35 @@
     <sc-if value="{{modalOpen}}" hint-placeholder-val="{{false}}">
       <div class="modal-scrim" onClick="{{closeConfirmModal}}">
         <div class="modal" onClick="{{stopClick}}">
-          <span class="ra-title-lg">{{modalTitle}}</span>
-          <p class="ra-body-md" style="color:var(--ra-ink-700);">{{modalBody}}</p>
-          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px;">
-            <button class="ra-btn ra-btn-secondary" onClick="{{closeConfirmModal}}">Batal</button>
-            <button class="ra-btn ra-btn-primary" style="background:var(--ra-danger-600);" onClick="{{closeConfirmModal}}">{{modalConfirmLabel}}</button>
-          </div>
+
+          <!-- Step OTP (hanya muncul untuk Confirm/closing->closed -- Close/
+               active->closing TIDAK butuh OTP, langkah terpisah di backend). -->
+          <sc-if value="{{isOtpStep}}" hint-placeholder-val="{{false}}">
+            <span class="ra-title-lg">Masukkan Kode OTP</span>
+            <p class="ra-body-md" style="color:var(--ra-ink-700);">Kode 6 digit sudah dikirim ke email terdaftar Anda ({{otpEmailMasked}}). Masukkan kodenya untuk menyelesaikan penutupan permanen — setelah dikonfirmasi, tindakan ini <strong>tidak bisa dibatalkan</strong>.</p>
+            <input class="ra-input" style="letter-spacing:8px;font-size:22px;text-align:center;font-weight:700;" type="text" inputmode="numeric" maxlength="8" placeholder="000000" value="{{otpValue}}" onInput="{{onOtpInput}}">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <button style="background:none;border:none;padding:0;color:var(--ra-blue-600);cursor:pointer;font:inherit;" class="ra-label-lg" onClick="{{resendOtp}}">Kirim ulang kode</button>
+              <sc-if value="{{otpResent}}" hint-placeholder-val="{{false}}">
+                <span class="ra-caption" style="color:var(--ra-success-600);">Kode baru terkirim.</span>
+              </sc-if>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px;">
+              <button class="ra-btn ra-btn-secondary" onClick="{{backToConfirmStep}}">Kembali</button>
+              <button class="ra-btn ra-btn-primary" style="background:var(--ra-danger-600);" disabled="{{otpConfirmDisabled}}" onClick="{{confirmWithOtp}}">Konfirmasi Penutupan</button>
+            </div>
+          </sc-if>
+
+          <!-- Step konfirmasi awal (Close, atau pengantar sebelum kirim OTP). -->
+          <sc-if value="{{isConfirmStep}}" hint-placeholder-val="{{true}}">
+            <span class="ra-title-lg">{{modalTitle}}</span>
+            <p class="ra-body-md" style="color:var(--ra-ink-700);">{{modalBody}}</p>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px;">
+              <button class="ra-btn ra-btn-secondary" onClick="{{closeConfirmModal}}">Batal</button>
+              <button class="ra-btn ra-btn-primary" style="background:var(--ra-danger-600);" onClick="{{modalPrimaryAction}}">{{modalConfirmLabel}}</button>
+            </div>
+          </sc-if>
+
         </div>
       </div>
     </sc-if>
@@ -198,14 +221,31 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { modalOpen: false };
+    this.state = { modalOpen: false, otpStep: 'confirm', otpValue: '', otpResent: false };
     this.openConfirmModal = this.openConfirmModal.bind(this);
     this.closeConfirmModal = this.closeConfirmModal.bind(this);
     this.stopClick = this.stopClick.bind(this);
+    this.goToOtpStep = this.goToOtpStep.bind(this);
+    this.backToConfirmStep = this.backToConfirmStep.bind(this);
+    this.onOtpInput = this.onOtpInput.bind(this);
+    this.resendOtp = this.resendOtp.bind(this);
+    this.confirmWithOtp = this.confirmWithOtp.bind(this);
   }
-  openConfirmModal(){ this.setState({ modalOpen: true }); }
+  openConfirmModal(){ this.setState({ modalOpen: true, otpStep: 'confirm', otpValue: '', otpResent: false }); }
   closeConfirmModal(){ this.setState({ modalOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  // Langkah Confirm (closing->closed) WAJIB OTP (PRD terkunci STEP13-A v3.7
+  // M12: "irreversible after successful OTP gate") -- POST /organizations/
+  // {id}/close-otp mengirim kode ke email pemanggil sendiri. Langkah Close
+  // (active->closing) TIDAK butuh OTP, jadi tombolnya tetap langsung
+  // closeConfirmModal (lihat modalPrimaryAction di renderVals).
+  goToOtpStep(){ this.setState({ otpStep: 'otp', otpValue: '', otpResent: false }); }
+  backToConfirmStep(){ this.setState({ otpStep: 'confirm' }); }
+  onOtpInput(e){ this.setState({ otpValue: (e.target.value || '').replace(/\D/g, '').slice(0, 8) }); }
+  // Supabase Auth menegakkan cooldown kirim-ulang sendiri (60 detik/email) --
+  // wireframe cukup tampilkan konfirmasi terkirim, tanpa timer palsu.
+  resendOtp(){ this.setState({ otpValue: '', otpResent: true }); }
+  confirmWithOtp(){ this.closeConfirmModal(); }
   renderVals() {
     const orgState = this.props.orgState ?? 'has_org';
     const role = this.props.viewerRole ?? 'leader';
@@ -222,14 +262,30 @@ class Component extends DCLogic {
     const modalTitle = status === 'active' ? 'Tutup Organisasi Ini?' : 'Konfirmasi Penutupan Permanen';
     const modalBody = status === 'active'
       ? 'Organisasi akan masuk status "closing" — anggota masih bisa melihatnya, tapi tidak bisa menerima anggota atau listing baru. Anda perlu konfirmasi sekali lagi untuk menutup permanen.'
-      : 'Tindakan ini permanen dan tidak bisa dibatalkan. Organisasi akan berstatus "closed" selamanya. Anggota tidak akan kehilangan listing/riwayat mereka, tapi organisasi tidak bisa dibuka kembali.';
-    const modalConfirmLabel = status === 'active' ? 'Ya, Tutup Organisasi' : 'Ya, Tutup Permanen';
+      : 'Tindakan ini permanen dan tidak bisa dibatalkan. Untuk keamanan, Anda perlu memverifikasi kode OTP yang dikirim ke email terdaftar Anda sebelum penutupan benar-benar dieksekusi. Anggota tidak akan kehilangan listing/riwayat mereka, tapi organisasi tidak bisa dibuka kembali.';
+    // Close (active) selesai satu langkah -- Confirm (closing) pindah ke step
+    // OTP dulu, BUKAN langsung menutup (lihat goToOtpStep/PDR OTP gate).
+    const modalConfirmLabel = status === 'active' ? 'Ya, Tutup Organisasi' : 'Kirim Kode OTP';
+    const modalPrimaryAction = status === 'active' ? this.closeConfirmModal : this.goToOtpStep;
+    const otpValue = this.state.otpValue || '';
 
     return {
       openConfirmModal: this.openConfirmModal,
       closeConfirmModal: this.closeConfirmModal,
       stopClick: this.stopClick,
+      goToOtpStep: this.goToOtpStep,
+      backToConfirmStep: this.backToConfirmStep,
+      onOtpInput: this.onOtpInput,
+      resendOtp: this.resendOtp,
+      confirmWithOtp: this.confirmWithOtp,
+      modalPrimaryAction,
       modalOpen: this.state.modalOpen ?? false,
+      isOtpStep: (this.state.otpStep || 'confirm') === 'otp',
+      isConfirmStep: (this.state.otpStep || 'confirm') !== 'otp',
+      otpValue,
+      otpConfirmDisabled: otpValue.length < 6,
+      otpResent: this.state.otpResent ?? false,
+      otpEmailMasked: 'ri**@propertijaya.com',
       modalTitle, modalBody, modalConfirmLabel,
       isNoOrg: orgState === 'no_org',
       hasOrg: orgState === 'has_org',
