@@ -2775,3 +2775,135 @@ CRUD di atas) — digabung dengan audit admin-surface sebelumnya, SELURUH
 239 endpoint STEP11-A kini tercakup (dibangun langsung, di-reuse lewat
 path terdokumentasi, atau eksplisit CONTROLLED GAP yang tidak boleh
 diciptakan sendiri sesuai Core).
+
+## `0117`-`0118` + 3 route baru — M07 DBR Share/Revoke: dari fungsi SQL laten jadi endpoint HTTP nyata
+
+Ditemukan saat deep-scan ulang repo sebelum mulai Fase C wireframe (Agent
+fitur baru: M07/M13/M14/M06): `share_dbr_simulation()`, `revoke_dbr_
+simulation_share()`, `get_shared_dbr_simulation()` (`0089`, Gate PRE-00-I
+§26-28) sudah ada dan sudah diuji lewat RPC langsung sejak migration itu
+dibuat — TAPI tidak ada satu pun route Next.js yang membungkusnya (`grep`
+seluruh `apps/web/app/api` untuk `share_token`/nama fungsi-fungsi itu
+nihil sebelum batch ini). Tanpa route, tombol "Bagikan ke Prospek" di
+wireframe M07-DBR-Calculator (Fase C) tidak akan punya apa pun untuk
+dipanggil.
+
+### File baru
+
+- `app/api/calculator/dbr/[id]/share/route.ts` — POST, membungkus
+  `share_dbr_simulation()`. `requireIdempotencyKey: true` (fungsi ini
+  MENGGANTI `share_token` setiap dipanggil — retry tanpa idempotency key
+  bisa membatalkan link yang sudah terlanjur dikirim ke prospek).
+- `app/api/calculator/dbr/[id]/revoke-share/route.ts` — POST, membungkus
+  `revoke_dbr_simulation_share()`. Sibling terpisah dari `share/`, bukan
+  digabung PUT generik — pola sama seperti refresh/unpublish listing,
+  niat aksi eksplisit di path.
+- `app/api/calculator/dbr/shared/[token]/route.ts` — GET, membungkus
+  `get_shared_dbr_simulation()`. **TIDAK memeriksa `ctx.userId` sama
+  sekali** — ini satu-satunya route M07 yang boleh diakses tanpa login
+  (Gate §27: "share does not create a new platform role"), otorisasi
+  murni lewat kepemilikan token yang dicek DI DALAM fungsi SQL. Dikonfirmasi
+  `get_shared_dbr_simulation` sudah di-`GRANT EXECUTE` ke `anon` sejak
+  `0089` (dicek lewat `has_function_privilege` langsung ke Supabase live).
+
+Ketiganya memakai path/verb yang TIDAK dikunci eksplisit oleh Core — Gate
+PRE-00-I §28 sendiri bilang "physical token/reference representation
+remains downstream", jadi penamaan mengikuti konvensi sibling yang sudah
+ada (`.../export-pdf`, `.../save-as-prospect`), bukan menebak kontrak yang
+tidak pernah dievidensi.
+
+### `0117_fix_dbr_prospect_trigger_blocks_share_revoke.sql` — bug regresi ditemukan SAAT baru pertama kali diuji lewat HTTP
+
+Percobaan pertama memanggil `share_dbr_simulation()` (via RPC langsung,
+sebagai pemilik simulasi yang sah) GAGAL dengan error dari trigger yang
+sama sekali tidak terkait: *"dbr_simulations: hanya prospect_name/
+prospect_phone yang boleh diubah lewat save-as-prospect"*.
+
+**Root cause**: `trg_dbr_simulation_prospect_only_update` (`0099`, dibuat
+untuk endpoint `save-as-prospect`) memasang `BEFORE UPDATE` trigger yang
+berlaku untuk SEMUA UPDATE ke `dbr_simulations`, dari fungsi mana pun —
+termasuk `share_dbr_simulation()`/`revoke_dbr_simulation_share()` (`0089`,
+migration LEBIH LAMA, tapi ditulis TANPA sepengetahuan bahwa `0099` nanti
+akan mengunci kolom mana saja yang boleh berubah). Trigger `0099` secara
+eksplisit memblokir perubahan `share_token`/`shared_at`/`revoked_at` —
+padahal ketiga kolom itu JUSTRU satu-satunya yang dimaksudkan berubah
+lewat kedua fungsi `0089`. Karena tidak ada route HTTP yang pernah
+memanggil `share_dbr_simulation()`/`revoke_dbr_simulation_share()` sejak
+`0089` dibuat (Agustus) sampai `0099` dibuat (baru-baru ini), regresi ini
+laten total — tidak pernah tertangkap sampai batch ini.
+
+**Fix**: `CREATE OR REPLACE FUNCTION` pada trigger yang SAMA (bukan
+trigger baru) — daftar kolom mutable diperluas dari `{prospect_name,
+prospect_phone}` jadi juga mencakup `{share_token, shared_at,
+revoked_at}`. Kolom hasil kalkulasi/finansial (`property_price`,
+`loan_amount`, `dbr_percent`, `threshold_used`, dst.) tetap terkunci
+immutable, tidak berubah dari niat awal `0099`.
+
+### `0118_fix_dbr_share_revoke_null_superadmin_bypass.sql` — bug otorisasi KEDUA, ditemukan saat menguji ulang setelah `0117`
+
+Setelah `0117` menutup bug pertama, pengujian ulang lengkap (share →
+akses token → revoke → akses ditolak) dijalankan dengan `auth.uid()`
+DISIMULASIKAN sebagai UUID acak yang TIDAK ADA barisnya di `public.users`
+(`set_config('request.jwt.claims', ...)` langsung ke Postgres) — sebagai
+kasus negatif "non-owner mencoba share/revoke simulasi orang lain,
+seharusnya `403`". **Hasilnya justru `share_dbr_simulation()` BERHASIL**
+membagikan simulasi milik agent lain.
+
+**Root cause**: guard kepemilikan di kedua fungsi (`0089`) berbentuk
+`IF v_row.agent_id IS DISTINCT FROM auth.uid() AND NOT public.is_
+superadmin() THEN RAISE EXCEPTION`. `is_superadmin()` (`0006`) = `current_
+role_code() = 'superadmin'`, dan `current_role_code()` (`0006`) JOIN
+`public.users`/`public.roles` `WHERE u.id = auth.uid()` — kalau `auth.
+uid()` tidak match baris `users` mana pun, hasilnya **`NULL`, bukan
+`FALSE`**. `NULL = 'superadmin'` → `NULL`, jadi `is_superadmin()`
+mengembalikan `NULL`. `NOT NULL` = `NULL` di SQL, dan `TRUE AND NULL` =
+`NULL` — PL/pgSQL memperlakukan kondisi `IF` yang `NULL` SAMA seperti
+`FALSE` (blok tidak dieksekusi), jadi `RAISE EXCEPTION` tidak pernah
+terpicu. Caller yang datanya TIDAK DIKENALI sama sekali diam-diam
+diperlakukan seolah dia Superadmin — kebalikan total dari yang
+dimaksudkan.
+
+**Fix**: bungkus `is_superadmin()` dengan `COALESCE(..., false)` di
+kedua fungsi supaya `NULL` diperlakukan sebagai "bukan superadmin" (fail
+CLOSED), bukan "entah" yang ternyata diperlakukan sebagai lolos.
+
+**Catatan penting — pola yang SAMA ditemukan di 4 migration LAIN**
+(`0019_m14_commercial_entitlement_quota.sql` fungsi `configure_refresh_
+allowance`, `0024_m04_partnership_learning_result.sql` trigger
+`enforce_partnership_result_validation_superadmin_only`, `0025_m14_m04_
+learning_point_grant_invocation.sql` fungsi `grant_learning_points_from_
+purchase`, `0050_m12_organization_document_invitations.sql` trigger
+`enforce_organization_invitation_no_self_accept`) — SEMUANYA memakai
+bentuk `IF NOT public.is_superadmin() THEN RAISE EXCEPTION` sebagai
+satu-satunya guard, rentan NULL-bypass yang SAMA persis untuk `auth.uid()`
+yang tidak match baris `public.users` (mis. race condition sinkronisasi
+`auth.users`↔`public.users` saat signup, atau user yang dihapus tapi
+sesinya belum kedaluwarsa). **SENGAJA TIDAK diperbaiki di batch ini** — di
+luar scope "M07 DBR Share/Revoke gap" yang sedang dikerjakan, dilaporkan
+terpisah ke pengguna untuk keputusan lanjutan (apakah mau ditutup sebagai
+batch keamanan tersendiri).
+
+Diuji nyata end-to-end (data dibuat lewat `execute_sql`, `auth.uid()`
+disimulasikan lewat `set_config`, bukan lewat sesi HTTP sungguhan — pola
+pengujian yang berbeda dari batch sebelumnya karena route baru ini
+sengaja mencakup jalur TANPA sesi login sama sekali):
+
+1. Owner sah `share_dbr_simulation()` → `share_token` terisi, `shared_at`
+   terisi.
+2. `get_shared_dbr_simulation(token)` TANPA `auth.uid()` sama sekali
+   (mensimulasikan recipient anonim) → berhasil, data simulasi terbaca.
+3. Owner sah `revoke_dbr_simulation_share()` → `revoked_at` terisi.
+4. `get_shared_dbr_simulation(token)` yang SAMA, diulang → `RAISE
+   EXCEPTION` ("referensi share tidak valid, sudah dicabut, atau tidak
+   ditemukan") — akses benar-benar mati seketika setelah revoke.
+5. **Kasus negatif (sebelum `0118`)**: `auth.uid()` = UUID acak tidak
+   dikenal → `share_dbr_simulation()`/`revoke_dbr_simulation_share()` atas
+   simulasi MILIK ORANG LAIN **berhasil** (bug). **Setelah `0118`**:
+   percobaan identik → `RAISE EXCEPTION` "hanya Creator... yang boleh"
+   (benar).
+
+`get_advisors(type: security)` dicek setelah kedua migration — nihil
+temuan BARU (36 fungsi `SECURITY DEFINER` anon-executable yang muncul
+sudah ada sejak sebelum batch ini, pola project-wide yang konsisten,
+bukan regresi dari perubahan ini). Data uji (1 bank, 1 simulasi DBR)
+dihapus total, diverifikasi `0` baris tersisa.
