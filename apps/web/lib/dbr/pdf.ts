@@ -12,8 +12,14 @@
 // keputusan cakupan eksplisit, bukan diam-diam diabaikan; kalau nanti
 // Storage terintegrasi, kolom itu tinggal dipakai tanpa mengubah kontrak
 // endpoint ini.
+//
+// Logo RumahAgen (public/assets/rumahagen-logo.png) digambar di pojok kanan
+// atas -- pola sama persis seperti lib/claims/pdf.ts (permintaan user yang
+// sama, diterapkan konsisten di kedua generator PDF).
 
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 export interface DbrPdfData {
   id: string;
@@ -42,6 +48,18 @@ export async function generateDbrSimulationPdf(data: DbrPdfData): Promise<Uint8A
   const page = doc.addPage([595.28, 841.89]); // A4
   const font = await doc.embedFont(StandardFonts.Helvetica);
   const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
+
+  const logoPath = path.join(process.cwd(), "public", "assets", "rumahagen-logo.png");
+  const logoBytes = await fs.readFile(logoPath);
+  const logoImage = await doc.embedPng(logoBytes);
+  const logoWidth = 110;
+  const logoHeight = (logoImage.height / logoImage.width) * logoWidth;
+  page.drawImage(logoImage, {
+    x: 595.28 - 50 - logoWidth,
+    y: 841.89 - 50 - logoHeight,
+    width: logoWidth,
+    height: logoHeight,
+  });
 
   let y = 800;
   const left = 50;
