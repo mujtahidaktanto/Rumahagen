@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Belajar Course — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);padding:10px 16px 12px;}
+  .topbar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);}
+  .progress-track{height:6px;border-radius:3px;background:var(--ra-ink-100);overflow:hidden;}
+  .progress-track-fill{height:100%;background:var(--ra-blue-600);}
+
+  .main{flex:1;overflow-y:auto;padding:20px 16px 90px;}
+  .viewer{aspect-ratio:16/9;background:var(--ra-ink-800);border-radius:var(--ra-radius-md);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);margin-bottom:16px;font-size:13px;}
+
+  .lesson-fab{position:absolute;left:16px;right:16px;bottom:16px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 14px rgba(11,20,31,.12);}
+
+  .sheet-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:flex-end;z-index:30;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:16px;width:100%;max-height:70%;display:flex;flex-direction:column;gap:4px;}
+  .lesson-item{display:flex;align-items:center;gap:12px;padding:12px 6px;border:none;background:transparent;width:100%;text-align:left;cursor:pointer;}
+  .lesson-item.is-current{background:var(--ra-blue-50);border-radius:var(--ra-radius-sm);}
+  .lesson-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;background:var(--ra-ink-100);color:var(--ra-ink-500);}
+  .lesson-icon.is-done{background:var(--ra-success-100);color:var(--ra-success-600);}
+  .lesson-icon.is-current-icon{background:var(--ra-blue-600);color:#fff;}
+
+  .quiz-q{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;margin-bottom:12px;}
+  .quiz-opt{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-sm);margin-top:8px;cursor:pointer;}
+  .quiz-opt.is-selected{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+
+  .success-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:40px 10px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <div class="topbar-row">
+      <a class="iconbtn" href="M04-Pembelajaran.dc.html" aria-label="Keluar" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M18 6 6 18M6 6l12 12"/></svg></a>
+      <span class="ra-label-lg ra-truncate-1" style="flex:1;text-align:center;">{{courseTitle}}</span>
+      <span class="ra-caption" style="width:38px;text-align:right;">{{overallProgress}}%</span>
+    </div>
+    <div class="progress-track"><div class="progress-track-fill" style="width:{{overallProgress}}%;"></div></div>
+  </div>
+
+  <div class="main">
+
+    <sc-if value="{{isLessonView}}" hint-placeholder-val="{{true}}">
+      <div class="viewer">Preview konten {{currentLesson.typeLabel}}</div>
+      <span class="ra-title-md" style="display:block;margin-bottom:6px;">{{currentLesson.title}}</span>
+      <span class="ra-body-sm" style="color:var(--ra-ink-500);display:block;margin-bottom:20px;">Materi {{currentLesson.typeLabel}} milik course ini. Selesaikan untuk melanjutkan ke materi berikutnya.</span>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <sc-if value="{{currentLesson.isDone}}" hint-placeholder-val="{{false}}">
+          <span class="ra-badge ra-badge-success" style="align-self:flex-start;padding:8px 14px;">Sudah selesai</span>
+        </sc-if>
+        <sc-if value="{{currentLesson.notDone}}" hint-placeholder-val="{{true}}">
+          <button class="ra-btn ra-btn-primary" onClick="{{markCurrentDone}}">Tandai Selesai</button>
+        </sc-if>
+        <button class="ra-btn ra-btn-secondary" onClick="{{goNext}}">Lanjut →</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isQuizView}}" hint-placeholder-val="{{false}}">
+      <span class="ra-title-md" style="display:block;margin-bottom:4px;">Kuis Akhir</span>
+      <span class="ra-caption" style="display:block;margin-bottom:16px;">Nilai kelulusan minimum {{passingGrade}}.</span>
+
+      <sc-if value="{{quizNotSubmitted}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{quizQuestions}}" as="q" hint-placeholder-count="2">
+          <div class="quiz-q">
+            <span class="ra-label-lg" style="display:block;margin-bottom:4px;">{{q.text}}</span>
+            <span class="ra-caption">{{q.typeLabel}}</span>
+            <sc-for list="{{q.options}}" as="opt">
+              <div class="quiz-opt {{opt.selectedClass}}" onClick="{{opt.onSelect}}">
+                <div style="width:18px;height:18px;border-radius:{{q.optionShapeRadius}};border:2px solid var(--ra-ink-300);flex:none;"></div>
+                <span class="ra-body-sm">{{opt.text}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{submitQuiz}}">Kumpulkan Kuis</button>
+      </sc-if>
+
+      <sc-if value="{{quizSubmitted}}" hint-placeholder-val="{{false}}">
+        <div style="border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;text-align:center;">
+          <span class="ra-caption">Skor Anda</span>
+          <div class="ra-display" style="font-size:34px;margin:6px 0;">{{quizScore}}</div>
+          <span class="ra-badge {{quizResultBadge}}">{{quizResultLabel}}</span>
+          <div style="margin-top:16px;">
+            <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{goToCompleted}}">Lanjutkan</button>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{isCompletedView}}" hint-placeholder-val="{{false}}">
+      <div class="success-wrap">
+        <div style="width:68px;height:68px;border-radius:50%;background:var(--ra-success-100);color:var(--ra-success-600);display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <span class="ra-display" style="font-size:22px;">Course Selesai!</span>
+        <span class="ra-body-sm" style="color:var(--ra-ink-500);">Anda lulus kuis akhir dengan skor {{quizScore}}.</span>
+        <div class="ra-badge ra-badge-warning" style="padding:9px 16px;font-size:14px;">+{{lpEarned}} Learning Points</div>
+        <a class="ra-btn ra-btn-secondary" style="width:100%;margin-top:6px;" href="M04-Pembelajaran.dc.html">Kembali ke Pembelajaran</a>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <button class="lesson-fab" onClick="{{toggleSheet}}">
+    <span class="ra-body-sm">Daftar Materi</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+
+  <sc-if value="{{sheetOpen}}" hint-placeholder-val="{{false}}">
+    <div class="sheet-scrim" onClick="{{toggleSheet}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div style="overflow-y:auto;">
+          <sc-for list="{{lessons}}" as="lsn">
+            <button class="lesson-item {{lsn.currentClass}}" onClick="{{lsn.onSelect}}">
+              <div class="lesson-icon {{lsn.iconClass}}">
+                <sc-if value="{{lsn.isDone}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="15" height="15"><path d="M5 13l4 4L19 7"/></svg></sc-if>
+                <sc-if value="{{lsn.notDoneAndVideo}}" hint-placeholder-val="{{true}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M5 4.6a1 1 0 0 1 1.5-.87l12 7.4a1 1 0 0 1 0 1.74l-12 7.4A1 1 0 0 1 5 19.4V4.6Z"/></svg></sc-if>
+                <sc-if value="{{lsn.notDoneAndPdf}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><path d="M6 3h9l4 4v14H6z"/></svg></sc-if>
+                <sc-if value="{{lsn.notDoneAndSlide}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><rect x="3" y="5" width="18" height="13" rx="1.5"/></svg></sc-if>
+                <sc-if value="{{lsn.notDoneAndQuiz}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><circle cx="12" cy="12" r="9.5"/></svg></sc-if>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <span class="ra-body-md ra-truncate-1" style="display:block;">{{lsn.title}}</span>
+                <span class="ra-caption">{{lsn.typeLabel}}</span>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      viewMode: 'lesson',
+      currentLessonIndex: 0,
+      doneLessons: {},
+      quizSubmitted: false,
+      selectedOptions: {},
+      sheetOpen: false
+    };
+    this.markCurrentDone = this.markCurrentDone.bind(this);
+    this.goNext = this.goNext.bind(this);
+    this.submitQuiz = this.submitQuiz.bind(this);
+    this.goToCompleted = this.goToCompleted.bind(this);
+    this.toggleSheet = this.toggleSheet.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+
+  get lessonDefs(){
+    return [
+      { id: 'l1', title: 'Pengantar Analisis DBR', type: 'video', typeLabel: 'Video' },
+      { id: 'l2', title: 'Rumus & Contoh Perhitungan DBR', type: 'pdf', typeLabel: 'PDF' },
+      { id: 'l3', title: 'Studi Kasus: Menilai Kelayakan KPR', type: 'slide', typeLabel: 'Slide' }
+    ];
+  }
+  get quizDef(){
+    return [
+      { id: 'q1', text: 'DBR (Debt to Burden Ratio) mengukur apa?', type: 'single_choice', typeLabel: 'Pilih satu jawaban', options: [
+        { id:'o1', text:'Rasio cicilan utang terhadap penghasilan bulanan' },
+        { id:'o2', text:'Rasio uang muka terhadap harga properti' },
+        { id:'o3', text:'Rasio luas tanah terhadap luas bangunan' }
+      ]},
+      { id: 'q2', text: 'Manakah dokumen relevan untuk analisis DBR? (bisa >1)', type: 'multi_choice', typeLabel: 'Pilih satu atau lebih', options: [
+        { id:'o4', text:'Slip gaji / bukti penghasilan' },
+        { id:'o5', text:'Riwayat cicilan aktif' },
+        { id:'o6', text:'Sertifikat tanah properti target' }
+      ]}
+    ];
+  }
+
+  markCurrentDone(){
+    const lsn = this.lessonDefs[this.state.currentLessonIndex];
+    if (!lsn) return;
+    this.setState({ doneLessons: { ...this.state.doneLessons, [lsn.id]: true } });
+  }
+  goNext(){
+    const lessons = this.lessonDefs;
+    const next = this.state.currentLessonIndex + 1;
+    if (next < lessons.length) {
+      this.setState({ currentLessonIndex: next, viewMode: 'lesson' });
+    } else {
+      this.setState({ viewMode: 'quiz' });
+    }
+  }
+  selectOption(question, opt){
+    const sel = { ...this.state.selectedOptions };
+    if (question.type === 'single_choice') {
+      sel[question.id] = { [opt.id]: true };
+    } else {
+      const cur = { ...(sel[question.id] || {}) };
+      cur[opt.id] = !cur[opt.id];
+      sel[question.id] = cur;
+    }
+    this.setState({ selectedOptions: sel });
+  }
+  submitQuiz(){ this.setState({ quizSubmitted: true }); }
+  goToCompleted(){ this.setState({ viewMode: 'completed' }); }
+  toggleSheet(){ this.setState({ sheetOpen: !this.state.sheetOpen }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  renderVals() {
+    const lessons = this.lessonDefs;
+    const idx = this.state.currentLessonIndex;
+    const doneLessons = this.state.doneLessons || {};
+    const doneCount = lessons.filter(l => doneLessons[l.id]).length;
+    const overallProgress = Math.round((doneCount / lessons.length) * (this.state.viewMode === 'completed' ? 100 : 90));
+
+    const lessonRows = lessons.map((l, i) => {
+      const isDone = !!doneLessons[l.id];
+      const isCurrent = this.state.viewMode === 'lesson' && i === idx;
+      return {
+        title: l.title,
+        typeLabel: l.type === 'video' ? 'Video' : (l.type === 'pdf' ? 'PDF' : 'Slide'),
+        isDone,
+        currentClass: isCurrent ? 'is-current' : '',
+        iconClass: isDone ? 'is-done' : (isCurrent ? 'is-current-icon' : ''),
+        notDoneAndVideo: !isDone && l.type === 'video',
+        notDoneAndPdf: !isDone && l.type === 'pdf',
+        notDoneAndSlide: !isDone && l.type === 'slide',
+        notDoneAndQuiz: false,
+        onSelect: () => this.setState({ currentLessonIndex: i, viewMode: 'lesson', sheetOpen: false })
+      };
+    });
+    lessonRows.push({
+      title: 'Kuis Akhir',
+      typeLabel: '2 soal',
+      isDone: this.state.quizSubmitted,
+      currentClass: this.state.viewMode === 'quiz' ? 'is-current' : '',
+      iconClass: this.state.quizSubmitted ? 'is-done' : (this.state.viewMode === 'quiz' ? 'is-current-icon' : ''),
+      notDoneAndVideo: false, notDoneAndPdf: false, notDoneAndSlide: false,
+      notDoneAndQuiz: !this.state.quizSubmitted,
+      onSelect: () => this.setState({ viewMode: 'quiz', sheetOpen: false })
+    });
+
+    const curLsn = lessons[idx] || lessons[0];
+    const currentLesson = {
+      title: curLsn.title,
+      typeLabel: curLsn.type === 'video' ? 'video' : (curLsn.type === 'pdf' ? 'PDF' : 'slide'),
+      isDone: !!doneLessons[curLsn.id],
+      notDone: !doneLessons[curLsn.id]
+    };
+
+    const quizQuestions = this.quizDef.map(q => ({
+      text: q.text,
+      typeLabel: q.typeLabel,
+      optionShapeRadius: q.type === 'single_choice' ? '50%' : '4px',
+      options: q.options.map(o => {
+        const selected = !!((this.state.selectedOptions[q.id] || {})[o.id]);
+        return {
+          text: o.text,
+          selectedClass: selected ? 'is-selected' : '',
+          onSelect: () => this.selectOption(q, o)
+        };
+      })
+    }));
+
+    return {
+      courseTitle: 'Dasar Analisis DBR',
+      overallProgress,
+      lessons: lessonRows,
+      isLessonView: this.state.viewMode === 'lesson',
+      isQuizView: this.state.viewMode === 'quiz',
+      isCompletedView: this.state.viewMode === 'completed',
+      currentLesson,
+      markCurrentDone: this.markCurrentDone,
+      goNext: this.goNext,
+      submitQuiz: this.submitQuiz,
+      goToCompleted: this.goToCompleted,
+      toggleSheet: this.toggleSheet,
+      stopClick: this.stopClick,
+      sheetOpen: this.state.sheetOpen,
+      passingGrade: '70',
+      quizQuestions,
+      quizNotSubmitted: !this.state.quizSubmitted,
+      quizSubmitted: this.state.quizSubmitted,
+      quizScore: '85',
+      quizResultBadge: 'ra-badge-success',
+      quizResultLabel: 'Lulus',
+      lpEarned: 50
+    };
+  }
+}
+</script>
+</body>
+</html>
