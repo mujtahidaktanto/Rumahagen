@@ -2663,9 +2663,53 @@ listing kedua independen (unit berbeda dari project yang sama). Seluruh
 data uji (2 listing, 1 project, 1 developer partner, 1 klaim, 3 akun)
 dihapus total, diverifikasi `0` baris tersisa.
 
+## `0114` — `PUT /leads/{id}/status`: kolom `status` ADD-NEW untuk listing_leads (API-049)
+
+Menutup gap agen/user #2: STEP11-B2 mengunci route-nya ("Preserve lead
+status mutation route under existing authorization") TAPI eksplisit juga
+menyatakan: *"The accepted physical baseline contains listing_leads with
+listing_id, agent_id, source default 'whatsapp_cta', plus IP/user-agent/
+timestamp evidence. **No new Lead table or endpoint is introduced by
+B2.**"* — `listing_leads` (`0047`) TIDAK PUNYA kolom `status` sama
+sekali, murni log kejadian klik CTA. Dicek menyeluruh: nol nama nilai
+status apa pun dievidensi di seluruh korpus Core untuk resource ini.
+
+### Vocabulary: keputusan rekayasa, lifecycle CRM minimal
+
+Kolom `status` ADD-NEW dengan 4 nilai: `new` (default, baru tercatat),
+`contacted`, `converted`, `lost` — lifecycle CRM lead paling standar/
+minimal, konsisten pola "SCOPE MINIMAL evidence-respecting" yang sudah
+dipakai `agents/me/leads/stats` (route lain untuk resource yang sama,
+sengaja tidak mengarang metrik di luar agregasi dasar dari kolom yang
+benar-benar ada).
+
+### Otorisasi: meniru PERSIS `listing_leads_select` yang sudah ada
+
+RLS `listing_leads_update` (baru) memakai kondisi IDENTIK dengan
+`listing_leads_select` (`has_permission('m03.listing.update',
+l.agent_id)`) — siapa pun yang bisa LIHAT detail lead (pemilik listing +
+Superadmin — CATATAN: `m03.listing.update` scope `'own'` untuk Agent,
+`'all'` HANYA Superadmin; Admin/Manager TIDAK punya baris permission ini
+sama sekali di seed `0009`, jadi `GET /admin/leads` yang komentarnya
+menyebut "staf scope all" pun sebenarnya hanya benar-benar berfungsi
+untuk Superadmin — bukan bug yang diperbaiki di sini, karena itu
+perilaku endpoint LAIN yang sudah ada, tidak diubah oleh batch ini;
+hanya dicatat sebagai temuan konsisten, bukan diperbaiki diam-diam) —
+bisa UBAH statusnya. Tidak ada permission baru.
+
+### File baru
+
+- `lib/validation/listing-media.ts` — tambahan `updateLeadStatusSchema`.
+- `app/api/leads/[id]/status/route.ts` — PUT.
+
+Diuji nyata: Agent outsider (bukan pemilik listing) -> `404` (RLS
+invisible); nilai status tidak valid -> `422`; pemilik listing PUT
+`contacted` -> `200`; PUT `converted` -> `200`; Superadmin PUT `lost`
+pada lead milik agent lain -> `200` (jalur staf terbukti terpisah dari
+jalur pemilik). Listing + lead uji dan 3 akun dihapus total, diverifikasi
+`0` baris tersisa.
+
 ### Sisa temuan dari audit endpoint agen/user M01-M15 (belum dibangun, di luar batch ini)
 
-- `PUT /leads/{id}/status` (M03) — lead cuma bisa dilihat, tidak pernah
-  bisa diubah statusnya.
 - `POST /developer-partners/events` (M05) — Developer Partner tidak
   punya permission ATAU route untuk membuat event.

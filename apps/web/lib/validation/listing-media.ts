@@ -24,6 +24,13 @@ export const createLeadSchema = z.object({
 });
 export type CreateLeadInput = z.infer<typeof createLeadSchema>;
 
+// PUT /leads/{id}/status (API-049) — kolom status ADD-NEW (migration
+// 0114), vocabulary keputusan rekayasa karena tidak dievidensi Core.
+export const updateLeadStatusSchema = z.object({
+  status: z.enum(["new", "contacted", "converted", "lost"]),
+});
+export type UpdateLeadStatusInput = z.infer<typeof updateLeadStatusSchema>;
+
 export const createAmenitySchema = z.object({
   name: z.string().min(1).max(100),
 });
