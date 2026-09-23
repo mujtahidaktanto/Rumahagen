@@ -2709,7 +2709,69 @@ pada lead milik agent lain -> `200` (jalur staf terbukti terpisah dari
 jalur pemilik). Listing + lead uji dan 3 akun dihapus total, diverifikasi
 `0` baris tersisa.
 
-### Sisa temuan dari audit endpoint agen/user M01-M15 (belum dibangun, di luar batch ini)
+## `0115` — `POST /developer-partners/events`: Developer Partner event submission (M05, gap TERAKHIR)
 
-- `POST /developer-partners/events` (M05) — Developer Partner tidak
-  punya permission ATAU route untuk membuat event.
+Menutup gap TERAKHIR dari SELURUH audit endpoint agen/user M01-M15.
+Dievidensi eksplisit di `PRE-00-G_M05_MANDATORY_DELTA_IMPACT_GATE` §15
+"DEVELOPER PARTNER EVENT PUBLICATION": *"Developer Partner → OWN/SUBMIT →
+subject to approval. Developer Partner does not directly publish the
+Event through an unrestricted bypass. Core already identifies: POST
+/developer-partners/events — Developer Partner; subject to approval."*
+Klasifikasi: **PRESERVE, No conflict**. Sebelum migration ini, `developer_
+partner` TIDAK PUNYA satu pun baris `role_permissions` untuk `m05.event.*`
+— tidak bisa membuat event sama sekali, baik lewat route generik
+`POST /events` maupun route khusus ini.
+
+### "Subject to approval" TANPA mekanisme baru — murni lewat ketiadaan permission
+
+Ini temuan paling elegan dari batch ini: `events.status` sudah `DEFAULT
+'pending_approval'` sejak `0031`, dan trigger `enforce_event_lifecycle_
+permissions` (0031, TIDAK diubah) sudah menolak transisi ke `'published'`
+tanpa `m05.event.publish`. Migration `0115` HANYA memberi `developer_
+partner` 2 permission yang SUDAH ADA sejak `0009` (`m05.event.create`,
+`m05.event.update`, keduanya scope `'own'`) — SENGAJA TIDAK memberi
+`m05.event.publish`/`.lifecycle`/`.cancellation`. Konsekuensinya:
+submission Developer Partner FISIK selalu berhenti di `pending_approval`
+sampai staf (Superadmin/Admin/Manager, `m05.event.publish` scope `'all'`)
+menyetujui lewat `PUT /events/{id}` yang sudah ada — "does not directly
+publish... subject to approval" terealisasi TANPA kode/kolom/trigger baru
+sama sekali, murni dari kombinasi permission yang tidak diberikan.
+
+**Catatan konsisten** (bukan diperbaiki, karena bukan bug — perilaku yang
+SUDAH ADA sejak `0031` untuk role lain): Agent/Instruktur JUSTRU sudah
+punya `m05.event.publish` scope `'own'` sejak seed `0009` — bisa
+self-publish event sendiri. Developer Partner SENGAJA TIDAK diberi ini,
+sesuai Gate §15 yang secara eksplisit membedakan Developer Partner dari
+role lain untuk soal publish.
+
+### `related_project_id` divalidasi kepemilikan eksplisit
+
+Kalau diisi, harus project MILIK pemanggil sendiri (`developer_projects.
+developer_id` → `developer_partners.user_id` = pemanggil) — dicek
+eksplisit di kode karena aturan LINTAS-TABEL (`events` → `developer_
+projects` → `developer_partners`), bukan RLS satu-tabel biasa.
+
+### File baru
+
+- `app/api/developer-partners/events/route.ts` — POST. `submitted_by`
+  SELALU pemanggil sendiri (bukan dari body — beda dari `POST /events`
+  generik yang membolehkan staf membuat event atas nama orang lain).
+
+Diuji nyata dengan 4 akun (superadmin/dp1/dp2/buyer1): Buyer (tanpa
+permission `m05.event.create` sama sekali) → `403`; dp1 submit event
+dengan `related_project_id` = project miliknya sendiri → `201`, `status=
+'pending_approval'`; dp2 (Developer Partner LAIN) mencoba pakai
+`related_project_id` milik dp1 → `422` (validasi kepemilikan lintas-tabel
+terbukti); dp1 `GET` event pending miliknya sendiri → `200` (lolos lewat
+`m05.event.update` scope own); **dp1 mencoba self-publish → `403`**
+dengan pesan trigger persis "butuh permission m05.event.publish"
+(membuktikan "subject to approval" benar-benar tertutup rapat); Superadmin
+approve/publish → `200`. Seluruh data uji (1 event, 1 project, 1 developer
+partner, 4 akun) dihapus total, diverifikasi `0` baris tersisa.
+
+**Ini menutup SELURUH 11 gap dari audit endpoint agen/user M01-M15**
+(bersama `listings/from-project`, `leads/status`, dan M12 Organization
+CRUD di atas) — digabung dengan audit admin-surface sebelumnya, SELURUH
+239 endpoint STEP11-A kini tercakup (dibangun langsung, di-reuse lewat
+path terdokumentasi, atau eksplisit CONTROLLED GAP yang tidak boleh
+diciptakan sendiri sesuai Core).
