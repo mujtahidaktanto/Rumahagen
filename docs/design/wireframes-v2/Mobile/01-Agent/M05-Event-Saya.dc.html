@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Event Saya — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);}
+
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;margin-bottom:16px;}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+
+  .ev-row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--ra-ink-50);flex-wrap:wrap;}
+  .ev-row:last-child{border-bottom:none;}
+  .ev-icon{width:38px;height:38px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+
+  .empty-box{padding:28px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+
+  .drawer-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);z-index:30;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:280px;background:#0B1D3A;z-index:31;display:flex;flex-direction:column;padding:20px 0;}
+  .drawer-item{display:flex;align-items:center;gap:14px;padding:13px 22px;color:rgba(255,255,255,.78);text-decoration:none;}
+  .drawer-item.is-active{background:rgba(255,255,255,.12);color:#fff;}
+
+  .modal-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:flex-end;z-index:40;}
+  .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;display:flex;flex-direction:column;gap:12px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="iconbtn" onClick="{{toggleMenu}}" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <span class="ra-title-md">Event Saya</span>
+    <a class="iconbtn" href="M05-Ajukan-Event.dc.html" aria-label="Ajukan Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 5v14M5 12h14"/></svg></a>
+  </div>
+
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;">
+
+    <div class="card">
+      <div class="card-head"><span class="ra-title-md">Saya Daftar</span><span class="ra-caption">{{registrations.length}}</span></div>
+      <sc-if value="{{hasRegistrations}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{registrations}}" as="r" hint-placeholder-count="3">
+          <div class="ev-row">
+            <div class="ev-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+            <div style="flex:1;min-width:0;">
+              <div class="ra-body-sm ra-truncate-1">{{r.title}}</div>
+              <span class="ra-caption">{{r.schedule}}</span>
+            </div>
+            <span class="ra-badge {{r.statusBadge}}">{{r.statusLabel}}</span>
+            <sc-if value="{{r.canCancel}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" onClick="{{r.onCancel}}">Batalkan</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{noRegistrations}}" hint-placeholder-val="{{false}}">
+        <div class="empty-box">
+          <span class="ra-body-sm">Belum ada event yang didaftar.</span>
+          <a class="ra-btn ra-btn-primary ra-btn-sm" href="../00-Publik/M11-Detail-Event-Mobile.dc.html">Jelajahi Event</a>
+        </div>
+      </sc-if>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="ra-title-md">Saya Ajukan</span><span class="ra-caption">{{submitted.length}}</span></div>
+      <sc-if value="{{hasSubmitted}}" hint-placeholder-val="{{true}}">
+        <sc-for list="{{submitted}}" as="s" hint-placeholder-count="3">
+          <div class="ev-row">
+            <div class="ev-icon" style="background:var(--ra-gold-100);color:var(--ra-gold-700);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg></div>
+            <div style="flex:1;min-width:0;">
+              <div class="ra-body-sm ra-truncate-1">{{s.title}}</div>
+              <span class="ra-caption">{{s.schedule}}</span>
+            </div>
+            <span class="ra-badge {{s.statusBadge}}">{{s.statusLabel}}</span>
+            <a class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" href="M05-Ajukan-Event.dc.html">Kelola</a>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{noSubmitted}}" hint-placeholder-val="{{false}}">
+        <div class="empty-box">
+          <span class="ra-body-sm">Belum ada event yang diajukan.</span>
+          <a class="ra-btn ra-btn-primary ra-btn-sm" href="M05-Ajukan-Event.dc.html">Ajukan Event</a>
+        </div>
+      </sc-if>
+    </div>
+
+  </div>
+
+  <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{toggleMenu}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div style="padding:0 22px 18px;"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;"></div>
+        <a class="drawer-item" href="M08-Dashboard.dc.html">Dashboard</a>
+        <a class="drawer-item" href="M03-Listing-Saya.dc.html">Listing Saya</a>
+        <a class="drawer-item" href="M04-Pembelajaran.dc.html">Pembelajaran</a>
+        <a class="drawer-item is-active" href="M05-Event-Saya.dc.html">Event</a>
+        <a class="drawer-item" href="M12-Organisasi-Dashboard.dc.html">Organisasi</a>
+        <a class="drawer-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{cancelModalOpen}}" hint-placeholder-val="{{false}}">
+    <div class="modal-scrim" onClick="{{closeCancelModal}}">
+      <div class="modal" onClick="{{stopClick}}">
+        <span class="ra-title-md">Batalkan Pendaftaran?</span>
+        <span class="ra-body-sm" style="color:var(--ra-ink-500);">Anda akan membatalkan pendaftaran untuk "{{cancelTarget}}".</span>
+        <button class="ra-btn ra-btn-danger" style="width:100%;" onClick="{{confirmCancel}}">Ya, Batalkan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeCancelModal}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasRegistrationsProp":{"editor":"boolean","default":true,"section":"Skenario"},"hasSubmittedProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { menuOpen: false, cancelModalOpen: false, cancelTarget: '', cancelledIds: {} };
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.openCancelModal = this.openCancelModal.bind(this);
+    this.closeCancelModal = this.closeCancelModal.bind(this);
+    this.confirmCancel = this.confirmCancel.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  toggleMenu(){ this.setState({ menuOpen: !this.state.menuOpen }); }
+  openCancelModal(id, title){ this.setState({ cancelModalOpen: true, cancelTarget: title, pendingId: id }); }
+  closeCancelModal(){ this.setState({ cancelModalOpen: false }); }
+  confirmCancel(){
+    const id = this.pendingId;
+    this.setState({ cancelModalOpen: false, cancelledIds: { ...this.state.cancelledIds, [id]: true } });
+  }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  renderVals() {
+    const hasRegistrations = this.props.hasRegistrationsProp ?? true;
+    const hasSubmitted = this.props.hasSubmittedProp ?? true;
+    const cancelledIds = this.state.cancelledIds || {};
+
+    const regDefs = [
+      { id: 'r1', title: 'Open House Perumahan Green Valley', schedule: '2 Okt 2026, 10.00 WIB', status: 'registered' },
+      { id: 'r2', title: 'Training Sertifikasi Negosiasi Properti', schedule: '10 Okt 2026, 09.00 WIB', status: 'pending_approval' },
+      { id: 'r3', title: 'Gathering Komunitas Agen Jabodetabek', schedule: '15 Sep 2026 (selesai)', status: 'attended' }
+    ];
+    const statusMap = {
+      registered: { badge: 'ra-badge-success', label: 'Terdaftar' },
+      waitlist: { badge: 'ra-badge-warning', label: 'Tunggu' },
+      pending_approval: { badge: 'ra-badge-info', label: 'Menunggu' },
+      attended: { badge: 'ra-badge-neutral', label: 'Selesai' },
+      cancelled: { badge: 'ra-badge-danger', label: 'Batal' }
+    };
+    const registrations = regDefs.map(r => {
+      const status = cancelledIds[r.id] ? 'cancelled' : r.status;
+      const sm = statusMap[status];
+      return {
+        title: r.title, schedule: r.schedule,
+        statusBadge: sm.badge, statusLabel: sm.label,
+        canCancel: ['registered', 'waitlist', 'pending_approval'].includes(status),
+        onCancel: () => this.openCancelModal(r.id, r.title)
+      };
+    });
+
+    const submittedStatusMap = {
+      pending_approval: { badge: 'ra-badge-warning', label: 'Belum Tayang' },
+      published: { badge: 'ra-badge-success', label: 'Tayang' },
+      rejected: { badge: 'ra-badge-danger', label: 'Ditolak' },
+      cancelled: { badge: 'ra-badge-neutral', label: 'Batal' }
+    };
+    const submittedDefs = [
+      { title: 'Sharing Session: Strategi Closing Q4', schedule: '20 Okt 2026, 14.00 WIB', status: 'published' },
+      { title: 'Workshop Fotografi Properti untuk Listing', schedule: '5 Nov 2026, 09.00 WIB', status: 'pending_approval' }
+    ];
+    const submitted = submittedDefs.map(s => {
+      const sm = submittedStatusMap[s.status];
+      return { title: s.title, schedule: s.schedule, statusBadge: sm.badge, statusLabel: sm.label };
+    });
+
+    return {
+      toggleMenu: this.toggleMenu, menuOpen: this.state.menuOpen ?? false, stopClick: this.stopClick,
+      hasRegistrations, noRegistrations: !hasRegistrations, registrations,
+      hasSubmitted, noSubmitted: !hasSubmitted, submitted,
+      cancelModalOpen: this.state.cancelModalOpen ?? false,
+      cancelTarget: this.state.cancelTarget ?? '',
+      closeCancelModal: this.closeCancelModal,
+      confirmCancel: this.confirmCancel
+    };
+  }
+}
+</script>
+</body>
+</html>

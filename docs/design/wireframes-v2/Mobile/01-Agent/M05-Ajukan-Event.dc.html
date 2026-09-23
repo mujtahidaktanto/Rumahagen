@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Ajukan Event — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+
+  .main{flex:1;overflow-y:auto;padding:16px 16px 90px;}
+
+  .banner{border-radius:var(--ra-radius-md);padding:14px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;}
+  .banner-pending{background:var(--ra-warning-100);border:1px solid var(--ra-warning-600);}
+  .banner-published{background:var(--ra-success-100);border:1px solid var(--ra-success-600);}
+  .banner-rejected{background:var(--ra-danger-100);border:1px solid var(--ra-danger-600);}
+
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;margin-bottom:16px;}
+  .card-title{display:block;margin-bottom:14px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;margin-bottom:6px;}
+
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--ra-ink-200);background:#fff;cursor:pointer;font-size:13px;}
+  .chip.is-selected{background:var(--ra-blue-600);border-color:var(--ra-blue-600);color:#fff;}
+
+  .switch-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+
+  .save-bar{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--ra-ink-100);padding:12px 16px;display:flex;gap:10px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M05-Event-Saya.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md">{{pageTitle}}</span>
+  </div>
+
+  <div class="main">
+
+    <sc-if value="{{isManageMode}}" hint-placeholder-val="{{false}}">
+      <div class="banner {{statusBannerClass}}">
+        <div>
+          <span class="ra-label-lg">{{statusBannerTitle}}</span>
+          <div class="ra-caption" style="margin-top:2px;">{{statusBannerCaption}}</div>
+        </div>
+        <sc-if value="{{canPublish}}" hint-placeholder-val="{{true}}">
+          <button class="ra-btn ra-btn-primary ra-btn-sm" style="width:100%;" onClick="{{publishEvent}}">Terbitkan Event</button>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <div class="card">
+      <span class="ra-title-md card-title">Informasi Dasar</span>
+      <div class="field">
+        <label class="ra-label-md">Judul Event</label>
+        <input class="ra-input" type="text" value="{{form.title}}" maxlength="200" placeholder="Contoh: Open House Green Valley">
+      </div>
+      <div class="field">
+        <label class="ra-label-md">Kategori</label>
+        <div class="chip-group">
+          <sc-for list="{{categories}}" as="c">
+            <div class="chip {{c.selectedClass}}" onClick="{{c.onSelect}}">{{c.label}}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div class="field">
+        <label class="ra-label-md">Deskripsi</label>
+        <textarea class="ra-input" rows="3" placeholder="Ceritakan agenda event Anda...">{{form.description}}</textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md card-title">Lokasi & Waktu</span>
+      <div class="switch-row">
+        <span class="ra-label-lg">Event Online</span>
+        <div class="switch {{onlineSwitchClass}}" onClick="{{toggleOnline}}"><div class="switch-knob"></div></div>
+      </div>
+      <sc-if value="{{isOnline}}" hint-placeholder-val="{{false}}">
+        <div class="field">
+          <label class="ra-label-md">Link Meeting</label>
+          <input class="ra-input" type="text" value="{{form.meetingLink}}" placeholder="https://meet.google.com/xxx">
+        </div>
+      </sc-if>
+      <sc-if value="{{isOffline}}" hint-placeholder-val="{{true}}">
+        <div class="field">
+          <label class="ra-label-md">Lokasi</label>
+          <input class="ra-input" type="text" value="{{form.location}}" placeholder="Alamat lengkap">
+        </div>
+      </sc-if>
+      <div class="field">
+        <label class="ra-label-md">Mulai</label>
+        <input class="ra-input" type="datetime-local" value="{{form.startAt}}">
+      </div>
+      <div class="field">
+        <label class="ra-label-md">Selesai <span class="ra-caption">(opsional)</span></label>
+        <input class="ra-input" type="datetime-local" value="{{form.endAt}}">
+      </div>
+      <div class="field">
+        <label class="ra-label-md">Host/Pembicara <span class="ra-caption">(opsional)</span></label>
+        <input class="ra-input" type="text" value="{{form.host}}" maxlength="150">
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md card-title">Kapasitas & Registrasi</span>
+      <div class="field">
+        <label class="ra-label-md">Kuota Peserta <span class="ra-caption">(opsional)</span></label>
+        <input class="ra-input" type="number" min="1" value="{{form.quota}}" placeholder="Contoh: 50">
+      </div>
+      <div class="field">
+        <label class="ra-label-md">Mode Registrasi</label>
+        <div class="chip-group">
+          <sc-for list="{{approvalModes}}" as="m">
+            <div class="chip {{m.selectedClass}}" onClick="{{m.onSelect}}">{{m.label}}</div>
+          </sc-for>
+        </div>
+        <span class="ra-caption" style="display:block;margin-top:8px;">{{approvalModeHelp}}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md card-title">Visibilitas</span>
+      <div class="chip-group">
+        <sc-for list="{{visibilities}}" as="v">
+          <div class="chip {{v.selectedClass}}" onClick="{{v.onSelect}}">{{v.label}}</div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md card-title">Terkait <span class="ra-caption" style="font-weight:400;">(opsional)</span></span>
+      <div class="field">
+        <label class="ra-label-md">Course Terkait</label>
+        <select class="ra-input">
+          <option>Tidak terkait</option>
+          <option>Financial & KPR: Dasar Analisis DBR</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="ra-label-md">Proyek Developer Terkait</label>
+        <select class="ra-input">
+          <option>Tidak terkait</option>
+          <option>Green Valley Residence</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="save-bar">
+    <a class="ra-btn ra-btn-secondary" style="flex:1;" href="M05-Event-Saya.dc.html">Batal</a>
+    <button class="ra-btn ra-btn-primary" style="flex:1;">{{submitButtonLabel}}</button>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"formModeProp":{"editor":"enum","options":["create","manage_pending","manage_published","manage_rejected"],"default":"create","section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      category: 'training',
+      isOnline: false,
+      approvalMode: 'auto_confirm',
+      visibility: 'public',
+      published: false
+    };
+    this.selectCategory = this.selectCategory.bind(this);
+    this.toggleOnline = this.toggleOnline.bind(this);
+    this.selectApprovalMode = this.selectApprovalMode.bind(this);
+    this.selectVisibility = this.selectVisibility.bind(this);
+    this.publishEvent = this.publishEvent.bind(this);
+  }
+  selectCategory(v){ this.setState({ category: v }); }
+  toggleOnline(){ this.setState({ isOnline: !this.state.isOnline }); }
+  selectApprovalMode(v){ this.setState({ approvalMode: v }); }
+  selectVisibility(v){ this.setState({ visibility: v }); }
+  publishEvent(){ this.setState({ published: true }); }
+
+  renderVals() {
+    const mode = this.props.formModeProp || 'create';
+    const isManageMode = mode !== 'create';
+    const publishedOverride = this.state.published;
+
+    let status = 'pending_approval';
+    if (mode === 'manage_published' || publishedOverride) status = 'published';
+    else if (mode === 'manage_rejected') status = 'rejected';
+
+    const bannerByStatus = {
+      pending_approval: { cls: 'banner-pending', title: 'Belum Tayang', caption: 'Terbitkan agar Agent lain bisa menemukan & mendaftar.' },
+      published: { cls: 'banner-published', title: 'Sedang Tayang', caption: 'Event ini terlihat publik sesuai visibilitas yang dipilih.' },
+      rejected: { cls: 'banner-rejected', title: 'Ditolak Tim RumahAgen', caption: 'Perbaiki informasi di bawah lalu ajukan kembali.' }
+    };
+    const banner = bannerByStatus[status];
+
+    const categoryDefs = [
+      { value: 'training', label: 'Training' },
+      { value: 'launching_proyek', label: 'Launching Proyek' },
+      { value: 'open_house', label: 'Open House' },
+      { value: 'gathering', label: 'Gathering' }
+    ];
+    const categories = categoryDefs.map(c => ({
+      label: c.label,
+      selectedClass: this.state.category === c.value ? 'is-selected' : '',
+      onSelect: () => this.selectCategory(c.value)
+    }));
+
+    const modeDefs = [
+      { value: 'auto_confirm', label: 'Otomatis', help: 'Pendaftar langsung "Terdaftar" tanpa perlu ditinjau.' },
+      { value: 'manual_approval', label: 'Perlu Persetujuan', help: 'Pendaftar menunggu tinjauan Anda satu per satu.' },
+      { value: 'closed', label: 'Ditutup', help: 'Tidak ada pendaftaran baru yang diterima.' }
+    ];
+    const approvalModes = modeDefs.map(m => ({
+      label: m.label,
+      selectedClass: this.state.approvalMode === m.value ? 'is-selected' : '',
+      onSelect: () => this.selectApprovalMode(m.value)
+    }));
+    const approvalModeHelp = modeDefs.find(m => m.value === this.state.approvalMode).help;
+
+    const visDefs = [
+      { value: 'public', label: 'Publik' },
+      { value: 'organization', label: 'Organisasi Saya' },
+      { value: 'private', label: 'Privat' }
+    ];
+    const visibilities = visDefs.map(v => ({
+      label: v.label,
+      selectedClass: this.state.visibility === v.value ? 'is-selected' : '',
+      onSelect: () => this.selectVisibility(v.value)
+    }));
+
+    return {
+      pageTitle: isManageMode ? 'Kelola Event' : 'Ajukan Event',
+      isManageMode,
+      statusBannerClass: banner.cls,
+      statusBannerTitle: banner.title,
+      statusBannerCaption: banner.caption,
+      canPublish: isManageMode && status !== 'published',
+      publishEvent: this.publishEvent,
+      form: {
+        title: isManageMode ? 'Sharing Session: Strategi Closing Q4' : '',
+        description: isManageMode ? 'Diskusi santai membahas strategi closing di kuartal akhir tahun.' : '',
+        meetingLink: '', location: isManageMode ? 'Kantor RumahAgen, Jakarta Selatan' : '',
+        startAt: '', endAt: '', host: isManageMode ? 'Rian Saputra' : '', quota: isManageMode ? '50' : ''
+      },
+      categories,
+      isOnline: this.state.isOnline,
+      isOffline: !this.state.isOnline,
+      onlineSwitchClass: this.state.isOnline ? 'is-on' : '',
+      toggleOnline: this.toggleOnline,
+      approvalModes,
+      approvalModeHelp,
+      visibilities,
+      submitButtonLabel: isManageMode ? 'Simpan' : 'Ajukan'
+    };
+  }
+}
+</script>
+</body>
+</html>

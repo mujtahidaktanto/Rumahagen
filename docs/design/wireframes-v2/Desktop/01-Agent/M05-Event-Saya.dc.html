@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Event Saya — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:22px;margin-bottom:24px;}
+  .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+
+  .ev-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .ev-row:last-child{border-bottom:none;}
+  .ev-icon{width:44px;height:44px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;}
+
+  .empty-box{padding:40px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+
+  .modal-scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:20;}
+  .modal{background:#fff;border-radius:var(--ra-radius-lg);padding:26px;width:440px;display:flex;flex-direction:column;gap:14px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item is-active" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;position:relative;">
+    <div class="topbar">
+      <h1 class="ra-title-lg">Event Saya</h1>
+      <a class="ra-btn ra-btn-primary ra-btn-sm" href="M05-Ajukan-Event.dc.html">+ Ajukan Event</a>
+    </div>
+
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:28px 40px;max-width:1000px;">
+
+      <div class="card">
+        <div class="card-head">
+          <span class="ra-title-md">Event yang Saya Daftar</span>
+          <span class="ra-caption">{{registrations.length}} pendaftaran</span>
+        </div>
+        <sc-if value="{{hasRegistrations}}" hint-placeholder-val="{{true}}">
+          <sc-for list="{{registrations}}" as="r" hint-placeholder-count="3">
+            <div class="ev-row">
+              <div class="ev-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+              <div style="flex:1;min-width:0;">
+                <div class="ra-body-md ra-truncate-1">{{r.title}}</div>
+                <span class="ra-caption">{{r.schedule}} · {{r.categoryLabel}}</span>
+              </div>
+              <span class="ra-badge {{r.statusBadge}}">{{r.statusLabel}}</span>
+              <sc-if value="{{r.canCancel}}" hint-placeholder-val="{{true}}">
+                <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.onCancel}}">Batalkan</button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{noRegistrations}}" hint-placeholder-val="{{false}}">
+          <div class="empty-box">
+            <span class="ra-body-md">Anda belum mendaftar event apapun.</span>
+            <a class="ra-btn ra-btn-primary ra-btn-sm" href="../00-Publik/M11-Detail-Event-Desktop.dc.html">Jelajahi Event</a>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="ra-title-md">Event yang Saya Ajukan</span>
+          <span class="ra-caption">{{submitted.length}} event</span>
+        </div>
+        <sc-if value="{{hasSubmitted}}" hint-placeholder-val="{{true}}">
+          <sc-for list="{{submitted}}" as="s" hint-placeholder-count="3">
+            <div class="ev-row">
+              <div class="ev-icon" style="background:var(--ra-gold-100);color:var(--ra-gold-700);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg></div>
+              <div style="flex:1;min-width:0;">
+                <div class="ra-body-md ra-truncate-1">{{s.title}}</div>
+                <span class="ra-caption">{{s.schedule}} · Registrasi: {{s.approvalModeLabel}}</span>
+              </div>
+              <span class="ra-badge {{s.statusBadge}}">{{s.statusLabel}}</span>
+              <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M05-Ajukan-Event.dc.html">Kelola</a>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{noSubmitted}}" hint-placeholder-val="{{false}}">
+          <div class="empty-box">
+            <span class="ra-body-md">Anda belum mengajukan event apapun.</span>
+            <a class="ra-btn ra-btn-primary ra-btn-sm" href="M05-Ajukan-Event.dc.html">Ajukan Event Pertama</a>
+          </div>
+        </sc-if>
+      </div>
+
+    </div>
+
+    <sc-if value="{{cancelModalOpen}}" hint-placeholder-val="{{false}}">
+      <div class="modal-scrim" onClick="{{closeCancelModal}}">
+        <div class="modal" onClick="{{stopClick}}">
+          <span class="ra-title-lg">Batalkan Pendaftaran?</span>
+          <span class="ra-body-sm" style="color:var(--ra-ink-500);">Anda akan membatalkan pendaftaran untuk "{{cancelTarget}}". Tindakan ini tidak bisa dibatalkan.</span>
+          <div style="display:flex;gap:10px;justify-content:flex-end;">
+            <button class="ra-btn ra-btn-secondary" onClick="{{closeCancelModal}}">Batal</button>
+            <button class="ra-btn ra-btn-danger" onClick="{{confirmCancel}}">Ya, Batalkan</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasRegistrationsProp":{"editor":"boolean","default":true,"section":"Skenario"},"hasSubmittedProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { cancelModalOpen: false, cancelTarget: '', cancelledIds: {} };
+    this.openCancelModal = this.openCancelModal.bind(this);
+    this.closeCancelModal = this.closeCancelModal.bind(this);
+    this.confirmCancel = this.confirmCancel.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openCancelModal(id, title){ this.setState({ cancelModalOpen: true, cancelTarget: title, pendingId: id }); }
+  closeCancelModal(){ this.setState({ cancelModalOpen: false }); }
+  confirmCancel(){
+    const id = this.pendingId;
+    this.setState({ cancelModalOpen: false, cancelledIds: { ...this.state.cancelledIds, [id]: true } });
+  }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  renderVals() {
+    const hasRegistrations = this.props.hasRegistrationsProp ?? true;
+    const hasSubmitted = this.props.hasSubmittedProp ?? true;
+    const cancelledIds = this.state.cancelledIds || {};
+
+    const regDefs = [
+      { id: 'r1', title: 'Open House Perumahan Green Valley', schedule: '2 Okt 2026, 10.00 WIB', categoryLabel: 'Open House', status: 'registered' },
+      { id: 'r2', title: 'Training Sertifikasi Negosiasi Properti', schedule: '10 Okt 2026, 09.00 WIB', categoryLabel: 'Training', status: 'pending_approval' },
+      { id: 'r3', title: 'Gathering Komunitas Agen Jabodetabek', schedule: '15 Sep 2026 (selesai)', categoryLabel: 'Gathering', status: 'attended' }
+    ];
+    const statusMap = {
+      registered: { badge: 'ra-badge-success', label: 'Terdaftar' },
+      waitlist: { badge: 'ra-badge-warning', label: 'Daftar Tunggu' },
+      pending_approval: { badge: 'ra-badge-info', label: 'Menunggu Persetujuan' },
+      attended: { badge: 'ra-badge-neutral', label: 'Selesai Dihadiri' },
+      cancelled: { badge: 'ra-badge-danger', label: 'Dibatalkan' }
+    };
+    const registrations = regDefs.map(r => {
+      const status = cancelledIds[r.id] ? 'cancelled' : r.status;
+      const sm = statusMap[status];
+      return {
+        title: r.title, schedule: r.schedule, categoryLabel: r.categoryLabel,
+        statusBadge: sm.badge, statusLabel: sm.label,
+        canCancel: ['registered', 'waitlist', 'pending_approval'].includes(status),
+        onCancel: () => this.openCancelModal(r.id, r.title)
+      };
+    });
+
+    const submittedStatusMap = {
+      pending_approval: { badge: 'ra-badge-warning', label: 'Belum Tayang' },
+      published: { badge: 'ra-badge-success', label: 'Tayang' },
+      rejected: { badge: 'ra-badge-danger', label: 'Ditolak' },
+      cancelled: { badge: 'ra-badge-neutral', label: 'Dibatalkan' }
+    };
+    const approvalModeLabel = { auto_confirm: 'Otomatis', manual_approval: 'Perlu Persetujuan', closed: 'Ditutup' };
+    const submittedDefs = [
+      { title: 'Sharing Session: Strategi Closing Q4', schedule: '20 Okt 2026, 14.00 WIB', status: 'published', mode: 'auto_confirm' },
+      { title: 'Workshop Fotografi Properti untuk Listing', schedule: '5 Nov 2026, 09.00 WIB', status: 'pending_approval', mode: 'manual_approval' }
+    ];
+    const submitted = submittedDefs.map(s => {
+      const sm = submittedStatusMap[s.status];
+      return { title: s.title, schedule: s.schedule, statusBadge: sm.badge, statusLabel: sm.label, approvalModeLabel: approvalModeLabel[s.mode] };
+    });
+
+    return {
+      hasRegistrations, noRegistrations: !hasRegistrations, registrations,
+      hasSubmitted, noSubmitted: !hasSubmitted, submitted,
+      cancelModalOpen: this.state.cancelModalOpen ?? false,
+      cancelTarget: this.state.cancelTarget ?? '',
+      closeCancelModal: this.closeCancelModal,
+      confirmCancel: this.confirmCancel,
+      stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>
