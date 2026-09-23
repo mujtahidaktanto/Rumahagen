@@ -2024,3 +2024,98 @@ assignment lama otomatis terhapus (fix 0105 terbukti); unauthenticated →
 kosong/403 di semua endpoint. Seluruh data uji (4 auth user, 1 preset)
 dihapus total dan diverifikasi kosong, `role_permissions` yang sempat
 diubah untuk tes dikembalikan ke nilai semula.
+
+## Internal Staff User Management: `GET/POST /admin/internal-users`, `PUT .../{id}`, `PUT .../{id}/deactivate` (admin-surface gap #1, tanpa migration baru)
+
+Menutup gap #1 dari audit admin-surface M01-M15 (pengecekan menyeluruh
+"apakah admin bisa akses semua modul lewat HTTP" yang diminta user
+sebelum batch Permission Matrix Console di atas). **Tidak ada migration
+SQL baru** — bergantung penuh pada RLS `users_update_admin` (`0104`)
+ditambah pengecekan eksplisit `requireSuperadmin()` di kode route.
+
+### "Internal user" = staf (admin/manager/superadmin), bukan actor platform
+
+Tidak ada definisi skema/field apa pun untuk resource ini di korpus Core
+selain nama endpoint (STEP11-A API-139/140/141/142) — dicek menyeluruh,
+kosong. "Internal user" dibaca sebagai akun **staf** yang mengoperasikan
+admin console, dibedakan eksplisit dari actor platform (agent/buyer/
+developer_partner/instructor) yang sudah punya jalur pendaftaran sendiri
+lewat M01 (`/auth/register`). Constraint kunci yang membentuk desain:
+`public.users` TIDAK punya kolom email/nama sama sekali — email HANYA ada
+di `auth.users`. Jadi create memakai Supabase Admin API
+(`auth.admin.createUser`), bukan `INSERT` biasa ke `public.users`.
+
+### Kenapa `requireSuperadmin()` (helper baru), bukan RLS tabel tunggal
+
+`lib/api/require-superadmin.ts` — pengecekan eksplisit `is_superadmin()`
+lewat RPC (fungsi otorisasi yang sama sejak `0006`, bukan logika baru),
+pola yang sama dipakai `app/api/admin/reports/export/route.ts`. Dipakai
+di SEMUA 4 operasi (GET/POST list, PUT update, PUT deactivate) karena GET
+dan POST memanggil Supabase Admin API (`auth.admin.listUsers`/
+`createUser`) yang sama sekali tidak tercakup RLS Postgres — RLS tabel
+tunggal tidak bisa menggerbangi operasi yang tidak menyentuh tabel lewat
+PostgREST/session client. Membuat/melihat daftar akun staf adalah
+kapabilitas paling sensitif di seluruh admin console (setara
+`system_configuration`/`PUT admin/users/{id}/role`) — konsisten
+Superadmin-only, bukan Manager-inclusive.
+
+### `role_id` di-override eksplisit setelah create
+
+Trigger sinkron `handle_auth_user_sync` (`0096`) otomatis membuat baris
+`public.users` dengan `role_id` default **'agent'** untuk SIAPA PUN baris
+`auth.users` baru — termasuk yang dibuat lewat Admin API di route ini.
+Route langsung menimpa `role_id` ke role staf yang diminta (`admin`/
+`manager`/`superadmin`, divalidasi dulu) pakai `createAdminClient()`
+(bukan client bersesi) karena trigger `enforce_users_protected_columns`
+(`0100`/`0101`) hanya mengizinkan `is_superadmin() OR auth.uid() IS NULL`
+— admin client selalu `auth.uid()` NULL, pola akses service-role yang
+sama dipakai di tempat lain proyek ini.
+
+### `PUT .../{id}` vs `PUT /admin/users/{id}/role` — batas semantik disengaja
+
+`PUT /admin/internal-users/{id}` HANYA menerima target yang **SAAT INI**
+staf (divalidasi `roles(code) IN (admin,manager,superadmin)` sebelum
+UPDATE) — mengubah role/status user platform biasa lewat sini ditolak
+`404`, diarahkan ke `PUT /admin/users/{id}/role` (generik, sudah ada dari
+batch Permission Matrix Console) supaya batas "internal user management"
+vs "user management umum" tetap eksplisit, bukan satu route serba-bisa.
+`PUT .../{id}/deactivate` adalah jalan pintas semantik `status:
+'suspended'` untuk aksi paling umum — Core menguncinya sebagai path
+terpisah (API-142), bukan sekadar field body di endpoint update.
+
+### File baru
+
+- `lib/api/require-superadmin.ts` — helper `requireSuperadmin()`.
+- `lib/validation/admin.ts` — tambahan `createInternalUserSchema`
+  (email/password/role_id), `updateInternalUserSchema` (role_id/status,
+  keduanya optional).
+- `app/api/admin/internal-users/route.ts` — GET (daftar staf, email
+  di-cross-reference dari `auth.admin.listUsers`, `perPage:1000` sebagai
+  pengaman praktis bukan aturan bisnis) + POST (`auth.admin.createUser`
+  lalu override `role_id`, `409` kalau email sudah terdaftar).
+- `app/api/admin/internal-users/[id]/route.ts` — PUT (role_id dan/atau
+  status, keduanya divalidasi tetap staf).
+- `app/api/admin/internal-users/[id]/deactivate/route.ts` — PUT,
+  `status='suspended'` langsung.
+
+Diuji nyata dengan 4 akun: Superadmin (qa-iu-superadmin), Manager
+(qa-iu-manager, dipakai untuk membuktikan 403 di semua 4 operasi — bukan
+cuma di satu), Manager baru dibuat lewat route ini sendiri
+(qa-iu-newmanager, dipromosikan lalu di-deactivate), dan satu Agent biasa
+(qa-iu-regularagent) untuk membuktikan `PUT .../{id}` menolak `404` saat
+target BUKAN staf. Hasil: Manager (non-superadmin) → 403 murni di
+GET/POST/PUT/deactivate; Superadmin POST create Manager baru → 201, email
+benar (cross-reference `auth.users` berfungsi), `role_id` ter-override
+dari default 'agent' trigger `0096`; PUT ubah role Manager→Admin →
+berhasil; PUT deactivate → `status='suspended'` tersimpan; PUT ke Agent
+biasa → `404` (batas semantik terbukti, tidak menembus ke user platform).
+
+**Temuan sampingan**: `GET /admin/internal-users` secara tidak sengaja
+memunculkan 5 akun sisa `tier2-{role}-{timestamp}-{random}@example.com`
+dari sesi kerja SEBELUM percakapan ini (bukan dibuat oleh tes ini). 4
+dihapus lewat Admin API setelah dikonfirmasi bukan data produksi; 1 akun
+(`tier2-agent-...`) sengaja DIBIARKAN — dihapus gagal `500` karena masih
+direferensikan `listings.agent_id` (`ON DELETE RESTRICT`) oleh listing uji
+`test-listing-tier2` lain, di luar cakupan pembersihan fitur ini. Data uji
+milik tes ini sendiri (4 akun qa-iu-*) dihapus total dan diverifikasi
+`0` baris tersisa.

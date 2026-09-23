@@ -113,3 +113,27 @@ export const updateUserRoleSchema = z.object({
   role_id: z.string().uuid(),
 });
 export type UpdateUserRoleInput = z.infer<typeof updateUserRoleSchema>;
+
+// GET/POST /admin/internal-users, PUT /admin/internal-users/{id},
+// PUT /admin/internal-users/{id}/deactivate — API-139/140/141/142 (M09,
+// STEP11-A). "Internal user" = akun staf (role admin/manager/superadmin),
+// dibedakan dari actor platform (agent/buyer/developer_partner/instructor)
+// yang punya jalur pendaftaran sendiri (M01). Tidak ada definisi
+// field/skema apa pun untuk resource ini di korpus Core selain nama
+// endpoint (dicek menyeluruh) — desain di bawah adalah keputusan rekayasa
+// minimal: `public.users` tidak punya kolom email/nama sama sekali (email
+// hanya ada di auth.users), jadi create memakai Supabase Admin API
+// (auth.admin.createUser) lalu role_id di-set eksplisit (menimpa default
+// 'agent' dari trigger sinkron 0096).
+export const createInternalUserSchema = z.object({
+  email: z.string().email().max(255),
+  password: z.string().min(8).max(72),
+  role_id: z.string().uuid(),
+});
+export type CreateInternalUserInput = z.infer<typeof createInternalUserSchema>;
+
+export const updateInternalUserSchema = z.object({
+  role_id: z.string().uuid().optional(),
+  status: z.enum(["active", "suspended"]).optional(),
+});
+export type UpdateInternalUserInput = z.infer<typeof updateInternalUserSchema>;
