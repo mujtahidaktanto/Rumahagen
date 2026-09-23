@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Profil Saya — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:18px;display:flex;flex-direction:column;gap:14px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-label{font-size:13px;font-weight:700;color:var(--ra-ink-900);}
+  .textarea{min-height:80px;padding:10px 14px;border-radius:var(--ra-radius-sm);border:1.5px solid var(--ra-ink-100);font-family:var(--ra-font);font-size:14px;color:var(--ra-ink-900);}
+  .chip-input{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-sm);min-height:44px;}
+  .chip-x{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 8px 0 12px;border-radius:var(--ra-radius-pill);background:var(--ra-blue-50);color:var(--ra-blue-600);font-size:12.5px;font-weight:700;}
+  .toggle-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--ra-ink-100);}
+  .toggle-row:last-child{border-bottom:none;}
+  .switch{position:relative;width:40px;height:22px;border-radius:11px;background:var(--ra-ink-200);flex:none;}
+  .switch[aria-checked="true"]{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;}
+  .switch[aria-checked="true"] .switch-knob{left:20px;}
+  .avatar-xl{width:72px;height:72px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;}
+  .bottom-cta{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--ra-ink-100);padding:10px 16px calc(10px + env(safe-area-inset-bottom));}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 18px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.75);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .ctx-row{display:flex;align-items:center;gap:10px;padding:12px 18px;margin:8px 12px 0;border-radius:var(--ra-radius-md);background:rgba(255,255,255,.08);}
+  .ctx-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="ra-iconbtn" style="margin-left:-8px;" onClick="{{openDrawer}}" aria-label="Buka navigasi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <span class="ra-title-md" style="flex:1;">Profil Saya</span>
+  </div>
+
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;">
+
+    <sc-if value="{{isFirstTime}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;flex-direction:column;gap:6px;background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);border-radius:var(--ra-radius-md);padding:14px 16px;">
+        <span class="ra-label-lg">Lengkapi profil Anda</span>
+        <span class="ra-body-md">Profil lengkap tampil lebih dipercaya di pencarian publik.</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{isSuccess}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;align-items:center;gap:8px;background:var(--ra-success-100);border:1px solid var(--ra-success-600);border-radius:var(--ra-radius-md);padding:12px 16px;">
+        <span class="ra-body-md" style="color:var(--ra-success-600);font-weight:700;">Profil berhasil disimpan.</span>
+      </div>
+    </sc-if>
+
+    <div class="card" style="align-items:center;text-align:center;">
+      <div class="avatar-xl">RS</div>
+      <button class="ra-btn ra-btn-secondary ra-btn-sm">Ganti Foto</button>
+      <a class="ra-label-lg" style="color:var(--ra-blue-600);" href="../00-Publik/M11-Detail-Agen-Mobile.dc.html">Lihat sebagai Publik</a>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md">Informasi Pribadi</span>
+      <div class="field"><span class="field-label">Nama Lengkap</span><div class="ra-input" style="display:flex;align-items:center;">Rian Saputra</div></div>
+      <div class="field"><span class="field-label">Nomor WhatsApp</span><div class="ra-input" style="display:flex;align-items:center;">0812-3456-7890</div></div>
+      <div class="field"><span class="field-label">Bio</span><div class="textarea">Agen properti berpengalaman 6 tahun di kawasan BSD City.</div></div>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md">Informasi Profesional</span>
+      <div class="field">
+        <span class="field-label">Spesialisasi</span>
+        <div class="chip-input">
+          <sc-for list="{{specializations}}" as="s" hint-placeholder-count="3">
+            <span class="chip-x">{{s.label}} ×</span>
+          </sc-for>
+        </div>
+      </div>
+      <div class="field"><span class="field-label">Area Cakupan</span><div class="ra-input" style="display:flex;align-items:center;">BSD City & Sekitarnya</div></div>
+      <div class="field"><span class="field-label">Nomor Lisensi (opsional)</span><div class="ra-input" style="display:flex;align-items:center;">AREBI-2024-08123</div></div>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md">Organisasi</span>
+      <sc-if value="{{hasOrg}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:38px;height:38px;border-radius:var(--ra-radius-sm);background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none;">PJ</div>
+          <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1" style="font-size:13px;">PT Properti Jaya Sejahtera</div></div>
+          <a class="ra-label-lg" style="font-size:12px;color:var(--ra-blue-600);" href="../00-Publik/M11-Detail-Organisasi-Mobile.dc.html">Lihat</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{noOrg}}" hint-placeholder-val="{{false}}">
+        <span class="ra-body-md" style="color:var(--ra-ink-500);">Belum tergabung ke organisasi manapun.</span>
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="#">Jelajahi Organisasi</a>
+      </sc-if>
+    </div>
+
+    <div class="card">
+      <span class="ra-title-md">Privasi &amp; Visibilitas</span>
+      <div class="toggle-row">
+        <div style="flex:1;"><div class="ra-label-lg" style="font-size:13px;">Profil Publik</div><span class="ra-caption">Muncul di pencarian &amp; tautan langsung.</span></div>
+        <div class="switch" aria-checked="{{profilePublic}}"><div class="switch-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <div style="flex:1;"><div class="ra-label-lg" style="font-size:13px;">Tampilkan Kontak</div><span class="ra-caption">Tombol WhatsApp di profil publik.</span></div>
+        <div class="switch" aria-checked="{{contactPublic}}"><div class="switch-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <div style="flex:1;"><div class="ra-label-lg" style="font-size:13px;">CTA di Hasil Pencarian</div><span class="ra-caption">Opt-in tombol hubungi langsung.</span></div>
+        <div class="switch" aria-checked="{{ctaEnabled}}"><div class="switch-knob"></div></div>
+      </div>
+    </div>
+
+    <div class="card" style="flex-direction:row;justify-content:space-around;">
+      <div style="text-align:center;"><div class="ra-title-md">{{soldCount}}</div><span class="ra-caption">Terjual</span></div>
+      <div style="text-align:center;"><div class="ra-title-md">{{rentedCount}}</div><span class="ra-caption">Tersewa</span></div>
+    </div>
+
+  </div>
+
+  <div class="bottom-cta">
+    <sc-if value="{{isSaving}}" hint-placeholder-val="{{false}}">
+      <button class="ra-btn ra-btn-primary" style="width:100%;" disabled>Menyimpan…</button>
+    </sc-if>
+    <sc-if value="{{isIdle}}" hint-placeholder-val="{{true}}">
+      <button class="ra-btn ra-btn-primary" style="width:100%;">Simpan Perubahan</button>
+    </sc-if>
+  </div>
+
+  <!-- drawer nav -->
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDrawer}}"></div>
+    <div class="drawer">
+      <div class="drawer-head">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup navigasi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <button class="ctx-row" aria-label="Ganti konteks" style="border:none;text-align:left;">
+        <div class="ctx-avatar" style="background:var(--ra-blue-100);color:var(--ra-blue-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div>
+        <div style="flex:1;min-width:0;"><div class="ra-caption" style="color:rgba(255,255,255,.55);">Konteks aktif</div><div class="ra-label-lg" style="color:#fff;">Personal</div></div>
+      </button>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;">
+        <a class="nav-item" href="M08-Dashboard.dc.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+          Dashboard
+        </a>
+        <a class="nav-item" href="M03-Listing-Saya.dc.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg>
+          Listing Saya
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg>
+          Pembelajaran
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+          Event
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>
+          Organisasi
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg>
+          Komersial
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>
+          AI Assistant
+        </a>
+        <a class="nav-item is-active" href="M02-Profil-Saya.dc.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+          Profil Saya
+        </a>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">RS</div>
+        <div><div class="ra-label-lg" style="color:#fff;">Rian Saputra</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div></div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"profileState":{"editor":"enum","default":"filled","options":["filled","first_time"],"section":"Skenario"},"formState":{"editor":"enum","default":"idle","options":["idle","saving","success"],"section":"Skenario"},"hasOrgProp":{"editor":"boolean","default":true,"section":"Skenario"},"profilePublicProp":{"editor":"boolean","default":true,"section":"Skenario"},"contactPublicProp":{"editor":"boolean","default":true,"section":"Skenario"},"ctaEnabledProp":{"editor":"boolean","default":false,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  renderVals() {
+    const profileState = this.props.profileState ?? 'filled';
+    const formState = this.props.formState ?? 'idle';
+    const hasOrg = this.props.hasOrgProp ?? true;
+    const specializations = [{ label: 'Rumah Tapak' }, { label: 'Apartemen' }, { label: 'KPR Konsultasi' }];
+    return {
+      drawerOpen: this.state.drawerOpen ?? false,
+      openDrawer: this.openDrawer,
+      closeDrawer: this.closeDrawer,
+      isFirstTime: profileState === 'first_time',
+      isSuccess: formState === 'success',
+      isSaving: formState === 'saving',
+      isIdle: formState !== 'saving',
+      hasOrg,
+      noOrg: !hasOrg,
+      profilePublic: this.props.profilePublicProp ?? true,
+      contactPublic: this.props.contactPublicProp ?? true,
+      ctaEnabled: this.props.ctaEnabledProp ?? false,
+      specializations,
+      soldCount: 34,
+      rentedCount: 12
+    };
+  }
+}
+</script>
+</body>
+</html>
