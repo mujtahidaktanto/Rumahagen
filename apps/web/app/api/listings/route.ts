@@ -54,10 +54,17 @@ export const GET = withApiHandler({}, async (ctx) => {
   const filters = validateSearchParams(url.searchParams, listListingsQuerySchema);
 
   const supabase = await createClient();
+  // Urutan "district-local freshness" (Gate PRE-00-E §26): freshness_rank_at
+  // (0116) adalah COALESCE(last_refreshed_at, published_at) GENERATED STORED --
+  // Refresh (0020) menaikkan listing ke posisi seolah baru publish tanpa
+  // mengubah published_at asli. `id` sebagai tie-break deterministik untuk
+  // timestamp yang identik persis (Gate §26, "listing_id ASC is only a final
+  // deterministic fallback").
   let query = supabase
     .from("listings")
     .select("*", { count: "exact" })
-    .order("created_at", { ascending: false })
+    .order("freshness_rank_at", { ascending: false })
+    .order("id", { ascending: true })
     .range(offset, offset + limit - 1);
 
   if (filters.category) query = query.eq("category", filters.category);
