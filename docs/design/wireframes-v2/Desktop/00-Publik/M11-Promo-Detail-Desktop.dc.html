@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Detail Konten Publik — Desktop</title>
+<title>Detail Promo — Desktop</title>
 <script src="./support.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../tokens.css">
@@ -26,15 +26,14 @@
   .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
   .breadcrumb a:hover{color:var(--ra-blue-600);}
 
-  .article-grid{display:grid;grid-template-columns:1fr 300px;gap:40px;padding:32px 0 56px;align-items:start;}
+  .banner{height:320px;border-radius:var(--ra-radius-lg);background:linear-gradient(135deg,var(--ra-gold-500),var(--ra-gold-700));margin-top:16px;position:relative;overflow:hidden;}
+  .unavailable-banner{position:absolute;inset:0;background:rgba(20,24,31,.55);display:flex;align-items:center;justify-content:center;}
+
+  .detail-grid{display:grid;grid-template-columns:1fr 320px;gap:32px;padding:32px 0 56px;align-items:start;}
   .prose p{font-size:15.5px;line-height:28px;color:var(--ra-ink-700);margin:0 0 18px;}
-  .prose h2{font-size:19px;font-weight:800;color:var(--ra-ink-900);margin:32px 0 12px;}
 
-  .side-card{position:sticky;top:96px;background:var(--ra-ink-50);border-radius:var(--ra-radius-lg);padding:20px;display:flex;flex-direction:column;gap:12px;}
-  .side-link{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--ra-ink-100);text-decoration:none;color:var(--ra-ink-700);font-size:13.5px;font-weight:600;}
-  .side-link:last-child{border-bottom:none;}
-
-  .empty-box{padding:80px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--ra-ink-500);}
+  .cta-card{position:sticky;top:96px;background:var(--ra-gold-100);border:1px solid var(--ra-gold-200);border-radius:var(--ra-radius-lg);padding:22px;display:flex;flex-direction:column;gap:14px;}
+  .related-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;margin-top:24px;}
 
   .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;margin-top:8px;}
   .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
@@ -56,8 +55,8 @@
         <a href="M11-Discovery.dc.html">Event</a>
         <a href="M11-Detail-Learning-Desktop.dc.html">Learning</a>
         <a href="M11-Detail-Learning-Session-Desktop.dc.html">Learning Session</a>
-        <a class="is-active" href="M11-Konten-Publik-Desktop.dc.html">Konten Publik</a>
-        <a href="M11-Promo-Desktop.dc.html">Promo</a>
+        <a href="M11-Konten-Publik-Desktop.dc.html">Konten Publik</a>
+        <a class="is-active" href="M11-Promo-Desktop.dc.html">Promo</a>
       </nav>
       <button class="ra-iconbtn" aria-label="Cari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
       <div style="display:flex;align-items:center;gap:10px;">
@@ -71,46 +70,50 @@
 
     <div class="breadcrumb">
       <a href="M11-Homepage.dc.html">Beranda</a><span>/</span>
-      <a href="M11-Konten-Publik-Desktop.dc.html">Konten Publik</a><span>/</span>
+      <a href="M11-Promo-Desktop.dc.html">Promo</a><span>/</span>
       <span style="color:var(--ra-ink-900);">{{title}}</span>
     </div>
 
-    <sc-if value="{{isNotFound}}" hint-placeholder-val="{{false}}">
-      <div class="empty-box">
-        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="52" height="52"><circle cx="27" cy="27" r="16"/><path d="M38 38l14 14"/></svg>
-        <h2 class="ra-title-lg">Halaman Tidak Ditemukan</h2>
-        <p class="ra-body-md">Artikel ini mungkin sudah dipindahkan atau belum dipublikasikan.</p>
-        <a class="ra-btn ra-btn-primary" href="M11-Konten-Publik-Desktop.dc.html">Kembali ke Pusat Bantuan</a>
-      </div>
-    </sc-if>
+    <div class="banner">
+      <sc-if value="{{isUnavailable}}" hint-placeholder-val="{{false}}">
+        <div class="unavailable-banner">
+          <span class="ra-badge {{unavailableBadge}}" style="font-size:16px;padding:10px 22px;"><span class="ra-dot"></span>{{unavailableLabel}}</span>
+        </div>
+      </sc-if>
+    </div>
 
-    <sc-if value="{{isFound}}" hint-placeholder-val="{{true}}">
-      <div class="article-grid">
-        <div style="min-width:0;">
-          <h1 class="ra-headline" style="margin-bottom:10px;">{{title}}</h1>
-          <span class="ra-caption">Terakhir diperbarui {{updatedAt}}</span>
-
-          <div class="prose" style="margin-top:24px;">
-            <p>{{introParagraph}}</p>
-            <h2>{{sectionTitle1}}</h2>
-            <p>{{bodyParagraph1}}</p>
-            <h2>{{sectionTitle2}}</h2>
-            <p>{{bodyParagraph2}}</p>
-          </div>
+    <div class="detail-grid">
+      <div style="min-width:0;">
+        <span class="ra-badge ra-badge-warning" style="margin-bottom:10px;">{{campaign}}</span>
+        <h1 class="ra-headline">{{title}}</h1>
+        <div style="display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);margin-top:10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="15" height="15"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+          <span class="ra-body-md">Berlaku {{scheduleText}}</span>
         </div>
 
-        <div class="side-card">
-          <span class="ra-label-lg" style="color:var(--ra-ink-500);">Artikel Lainnya</span>
-          <sc-for list="{{relatedArticles}}" as="r" hint-placeholder-count="4">
-            <a class="side-link" href="M11-Konten-Publik-Detail-Desktop.dc.html">
-              {{r.title}}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M9 5l7 7-7 7"/></svg>
-            </a>
-          </sc-for>
+        <div class="prose" style="margin-top:24px;">
+          <p>{{bodyParagraph1}}</p>
+          <p>{{bodyParagraph2}}</p>
         </div>
-      </div>
-    </sc-if>
 
+        <sc-if value="{{hasRelated}}" hint-placeholder-val="{{true}}">
+          <a class="related-card" href="M11-Detail-Developer-Project-Desktop.dc.html">
+            <div style="width:40px;height:40px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M3 21V9l9-6 9 6v12"/></svg></div>
+            <div><div class="ra-label-lg">{{relatedTitle}}</div><span class="ra-caption">Proyek terkait promo ini</span></div>
+          </a>
+        </sc-if>
+      </div>
+
+      <!-- CTA CARD -->
+      <div class="cta-card">
+        <span class="ra-label-md" style="color:var(--ra-gold-700);">Ambil Penawaran Ini</span>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;"><span class="ra-caption">Berlaku Dari</span><span class="ra-body-md" style="font-weight:700;">{{validFrom}}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span class="ra-caption">Berakhir</span><span class="ra-body-md" style="font-weight:700;">{{validTo}}</span></div>
+        </div>
+        <a class="ra-btn ra-btn-primary" style="width:100%;" href="{{ctaHref}}">{{ctaLabel}}</a>
+      </div>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -130,29 +133,34 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"pageState":{"editor":"enum","default":"found","options":["found","not_found"],"section":"Skenario"},"$preview":{"width":1440,"height":1200}}'>
+<script type="text/x-dc" data-dc-script data-props='{"promoStatus":{"editor":"enum","default":"active","options":["active","scheduled","expired","archived"],"section":"Skenario status"},"$preview":{"width":1440,"height":1400}}'>
 class Component extends DCLogic {
   renderVals() {
-    const pageState = this.props.pageState ?? 'found';
+    const status = this.props.promoStatus ?? 'active';
 
-    const relatedArticles = [
-      { title: 'Kebijakan Privasi' },
-      { title: 'Kode Etik Agen RumahAgen' },
-      { title: 'Panduan Verifikasi Akun & Lisensi' },
-      { title: 'Hubungi Kami' }
-    ];
+    const statusCopy = {
+      scheduled: { label: 'Segera Dimulai', badge: 'ra-badge-info' },
+      expired: { label: 'Promo Telah Berakhir', badge: 'ra-badge-neutral' },
+      archived: { label: 'Promo Sudah Diarsipkan', badge: 'ra-badge-neutral' }
+    };
+    const isUnavailable = status !== 'active';
+    const c = statusCopy[status] ?? { label: '', badge: '' };
 
     return {
-      isFound: pageState === 'found',
-      isNotFound: pageState === 'not_found',
-      title: 'Syarat & Ketentuan Penggunaan Platform',
-      updatedAt: '12 September 2026',
-      introParagraph: 'Dokumen ini mengatur hak dan kewajiban setiap pengguna platform RumahAgen, baik sebagai agen properti terdaftar maupun pengguna publik yang mencari properti, informasi, atau layanan pembelajaran.',
-      sectionTitle1: '1. Ketentuan Umum',
-      bodyParagraph1: 'Dengan mendaftar dan menggunakan platform RumahAgen, pengguna dianggap telah membaca, memahami, dan menyetujui seluruh syarat dan ketentuan yang berlaku, termasuk perubahan yang mungkin dilakukan dari waktu ke waktu.',
-      sectionTitle2: '2. Kewajiban Agen Terdaftar',
-      bodyParagraph2: 'Setiap agen wajib memberikan informasi listing yang akurat, menjaga etika komunikasi dengan calon pembeli, dan mematuhi kode etik profesi yang ditetapkan RumahAgen.',
-      relatedArticles
+      title: 'Cashback Rp 2 Juta — Klaim Proyek Kanaya Residence',
+      campaign: 'Developer Partner',
+      scheduleText: '1 – 30 September 2026',
+      validFrom: '1 Sep 2026',
+      validTo: '30 Sep 2026',
+      isUnavailable,
+      unavailableLabel: c.label,
+      unavailableBadge: c.badge,
+      bodyParagraph1: 'RumahAgen bekerja sama dengan PT Kanaya Group Developer menghadirkan program cashback khusus bagi agen yang berhasil klaim dan closing unit pertama di proyek Cluster Kanaya Residence.',
+      bodyParagraph2: 'Cashback sebesar Rp 2.000.000 akan dicairkan maksimal 14 hari kerja setelah akad kredit disetujui bank, dengan syarat dan ketentuan berlaku sesuai kebijakan developer partner.',
+      hasRelated: true,
+      relatedTitle: 'Cluster Kanaya Residence',
+      ctaHref: 'M11-Detail-Developer-Project-Desktop.dc.html',
+      ctaLabel: 'Lihat Proyek & Klaim Sekarang'
     };
   }
 }

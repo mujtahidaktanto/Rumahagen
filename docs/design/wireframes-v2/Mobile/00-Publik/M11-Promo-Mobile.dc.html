@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Promo & Pengumuman — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:var(--ra-surface);position:relative;}
+  .topbar{height:58px;position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tb-btn{width:38px;height:38px;border-radius:50%;background:var(--ra-ink-50);display:flex;align-items:center;justify-content:center;border:none;flex:none;}
+  .list-col{padding:16px;display:flex;flex-direction:column;gap:14px;}
+  .promo-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;text-decoration:none;color:inherit;background:#fff;display:flex;flex-direction:column;}
+  .promo-banner{height:120px;background:linear-gradient(135deg,var(--ra-gold-500),var(--ra-gold-700));position:relative;flex:none;}
+  .campaign-tag{position:absolute;top:8px;left:8px;background:rgba(20,24,31,.72);color:#fff;padding:3px 9px;border-radius:var(--ra-radius-pill);font-size:10.5px;font-weight:700;}
+  .expiry-pill{position:absolute;bottom:8px;right:8px;background:rgba(255,255,255,.92);color:var(--ra-ink-900);padding:3px 9px;border-radius:var(--ra-radius-pill);font-size:10.5px;font-weight:700;}
+  .promo-body{padding:14px;display:flex;flex-direction:column;gap:6px;}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:48px 20px;color:var(--ra-ink-300);text-align:center;}
+</style>
+</helmet>
+<div class="page">
+
+  <div class="topbar">
+    <button class="tb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="ra-title-md">Promo &amp; Pengumuman</span>
+  </div>
+
+  <div class="ra-scroll" style="max-height:calc(844px - 58px);overflow-y:auto;">
+
+    <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+      <div class="list-col">
+        <div class="ra-skel" style="height:190px;"></div>
+        <div class="ra-skel" style="height:190px;"></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+      <div class="empty-wrap">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M3 11.5 11.5 3H19a2 2 0 0 1 2 2v7.5L12.5 21 3 11.5Z"/><circle cx="14.5" cy="8.5" r="1.4" fill="currentColor" stroke="none"/></svg>
+        <span class="ra-body-md">Belum ada promo aktif saat ini</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+      <div class="list-col">
+        <sc-for list="{{promos}}" as="p" hint-placeholder-count="6">
+          <a class="promo-card" href="M11-Promo-Detail-Mobile.dc.html">
+            <div class="promo-banner">
+              <span class="campaign-tag">{{p.campaign}}</span>
+              <span class="expiry-pill">{{p.expiryLabel}}</span>
+            </div>
+            <div class="promo-body">
+              <span class="ra-label-lg ra-truncate-2" style="font-size:13.5px;">{{p.title}}</span>
+              <span class="ra-caption ra-truncate-2">{{p.excerpt}}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const listState = this.props.listState ?? 'loaded';
+
+    const promos = [
+      { title: 'Diskon Komisi Listing Premium 20% untuk Agen Baru', excerpt: 'Berlaku untuk 100 agen pertama bulan ini.', campaign: 'Onboarding', expiryLabel: '3 hari lagi' },
+      { title: 'Cashback Rp 2 Juta — Klaim Proyek Kanaya Residence', excerpt: 'Klaim proyek dan closing unit pertama.', campaign: 'Developer Partner', expiryLabel: '10 hari lagi' },
+      { title: 'Gratis Akses Course Financial & KPR Selama September', excerpt: 'Semua agen terverifikasi dapat akses gratis.', campaign: 'Learning', expiryLabel: '5 hari lagi' },
+      { title: 'Pengumuman: Pemeliharaan Sistem 20 September', excerpt: 'Platform tidak dapat diakses 23.00–02.00 WIB.', campaign: 'Pengumuman', expiryLabel: '1 hari lagi' },
+      { title: 'Bonus Learning Point 2x Lipat Setiap Sabtu', excerpt: 'Selesaikan sesi belajar hari Sabtu.', campaign: 'Learning', expiryLabel: '30 hari lagi' },
+      { title: 'Undangan Gathering Agen Regional Jabodetabek', excerpt: 'Networking bersama agen top region.', campaign: 'Event', expiryLabel: '7 hari lagi' }
+    ];
+
+    return {
+      isLoading: listState === 'loading',
+      isEmpty: listState === 'empty',
+      isLoaded: listState === 'loaded',
+      promos
+    };
+  }
+}
+</script>
+</body>
+</html>
