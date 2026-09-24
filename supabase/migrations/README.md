@@ -3310,3 +3310,34 @@ baru, listing baru, lead, order, dst.) tidak disimpan — dihitung langsung dari
 **Belum dibuat:** pemanggil terjadwal harian (sengaja tanpa `pg_cron`, sesuai
 0019; rencananya Vercel Cron → route admin dengan service_role) dan route
 export `/api/admin/reports/export`.
+
+## `0124` — Fungsi baca Dashboard Analytics `admin_analytics_flow()` + `admin_analytics_funnel()` (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna. Verifikasi pasca-terapan (transaksi rollback, pengguna sementara sudah dibersihkan): Agent ditolak 42501; Manager dan Superadmin bisa memanggil kedua fungsi; rentang 500 hari ditolak; `EXECUTE` tidak diberikan ke `anon`. Route `/api/admin/analytics/dashboard` dan `/api/admin/analytics/export` bergantung pada migration ini.
+
+Dua fungsi `SECURITY DEFINER` untuk metrik ARUS (agen baru, listing baru, lead,
+refresh, proyek, klaim, organisasi baru, learning, sertifikat, poin, GMV, refund,
+pendapatan langganan vs add-on, pembeli add-on, banding masuk, kunjungan listing)
+dan funnel aktivasi kohort. Dibuat sebagai fungsi karena agregat lintas-pengguna tidak
+bisa dihitung lewat RLS (Manager hanya melihat baris Agent/mitra di `users`;
+Admin/Manager tidak punya akses baris ke `payment_transactions`). Otorisasi di DB:
+hanya Superadmin/Admin/Manager (selain itu error 42501 → 403), hanya agregat yang
+dikembalikan. Tidak ada permission baru (D13-15).
+
+**Keterbatasan data yang dipertahankan apa adanya** (tercantum juga di response API):
+- Lead unik: dedup per (listing, ip, user agent) per hari; klik pemilik listing dan
+  bot tidak bisa dikeluarkan (tidak ada penandanya).
+- Proyek developer baru dihitung saat dibuat, bukan saat dipublikasikan (tidak ada
+  timestamp publikasi).
+- Penyelesaian learning tidak difilter hasil "qualifying".
+- Refund/chargeback hanya status penuh; `partial_*` dihitung sebagai transaksi sukses
+  penuh (jumlah refund parsial tidak tersimpan).
+- Tidak ada listing ditolak per hari (tidak ada `rejected_at`), churn langganan, maupun
+  GMV nilai properti — dicantumkan sebagai "belum bisa ditampilkan".
+- Funnel: tiap tahap dihitung mandiri dalam jendela 30 hari sejak daftar (bukan berurutan).
+
+**Route (belum ada yang di-commit):** `GET /api/admin/analytics/dashboard` (JSON,
+withApiHandler, tanpa service role) dan `GET /api/admin/analytics/export?format=xlsx|pdf`
+(Superadmin via `m09.administrative_export.export`, tercatat di audit log SEBELUM file
+dikirim, Excel ditulis tanpa dependency baru). `/api/admin/reports/export` yang sudah
+ada TIDAK berubah: itu export baris `audit_logs`, bukan analitik.
