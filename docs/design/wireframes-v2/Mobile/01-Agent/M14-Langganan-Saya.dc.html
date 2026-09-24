@@ -105,10 +105,10 @@
       <sc-if value="{{planEmpty}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada paket Pro yang dijual</span><p class="ra-body-md" style="max-width:380px;">Paket akan tampil di sini setelah tim RumahAgen mengaktifkannya.</p></div></div></sc-if>
       <sc-if value="{{planReady}}" hint-placeholder-val="{{true}}"><div class="plan-grid"><sc-for list="{{plans}}" as="p" hint-placeholder-count="2">
         <div class="plan-card">
-          <div><div class="ra-title-md">{{p.name}}</div><div class="ra-caption">{{p.duration}}</div></div>
+          <div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="ra-title-md">{{p.name}}</span><sc-if value="{{p.hasPromoBadge}}" hint-placeholder-val="{{false}}"><span class="ra-badge {{p.promoBadgeClass}}">{{p.promoBadgeText}}</span></sc-if></div><div class="ra-caption">{{p.duration}}</div><sc-if value="{{p.hasPromoReason}}" hint-placeholder-val="{{false}}"><div class="ra-caption" style="color:var(--ra-warning-600);">{{p.promoReason}} Harga normal berlaku.</div></sc-if></div>
           <div style="display:flex;flex-direction:column;gap:6px;">
-            <div class="price-row"><span class="ra-body-md">Pribadi</span><span class="ra-title-md">{{p.pricePersonal}}</span></div>
-            <div class="price-row"><span class="ra-body-md">Organisasi</span><span class="ra-label-lg">{{p.priceOrg}}</span></div>
+            <div class="price-row"><span class="ra-body-md">Pribadi</span><span><sc-if value="{{p.hasOldPersonal}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="text-decoration:line-through;margin-right:6px;">{{p.oldPersonal}}</span></sc-if><span class="ra-title-md">{{p.pricePersonal}}</span></span></div>
+            <div class="price-row"><span class="ra-body-md">Organisasi</span><span><sc-if value="{{p.hasOldOrg}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="text-decoration:line-through;margin-right:6px;">{{p.oldOrg}}</span></sc-if><span class="ra-label-lg">{{p.priceOrg}}</span></span></div>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;"><span class="ra-body-sm">✓ {{p.quotaPersonal}} jatah listing per siklus bulanan (pribadi)</span><span class="ra-body-sm">✓ {{p.quotaOrg}} jatah per siklus (organisasi)</span><span class="ra-body-sm">✓ Ditambahkan di atas kuota Gratis</span></div>
           <button class="ra-btn ra-btn-primary" onClick="{{p.buy}}">Beli {{p.name}}</button>
@@ -161,7 +161,9 @@
         <div class="field"><span class="ra-label-md">Langganan untuk</span>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;"><button class="ra-chip" aria-pressed="{{ownerPersonalPressed}}" onClick="{{pickPersonal}}">Pribadi</button><button class="ra-chip" aria-pressed="{{ownerOrgPressed}}" disabled="{{orgDisabled}}" onClick="{{pickOrg}}">Organisasi</button></div>
           <span class="ra-caption" style="display:block;margin-top:6px;">{{orgNote}}</span></div>
-        <dl class="kv" style="grid-template-columns:110px 1fr;"><dt>Harga</dt><dd>{{buyPrice}}</dd><dt>Masa aktif</dt><dd>{{buyDuration}}</dd></dl>
+        <dl class="kv" style="grid-template-columns:110px 1fr;"><sc-if value="{{hasBuyPromo}}" hint-placeholder-val="{{false}}"><dt>Harga normal</dt><dd><span style="text-decoration:line-through;">{{buyListPrice}}</span></dd></sc-if><sc-if value="{{buyPromoOk}}" hint-placeholder-val="{{false}}"><dt>Promosi</dt><dd>{{buyPromoLine}} <strong>{{buyDiscount}}</strong></dd></sc-if><dt>Total</dt><dd><strong>{{buyPrice}}</strong></dd><dt>Masa aktif</dt><dd>{{buyDuration}}</dd></dl>
+        <sc-if value="{{buyPromoBad}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span class="ra-body-md">{{buyPromoReason}} Pesanan dibuat dengan harga normal.</span></div></sc-if>
+        <sc-if value="{{buyPromoOk}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Promosi dikirim bersama pesanan; harga akhir dihitung server dan bisa ditolak bila promosi sudah tidak berlaku saat Anda membayar.</span></sc-if>
         <sc-if value="{{hasStack}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span class="ra-body-md">{{stackNote}}</span></div></sc-if>
         <div class="banner banner-info"><span class="ra-body-md">Kuota Pro dihitung dari pembelian ini dan reset tiap siklus bulanan. Sisa kuota Pro dari pembelian sebelumnya hilang. Kuota Gratis tidak berubah. Harga dihitung server, nominal final dikonfirmasi di halaman pembayaran.</span></div>
         <sc-if value="{{buyErr}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span class="ra-body-md">{{buyErrText}}</span></div></sc-if>
@@ -178,7 +180,7 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario daftar"},"skenario":{"editor":"enum","default":"aktif","options":["aktif","segera_berakhir","berakhir","campuran","status_tak_dikenal"],"section":"Kondisi langganan"},"paket":{"editor":"enum","default":"tersedia","options":["tersedia","memuat","kosong","gagal_muat","tanpa_harga_organisasi"],"section":"Skenario paket Pro"},"peran":{"editor":"enum","default":"leader","options":["leader","member","tanpa_organisasi"],"section":"Skenario paket Pro"},"beli":{"editor":"enum","default":"normal","options":["normal","gagal_konflik","gagal_bukan_leader"],"section":"Skenario paket Pro"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario daftar"},"skenario":{"editor":"enum","default":"aktif","options":["aktif","segera_berakhir","berakhir","campuran","status_tak_dikenal"],"section":"Kondisi langganan"},"paket":{"editor":"enum","default":"tersedia","options":["tersedia","memuat","kosong","gagal_muat","tanpa_harga_organisasi"],"section":"Skenario paket Pro"},"peran":{"editor":"enum","default":"leader","options":["leader","member","tanpa_organisasi"],"section":"Skenario paket Pro"},"beli":{"editor":"enum","default":"normal","options":["normal","gagal_konflik","gagal_bukan_leader"],"section":"Skenario paket Pro"},"promo":{"editor":"enum","default":"berlaku","options":["tanpa","berlaku","tidak_layak"],"section":"Skenario promosi paket"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -244,14 +246,20 @@ class Component extends DCLogic {
     ];
     var fmtR = function(n){ return n ? 'Rp ' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : 'Belum tersedia'; };
     var noOrgPrice = paketS === 'tanpa_harga_organisasi';
-    var plans = paketS === 'kosong' ? [] : PLANS.map(function(p){ return { name: p.name, duration: p.duration, pricePersonal: fmtR(p.pp), priceOrg: noOrgPrice ? 'Belum tersedia' : fmtR(p.po), quotaPersonal: 75, quotaOrg: 100, buy: function(){ self.openBuy(p.id); } }; });
+    var promoS = pr.promo || 'berlaku';
+    var PROMO = { id: 'pl1', name: 'Promo Awal Pro 20%', pct: 20 };
+    var offerFor = function(p){ return p.id === PROMO.id && promoS !== 'tanpa' ? { eligible: promoS === 'berlaku', reason: promoS === 'berlaku' ? '' : 'Promosi ini hanya untuk pembelian pertama.', pct: PROMO.pct, name: PROMO.name } : null; };
+    var afterPct = function(n, o){ return o && o.eligible ? Math.round(n * (1 - o.pct / 100)) : n; };
+    var plans = paketS === 'kosong' ? [] : PLANS.map(function(p){ var o = offerFor(p), on = o && o.eligible; return { name: p.name, duration: p.duration, pricePersonal: fmtR(afterPct(p.pp, o)), oldPersonal: on ? fmtR(p.pp) : '', hasOldPersonal: !!on, priceOrg: noOrgPrice ? 'Belum tersedia' : fmtR(afterPct(p.po, o)), oldOrg: on && !noOrgPrice ? fmtR(p.po) : '', hasOldOrg: !!on && !noOrgPrice,
+      hasPromoBadge: !!o, promoBadgeText: o ? (o.eligible ? 'Promo ' + o.pct + '%' : 'Promo tidak berlaku') : '', promoBadgeClass: o && o.eligible ? 'ra-badge-warning' : 'ra-badge-neutral', hasPromoReason: !!o && !o.eligible, promoReason: o ? o.reason : '', promoName: o ? o.name : '', quotaPersonal: 75, quotaOrg: 100, buy: function(){ self.openBuy(p.id); } }; });
     var bp = PLANS.filter(function(p){ return p.id === st.buyPlan; })[0] || PLANS[0];
     var orgOff = peran !== 'leader' || noOrgPrice;
     var orgNote = peran === 'member' ? 'Hanya leader organisasi yang dapat membeli langganan organisasi.' : (peran === 'tanpa_organisasi' ? 'Anda belum menjadi anggota organisasi aktif.' : (noOrgPrice ? 'Paket ini belum dijual untuk organisasi.' : 'Langganan menjadi milik organisasi Properti Sejahtera Agency dan berlaku untuk seluruh anggota.'));
     var activeSame = items.filter(function(s){ return (s.st === 'active' || s.st === 'expiring') && s.scope === (owner === 'org' ? 'org' : 'personal'); })[0];
-    var buyOut = { planLoading: paketS === 'memuat', planError: paketS === 'gagal_muat', planEmpty: paketS === 'kosong', planReady: paketS !== 'memuat' && paketS !== 'gagal_muat' && paketS !== 'kosong', plans: plans,
+    var bo = offerFor(bp), bon = !!(bo && bo.eligible), listP = owner === 'org' ? bp.po : bp.pp;
+    var buyOut = { hasBuyPromo: !!bo, buyPromoOk: bon, buyPromoBad: !!bo && !bon, buyListPrice: fmtR(listP), buyPromoLine: bo ? bo.name + ' (−' + bo.pct + '%)' : '', buyPromoReason: bo ? bo.reason : '', buyDiscount: bon ? '−' + fmtR(listP - afterPct(listP, bo)) : '', planLoading: paketS === 'memuat', planError: paketS === 'gagal_muat', planEmpty: paketS === 'kosong', planReady: paketS !== 'memuat' && paketS !== 'gagal_muat' && paketS !== 'kosong', plans: plans,
       buyOpen: st.buyOpen === true, isStepPilih: (st.step || 'pilih') === 'pilih', isStepDibuat: st.step === 'dibuat', closeBuy: this.closeBuy, pickPersonal: this.pickPersonal, pickOrg: this.pickOrg, createOrder: this.createOrder,
-      buyPlanName: bp.name, buyPrice: fmtR(owner === 'org' ? bp.po : bp.pp), buyDuration: bp.duration, buyOwnerLabel: owner === 'org' ? 'organisasi' : 'pribadi',
+      buyPlanName: bp.name, buyPrice: fmtR(afterPct(listP, bo)), buyDuration: bp.duration, buyOwnerLabel: owner === 'org' ? 'organisasi' : 'pribadi',
       ownerPersonalPressed: owner === 'personal' ? 'true' : 'false', ownerOrgPressed: owner === 'org' && !orgOff ? 'true' : 'false', orgDisabled: orgOff, orgNote: orgNote,
       hasStack: !!activeSame, stackNote: activeSame ? 'Anda masih punya Pro aktif sampai ' + (activeSame.end || '—') + '. Masa baru ditumpuk setelahnya, tetapi kuota Pro direset sekarang.' : '',
       buyErr: !!st.buyErr, buyErrText: st.buyErr || '' };

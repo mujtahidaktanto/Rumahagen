@@ -78,7 +78,7 @@
     <span class="ra-badge ra-badge-info">{{aktorLabel}}</span>
   </div>
   <div class="main ra-scroll">
-      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Harga di sini adalah <strong>satu-satunya sumber harga</strong> pesanan langganan; perubahan hanya berlaku untuk pesanan baru. Harga kosong berarti paket tidak dijual untuk cakupan itu (pribadi atau organisasi). Kode dan durasi terkunci setelah paket terjual. Beli lagi = langganan baru; tidak ada perpanjangan.</p></div>
+      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Harga di sini adalah <strong>satu-satunya sumber harga</strong> pesanan langganan; perubahan hanya berlaku untuk pesanan baru. Harga kosong berarti paket tidak dijual untuk cakupan itu (pribadi atau organisasi). Promosi dihubungkan per paket dan berlaku untuk kedua cakupan. Kode dan durasi terkunci setelah paket terjual. Beli lagi = langganan baru; tidak ada perpanjangan.</p></div>
       <sc-if value="{{readOnly}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md">Peran Manager hanya bisa melihat katalog paket.</p></div></sc-if>
     <sc-if value="{{canManage}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreate}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Buat Paket</button></sc-if>
     <div class="card">
@@ -90,6 +90,7 @@
       <div class="ra-body-md">Pribadi: <sc-if value="{{r.noPP}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-neutral">Tidak dijual</span></sc-if><strong>{{r.pp}}</strong></div>
       <div class="ra-body-md">Organisasi: <sc-if value="{{r.noPO}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-neutral">Tidak dijual</span></sc-if><strong>{{r.po}}</strong></div>
       <sc-if value="{{r.notInList}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-warning-600);">Kode tidak ada di daftar produk Pro: tidak memberi kuota Pro.</span></sc-if>
+      <sc-if value="{{r.hasPromo}}" hint-placeholder-val="{{false}}"><span class="ra-badge {{r.promoBadge}}" style="align-self:flex-start;">Promo: {{r.promoName}} · {{r.promoLabel}}</span></sc-if><sc-if value="{{r.hasPromoNote}}" hint-placeholder-val="{{false}}"><span class="ra-caption">{{r.promoNote}}</span></sc-if>
       <div class="ra-caption">{{r.sold}} terjual</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;"><sc-if value="{{r.canEdit}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.edit}}">Ubah</button></sc-if>
         <sc-if value="{{r.showActivate}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary ra-btn-sm" disabled="{{r.activateOff}}" onClick="{{r.activate}}">Aktifkan</button></sc-if>
@@ -108,6 +109,14 @@
       <div class="field"><label class="ra-label-lg" for="pk-mo">Durasi (bulan) <span class="req">*</span></label><input id="pk-mo" class="ra-input" type="number" min="1" max="36" style="max-width:160px;" disabled="{{lockTerms}}" value="{{fMonths}}" onInput="{{onMonths}}"><sc-if value="{{lockTerms}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Terkunci karena paket sudah terjual; buat paket baru untuk syarat berbeda.</span></sc-if><sc-if value="{{eMonths}}" hint-placeholder-val="{{false}}"><span class="err">Isi bilangan bulat 1–36.</span></sc-if></div>
       <div class="field"><label class="ra-label-lg" for="pk-pp">Harga pribadi (Rp)</label><input id="pk-pp" class="ra-input" type="text" inputmode="numeric" placeholder="Kosong = tidak dijual untuk pribadi" value="{{fPP}}" onInput="{{onPP}}"><sc-if value="{{ePP}}" hint-placeholder-val="{{false}}"><span class="err">Harga harus lebih dari 0.</span></sc-if></div>
       <div class="field"><label class="ra-label-lg" for="pk-po">Harga organisasi (Rp)</label><input id="pk-po" class="ra-input" type="text" inputmode="numeric" placeholder="Kosong = tidak dijual untuk organisasi" value="{{fPO}}" onInput="{{onPO}}"><span class="ra-caption">Hanya leader organisasi yang bisa membeli; langganan menjadi milik organisasi.</span><sc-if value="{{ePO}}" hint-placeholder-val="{{false}}"><span class="err">Harga harus lebih dari 0.</span></sc-if></div>
+      <div class="field"><span class="ra-label-lg">Promosi terhubung</span>
+        <sc-if value="{{plLoading}}" hint-placeholder-val="{{false}}"><div class="ra-skel" style="height:56px;"></div></sc-if>
+        <sc-if value="{{plError}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span class="ra-body-md">Daftar promosi gagal dimuat. Paket tetap bisa disimpan tanpa mengubah promosi.</span></div></sc-if>
+        <sc-if value="{{plEmpty}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Belum ada promosi. Buat di layar Promosi, lalu hubungkan di sini.</span></sc-if>
+        <sc-if value="{{plReady}}" hint-placeholder-val="{{true}}"><div role="radiogroup" aria-label="Promosi terhubung" style="display:flex;flex-direction:column;gap:8px;"><sc-for list="{{promoOptions}}" as="o" hint-placeholder-count="4"><button class="radio-card" role="radio" aria-checked="{{o.checked}}" disabled="{{o.dis}}" onClick="{{o.pick}}"><span class="ra-label-lg">{{o.name}}</span><span class="ra-caption">{{o.meta}}</span><sc-if value="{{o.hasBadge}}" hint-placeholder-val="{{false}}"><span class="ra-badge {{o.badgeClass}}">{{o.badge}}</span></sc-if><sc-if value="{{o.hasReason}}" hint-placeholder-val="{{false}}"><span class="ra-caption">{{o.reason}}</span></sc-if></button></sc-for></div></sc-if>
+        <sc-if value="{{hasPromoNoteForm}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span class="ra-body-md">{{promoNoteForm}}</span></div></sc-if>
+        <sc-if value="{{showFinal}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Harga akhir setelah promosi: <sc-if value="{{hasFinalPP}}" hint-placeholder-val="{{false}}"><strong>pribadi {{finalPP}}</strong></sc-if> <sc-if value="{{hasFinalPO}}" hint-placeholder-val="{{false}}"><strong>organisasi {{finalPO}}</strong></sc-if>. Promosi hanya terpakai bila pembeli memilihnya dan lolos aturan kelayakan; harga dihitung server.</span></sc-if>
+      </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{save}}">Simpan</button></div>
     </sc-if>
     <sc-if value="{{isStatus}}" hint-placeholder-val="{{false}}">
@@ -119,13 +128,13 @@
   <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="ra-label-lg">{{toast}}</span></div></sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"state":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario daftar"},"aksi":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario aksi"},"dialogAwal":{"editor":"enum","default":"tutup","options":["tutup","ubah","buat"],"section":"Skenario dialog"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"state":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario daftar"},"aksi":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario aksi"},"dialogAwal":{"editor":"enum","default":"tutup","options":["tutup","ubah","buat"],"section":"Skenario dialog"},"daftarPromosi":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario daftar promosi"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
     this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { st: {}, dialog: '', target: null, next: '', toast: '', actionFailed: false, tried: false, form: null });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'closeAll', 'confirm', 'onCode', 'onName', 'onDesc', 'onMonths', 'onPP', 'onPO', 'save'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'closeAll', 'confirm', 'onCode', 'onName', 'onDesc', 'onMonths', 'onPP', 'onPO', 'save', 'onPromo'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
@@ -134,8 +143,8 @@ class Component extends DCLogic {
 
   closeAll(){ this.setState({ dialog: '', actionFailed: false, tried: false, form: null }); }
   fm(){ if (this.state.form) return this.state.form; var d = this.state.dialog || (this.props.dialogAwal === 'ubah' ? 'form' : (this.props.dialogAwal === 'buat' ? 'form' : ''));
-    if (this.props.dialogAwal === 'ubah' && !this.state.dialog) return { id: 'p1', code: 'pro_bulanan', name: 'Pro Bulanan', desc: 'Kuota penerbitan listing Pro; kuota Pro reset tiap pembelian baru.', months: '1', pp: '149000', po: '449000', sold: 12 };
-    return { id: '', code: '', name: '', desc: '', months: '1', pp: '', po: '', sold: 0 }; }
+    if (this.props.dialogAwal === 'ubah' && !this.state.dialog) return { id: 'p1', code: 'pro_bulanan', name: 'Pro Bulanan', desc: 'Kuota penerbitan listing Pro; kuota Pro reset tiap pembelian baru.', months: '1', pp: '149000', po: '449000', sold: 12, promo: 'pm1' };
+    return { id: '', code: '', name: '', desc: '', months: '1', pp: '', po: '', sold: 0, promo: 'none' }; }
   up(k, v){ var f = Object.assign({}, this.fm()); f[k] = v; this.setState({ form: f }); }
   onCode(e){ this.up('code', e.target.value); }
   onName(e){ this.up('name', e.target.value); }
@@ -143,6 +152,7 @@ class Component extends DCLogic {
   onMonths(e){ this.up('months', e.target.value); }
   onPP(e){ this.up('pp', e.target.value); }
   onPO(e){ this.up('po', e.target.value); }
+  onPromo(id){ this.up('promo', id); }
   save(){
     var f = this.fm(), bad = this.bad(f);
     if (bad.any) { this.setState({ tried: true }); return; }
@@ -174,23 +184,37 @@ class Component extends DCLogic {
     var STS = { draft: ['Draf','ra-badge-neutral'], active: ['Aktif','ra-badge-success'], inactive: ['Nonaktif','ra-badge-warning'] };
     var PRO_CODES = ['pro_bulanan', 'pro_tahunan'];
     var PLANS = [
-      { id: 'p1', code: 'pro_bulanan', name: 'Pro Bulanan', desc: 'Kuota penerbitan listing Pro; kuota Pro reset tiap pembelian baru.', months: 1, pp: 149000, po: 449000, st: 'active', sold: 12 },
-      { id: 'p2', code: 'pro_tahunan', name: 'Pro Tahunan', desc: 'Kuota Pro selama 12 bulan; kuota Pro reset tiap siklus bulanan.', months: 12, pp: 1490000, po: 0, st: 'draft', sold: 0 },
+      { id: 'p1', code: 'pro_bulanan', name: 'Pro Bulanan', desc: 'Kuota penerbitan listing Pro; kuota Pro reset tiap pembelian baru.', months: 1, pp: 149000, po: 449000, st: 'active', sold: 12, promo: 'pm1' },
+      { id: 'p2', code: 'pro_tahunan', name: 'Pro Tahunan', desc: 'Kuota Pro selama 12 bulan; kuota Pro reset tiap siklus bulanan.', months: 12, pp: 1490000, po: 0, st: 'draft', sold: 0, promo: 'pm2' },
       { id: 'p3', code: 'pro_semester', name: 'Pro Semester Promo Akhir Tahun untuk Agen Aktif', desc: '', months: 6, pp: 0, po: 0, st: 'draft', sold: 0 }
     ];
+    var PROMOS = [
+      { id: 'pm1', name: 'Promo Awal Pro 20%', meta: 'PRO20 · 20% · 1 Okt – 31 Des 2026 · Semua pembeli', state: 'active', pct: 20 },
+      { id: 'pm2', name: 'Promo Lebaran 25%', meta: 'LEBARAN25 · 25% · 1 Mar – 15 Apr 2026 · Semua pembeli', state: 'expired', pct: 25 },
+      { id: 'pm3', name: 'Promo Agen Baru 10%', meta: 'AGENBARU · 10% · mulai 1 Nov 2026 · Pembelian pertama', state: 'scheduled', pct: 10 }
+    ];
+    var PSTATE = { active: ['Aktif', 'ra-badge-success'], expired: ['Kedaluwarsa', 'ra-badge-neutral'], scheduled: ['Terjadwal', 'ra-badge-info'] };
     var rp = function(n){ return n > 0 ? 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; };
     var self = this, mode = pr.state || 'normal', canManage = aktor !== 'manager';
     var all = PLANS.map(function(p){ return Object.assign({}, p, { st: st.st[p.id] || p.st }); });
     var rows = all.map(function(p){
-      var m = STS[p.st], noPrice = !(p.pp > 0) && !(p.po > 0), locked = p.sold > 0, inList = PRO_CODES.indexOf(p.code) >= 0;
-      return { code: p.code, name: p.name, months: p.months + ' bulan', pp: rp(p.pp), noPP: !(p.pp > 0), po: rp(p.po), noPO: !(p.po > 0), label: m[0], badge: m[1], sold: p.sold, locked: locked, noPrice: noPrice, notInList: !inList,
+      var m = STS[p.st], noPrice = !(p.pp > 0) && !(p.po > 0), locked = p.sold > 0, inList = PRO_CODES.indexOf(p.code) >= 0, pmo = PROMOS.filter(function(x){ return x.id === p.promo; })[0];
+      return { code: p.code, name: p.name, months: p.months + ' bulan', pp: rp(p.pp), noPP: !(p.pp > 0), po: rp(p.po), noPO: !(p.po > 0), label: m[0], badge: m[1], sold: p.sold, locked: locked, noPrice: noPrice, notInList: !inList, hasPromo: !!pmo, promoName: pmo ? pmo.name : '', promoBadge: pmo ? PSTATE[pmo.state][1] : '', promoLabel: pmo ? PSTATE[pmo.state][0] : '', promoNote: pmo && pmo.state === 'expired' ? 'Promosi kedaluwarsa: dijual dengan harga normal.' : (pmo && pmo.state === 'scheduled' ? 'Potongan mulai berlaku sesuai jadwal promosi.' : ''), hasPromoNote: !!pmo && pmo.state !== 'active',
         showActivate: canManage && p.st !== 'active', showDeactivate: canManage && p.st === 'active', activateOff: noPrice, activateReason: noPrice ? 'Isi minimal satu harga' : '', hasReason: p.st !== 'active' && noPrice,
-        edit: function(){ if (!canManage) return; self.setState({ dialog: 'form', form: { id: p.id, code: p.code, name: p.name, desc: p.desc, months: String(p.months), pp: p.pp > 0 ? String(p.pp) : '', po: p.po > 0 ? String(p.po) : '', sold: p.sold }, tried: false }); }, canEdit: canManage,
+        edit: function(){ if (!canManage) return; self.setState({ dialog: 'form', form: { id: p.id, code: p.code, name: p.name, desc: p.desc, months: String(p.months), pp: p.pp > 0 ? String(p.pp) : '', po: p.po > 0 ? String(p.po) : '', sold: p.sold, promo: p.promo || 'none' }, tried: false }); }, canEdit: canManage,
         activate: function(){ self.setState({ dialog: 'status', target: p.id, next: 'active', targetName: p.name }); }, deactivate: function(){ self.setState({ dialog: 'status', target: p.id, next: 'inactive', targetName: p.name }); } }; });
     var f = this.fm(), fb = this.bad(f), tried = st.tried === true, dlg = st.dialog || (pr.dialogAwal && pr.dialogAwal !== 'tutup' ? 'form' : '');
-    var out = { aktorLabel: aktorLabel, canManage: canManage, readOnly: !canManage, rows: rows, showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showRows: mode === 'normal',
+    var plMode = pr.daftarPromosi || 'loaded';
+    var promoOptions = [{ id: 'none', name: 'Tanpa promosi', meta: 'Paket dijual dengan harga normal', badge: '', badgeClass: '', hasBadge: false, checked: f.promo === 'none' ? 'true' : 'false', dis: false, reason: '', hasReason: false, pick: function(){ self.onPromo('none'); } }];
+    if (plMode === 'loaded') { PROMOS.forEach(function(x){ var dis = x.state === 'expired' && f.promo !== x.id; promoOptions.push({ id: x.id, name: x.name, meta: x.meta, badge: PSTATE[x.state][0], badgeClass: PSTATE[x.state][1], hasBadge: true, checked: f.promo === x.id ? 'true' : 'false', dis: dis, reason: dis ? 'Sudah kedaluwarsa; perbarui masa berlakunya di Promosi.' : '', hasReason: dis, pick: function(){ if (dis) return; self.onPromo(x.id); } }); }); }
+    var chosen = PROMOS.filter(function(x){ return x.id === f.promo; })[0], ppN = Number(f.pp) || 0, poN = Number(f.po) || 0;
+    var showFinal = !!chosen && chosen.state === 'active';
+    var out = { aktorLabel: aktorLabel, canManage: canManage, readOnly: !canManage, rows: rows,
+      promoOptions: promoOptions, plLoading: plMode === 'loading', plError: plMode === 'error', plEmpty: plMode === 'empty', plReady: plMode === 'loaded',
+      showFinal: showFinal, finalPP: showFinal && ppN > 0 ? rp(Math.round(ppN * (1 - chosen.pct / 100))) : '', finalPO: showFinal && poN > 0 ? rp(Math.round(poN * (1 - chosen.pct / 100))) : '', hasFinalPP: showFinal && ppN > 0, hasFinalPO: showFinal && poN > 0,
+      promoNoteForm: chosen && chosen.state === 'expired' ? 'Promosi yang terhubung sudah kedaluwarsa. Paket dijual dengan harga normal sampai Anda memilih promosi lain.' : (chosen && chosen.state === 'scheduled' ? 'Potongan mulai berlaku sesuai jadwal; sebelum itu paket dijual dengan harga normal.' : ''), hasPromoNoteForm: !!chosen && chosen.state !== 'active', showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showRows: mode === 'normal',
       dialogOpen: dlg !== '', isForm: dlg === 'form', isStatus: dlg === 'status', toActive: st.next === 'active', tName: st.targetName || '', closeAll: this.closeAll, confirm: this.confirm, actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast,
-      openCreate: function(){ self.setState({ dialog: 'form', form: { id: '', code: '', name: '', desc: '', months: '1', pp: '', po: '', sold: 0 }, tried: false }); },
+      openCreate: function(){ self.setState({ dialog: 'form', form: { id: '', code: '', name: '', desc: '', months: '1', pp: '', po: '', sold: 0, promo: 'none' }, tried: false }); },
       formTitle: f.id ? 'Ubah paket' : 'Buat paket', isCreate: !f.id, lockTerms: !!f.id && f.sold > 0, fCode: f.code, fName: f.name, fDesc: f.desc, fMonths: f.months, fPP: f.pp, fPO: f.po,
       onCode: this.onCode, onName: this.onName, onDesc: this.onDesc, onMonths: this.onMonths, onPP: this.onPP, onPO: this.onPO, save: this.save,
       eCode: tried && fb.code, eName: tried && fb.name, eMonths: tried && fb.months, ePP: tried && fb.pp, ePO: tried && fb.po,

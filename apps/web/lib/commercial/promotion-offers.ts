@@ -49,3 +49,40 @@ export async function annotateAddonsWithPromotionOffers<T extends { id: string; 
 
   return addons.map((a) => ({ ...a, promotion_offer: offers.get(a.id) ?? null }));
 }
+
+// Paket langganan (0143): padanan untuk subscription_plans lewat RPC my_plan_promotion_offers. organizationId menentukan cakupan harga
+// (null = pribadi; leader organisasi = harga organisasi). Pengguna anonim mendapat promotion_offer null.
+export async function annotatePlansWithPromotionOffers<T extends { id: string; promotion_id?: string | null }>(
+  supabase: Supabase,
+  userId: string | null,
+  plans: T[],
+  organizationId: string | null,
+): Promise<(T & { promotion_offer: PromotionOffer | null })[]> {
+  const withPromo = plans.filter((p) => p.promotion_id);
+  const offers = new Map<string, PromotionOffer>();
+
+  if (userId && withPromo.length > 0) {
+    const { data, error } = await supabase.rpc("my_plan_promotion_offers", { p_plan_ids: withPromo.map((p) => p.id), p_organization_id: organizationId });
+    if (error) {
+      throw error;
+    }
+    for (const row of (data ?? []) as {
+      plan_id: string;
+      promotion_id: string;
+      eligible: boolean;
+      reason: string | null;
+      list_price: number | string;
+      final_amount: number | string;
+    }[]) {
+      offers.set(row.plan_id, {
+        promotion_id: row.promotion_id,
+        eligible: row.eligible,
+        reason: row.reason,
+        list_price: Number(row.list_price),
+        final_amount: Number(row.final_amount),
+      });
+    }
+  }
+
+  return plans.map((p) => ({ ...p, promotion_offer: offers.get(p.id) ?? null }));
+}

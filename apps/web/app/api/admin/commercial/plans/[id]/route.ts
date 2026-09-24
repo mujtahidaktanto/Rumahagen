@@ -32,6 +32,7 @@ export const PUT = withApiHandler({}, async (ctx) => {
       description: body.description ?? null,
       price_personal: body.price_personal ?? null,
       price_organization: body.price_organization ?? null,
+      promotion_id: body.promotion_id ?? null,
     })
     .eq("id", ctx.params.id)
     .select()

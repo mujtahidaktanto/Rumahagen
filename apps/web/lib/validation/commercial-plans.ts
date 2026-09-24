@@ -16,6 +16,7 @@ const planBase = z.object({
   price_personal: price,
   price_organization: price,
   currency: z.string().length(3).optional(),
+  promotion_id: z.string().uuid().nullable().optional(),
   status: planStatusEnum.optional(),
 });
 
