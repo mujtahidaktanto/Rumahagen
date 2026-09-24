@@ -39,6 +39,8 @@ export const PUT = withApiHandler({}, async (ctx) => {
       benefit_configuration: body.benefit,
       // PUT = form penuh: eligibility yang tidak dikirim dikosongkan (promosi berlaku untuk semua pembeli).
       eligibility_configuration: body.eligibility ?? {},
+      // Aturan tambahan (0145): PUT = form penuh, yang tidak dikirim dikosongkan.
+      rule_configuration: body.rule_configuration ?? {},
       valid_from: body.valid_from ?? null,
       valid_to: body.valid_to ?? null,
       updated_at: new Date().toISOString(),
@@ -52,7 +54,7 @@ export const PUT = withApiHandler({}, async (ctx) => {
       throw new ApiError("CONFLICT", "Kode promosi ini sudah dipakai.");
     }
     if (error.code === "23514") {
-      throw new ApiError("VALIDATION_ERROR", "Promosi aktif wajib punya benefit valid, aturan kelayakan harus berbentuk valid, dan masa berlaku harus berurutan.");
+      throw new ApiError("VALIDATION_ERROR", "Promosi aktif wajib punya benefit valid, aturan kelayakan dan aturan tambahan harus berbentuk valid, dan masa berlaku harus berurutan.");
     }
     throw error;
   }

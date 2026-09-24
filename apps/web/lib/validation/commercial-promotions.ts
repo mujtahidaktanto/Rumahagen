@@ -2,7 +2,8 @@
 // Skema Zod untuk promosi M14 (admin). Promosi mengubah harga pesanan lewat benefit_configuration (migration 0131):
 // tepat SATU dari percent_off (0 < n <= 100) atau amount_off (> 0). Aturan kelayakan (eligibility) dievaluasi server saat pesanan dibuat
 // (migration 0134): kunci yang dikenal roles, first_purchase_only, max_redemptions, max_redemptions_per_user, min_list_price.
-// CHECK yang sama ditegakkan database (migration 0133/0134). rule_configuration belum dievaluasi sistem, jadi API menolak isian tak kosong.
+// CHECK yang sama ditegakkan database (migration 0133/0134). rule_configuration (0145) memuat aturan tambahan: max_discount_amount, applies_to,
+// product_codes, days_of_week, time_from/time_to (WIB), new_user_within_days; dievaluasi server pada pesanan add-on dan paket.
 
 import { z } from "zod";
 
@@ -32,9 +33,30 @@ export const eligibilitySchema = z
   .strict();
 export type PromotionEligibility = z.infer<typeof eligibilitySchema>;
 
-const emptyObject = z
-  .record(z.string(), z.unknown())
-  .refine((v) => Object.keys(v).length === 0, { message: "Belum dievaluasi sistem; kosongkan." });
+// Aturan tambahan (migration 0145): batas potongan, cakupan pembeli, produk, hari/jam (WIB), dan pengguna baru.
+const timeOfDay = z.string().regex(/^([01][0-9]|2[0-3]):[0-5][0-9]$/, "Format jam HH:MM (00:00–23:59).");
+export const ruleSchema = z
+  .object({
+    max_discount_amount: z.coerce.number().gt(0).max(999999999999).optional(),
+    applies_to: z.enum(["personal", "organization"]).optional(),
+    product_codes: z.array(z.string().trim().min(1).max(100)).min(1).max(50).optional(),
+    days_of_week: z.array(z.number().int().min(1).max(7)).min(1).max(7).optional(),
+    time_from: timeOfDay.optional(),
+    time_to: timeOfDay.optional(),
+    new_user_within_days: z.coerce.number().int().min(1).max(3650).optional(),
+  })
+  .strict()
+  .superRefine((v, ctx) => {
+    if ((v.time_from === undefined) !== (v.time_to === undefined)) {
+      ctx.addIssue({ code: "custom", path: ["time_to"], message: "Isi time_from dan time_to bersamaan." });
+    } else if (v.time_from !== undefined && v.time_to !== undefined && v.time_from >= v.time_to) {
+      ctx.addIssue({ code: "custom", path: ["time_to"], message: "time_to harus setelah time_from (tidak melewati tengah malam)." });
+    }
+    if (v.days_of_week && new Set(v.days_of_week).size !== v.days_of_week.length) {
+      ctx.addIssue({ code: "custom", path: ["days_of_week"], message: "Hari tidak boleh ganda." });
+    }
+  });
+export type PromotionRules = z.infer<typeof ruleSchema>;
 
 const promotionBase = z.object({
   code: z.string().trim().min(1).max(100).regex(/^[A-Za-z0-9_.-]+$/, "Kode hanya huruf, angka, titik, garis bawah, dan strip."),
@@ -43,7 +65,7 @@ const promotionBase = z.object({
   eligibility: eligibilitySchema.optional(),
   valid_from: z.string().datetime({ offset: true }).nullable().optional(),
   valid_to: z.string().datetime({ offset: true }).nullable().optional(),
-  rule_configuration: emptyObject.optional(),
+  rule_configuration: ruleSchema.optional(),
 });
 
 type PromotionShape = z.infer<typeof promotionBase>;

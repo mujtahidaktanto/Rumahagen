@@ -21,7 +21,7 @@ export const GET = withApiHandler({}, async (ctx) => {
   const supabase = await createClient();
   let query = supabase
     .from("promotions")
-    .select("id, code, name, status, valid_from, valid_to, benefit_configuration, eligibility_configuration, created_at, updated_at", { count: "exact" })
+    .select("id, code, name, status, valid_from, valid_to, benefit_configuration, eligibility_configuration, rule_configuration, created_at, updated_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
   if (filters.status) query = query.eq("status", filters.status);
@@ -62,7 +62,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
       name: body.name,
       status: body.status ?? "draft",
       benefit_configuration: body.benefit,
-      rule_configuration: {},
+      rule_configuration: body.rule_configuration ?? {},
       eligibility_configuration: body.eligibility ?? {},
       valid_from: body.valid_from ?? null,
       valid_to: body.valid_to ?? null,
@@ -75,7 +75,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
       throw new ApiError("CONFLICT", "Kode promosi ini sudah dipakai.");
     }
     if (error.code === "23514") {
-      throw new ApiError("VALIDATION_ERROR", "Promosi aktif wajib punya benefit valid, aturan kelayakan harus berbentuk valid, dan masa berlaku harus berurutan.");
+      throw new ApiError("VALIDATION_ERROR", "Promosi aktif wajib punya benefit valid, aturan kelayakan dan aturan tambahan harus berbentuk valid, dan masa berlaku harus berurutan.");
     }
     throw error;
   }

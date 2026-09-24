@@ -8,11 +8,16 @@
 import { withApiHandler } from "@/lib/api/handler";
 import { parsePagination, buildPaginationMeta } from "@/lib/api/pagination";
 import { annotateAddonsWithPromotionOffers } from "@/lib/commercial/promotion-offers";
+import { validateSearchParams } from "@/lib/api/validate";
 import { createClient } from "@/lib/supabase/server";
+import { z } from "zod";
+
+const offerScopeSchema = z.object({ organization_id: z.string().uuid().optional() });
 
 export const GET = withApiHandler({}, async (ctx) => {
   const url = new URL(ctx.request.url);
   const { limit, offset } = parsePagination(url.searchParams);
+  const scope = validateSearchParams(url.searchParams, offerScopeSchema);
 
   const supabase = await createClient();
   const { data, count, error } = await supabase
@@ -26,6 +31,6 @@ export const GET = withApiHandler({}, async (ctx) => {
   }
 
   // Pengguna login: setiap addon berpromosi diberi promotion_offer (berlaku/tidak, alasan, harga akhir).
-  const annotated = await annotateAddonsWithPromotionOffers(supabase, ctx.userId, data ?? []);
+  const annotated = await annotateAddonsWithPromotionOffers(supabase, ctx.userId, data ?? [], scope.organization_id ?? null);
   return { data: annotated, pagination: buildPaginationMeta(limit, offset, count ?? 0) };
 });
