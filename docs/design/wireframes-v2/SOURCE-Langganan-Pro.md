@@ -1,7 +1,7 @@
 # Dokumen Sumber — Pembelian Langganan Pro (M14)
 
 Dibuat 2026-09-24. Backend: migration `0142` (diterapkan) + API `GET /commercial/plans`, `POST /commercial/orders { subscription_plan_id, organization_id? }`, admin `/admin/commercial/plans`.
-Layar: Agent `M14-Langganan-Saya` (diperbarui), Admin `M14-Katalog-Paket` (baru, desktop + mobile; dijangkau dari tombol "Paket Langganan" di Katalog Add-on, tanpa item menu baru).
+Layar: Agent `M14-Langganan-Saya` (diperbarui), Admin `M14-Katalog-Paket` (baru, desktop + mobile; item menu "Paket Langganan" ditambahkan ke navigasi semua layar Admin, setelah Promosi; tombol pintasan di Katalog Add-on tetap ada).
 
 ## Aturan (keputusan pemilik produk + default yang dipilih)
 - Perpanjangan = pembelian baru; tidak ada mekanisme perpanjangan. Beli lagi menumpuk masa aktif setelah masa aktif sejenis dan **mereset kuota Pro** (awal siklus = pembelian baru); kuota Gratis tidak terpengaruh. Pro Tahunan tetap reset bulanan.
@@ -18,4 +18,4 @@ Layar: Agent `M14-Langganan-Saya` (diperbarui), Admin `M14-Katalog-Paket` (baru,
 Prop skenario baru: Langganan Saya `paket`, `peran`, `beli`; Katalog Paket `state`, `aksi`, `dialogAwal`, `aktor`.
 
 ## Belum
-Item menu Admin untuk Katalog Paket (saat ini dari tombol di Katalog Add-on); promosi untuk paket; layar status pembayaran khusus langganan (memakai Pesanan & Kuota Saya).
+Promosi untuk paket; layar status pembayaran khusus langganan (memakai Pesanan & Kuota Saya).

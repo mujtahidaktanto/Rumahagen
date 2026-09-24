@@ -176,7 +176,7 @@ class Component extends DCLogic {
       isLinked: linked, isUnlinked: !linked,
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
-    var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var IS_INS = false; var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
     var self = this, f = this.form(), tried = st.tried === true, p = tried ? this.problems(f) : {}, v = Number(f.value);
     var dipakai = this.mode() === 'edit_dipakai';
     var fmt = function(n){ return 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
