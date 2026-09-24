@@ -1,15 +1,24 @@
 // lib/validation/commercial-orders.ts
-// Skema Zod untuk Commercial Order (M14 Fase 4, migration 0072). SCOPE MVP:
-// hanya addon-sourced order (subscription purchase belum dibangun). HARGA TIDAK
-// DITERIMA dari klien: amount/currency/promotion/snapshot dihitung server dari
-// addons.price (trigger DB trg_price_commercial_order, migration 0131). Klien hanya
-// menyebut addon, promosi (opsional, harus yang terkait addon), dan organisasi.
+// Skema Zod untuk Commercial Order (M14 Fase 4, migration 0072). HARGA TIDAK DITERIMA dari klien: amount/currency/promotion/snapshot dihitung
+// server oleh trigger DB trg_price_commercial_order (addons.price, migration 0131; subscription_plans.price_*, migration 0142).
+// Klien menyebut TEPAT SATU dari: addon_id (beli add-on; boleh disertai promosi terkait addon) atau subscription_plan_id (beli paket langganan
+// Pro; tanpa promosi). organization_id opsional: add-on slot listing masuk ke organisasi; langganan menjadi milik organisasi (hanya leader aktif).
 
 import { z } from "zod";
 
-export const createCommercialOrderSchema = z.object({
-  addon_id: z.string().uuid(),
-  promotion_id: z.string().uuid().optional(),
-  organization_id: z.string().uuid().optional(),
-});
+export const createCommercialOrderSchema = z
+  .object({
+    addon_id: z.string().uuid().optional(),
+    subscription_plan_id: z.string().uuid().optional(),
+    promotion_id: z.string().uuid().optional(),
+    organization_id: z.string().uuid().optional(),
+  })
+  .superRefine((v, ctx) => {
+    if ((v.addon_id ? 1 : 0) + (v.subscription_plan_id ? 1 : 0) !== 1) {
+      ctx.addIssue({ code: "custom", path: ["addon_id"], message: "Kirim tepat satu dari addon_id atau subscription_plan_id." });
+    }
+    if (v.subscription_plan_id && v.promotion_id) {
+      ctx.addIssue({ code: "custom", path: ["promotion_id"], message: "Promosi belum berlaku untuk paket langganan." });
+    }
+  });
 export type CreateCommercialOrderInput = z.infer<typeof createCommercialOrderSchema>;
