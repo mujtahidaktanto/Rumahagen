@@ -70,7 +70,7 @@
 
     <div class="tab-row">
       <span class="tab {{tabBaselineClass}}" onClick="{{selectTabBaseline}}">Matriks Baseline (Role × Permission)</span>
-      <span class="tab {{tabPresetClass}}" onClick="{{selectTabPreset}}">Preset Agent</span>
+      <span class="tab {{tabPresetClass}}" onClick="{{selectTabPreset}}">Preset</span>
     </div>
 
     <!-- TAB: Baseline matrix -->
@@ -112,20 +112,36 @@
       </div>
     </sc-if>
 
-    <!-- TAB: Preset Agent -->
+    <!-- TAB: Preset -->
     <sc-if value="{{isTabPreset}}" hint-placeholder-val="{{false}}">
       <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:20px 40px 40px;display:flex;flex-direction:column;gap:16px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <p class="ra-body-md" style="color:var(--ra-ink-500);max-width:600px;">Preset selalu menyasar role Agent — konfigurasi subset izin di luar baseline Agent, lalu tugaskan ke akun tertentu. Preset tidak pernah menjadi role baru.</p>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;">
+          <p class="ra-body-md" style="color:var(--ra-ink-500);max-width:600px;">{{presetIntroText}}</p>
           <sc-if value="{{canManagePreset}}" hint-placeholder-val="{{true}}">
-            <button class="ra-btn ra-btn-primary" onClick="{{openCreatePreset}}">+ Buat Preset</button>
+            <button class="ra-btn ra-btn-primary" style="flex:none;" onClick="{{openCreatePreset}}">+ Buat Preset</button>
           </sc-if>
         </div>
+
+        <sc-if value="{{isSuperadmin}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label class="ra-label-lg">Role target:</label>
+            <select class="scope-select" style="padding:6px 10px;font-size:13px;" onChange="{{onTargetRoleFilterChange}}">
+              <option value="agent" {{targetRoleAgentSelected}}>Agent</option>
+              <option value="instructor" {{targetRoleInstructorSelected}}>Instructor</option>
+              <option value="admin" {{targetRoleAdminSelected}}>Admin</option>
+            </select>
+            <span class="ra-caption">Hanya Superadmin yang bisa memilih role selain Agent (trigger DB, bukan sekadar UI) — Manager selalu terkunci ke Agent.</span>
+          </div>
+        </sc-if>
+
         <div class="ra-card" style="overflow:hidden;">
           <sc-for list="{{presets}}" as="p" hint-placeholder-count="3">
             <div class="preset-row">
               <div style="flex:1;min-width:0;">
-                <span class="ra-label-lg">{{p.name}}</span>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span class="ra-label-lg">{{p.name}}</span>
+                  <span class="ra-badge ra-badge-neutral">{{p.targetRoleLabel}}</span>
+                </div>
                 <p class="ra-caption">{{p.itemCount}} izin dikonfigurasi · ditugaskan ke {{p.assignedCount}} akun</p>
               </div>
               <sc-if value="{{canManagePreset}}" hint-placeholder-val="{{true}}">
@@ -148,8 +164,18 @@
           <label class="ra-label-lg">Nama preset</label>
           <input class="ra-input" type="text" placeholder="mis. Agent Senior — Akses Klaim" value="{{presetFormName}}" onInput="{{onPresetNameInput}}">
         </div>
+        <sc-if value="{{isSuperadmin}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label class="ra-label-lg">Role target</label>
+            <select class="ra-input"><option value="agent">Agent</option><option value="instructor">Instructor</option><option value="admin">Admin</option></select>
+            <span class="ra-caption">Hanya Superadmin yang boleh memilih role selain Agent — ditegakkan trigger DB (enforce_preset_target_role_is_agent, migration 0004/0102), bukan diam-diam ditolak backend.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{isNotSuperadmin}}" hint-placeholder-val="{{false}}">
+          <p class="ra-caption">Role target: <strong>Agent</strong> (Manager hanya bisa membuat preset untuk Agent).</p>
+        </sc-if>
         <div>
-          <label class="ra-label-lg" style="display:block;margin-bottom:8px;">Izin di luar baseline Agent</label>
+          <label class="ra-label-lg" style="display:block;margin-bottom:8px;">Izin di luar baseline role target</label>
           <sc-for list="{{presetItemOptions}}" as="i" hint-placeholder-count="6">
             <div class="item-row">
               <span class="ra-body-md" style="font-family:monospace;font-size:12.5px;">{{i.actionCode}}</span>
@@ -157,7 +183,7 @@
             </div>
           </sc-for>
         </div>
-        <p class="ra-caption">Item tidak boleh melebihi baseline role Agent (ditegakkan trigger DB) — dropdown di atas hanya untuk ilustrasi.</p>
+        <p class="ra-caption">Item tidak boleh melebihi baseline role target yang dipilih (ditegakkan trigger DB) — dropdown di atas hanya untuk ilustrasi.</p>
         <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:4px;">
           <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Batal</button>
           <button class="ra-btn ra-btn-primary" disabled="{{presetSaveDisabled}}" onClick="{{closeDialogs}}">Simpan Preset</button>
@@ -179,7 +205,7 @@
           <div class="preset-row"><span class="ra-body-md">Dewi Anggraini — dewi.anggraini@example.com</span></div>
           <div class="preset-row"><span class="ra-body-md">Rian Saputra — rian.saputra@example.com</span></div>
         </div>
-        <p class="ra-caption">Role akun harus Agent (ditegakkan trigger DB, kalau tidak cocok akan ditolak dengan pesan jelas). Pilih "Lepas Preset" untuk kembalikan akun ke baseline Role Default.</p>
+        <p class="ra-caption">Role akun harus cocok dengan role target preset ini (ditegakkan trigger enforce_preset_assignee_matches_target_role, kalau tidak cocok akan ditolak dengan pesan jelas). Pilih "Lepas Preset" untuk kembalikan akun ke baseline Role Default.</p>
         <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:4px;">
           <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Lepas Preset</button>
           <button class="ra-btn ra-btn-primary" onClick="{{closeDialogs}}">Tugaskan</button>
@@ -194,13 +220,14 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { tab: 'baseline', presetFormOpen: false, presetFormName: '', presetFormTitle: 'Buat Preset Baru', assignOpen: false, assignPresetName: '' };
+    this.state = { tab: 'baseline', presetTargetRole: 'agent', presetFormOpen: false, presetFormName: '', presetFormTitle: 'Buat Preset Baru', assignOpen: false, assignPresetName: '' };
     this.selectTabBaseline = this.selectTabBaseline.bind(this);
     this.selectTabPreset = this.selectTabPreset.bind(this);
     this.openCreatePreset = this.openCreatePreset.bind(this);
     this.closeDialogs = this.closeDialogs.bind(this);
     this.stopClick = this.stopClick.bind(this);
     this.onPresetNameInput = this.onPresetNameInput.bind(this);
+    this.onTargetRoleFilterChange = this.onTargetRoleFilterChange.bind(this);
   }
   selectTabBaseline(){ this.setState({ tab: 'baseline' }); }
   selectTabPreset(){ this.setState({ tab: 'preset' }); }
@@ -210,6 +237,11 @@ class Component extends DCLogic {
   closeDialogs(){ this.setState({ presetFormOpen: false, assignOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   onPresetNameInput(e){ this.setState({ presetFormName: e.target.value }); }
+  // GET /admin/permissions/matrix/agent?target_role_id=... -- filter
+  // hanya benar-benar berarti untuk Superadmin (Manager/Admin RLS tetap
+  // lolos VIEW lintas role, tapi UI ini menguncinya ke Agent untuk mereka
+  // karena WRITE mereka toh selalu Agent -- lihat renderVals di bawah).
+  onTargetRoleFilterChange(e){ this.setState({ presetTargetRole: e.target.value }); }
   renderVals() {
     const viewerRole = this.props.viewerRole ?? 'superadmin';
     const roleLabels = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' };
@@ -243,17 +275,38 @@ class Component extends DCLogic {
       agent: r.agent, agentLabel: scopeLabel(r.agent), agentEditable: isSuperadmin || isManager, agentReadonlyDisplay: (isSuperadmin || isManager) ? 'none' : 'inline'
     }));
 
-    // permission_presets (0004) -- SELALU target_role_id = Agent (trigger
-    // enforce_preset_target_role_is_agent). Manage: Superadmin ALL +
-    // Manager (RLS permission_presets_manage, 0007); Admin hanya view
-    // (permission_presets_select_view, 0103).
+    // permission_presets (0004) -- trigger enforce_preset_target_role_is_
+    // agent SEBELUMNYA memaksa target_role_id ke Agent untuk SIAPA PUN;
+    // 0102 memperbaikinya persis sesuai STEP12-B PP-002/PP-003: Superadmin
+    // BOLEH target role lain (Instructor/Admin/dst.), HANYA Manager yang
+    // terkunci ke Agent saja. Koreksi ditemukan lewat pertanyaan user atas
+    // wireframe versi sebelumnya (yang keliru menyiratkan Preset SELALU
+    // Agent untuk semua role) -- endpoint HTTP `/admin/permissions/matrix/
+    // agent` diperbaiki di sesi yang sama untuk menerima `target_role_id`
+    // opsional (default Agent, override hanya berlaku untuk Superadmin).
+    // Manage: Superadmin ALL role + Manager (Agent-only, RLS permission_
+    // presets_manage 0007); Admin hanya view (permission_presets_select_
+    // view, 0103) lintas role apa pun (RLS view TIDAK dibatasi ke Agent).
     const canManagePreset = isSuperadmin || isManager;
-    const presetDefs = [
-      { name: 'Agent Senior — Akses Klaim Tambahan', itemCount: 3, assignedCount: 2 },
-      { name: 'Agent Trial — Akses Terbatas', itemCount: 5, assignedCount: 1 }
-    ];
+    // Manager/Admin terkunci ke Agent di UI ini (write mereka toh cuma
+    // pernah valid untuk Agent) -- hanya Superadmin yang benar-benar bisa
+    // pilih role lain.
+    const effectiveTargetRole = isSuperadmin ? (this.state.presetTargetRole || 'agent') : 'agent';
+    const roleTargetLabels = { agent: 'Agent', instructor: 'Instructor', admin: 'Admin' };
+    const presetsByRole = {
+      agent: [
+        { name: 'Agent Senior — Akses Klaim Tambahan', itemCount: 3, assignedCount: 2 },
+        { name: 'Agent Trial — Akses Terbatas', itemCount: 5, assignedCount: 1 }
+      ],
+      instructor: [
+        { name: 'Instructor Tamu — Akses Kursus Terbatas', itemCount: 2, assignedCount: 1 }
+      ],
+      admin: []
+    };
+    const presetDefs = presetsByRole[effectiveTargetRole] || [];
     const presets = presetDefs.map(p => ({
       ...p,
+      targetRoleLabel: roleTargetLabels[effectiveTargetRole],
       openEdit: () => this.openEditPreset(p.name),
       openAssign: () => this.openAssign(p.name)
     }));
@@ -264,6 +317,9 @@ class Component extends DCLogic {
     ];
 
     const presetFormName = this.state.presetFormName || '';
+    const presetIntroText = isSuperadmin
+      ? 'Preset default menyasar role Agent — sebagai Superadmin Anda juga bisa menargetkan role lain (Instructor, Admin, dst.), ditegakkan trigger DB, bukan cuma pilihan UI. Preset tidak pernah menjadi role baru.'
+      : 'Preset yang Anda kelola selalu menyasar role Agent — role lain memerlukan Superadmin (STEP12-B PP-002/PP-003). Preset tidak pernah menjadi role baru.';
 
     return {
       viewerRoleLabel: roleLabels[viewerRole] ?? 'Superadmin',
@@ -273,7 +329,12 @@ class Component extends DCLogic {
       selectTabBaseline: this.selectTabBaseline, selectTabPreset: this.selectTabPreset,
       editHintText: isSuperadmin ? 'Anda bisa ubah semua baris.' : isManager ? 'Anda hanya bisa ubah kolom Agent.' : 'Anda hanya bisa melihat (view-only).',
       matrixRows,
-      canManagePreset, presets, presetItemOptions,
+      isSuperadmin, isNotSuperadmin: !isSuperadmin,
+      canManagePreset, presets, presetItemOptions, presetIntroText,
+      targetRoleAgentSelected: effectiveTargetRole === 'agent' ? 'selected' : '',
+      targetRoleInstructorSelected: effectiveTargetRole === 'instructor' ? 'selected' : '',
+      targetRoleAdminSelected: effectiveTargetRole === 'admin' ? 'selected' : '',
+      onTargetRoleFilterChange: this.onTargetRoleFilterChange,
       openCreatePreset: this.openCreatePreset,
       presetFormOpen: this.state.presetFormOpen ?? false,
       presetFormTitle: this.state.presetFormTitle || 'Buat Preset Baru',

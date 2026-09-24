@@ -3064,3 +3064,53 @@ dibangun mengasumsikan pengguna MENGETIK kode 6 digit — langkah Dashboard
 ini WAJIB diselesaikan sebelum fitur ini benar-benar bisa dipakai
 end-to-end oleh pengguna asli, persis seperti Google OAuth/template
 signup yang didokumentasikan di `0096`.
+
+## `GET/PUT /admin/permissions/matrix/agent` — fix: Superadmin tidak bisa target role selain Agent (tanpa migration baru)
+
+Ditemukan lewat pertanyaan user atas wireframe M10-Matriks-Izin ("kenapa
+hanya role agen, bukankah superadmin juga bisa preset seluruh
+permission?") — pertanyaan itu BENAR, dan mengungkap bug nyata di
+endpoint, bukan cuma kesan wireframe.
+
+**Yang sudah benar sejak awal**: RLS `permission_presets_manage` (0007)
+`is_superadmin() OR (current_role_code()='manager' AND target_role_id=
+agent)` — Superadmin TIDAK dibatasi role apa pun. Trigger
+`enforce_preset_target_role_is_agent` awalnya (migration 0004) SALAH
+memaksa `target_role_id` ke Agent untuk SIAPA PUN termasuk Superadmin —
+sudah diperbaiki di migration `0102` (jauh sebelum sesi ini) persis
+sesuai `STEP12-B_PRESET_ROLE_TRACEABILITY_MATRIX.csv`: PP-002 ("Superadmin
+governance remains" untuk preset role selain Agent) dan PP-003 ("Full
+preset governance" untuk preset target Superadmin) — HANYA Manager yang
+dikunci ke Agent (PP-001).
+
+**Yang masih salah sampai sesi ini**: route HTTP
+`app/api/admin/permissions/matrix/agent/route.ts` tidak pernah
+diperbarui mengikuti perbaikan trigger 0102 — baik GET maupun PUT
+memanggil `getAgentRoleId()` dan HARDCODE hasilnya sebagai satu-satunya
+`target_role_id`, untuk caller mana pun termasuk Superadmin. Trigger DB
+sudah benar sejak 0102, tapi tidak ada jalur HTTP yang pernah
+mengekspos kemampuan itu — persis seperti gap DBR share/revoke di awal
+sesi ini (RPC laten sudah benar, HTTP-nya yang telat menyusul).
+
+**Fix**: `target_role_id` opsional ditambahkan ke query (GET) dan body
+(PUT) — kalau diisi, dipakai apa adanya; kalau kosong, default Agent
+(perilaku lama, satu-satunya yang valid untuk Manager). Tidak ada
+duplikasi validasi role di kode — trigger 0004/0102 yang tetap
+menegakkan (Manager yang mengirim `target_role_id` selain Agent akan
+kena `RAISE EXCEPTION`, ditangkap dan dipetakan ke `403 FORBIDDEN` yang
+jelas). `lib/validation/admin.ts`: skema `agentPermissionPresetUpsertSchema`
+dapat field baru, plus skema query baru `presetTargetRoleQuerySchema`.
+
+Diuji nyata lewat dev server + throwaway Superadmin & Manager:
+Superadmin PUT dengan `target_role_id`=Instructor → **201**, preset
+benar-benar tersimpan dengan `target_role_id` Instructor; GET dengan
+filter yang sama → preset itu muncul; Manager mengulang PUT identik →
+**403** dengan pesan persis dari trigger ("Manager hanya boleh membuat
+preset untuk role Agent... role lain memerlukan Superadmin"); Manager
+PUT TANPA `target_role_id` (regresi) → tetap **201** seperti sebelum
+fix. Data uji (2 preset, 2 user) dihapus total.
+
+Wireframe M10-Matriks-Izin (desktop+mobile) diperbarui: tab berganti
+nama dari "Preset Agent" ke "Preset", ditambah selector role target
+(hanya tampil untuk Superadmin — Manager/Admin tetap terkunci ke Agent
+di UI karena tulisan mereka toh selalu ditolak backend untuk role lain).

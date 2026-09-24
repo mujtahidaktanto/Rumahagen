@@ -78,13 +78,23 @@ export const permissionMatrixCellUpdateSchema = z.object({
 });
 export type PermissionMatrixCellUpdateInput = z.infer<typeof permissionMatrixCellUpdateSchema>;
 
-// PUT /admin/permissions/matrix/agent — API-147 (M10). Upsert preset
-// (permission_presets, migration 0004) yang target_role_id-nya SELALU
-// Agent (trigger enforce_preset_target_role_is_agent, 0004/0102) —
-// `preset_id` diisi untuk edit preset yang sudah ada, dikosongkan untuk
-// membuat preset baru.
+// GET/PUT /admin/permissions/matrix/agent — API-145/API-147 (M10). Nama
+// path historis ("agent") dari saat trigger 0004 salah mengunci SEMUA
+// preset ke role Agent -- 0102 memperbaiki trigger itu supaya Superadmin
+// tetap bisa target role LAIN (STEP12-B PP-002/PP-003), tapi endpoint-nya
+// sendiri belum pernah diperbarui untuk mengekspos itu (ditemukan lewat
+// pertanyaan user, 2026-09-25). `target_role_id` kini opsional -- default
+// Agent (perilaku lama, satu-satunya yang bisa dipakai Manager), diisi
+// eksplisit HANYA berlaku untuk Superadmin (trigger enforce_preset_
+// target_role_is_agent yang menegakkan, bukan diduplikasi di sini, R-02).
+export const presetTargetRoleQuerySchema = z.object({
+  target_role_id: z.string().uuid().optional(),
+});
+export type PresetTargetRoleQuery = z.infer<typeof presetTargetRoleQuerySchema>;
+
 export const agentPermissionPresetUpsertSchema = z.object({
   preset_id: z.string().uuid().optional(),
+  target_role_id: z.string().uuid().optional(),
   name: z.string().min(1).max(150),
   items: z
     .array(
