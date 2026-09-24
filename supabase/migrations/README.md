@@ -3409,3 +3409,21 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Hasil uji (rollback, 20 skenario):** pemilik dan penugasan melihat roster (1 baris); agent lain 0 baris; penugasan bisa ubah status, ubah visibilitas ditolak 42501; penilaian kehadiran oleh Instructor penugasan ok, peserta menilai diri ditolak 42501; penyelenggara melihat 1 pendaftar, approve ok, pending->attended ditolak 23514, ubah email ditolak; notifikasi terbentuk untuk peserta dan penyelenggara; `notify_user` oleh pengguna ditolak 42501.
 
 **Belum tercakup:** route `GET /events/{id}/registrations` dan perubahan status pendaftaran oleh penyelenggara perlu ditambah di aplikasi; pemanggil `send_event_reminders`/`notify_expiring_listings` perlu penjadwal.
+
+---
+
+## `0130` — Tutup celah M04 kursus (self-complete, self-publish, skor kuis palsu) dan validasi url_redirects (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Celah dari `SOURCE-Admin-Kursus-Redirect.md` §5.
+
+**Perubahan:**
+1. **Enrollment kursus:** trigger INSERT (non-staf: harus `in_progress`/0%, kursus harus `published`, prasyarat kursus harus sudah `completed`) dan trigger UPDATE (non-staf: tidak boleh mengubah pemilik/kursus/waktu daftar, `status`, `completed_at`; progres maksimal 99). Staf (`m04.course_enrollment.view` scope all) dan konteks server tidak dibatasi.
+2. **Penerbitan kursus:** izin baru `m04.course.publish` (Superadmin/Admin/Manager=ALL); trigger menolak INSERT/UPDATE ke `published` tanpa izin itu. Instructor tetap bisa membuat dan mengubah draf miliknya dan mengubah kursus yang sudah terbit; staf yang menerbitkan.
+3. **Percobaan kuis:** policy `quiz_attempts_insert` dihapus (hanya server/service_role yang menulis); trigger `complete_enrollment_on_quiz_pass` menyelesaikan enrollment (`completed`, 100%, `completed_at`) bila semua kuis kursus sudah lulus.
+4. **url_redirects:** CHECK jalur internal (`/...`, bukan `//`, tanpa spasi/backslash), `old_path <> new_path`, dan trigger anti-putaran (rantai ke depan dari tujuan tidak boleh kembali ke jalur lama, maksimal 10 lompatan).
+
+**Perubahan kode (satu paket dengan migration):** `apps/web/app/api/quizzes/[id]/submit/route.ts` menilai terhadap total soal kuis, menolak jawaban untuk soal di luar kuis atau terduplikasi, dan menyimpan percobaan lewat admin client (wajib, karena policy INSERT dihapus; tanpa perubahan ini submit kuis gagal setelah migration diterapkan). `lib/validation/url-redirects.ts` memakai regex jalur internal yang sama.
+
+**Hasil uji (23 skenario, rollback):** insert enrollment completed 42501; enroll ke kursus draft dan tanpa prasyarat 23514; enroll ke kursus terbit ok; self status completed dan progres 100 ditolak 42501, progres 50 ok; insert percobaan kuis oleh Agent 42501; percobaan lulus dari server menyelesaikan enrollment; Instructor insert/UPDATE ke published 42501, draf dan edit kursus terbit ok; Manager menerbitkan ok; pengalihan: loop, URL luar, `//host`, diri sendiri, tanpa awalan `/` ditolak 23514, jalur dengan query dan rantai `/a->/b->/c` ok.
+
+**Belum tercakup:** tidak ada mekanisme "minta terbit" dari Instructor; hapus kursus oleh pemilik (policy FOR ALL) masih menghapus berantai; API ubah/hapus kuis-soal-opsi, PUT pengalihan, dan pemakaian `url_redirects` oleh aplikasi publik masih belum ada.

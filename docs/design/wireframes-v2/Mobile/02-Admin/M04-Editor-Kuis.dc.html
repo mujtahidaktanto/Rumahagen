@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Editor Kuis — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+
+  .drawer{background:var(--ra-ink-900);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <a class="ra-iconbtn" href="M04-Detail-Kursus.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">Editor Kuis</span>
+    <span class="ra-badge ra-badge-info">{{aktorLabel}}</span>
+  </div>
+  <div class="main ra-scroll">
+      <sc-if value="{{pLoading}}" hint-placeholder-val="{{false}}"><div class="card card-pad" style="display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:28px;width:50%;"></div><div class="ra-skel" style="height:120px;"></div></div></sc-if>
+      <sc-if value="{{pError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Kuis gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+      <sc-if value="{{pReady}}" hint-placeholder-val="{{true}}">
+      <div class="card card-pad" style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><div style="min-width:0;flex:1;"><div class="ra-title-md">Kuis Akhir</div><div class="ra-caption">Strategi Closing Properti Primary · {{qCount}} soal · nilai lulus 70</div></div><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{openAddQuestion}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah Soal</button></div>
+        <sc-if value="{{ready}}" hint-placeholder-val="{{false}}"><div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><p class="ra-body-md">{{readyText}}</p></div></sc-if>
+        <sc-if value="{{notReady}}" hint-placeholder-val="{{true}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">{{readyText}}</p></div></sc-if>
+      </div>
+      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Kunci jawaban hanya terlihat oleh pengelola kursus. Peserta melihat soal dan opsi tanpa penanda benar. Nilai dihitung dari seluruh soal kuis (soal yang tidak dijawab dihitung salah) dan kursus selesai otomatis bila semua kuisnya lulus. Kuis tanpa soal tidak bisa dikerjakan. Melihat opsi yang sudah ada, mengubah, dan menghapus soal atau opsi butuh perbaikan backend (API saat ini hanya menambah).</p></div>
+      <sc-if value="{{noQs}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada soal</span><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{openAddQuestion}}">Tambah Soal Pertama</button></div></div></sc-if>
+      <sc-if value="{{hasQs}}" hint-placeholder-val="{{true}}"><sc-for list="{{qs}}" as="q" hint-placeholder-count="3">
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="align-items:flex-start;"><div style="min-width:0;flex:1;"><span class="ra-caption">Soal {{q.n}} · {{q.typeLabel}}</span><div class="ra-label-lg" style="margin-top:2px;">{{q.text}}</div></div><button class="ra-iconbtn" aria-label="Hapus soal" onClick="{{q.del}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div>
+          <sc-if value="{{q.noOpts}}" hint-placeholder-val="{{false}}"><div class="row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Belum ada opsi jawaban.</span></div></sc-if>
+          <sc-for list="{{q.opts}}" as="o" hint-placeholder-count="3"><div class="row"><div style="min-width:0;flex:1;" class="ra-body-md">{{o.t}}</div><span class="ra-badge {{o.cBadge}}">{{o.cLabel}}</span></div></sc-for>
+          <div class="row" style="justify-content:space-between;flex-wrap:wrap;"><sc-if value="{{q.hasProblem}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">{{q.problem}}</span></sc-if><button class="ra-btn ra-btn-secondary ra-btn-sm" style="margin-left:auto;" onClick="{{q.addOpt}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah Opsi</button></div>
+        </div></sc-for></sc-if>
+      </sc-if></div>
+
+  <sc-if value="{{dialogOpen}}" hint-placeholder-val="{{false}}"><div class="scrim" onClick="{{closeAll}}"><div class="sheet" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
+    <sc-if value="{{actionFailed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Gagal menyimpan. Tidak ada yang berubah; coba lagi.</p></div></sc-if>
+    <sc-if value="{{dQuestion}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Tambah soal</span>
+      <div class="field"><label class="ra-label-lg" for="s-text">Teks soal <span class="req">*</span></label><textarea id="s-text" class="ra-input" style="height:96px;padding:12px 14px;resize:vertical;" value="{{qText}}" onInput="{{onQText}}"></textarea><sc-if value="{{qTextErr}}" hint-placeholder-val="{{false}}"><span class="err">Teks soal wajib diisi.</span></sc-if></div>
+      <div class="field"><span class="ra-label-lg">Jenis soal</span><div style="display:grid;grid-template-columns:1fr;gap:10px;" role="radiogroup" aria-label="Jenis soal"><sc-for list="{{types}}" as="t" hint-placeholder-count="2"><button class="radio-card" role="radio" aria-checked="{{t.checked}}" onClick="{{t.pick}}"><span class="ra-label-lg">{{t.l}}</span></button></sc-for></div></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{saveQuestion}}">Tambah Soal</button></div></sc-if>
+    <sc-if value="{{dOption}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Tambah opsi jawaban</span>
+      <div class="field"><label class="ra-label-lg" for="o-text">Teks opsi <span class="req">*</span></label><input id="o-text" class="ra-input" type="text" maxlength="500" value="{{oText}}" onInput="{{onOText}}"><sc-if value="{{oTextErr}}" hint-placeholder-val="{{false}}"><span class="err">Teks opsi wajib diisi.</span></sc-if></div>
+      <div class="switch-row"><span class="ra-label-lg">Jawaban benar</span><button class="switch {{oClass}}" role="switch" aria-checked="{{oChecked}}" aria-label="Tandai sebagai jawaban benar" onClick="{{toggleCorrect}}"><div class="switch-knob"></div></button></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{saveOption}}">Tambah Opsi</button></div></sc-if>
+    <sc-if value="{{dDel}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Hapus soal?</span><p class="ra-body-md">"{{tName}}" beserta opsinya akan dihapus. Percobaan peserta sebelumnya tidak berubah.</p>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{confirmDel}}">Hapus</button></div></sc-if>
+  </div></div></sc-if>
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="ra-label-lg">{{toast}}</span></div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"halaman":{"editor":"enum","default":"normal","options":["normal","memuat","gagal_muat"],"section":"Skenario halaman"},"aksi":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario aksi"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { qs: null, dialog: '', target: null, qText: '', qType: 'single_choice', oText: '', oCorrect: false, tried: false, toast: '', actionFailed: false });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'closeAll', 'saveQuestion', 'saveOption', 'onQText', 'onOText', 'toggleCorrect', 'confirmDel'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  list(){ return this.state.qs || [
+    { id: 'a1', text: 'Berapa maksimum rasio DBR yang lazim dipakai bank?', type: 'single_choice', opts: [{ id: 'o1', t: '20%', c: false }, { id: 'o2', t: '30–40%', c: true }, { id: 'o3', t: '70%', c: false }] },
+    { id: 'a2', text: 'Dokumen mana yang wajib disiapkan pemohon KPR?', type: 'multi_choice', opts: [{ id: 'o4', t: 'KTP', c: true }, { id: 'o5', t: 'Slip gaji', c: true }] },
+    { id: 'a3', text: 'Kapan sertifikat balik nama dilakukan?', type: 'single_choice', opts: [] }
+  ]; }
+  onQText(e){ this.setState({ qText: e.target.value }); }
+  onOText(e){ this.setState({ oText: e.target.value }); }
+  toggleCorrect(){ this.setState({ oCorrect: !this.state.oCorrect }); }
+  closeAll(){ this.setState({ dialog: '', actionFailed: false, tried: false }); }
+  saveQuestion(){
+    if (!String(this.state.qText).trim()) { this.setState({ tried: true }); return; }
+    if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
+    var l = this.list().slice(); l.push({ id: 'n' + Date.now(), text: this.state.qText, type: this.state.qType, opts: [] });
+    this.setState({ qs: l, dialog: '', qText: '', tried: false, toast: 'Soal ditambahkan. Tambahkan opsi jawaban.' });
+  }
+  saveOption(){
+    if (!String(this.state.oText).trim()) { this.setState({ tried: true }); return; }
+    if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
+    var tid = this.state.target, o = this.state.oText, c = this.state.oCorrect;
+    var l = this.list().map(function(q){ if (q.id !== tid) return q; var opts = q.opts.slice(); opts.push({ id: 'o' + Date.now(), t: o, c: c }); return Object.assign({}, q, { opts: opts }); });
+    this.setState({ qs: l, dialog: '', oText: '', oCorrect: false, tried: false, toast: 'Opsi ditambahkan.' });
+  }
+  confirmDel(){
+    if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
+    var tid = this.state.target;
+    this.setState({ qs: this.list().filter(function(q){ return q.id !== tid; }), dialog: '', toast: 'Soal dihapus.' });
+  }
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var self = this, mode = pr.halaman || 'normal';
+    var qs = this.list().map(function(q, i){
+      var correct = q.opts.filter(function(o){ return o.c; }).length;
+      var problem = q.opts.length < 2 ? 'Minimal 2 opsi jawaban.' : (correct === 0 ? 'Belum ada opsi yang ditandai benar.' : (q.type === 'single_choice' && correct > 1 ? 'Pilihan tunggal hanya boleh punya 1 jawaban benar.' : ''));
+      return { n: i + 1, text: q.text, typeLabel: q.type === 'single_choice' ? 'Pilihan tunggal' : 'Pilihan ganda', opts: q.opts.map(function(o){ return { t: o.t, c: o.c, cLabel: o.c ? 'Benar' : 'Salah', cBadge: o.c ? 'ra-badge-success' : 'ra-badge-neutral' }; }), noOpts: q.opts.length === 0, problem: problem, hasProblem: !!problem,
+        addOpt: function(){ self.setState({ dialog: 'option', target: q.id, oText: '', oCorrect: false, tried: false }); }, del: function(){ self.setState({ dialog: 'delQ', target: q.id, targetName: q.text }); }, invalid: !!problem }; });
+    var bad = qs.filter(function(q){ return q.invalid; }).length;
+    var types = [['single_choice','Pilihan tunggal'],['multi_choice','Pilihan ganda']].map(function(t){ return { l: t[1], checked: st.qType === t[0] ? 'true' : 'false', pick: function(){ self.setState({ qType: t[0] }); } }; });
+    var out = { aktorLabel: aktorLabel, pLoading: mode === 'memuat', pError: mode === 'gagal_muat', pReady: mode === 'normal', qs: qs, hasQs: qs.length > 0, noQs: qs.length === 0, qCount: qs.length, badCount: bad, ready: qs.length > 0 && bad === 0, notReady: !(qs.length > 0 && bad === 0),
+      readyText: qs.length === 0 ? 'Kuis belum punya soal.' : (bad === 0 ? 'Semua soal valid dan siap dipakai.' : bad + ' soal perlu diperbaiki sebelum kuis dipakai peserta.'),
+      dQuestion: st.dialog === 'question', dOption: st.dialog === 'option', dDel: st.dialog === 'delQ', dialogOpen: st.dialog !== '', types: types,
+      qText: st.qText, onQText: this.onQText, oText: st.oText, onOText: this.onOText, oChecked: st.oCorrect ? 'true' : 'false', oClass: st.oCorrect ? 'is-on' : '', toggleCorrect: this.toggleCorrect,
+      qTextErr: st.tried === true && !String(st.qText).trim(), oTextErr: st.tried === true && !String(st.oText).trim(),
+      openAddQuestion: function(){ self.setState({ dialog: 'question', qText: '', qType: 'single_choice', tried: false }); },
+      saveQuestion: this.saveQuestion, saveOption: this.saveOption, confirmDel: this.confirmDel, closeAll: this.closeAll, tName: st.targetName || '', actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>

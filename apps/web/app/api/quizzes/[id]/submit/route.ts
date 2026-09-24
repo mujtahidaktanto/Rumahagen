@@ -67,6 +67,23 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     throw courseError;
   }
 
+  // Penilaian memakai SELURUH soal kuis (bukan hanya yang dijawab), dan jawaban hanya boleh untuk soal kuis ini.
+  const { data: quizQuestions, error: questionsError } = await admin
+    .from("quiz_questions")
+    .select("id")
+    .eq("quiz_id", ctx.params.id);
+  if (questionsError) {
+    throw questionsError;
+  }
+  const questionIds = new Set((quizQuestions ?? []).map((q) => q.id));
+  if (questionIds.size === 0) {
+    throw new ApiError("VALIDATION_ERROR", "Quiz ini belum memiliki soal.");
+  }
+  const answeredIds = body.answers.map((a) => a.question_id);
+  if (answeredIds.some((id) => !questionIds.has(id)) || new Set(answeredIds).size !== answeredIds.length) {
+    throw new ApiError("VALIDATION_ERROR", "Jawaban memuat soal yang bukan bagian dari quiz ini atau terduplikasi.");
+  }
+
   const { data: options, error: optionsError } = await admin
     .from("quiz_options")
     .select("id, question_id, is_correct")
@@ -96,11 +113,13 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     if (isExactMatch) correctCount += 1;
   }
 
-  const score = body.answers.length > 0 ? (correctCount / body.answers.length) * 100 : 0;
+  const score = (correctCount / questionIds.size) * 100;
   const passingGrade = course?.passing_grade ?? 70;
   const passed = score >= passingGrade;
 
-  const { data: attempt, error: attemptError } = await supabase
+  // Insert lewat admin client: quiz_attempts tidak punya policy INSERT untuk pengguna (0130), agar skor tidak bisa dipalsukan.
+  // Kepemilikan enrollment sudah diperiksa manual di atas.
+  const { data: attempt, error: attemptError } = await admin
     .from("quiz_attempts")
     .insert({
       enrollment_id: body.enrollment_id,
