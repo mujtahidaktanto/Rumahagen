@@ -25,6 +25,14 @@
   .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
   .ctx-row{display:flex;align-items:center;gap:10px;padding:12px 18px;margin:8px 12px 0;border-radius:var(--ra-radius-md);background:rgba(255,255,255,.08);}
   .ctx-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+
+  .q-card{display:block;}
+  .q-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+  .q-col{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .q-bar{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .q-bar > div{height:100%;border-radius:4px;}
+  .q-warn{color:var(--ra-warning-600);font-weight:700;}
+  .q-danger{color:var(--ra-danger-600);font-weight:700;}
 </style>
 </helmet>
 <div class="app" style="position:relative;">
@@ -41,7 +49,25 @@
 
   <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px;">
 
-    <div class="ra-scroll-x chip-row">
+    <div class="card q-card" style="">
+        <sc-if value="{{qLoading}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;gap:10px;"><div class="ra-skel" style="height:22px;width:50%;"></div><div class="ra-skel" style="height:80px;"></div></div></sc-if>
+        <sc-if value="{{qError}}" hint-placeholder-val="{{false}}"><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span class="ra-body-md" style="flex:1;min-width:180px;">Kuota penerbitan gagal dimuat. Anda tetap bisa menyusun listing; kuota diperiksa saat menerbitkan.</span><button class="ra-btn ra-btn-secondary ra-btn-sm">Coba Lagi</button></div></sc-if>
+        <sc-if value="{{qReady}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;"><span class="ra-title-md" style="font-size:14px;">{{qTitle}}</span><span class="ra-badge ra-badge-info">{{qTotalLine}}</span></div>
+          <sc-if value="{{qFull}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-danger-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-bottom:12px;"><span class="ra-body-md"><strong>Kuota habis.</strong> {{qFullText}}</span><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><a class="ra-btn ra-btn-primary ra-btn-sm" href="M14-Katalog-Komersial.dc.html">Beli Slot Listing</a><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M14-Langganan-Saya.dc.html">Lihat Paket Pro</a></div></div></sc-if>
+          <sc-if value="{{qLow}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-bottom:12px;"><span class="ra-body-md">{{qLowText}}</span></div></sc-if>
+          <div class="q-grid">
+            <div class="q-col"><span class="ra-label-lg">Gratis</span><div class="q-bar"><div style="width:{{qFreePct}}%;background:{{qFreeColor}};"></div></div><span class="ra-body-md">{{qFreeLine}}</span><span class="ra-caption">{{qFreeReset}}</span></div>
+            <div class="q-col"><span class="ra-label-lg">Pro</span>
+              <sc-if value="{{qHasPro}}" hint-placeholder-val="{{false}}"><div class="q-bar"><div style="width:{{qProPct}}%;background:{{qProColor}};"></div></div><span class="ra-body-md">{{qProLine}}</span><span class="ra-caption">{{qProReset}}</span></sc-if>
+              <sc-if value="{{qNoPro}}" hint-placeholder-val="{{true}}"><span class="ra-caption">{{qProCta}}</span><a class="ra-label-lg" style="color:var(--ra-blue-600);" href="M14-Langganan-Saya.dc.html">Lihat paket Pro</a></sc-if></div>
+            <div class="q-col"><span class="ra-label-lg">Slot beli</span><span class="ra-title-md">{{qSlotLine}}</span><span class="ra-caption">{{qSlotNote}}</span><a class="ra-label-lg" style="color:var(--ra-blue-600);" href="M14-Katalog-Komersial.dc.html">Beli slot listing</a></div>
+          </div>
+          <span class="ra-caption" style="display:block;margin-top:10px;">{{qMasa}} Urutan pemakaian: Gratis → Pro → Slot beli.</span>
+        </sc-if>
+      </div>
+
+      <div class="ra-scroll-x chip-row">
       <sc-for list="{{chips}}" as="c" hint-placeholder-count="9">
         <span class="ra-chip" aria-pressed="{{c.isActive}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">·{{c.count}}</span></span>
       </sc-for>
@@ -86,6 +112,7 @@
             <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;">
               <span class="ra-label-lg ra-truncate-2">{{item.title}}</span>
               <span class="ra-caption ra-truncate-1">{{item.location}}</span>
+              <sc-if value="{{item.hasQuotaNote}}" hint-placeholder-val="{{false}}"><span class="{{item.quotaNoteClass}}">{{item.quotaNote}}</span></sc-if>
               <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px;">
                 <span class="ra-label-lg" style="color:var(--ra-blue-600);">{{item.price}}</span>
                 <span class="ra-badge {{item.badgeClass}}"><span class="ra-dot"></span>{{item.status}}</span>
@@ -174,7 +201,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"viewState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"context":{"editor":"enum","default":"personal","options":["personal","org_a"],"section":"Context switcher"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"viewState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"context":{"editor":"enum","default":"personal","options":["personal","org_a"],"section":"Context switcher"},"kuota":{"editor":"enum","default":"tersedia","options":["tersedia","hampir_habis","penuh","memuat","gagal_muat"],"section":"Skenario kuota"},"paket":{"editor":"enum","default":"gratis","options":["gratis","pro"],"section":"Skenario kuota"},"slotBeli":{"editor":"enum","default":"tidak","options":["tidak","ada"],"section":"Skenario kuota"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -209,8 +236,52 @@ class Component extends DCLogic {
     const filtered = activeFilter === 'all' ? listings : listings.filter(l => l.statusKey === activeFilter);
     const activeFilterLabel = (chipDefs.find(c => c.key === activeFilter) || {}).label ?? 'Semua';
     const viewState = this.props.viewState ?? 'loaded';
+
+    const isOrgQ = (this.props.context ?? 'personal') === 'org_a';
+    const kuotaS = this.props.kuota ?? 'tersedia';
+    const paketS = this.props.paket ?? 'gratis';
+    const slotS = this.props.slotBeli ?? 'tidak';
+    const fLimit = isOrgQ ? 50 : 25;
+    const fUsed = kuotaS === 'penuh' ? fLimit : (kuotaS === 'hampir_habis' ? fLimit - (isOrgQ ? 3 : 2) : (isOrgQ ? 9 : 7));
+    const proOn = paketS === 'pro';
+    const pLimit = isOrgQ ? 100 : 75;
+    const pUsed = !proOn ? 0 : (kuotaS === 'penuh' ? pLimit : (kuotaS === 'hampir_habis' ? pLimit - 2 : (isOrgQ ? 30 : 12)));
+    const slotBal = kuotaS === 'penuh' ? 0 : (slotS === 'ada' ? 5 : 0);
+    const totalLeft = (fLimit - fUsed) + (proOn ? pLimit - pUsed : 0) + slotBal;
+    const barColor = (used, limit) => used >= limit ? 'var(--ra-danger-600)' : (limit - used <= 3 ? 'var(--ra-warning-600)' : 'var(--ra-blue-600)');
+    const pct = (used, limit) => limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
+    const qFullNow = totalLeft === 0;
+    const qLowNow = !qFullNow && totalLeft <= 3;
+    const quotaVals = {
+      qLoading: kuotaS === 'memuat', qError: kuotaS === 'gagal_muat', qReady: kuotaS !== 'memuat' && kuotaS !== 'gagal_muat',
+      qTitle: 'Kuota Penerbitan — ' + (isOrgQ ? 'Organisasi (dipakai bersama anggota)' : 'Pribadi'),
+      qTotalLine: totalLeft + ' jatah tersisa',
+      qFull: qFullNow && kuotaS !== 'memuat' && kuotaS !== 'gagal_muat', qLow: qLowNow,
+      qFullText: 'Semua jatah kuota ' + (isOrgQ ? 'organisasi' : 'pribadi') + ' terpakai. Listing baru hanya bisa disimpan sebagai draf sampai kuota tersedia.',
+      qLowText: 'Sisa jatah menipis (' + totalLeft + '). Kuota tidak dibawa ke bulan berikutnya.',
+      qFreeLine: fUsed + ' dari ' + fLimit + ' terpakai', qFreePct: pct(fUsed, fLimit), qFreeColor: barColor(fUsed, fLimit),
+      qFreeReset: 'Reset 1 Okt 2026 00:00 WIB',
+      qHasPro: proOn, qNoPro: !proOn,
+      qProLine: pUsed + ' dari ' + pLimit + ' terpakai', qProPct: pct(pUsed, pLimit), qProColor: barColor(pUsed, pLimit),
+      qProReset: 'Reset 14 Okt 2026 (siklus bulanan langganan)',
+      qProCta: 'Belum berlangganan Pro: tambah ' + pLimit + ' jatah per siklus bulanan di atas kuota gratis.',
+      qSlotLine: slotBal + ' slot tersisa', qSlotNote: 'Slot beli tidak reset dan tidak kedaluwarsa sebelum dipakai; dipakai terakhir setelah Gratis dan Pro.',
+      qMasa: 'Tiap listing terbit memakai 1 jatah: tayang 90 hari + 7 hari masa tenggang, lalu kembali ke draf.',
+    };
+    const annotate = (l) => {
+      let note = '', cls = '';
+      if (l.statusKey === 'published') {
+        if (l.title.indexOf('Apartemen 2BR') === 0) { note = 'Masa tenggang sampai 30 Des 2026 — tetap tampil, lalu kembali ke draf'; cls = 'ra-caption q-warn'; }
+        else { note = 'Tayang sampai 23 Des 2026 · 61 hari lagi'; cls = 'ra-caption'; }
+      } else if (l.statusKey === 'draft') {
+        if (qFullNow && kuotaS !== 'memuat' && kuotaS !== 'gagal_muat') { note = 'Kuota habis — belum bisa diterbitkan'; cls = 'ra-caption q-danger'; }
+        else { note = 'Belum terbit — memakai 1 jatah saat terbit'; cls = 'ra-caption'; }
+      }
+      return Object.assign({}, l, { quotaNote: note, hasQuotaNote: !!note, quotaNoteClass: cls });
+    };
     return {
-      chips, filtered, activeFilterLabel,
+      ...quotaVals,
+      chips, filtered: filtered.map(annotate), activeFilterLabel,
       showPendingReviewHint: activeFilter === 'pending_review',
       isLoading: viewState === 'loading',
       isError: viewState === 'error',

@@ -46,11 +46,31 @@
   <div class="tab-row">
     <span class="tab {{tabSystemClass}}" onClick="{{selectTabSystem}}">System</span>
     <span class="tab {{tabSeoClass}}" onClick="{{selectTabSeo}}">SEO</span>
+      <span class="tab {{tabKuotaClass}}" onClick="{{selectTabKuota}}">Kuota Listing</span>
   </div>
   <sc-if value="{{isTabSystem}}" hint-placeholder-val="{{true}}">
     <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
-      <p class="ra-body-md" style="color:var(--ra-ink-500);">Key-value generik — belum ada config key yang dibuat.</p>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);">Key-value generik — belum ada config key lain. Kunci kuota listing diatur di tab Kuota Listing.</p>
       <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openAddSystemKey}}">+ Tambah Config Key</button>
+    </div>
+  </sc-if>
+  <sc-if value="{{isTabKuota}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
+      <p class="ra-body-md" style="color:var(--ra-ink-500);">Batas kuota penerbitan listing (kunci <span style="font-family:ui-monospace,Consolas,monospace;">listing_quota.*</span> di <span style="font-family:ui-monospace,Consolas,monospace;">system_configs</span>). Dibaca saat dipakai: perubahan berlaku untuk penerbitan berikutnya, listing yang sudah terbit tidak berubah.</p>
+      <div style="display:flex;align-items:flex-start;gap:10px;background:var(--ra-info-100);border-radius:var(--ra-radius-md);padding:12px 14px;"><span class="ra-body-md"><strong>Tetap (tidak bisa diubah di sini):</strong> reset kuota Gratis tiap tanggal 1 pukul 00:00 WIB tanpa carry over; reset kuota Pro tiap siklus bulanan langganan (beli baru = reset); slot beli tidak reset dan tidak kedaluwarsa sebelum dipakai; urutan pemakaian Gratis → Pro → Slot beli.</span></div>
+      <sc-if value="{{kSaved}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-success-100);border-radius:var(--ra-radius-md);padding:12px 14px;"><span class="ra-body-md"><strong>Tersimpan.</strong> Batas baru dipakai pada penerbitan berikutnya.</span></div></sc-if>
+      <sc-if value="{{kFailed}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-danger-100);border-radius:var(--ra-radius-md);padding:12px 14px;"><span class="ra-body-md"><strong>Gagal menyimpan.</strong> Tidak ada yang berubah; coba lagi.</span></div></sc-if>
+      <sc-if value="{{kHasError}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:12px 14px;"><span class="ra-body-md">Periksa isian bertanda merah sebelum menyimpan.</span></div></sc-if>
+      <div style="display:grid;grid-template-columns:1fr;gap:0;">
+        <div class="field"><label class="ra-label-lg">Kuota gratis pribadi (per bulan)</label><input class="ra-input" type="text" inputmode="numeric" value="{{kvFreePersonal}}" onInput="{{onKFreePersonal}}"><span class="ra-caption" style="font-family:ui-monospace,Consolas,monospace;">listing_quota.free_personal</span><sc-if value="{{kErrFreePersonal}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Isi bilangan bulat 0–999999.</span></sc-if></div>
+        <div class="field"><label class="ra-label-lg">Kuota gratis organisasi (per bulan)</label><input class="ra-input" type="text" inputmode="numeric" value="{{kvFreeOrg}}" onInput="{{onKFreeOrg}}"><span class="ra-caption" style="font-family:ui-monospace,Consolas,monospace;">listing_quota.free_organization</span><sc-if value="{{kErrFreeOrg}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Isi bilangan bulat 0–999999.</span></sc-if></div>
+        <div class="field"><label class="ra-label-lg">Kuota Pro pribadi (per siklus bulanan)</label><input class="ra-input" type="text" inputmode="numeric" value="{{kvProPersonal}}" onInput="{{onKProPersonal}}"><span class="ra-caption" style="font-family:ui-monospace,Consolas,monospace;">listing_quota.pro_personal</span><sc-if value="{{kErrProPersonal}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Isi bilangan bulat 0–999999.</span></sc-if></div>
+        <div class="field"><label class="ra-label-lg">Kuota Pro organisasi (per siklus bulanan)</label><input class="ra-input" type="text" inputmode="numeric" value="{{kvProOrg}}" onInput="{{onKProOrg}}"><span class="ra-caption" style="font-family:ui-monospace,Consolas,monospace;">listing_quota.pro_organization</span><sc-if value="{{kErrProOrg}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Isi bilangan bulat 0–999999.</span></sc-if></div>
+        <div class="field"><label class="ra-label-lg">Masa tayang tiap jatah (hari)</label><input class="ra-input" type="text" inputmode="numeric" value="{{kvValidity}}" onInput="{{onKValidity}}"><span class="ra-caption" style="font-family:ui-monospace,Consolas,monospace;">listing_quota.validity_days</span><sc-if value="{{kErrValidity}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Isi bilangan bulat 1–999999.</span></sc-if></div>
+        <div class="field"><label class="ra-label-lg">Masa tenggang (hari)</label><input class="ra-input" type="text" inputmode="numeric" value="{{kvGrace}}" onInput="{{onKGrace}}"><span class="ra-caption" style="font-family:ui-monospace,Consolas,monospace;">listing_quota.grace_days</span><sc-if value="{{kErrGrace}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Isi bilangan bulat 0–999999.</span></sc-if></div>
+      </div>
+      <div class="field"><label class="ra-label-lg">Kode produk langganan Pro</label><input class="ra-input" type="text" value="{{kvCodes}}" onInput="{{onKCodes}}"><span class="ra-caption">Dipisah koma. Langganan aktif dengan kode ini memberi kuota Pro (listing_quota.pro_product_codes). Huruf kecil, angka, dan garis bawah.</span><sc-if value="{{kErrCodes}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Format tidak valid, contoh: pro_bulanan,pro_tahunan</span></sc-if></div>
+      <div style="display:flex;gap:12px;flex-direction:column;"><button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{kSaving}}" onClick="{{saveKuota}}">{{kSaveLabel}}</button></div>
     </div>
   </sc-if>
   <sc-if value="{{isTabSeo}}" hint-placeholder-val="{{false}}">
@@ -123,11 +143,11 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"superadmin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"superadmin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"tabAwal":{"editor":"enum","default":"system","options":["system","seo","kuota"],"section":"Skenario tab"},"simpan":{"editor":"enum","default":"normal","options":["normal","menyimpan","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { drawerOpen: false, tab: 'system', addKeyOpen: false, reindexOpen: false, seoTitleSuffix: '— RumahAgen', seoMetaDescription: 'Platform agen properti terpercaya di Indonesia.' };
+    this.state = { drawerOpen: false, tab: (props && props.tabAwal) || 'system', kFreePersonal: '25', kFreeOrg: '50', kProPersonal: '75', kProOrg: '100', kValidity: '90', kGrace: '7', kCodes: 'pro_bulanan,pro_tahunan', kTried: false, kSaved: false, kFailed: false, addKeyOpen: false, reindexOpen: false, seoTitleSuffix: '— RumahAgen', seoMetaDescription: 'Platform agen properti terpercaya di Indonesia.' };
     this.openDrawer = this.openDrawer.bind(this);
     this.closeDrawer = this.closeDrawer.bind(this);
     this.selectTabSystem = this.selectTabSystem.bind(this);
@@ -138,6 +158,15 @@ class Component extends DCLogic {
     this.stopClick = this.stopClick.bind(this);
     this.onSeoTitleSuffixInput = this.onSeoTitleSuffixInput.bind(this);
     this.saveSeoNoop = this.saveSeoNoop.bind(this);
+    this.onKFreePersonal = this.onKFreePersonal.bind(this);
+    this.onKFreeOrg = this.onKFreeOrg.bind(this);
+    this.onKProPersonal = this.onKProPersonal.bind(this);
+    this.onKProOrg = this.onKProOrg.bind(this);
+    this.onKValidity = this.onKValidity.bind(this);
+    this.onKGrace = this.onKGrace.bind(this);
+    this.onKCodes = this.onKCodes.bind(this);
+    this.saveKuota = this.saveKuota.bind(this);
+    this.selectTabKuota = this.selectTabKuota.bind(this);
   }
   openDrawer(){ this.setState({ drawerOpen: true }); }
   closeDrawer(){ this.setState({ drawerOpen: false }); }
@@ -149,14 +178,56 @@ class Component extends DCLogic {
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   onSeoTitleSuffixInput(e){ this.setState({ seoTitleSuffix: e.target.value }); }
   saveSeoNoop(){}
+  onKFreePersonal(e){ this.setState({ kFreePersonal: e.target.value, kSaved: false, kFailed: false }); }
+  onKFreeOrg(e){ this.setState({ kFreeOrg: e.target.value, kSaved: false, kFailed: false }); }
+  onKProPersonal(e){ this.setState({ kProPersonal: e.target.value, kSaved: false, kFailed: false }); }
+  onKProOrg(e){ this.setState({ kProOrg: e.target.value, kSaved: false, kFailed: false }); }
+  onKValidity(e){ this.setState({ kValidity: e.target.value, kSaved: false, kFailed: false }); }
+  onKGrace(e){ this.setState({ kGrace: e.target.value, kSaved: false, kFailed: false }); }
+  onKCodes(e){ this.setState({ kCodes: e.target.value, kSaved: false, kFailed: false }); }
+  selectTabKuota(){ this.setState({ tab: 'kuota' }); }
+  saveKuota(){
+    const st = this.state; const bad = Object.values(this.kuotaBad(st)).some(Boolean);
+    if (bad) { this.setState({ kTried: true, kSaved: false, kFailed: false }); return; }
+    if (this.props.simpan === 'menyimpan') return;
+    if (this.props.simpan === 'gagal') { this.setState({ kFailed: true, kSaved: false, kTried: true }); return; }
+    this.setState({ kSaved: true, kFailed: false, kTried: true });
+  }
+  kuotaBad(st){
+    const intOk = (v, min) => /^[0-9]{1,6}$/.test(String(v)) && Number(v) >= min;
+    return {
+      FreePersonal: !intOk(st.kFreePersonal, 0),
+      FreeOrg: !intOk(st.kFreeOrg, 0),
+      ProPersonal: !intOk(st.kProPersonal, 0),
+      ProOrg: !intOk(st.kProOrg, 0),
+      Validity: !intOk(st.kValidity, 1),
+      Grace: !intOk(st.kGrace, 0),
+      Codes: !/^[a-z0-9_]+(,[a-z0-9_]+)*$/.test(String(st.kCodes))
+    };
+  }
   renderVals() {
     const viewerRole = this.props.viewerRole ?? 'superadmin';
     const isSuperadmin = viewerRole === 'superadmin';
     const tab = this.state.tab || 'system';
+    const kb = this.kuotaBad(this.state); const kTried = this.state.kTried === true;
+    const kuotaVals = {
+      kvFreePersonal: this.state.kFreePersonal, onKFreePersonal: this.onKFreePersonal, kErrFreePersonal: kTried && kb.FreePersonal,
+      kvFreeOrg: this.state.kFreeOrg, onKFreeOrg: this.onKFreeOrg, kErrFreeOrg: kTried && kb.FreeOrg,
+      kvProPersonal: this.state.kProPersonal, onKProPersonal: this.onKProPersonal, kErrProPersonal: kTried && kb.ProPersonal,
+      kvProOrg: this.state.kProOrg, onKProOrg: this.onKProOrg, kErrProOrg: kTried && kb.ProOrg,
+      kvValidity: this.state.kValidity, onKValidity: this.onKValidity, kErrValidity: kTried && kb.Validity,
+      kvGrace: this.state.kGrace, onKGrace: this.onKGrace, kErrGrace: kTried && kb.Grace,
+      kvCodes: this.state.kCodes, onKCodes: this.onKCodes, kErrCodes: kTried && kb.Codes,
+      saveKuota: this.saveKuota, selectTabKuota: this.selectTabKuota,
+      isTabKuota: (this.state.tab || 'system') === 'kuota', tabKuotaClass: (this.state.tab || 'system') === 'kuota' ? 'is-active' : '',
+      kSaved: this.state.kSaved === true, kFailed: this.state.kFailed === true,
+      kSaving: this.props.simpan === 'menyimpan', kSaveLabel: this.props.simpan === 'menyimpan' ? 'Menyimpan…' : 'Simpan Kuota',
+      kHasError: Object.values(kb).some(Boolean) && kTried,
+    };
     return {
       isDenied: !isSuperadmin, isAllowed: isSuperadmin,
       drawerOpen: this.state.drawerOpen ?? false, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
-      isTabSystem: tab === 'system', isTabSeo: tab === 'seo',
+      ...kuotaVals, isTabSystem: tab === 'system', isTabSeo: tab === 'seo',
       tabSystemClass: tab === 'system' ? 'is-active' : '', tabSeoClass: tab === 'seo' ? 'is-active' : '',
       selectTabSystem: this.selectTabSystem, selectTabSeo: this.selectTabSeo,
       openAddSystemKey: this.openAddSystemKey,

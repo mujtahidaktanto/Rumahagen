@@ -66,9 +66,15 @@
       <h1 class="ra-title-lg" style="margin-bottom:4px;">Mulai Listing Baru</h1>
       <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:18px;">Judul singkat dan atas nama siapa listing ini.</p>
       <div class="field"><span class="field-label">Judul Listing <span class="req">*</span></span><div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">Rumah Minimalis 2 Lantai BSD</div></div>
-      <span class="field-label">Konteks Kepemilikan <span class="req">*</span></span>
-      <div class="card-pick is-active" style="margin-top:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-blue-600)" stroke-width="1.8" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><div><div class="ra-label-lg" style="font-size:13px;">Personal</div></div></div>
-      <div class="card-pick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg><div><div class="ra-label-lg" style="font-size:13px;">Organisasi</div></div></div>
+      <span class="field-label">Pemilik Kuota &amp; Konteks <span class="req">*</span></span>
+      <div class="card-pick {{personalClass}}" style="margin-top:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><div><div class="ra-label-lg" style="font-size:13px;">Personal</div><div class="ra-caption" style="color:var(--ra-blue-700);font-weight:700;">{{personalQuotaLine}}</div></div></div>
+      <div class="card-pick {{orgClass}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg><div><div class="ra-label-lg" style="font-size:13px;">Organisasi</div><div class="ra-caption" style="color:var(--ra-blue-700);font-weight:700;">{{orgQuotaLine}}</div></div></div>
+      <span class="ra-caption">Kuota organisasi dipakai bersama seluruh anggota aktif.</span>
+      <sc-if value="{{hasOrgs}}" hint-placeholder-val="{{false}}"><div class="field" style="margin-top:12px;"><span class="field-label">Organisasi <span class="req">*</span></span><div class="ra-input" style="display:flex;align-items:center;">{{orgName}}</div><span class="ra-caption">Tidak bisa diganti setelah listing terbit.</span></div></sc-if>
+      <sc-if value="{{noOrgs}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-top:12px;display:flex;flex-direction:column;gap:8px;"><span class="ra-body-md" style="font-size:12.5px;"><strong>Anda belum menjadi anggota organisasi aktif.</strong> Buat organisasi atau pilih Personal.</span><a class="ra-btn ra-btn-secondary" style="height:44px;" href="M12-Buat-Organisasi.dc.html">Buat Organisasi</a></div></sc-if>
+      <sc-if value="{{showLow}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-top:12px;"><span class="ra-body-md" style="font-size:12.5px;">{{lowLine}}</span></div></sc-if>
+      <sc-if value="{{showFull}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-danger-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-top:12px;"><span class="ra-body-md" style="font-size:12.5px;"><strong>{{fullTitle}}.</strong> Anda tetap bisa menyimpan listing sebagai draf; terbit setelah kuota tersedia.</span></div></sc-if>
+      <sc-if value="{{showQuotaError}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-top:12px;display:flex;flex-direction:column;gap:8px;"><span class="ra-body-md" style="font-size:12.5px;">Kuota gagal dimuat; diperiksa saat menerbitkan.</span><button class="ra-btn ra-btn-secondary" style="height:44px;">Coba Lagi</button></div></sc-if>
     </sc-if>
 
     <!-- STEP 2 -->
@@ -172,7 +178,7 @@
       <div class="preview-block">
         <div class="preview-block-head"><span class="ra-title-md" style="font-size:14px;">Konteks &amp; Kategori</span><button class="ra-label-lg" style="font-size:12px;border:none;background:none;color:var(--ra-blue-600);">Ubah</button></div>
         <div class="kv-row"><span class="ra-caption">Judul</span><span class="ra-body-md" style="font-weight:700;font-size:12.5px;">Rumah 2 Lantai BSD</span></div>
-        <div class="kv-row"><span class="ra-caption">Konteks</span><span class="ra-body-md" style="font-weight:700;">Personal</span></div>
+        <div class="kv-row"><span class="ra-caption">Konteks</span><span class="ra-body-md" style="font-weight:700;font-size:12.5px;">{{konteksLabel}}</span></div>
       </div>
       <div class="preview-block">
         <div class="preview-block-head"><span class="ra-title-md" style="font-size:14px;">Lokasi &amp; Properti</span><button class="ra-label-lg" style="font-size:12px;border:none;background:none;color:var(--ra-blue-600);">Ubah</button></div>
@@ -182,6 +188,19 @@
         <div class="preview-block-head"><span class="ra-title-md" style="font-size:14px;">Harga</span><button class="ra-label-lg" style="font-size:12px;border:none;background:none;color:var(--ra-blue-600);">Ubah</button></div>
         <div class="kv-row"><span class="ra-caption">Harga</span><span class="ra-body-md" style="font-weight:700;">Rp 850 Jt (nego)</span></div>
       </div>
+      <div class="preview-block">
+        <div class="preview-block-head"><span class="ra-title-md" style="font-size:14px;">Kuota &amp; Masa Tayang</span></div>
+        <div class="kv-row"><span class="ra-caption">Kuota dipakai</span><span class="ra-body-md" style="font-weight:700;font-size:12.5px;text-align:right;">{{usedLine}}</span></div>
+        <div class="kv-row"><span class="ra-caption">Masa tayang</span><span class="ra-body-md" style="font-weight:700;font-size:12.5px;text-align:right;max-width:200px;">90 hari + 7 hari tenggang</span></div>
+        <div class="kv-row"><span class="ra-caption">Urutan</span><span class="ra-body-md" style="font-weight:700;font-size:12.5px;">Gratis → Pro → Slot beli</span></div>
+      </div>
+      <sc-if value="{{showFull}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-danger-100);border-radius:var(--ra-radius-md);padding:14px;margin-bottom:12px;">
+        <div class="ra-title-md" style="font-size:14px;color:var(--ra-danger-600);margin-bottom:4px;">{{fullTitle}}</div>
+        <p class="ra-body-md" style="font-size:12.5px;margin-bottom:10px;">{{fullLine}}</p>
+        <div style="display:flex;flex-direction:column;gap:8px;"><a class="ra-btn ra-btn-primary" style="height:44px;" href="M14-Katalog-Komersial.dc.html">Beli Slot Listing</a><a class="ra-btn ra-btn-secondary" style="height:44px;" href="M14-Langganan-Saya.dc.html">Lihat Paket Pro</a></div>
+        <p class="ra-caption" style="margin-top:8px;">Reset tiap tanggal 1 pukul 00:00 WIB.</p>
+      </div></sc-if>
+      <sc-if value="{{showQuotaError}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-warning-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-bottom:12px;"><span class="ra-body-md" style="font-size:12.5px;">Kuota belum bisa diperiksa; jika penuh, listing tetap tersimpan sebagai draf.</span></div></sc-if>
       <div style="display:flex;align-items:flex-start;gap:8px;background:var(--ra-info-100);border-radius:var(--ra-radius-md);padding:12px 14px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" width="16" height="16" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/></svg>
         <span class="ra-body-md" style="font-size:12.5px;">Langsung tayang publik — tanpa antrean moderasi.</span>
@@ -194,7 +213,7 @@
     <sc-if value="{{canGoBack}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary" style="flex:1;">Kembali</button></sc-if>
     <sc-if value="{{isLastStep}}" hint-placeholder-val="{{false}}">
       <sc-if value="{{isSubmitting}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary" style="flex:2;" disabled>Menerbitkan…</button></sc-if>
-      <sc-if value="{{isNotSubmitting}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;">Terbitkan Listing</button></sc-if>
+      <sc-if value="{{isNotSubmitting}}" hint-placeholder-val="{{true}}"><sc-if value="{{canPublish}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;">Terbitkan Listing</button></sc-if><sc-if value="{{cannotPublish}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary" style="flex:1;">Simpan Draf</button><button class="ra-btn ra-btn-primary" style="flex:1;" disabled>Terbitkan</button></sc-if></sc-if>
     </sc-if>
     <sc-if value="{{isNotLastStep}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;">Lanjut</button></sc-if>
   </div>
@@ -206,13 +225,14 @@
       <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="32" height="32"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.5 2.5 5.5-6"/></svg></div>
       <h1 class="ra-title-lg">Listing Berhasil Diterbitkan</h1>
       <p class="ra-body-md" style="color:var(--ra-ink-500);">Listing Anda sudah tayang publik dan bisa ditemukan di pencarian.</p>
+      <p class="ra-caption">{{successLine}}</p>
       <a class="ra-btn ra-btn-primary" style="width:100%;" href="M03-Listing-Saya.dc.html">Lihat Listing Saya</a>
     </div>
   </sc-if>
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"previewStep":{"editor":"enum","default":"1","options":["1","2","3","4","5","6","7","8","9"],"section":"Skenario langkah"},"wizardState":{"editor":"enum","default":"in_progress","options":["in_progress","submitting","success"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"previewStep":{"editor":"enum","default":"1","options":["1","2","3","4","5","6","7","8","9"],"section":"Skenario langkah"},"wizardState":{"editor":"enum","default":"in_progress","options":["in_progress","submitting","success"],"section":"Skenario"},"konteks":{"editor":"enum","default":"personal","options":["personal","organisasi"],"section":"Skenario kuota"},"kuota":{"editor":"enum","default":"tersedia","options":["tersedia","hampir_habis","penuh","gagal_muat"],"section":"Skenario kuota"},"organisasi":{"editor":"enum","default":"ada","options":["ada","belum_bergabung"],"section":"Skenario kuota"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   renderVals() {
     const step = parseInt(this.props.previewStep ?? '1', 10);
@@ -220,7 +240,42 @@ class Component extends DCLogic {
     const isSuccess = wizardState === 'success';
     const isSubmitting = wizardState === 'submitting';
 
+
+    const konteks = this.props.konteks ?? 'personal';
+    const kuota = this.props.kuota ?? 'tersedia';
+    const orgState = this.props.organisasi ?? 'ada';
+    const isOrg = konteks === 'organisasi';
+    const limit = isOrg ? 50 : 25;
+    const remain = kuota === 'penuh' ? 0 : (kuota === 'hampir_habis' ? (isOrg ? 3 : 2) : (isOrg ? 41 : 18));
+    const pLimit = 25, oLimit = 50;
+    const pRemain = kuota === 'penuh' && !isOrg ? 0 : (kuota === 'hampir_habis' && !isOrg ? 2 : 18);
+    const oRemain = kuota === 'penuh' && isOrg ? 0 : (kuota === 'hampir_habis' && isOrg ? 3 : 41);
+    const quotaOk = kuota !== 'gagal_muat';
+    const isFull = kuota === 'penuh';
+    const isLow = kuota === 'hampir_habis';
+    const canPublish = !isFull;
+    const ownerLabel = isOrg ? 'organisasi' : 'pribadi';
+    const quotaVals = {
+      isPersonal: !isOrg, isOrg,
+      personalClass: !isOrg ? 'is-active' : '', orgClass: isOrg ? 'is-active' : '',
+      personalQuotaLine: quotaOk ? ('Sisa ' + pRemain + ' dari ' + pLimit + ' jatah gratis bulan ini') : 'Kuota gagal dimuat',
+      orgQuotaLine: orgState === 'ada' ? (quotaOk ? ('Kuota bersama anggota: sisa ' + oRemain + ' dari ' + oLimit) : 'Kuota gagal dimuat') : 'Belum bergabung ke organisasi',
+      hasOrgs: isOrg && orgState === 'ada', noOrgs: isOrg && orgState !== 'ada',
+      orgName: 'Properti Sejahtera Agency',
+      quotaLine: 'Sisa ' + remain + ' dari ' + limit + ' jatah gratis bulan ini',
+      resetLine: 'Reset tiap tanggal 1 pukul 00:00 WIB (berikutnya 1 Okt 2026). Jatah tidak dibawa ke bulan berikutnya.',
+      showQuotaOk: quotaOk && !isFull && !isLow, showLow: quotaOk && isLow, showFull: isFull, showQuotaError: !quotaOk,
+      lowLine: 'Kuota ' + ownerLabel + ' hampir habis: sisa ' + remain + ' dari ' + limit + '.',
+      fullTitle: 'Kuota ' + ownerLabel + ' habis',
+      fullLine: 'Jatah gratis bulan ini terpakai (' + limit + ' dari ' + limit + ') dan tidak ada kuota Pro atau slot beli. Listing tetap tersimpan sebagai draf dan bisa diterbitkan setelah kuota tersedia.',
+      konteksLabel: isOrg ? 'Organisasi — Properti Sejahtera Agency' : 'Personal',
+      usedLine: quotaOk ? (isFull ? 'Tidak ada jatah tersedia' : '1 jatah gratis (sisa ' + (remain - 1) + ' dari ' + limit + ' setelah terbit)') : 'Diperiksa saat menerbitkan',
+      validityLine: '90 hari sejak terbit + 7 hari masa tenggang (tetap tampil). Setelah itu kembali ke draf dan perlu jatah baru untuk terbit lagi.',
+      canPublish, cannotPublish: !canPublish,
+      successLine: 'Memakai 1 jatah gratis (sisa ' + Math.max(remain - 1, 0) + ' dari ' + limit + '). Tayang sampai 23 Des 2026, ditambah 7 hari masa tenggang.',
+    };
     return {
+      ...quotaVals,
       isWizard: !isSuccess,
       isSuccess,
       isSubmitting,
