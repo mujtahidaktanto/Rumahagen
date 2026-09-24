@@ -79,6 +79,10 @@
   .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
   .meter > div{height:100%;background:var(--ra-blue-600);}
   .meter.is-warn > div{background:var(--ra-gold-500);}
+
+  .plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+  .plan-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:12px;}
+  .price-row{display:flex;justify-content:space-between;gap:12px;align-items:baseline;}
 </style>
 </helmet>
 <div class="app">
@@ -117,7 +121,7 @@
       </div>
     </div>
     <div class="main ra-scroll">
-      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Layar ini hanya menampilkan langganan Anda. Membeli, memperpanjang, dan berhenti berlangganan secara mandiri belum tersedia; hubungi tim RumahAgen. Add-on (paket kuota dan poin) dibeli dari katalog dan tampil di Pesanan &amp; Kuota.</p></div>
+      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Beli paket Pro di bagian Paket Pro. Beli lagi = langganan baru (tidak ada perpanjangan): masa aktif ditumpuk dan kuota Pro direset. Riwayat langganan pribadi dan organisasi tampil di bawah.</p></div>
       <sc-if value="{{hasCur}}" hint-placeholder-val="{{true}}"><div class="plan-hero">
         <span class="ra-caption">Paket saat ini</span>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span class="ra-headline" style="color:#fff;">{{curName}}</span><sc-if value="{{curIsOrg}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-info">Organisasi</span></sc-if></div>
@@ -129,6 +133,21 @@
         <span class="ra-caption">Paket saat ini</span><span class="ra-headline" style="color:#fff;">Free</span>
         <span class="ra-body-md" style="color:rgba(255,255,255,.9);">Anda belum memiliki langganan aktif, sehingga memakai paket Free dengan fitur dasar.</span>
       </div></sc-if>
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;"><span class="ra-title-lg">Paket Pro</span><span class="ra-caption">Menambah kuota penerbitan listing di atas kuota Gratis. Beli lagi = langganan baru.</span></div>
+      <sc-if value="{{planLoading}}" hint-placeholder-val="{{false}}"><div class="card" style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:24px;width:40%;"></div><div class="ra-skel" style="height:96px;"></div></div></sc-if>
+      <sc-if value="{{planError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Paket Pro gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+      <sc-if value="{{planEmpty}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada paket Pro yang dijual</span><p class="ra-body-md" style="max-width:380px;">Paket akan tampil di sini setelah tim RumahAgen mengaktifkannya.</p></div></div></sc-if>
+      <sc-if value="{{planReady}}" hint-placeholder-val="{{true}}"><div class="plan-grid"><sc-for list="{{plans}}" as="p" hint-placeholder-count="2">
+        <div class="plan-card">
+          <div><div class="ra-title-md">{{p.name}}</div><div class="ra-caption">{{p.duration}}</div></div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="price-row"><span class="ra-body-md">Pribadi</span><span class="ra-title-md">{{p.pricePersonal}}</span></div>
+            <div class="price-row"><span class="ra-body-md">Organisasi</span><span class="ra-label-lg">{{p.priceOrg}}</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;"><span class="ra-body-sm">✓ {{p.quotaPersonal}} jatah listing per siklus bulanan (pribadi)</span><span class="ra-body-sm">✓ {{p.quotaOrg}} jatah per siklus (organisasi)</span><span class="ra-body-sm">✓ Ditambahkan di atas kuota Gratis</span></div>
+          <button class="ra-btn ra-btn-primary" onClick="{{p.buy}}">Beli {{p.name}}</button>
+        </div></sc-for></div>
+        <span class="ra-caption">Kuota Pro reset tiap siklus bulanan sejak pembelian (Pro Tahunan juga bulanan). Kuota Gratis tetap reset tanggal 1.</span></sc-if>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span class="ra-title-lg">Semua Langganan</span><div style="flex:1;"></div><div class="chip-group" role="group" aria-label="Filter konteks"><sc-for list="{{ctxChips}}" as="c" hint-placeholder-count="3"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.l}}</button></sc-for></div></div>
         <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div class="card" style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:24px;width:40%;"></div><div class="ra-skel" style="height:64px;"></div><div class="ra-skel" style="height:64px;"></div></div></sc-if>
         <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Langganan gagal dimuat</span><p class="ra-body-md">Periksa koneksi Anda lalu coba lagi.</p><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
@@ -140,7 +159,7 @@
             <sc-if value="{{c.isOrg}}" hint-placeholder-val="{{false}}"><div class="ra-caption ra-truncate-2">Organisasi: {{c.org}}</div></sc-if>
             <dl class="kv" style="grid-template-columns:130px 1fr;"><dt>Mulai</dt><dd>{{c.start}}</dd><dt>Berakhir</dt><dd>{{c.end}}</dd><sc-if value="{{c.hasRenew}}" hint-placeholder-val="{{false}}"><dt>Jadwal perpanjangan</dt><dd>{{c.renew}}</dd></sc-if></dl>
             <sc-if value="{{c.hasMeter}}" hint-placeholder-val="{{false}}"><div><div class="meter {{c.meterClass}}" role="progressbar" aria-label="Masa langganan terpakai"><div style="{{c.meterStyle}}"></div></div><div class="ra-caption" style="margin-top:6px;">{{c.leftText}}</div></div></sc-if>
-            <sc-if value="{{c.expiredNote}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Untuk melanjutkan, lihat katalog. Pembelian langganan belum tersedia mandiri.</span></sc-if>
+            <sc-if value="{{c.expiredNote}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Untuk melanjutkan, beli paket Pro di atas (beli lagi = langganan baru; masa baru ditumpuk setelah masa aktif).</span></sc-if>
             <button class="ra-btn ra-btn-secondary ra-btn-sm" aria-expanded="{{c.snapOpen}}" onClick="{{c.toggle}}">{{c.snapLabel}}</button>
             <sc-if value="{{c.snapOpen}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-ink-50);border-radius:var(--ra-radius-md);padding:12px;display:flex;flex-direction:column;gap:6px;">
               <sc-if value="{{c.noSnap}}" hint-placeholder-val="{{false}}"><span class="ra-body-md" style="color:var(--ra-ink-500);">Tidak ada ringkasan pembelian tersimpan.</span></sc-if>
@@ -150,20 +169,54 @@
         <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada langganan pada konteks ini</span></div></div></sc-if>
     </div>
   </div>
+  <sc-if value="{{buyOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeBuy}}"><div class="dialog" onClick="{{stopClick}}">
+      <sc-if value="{{isStepPilih}}" hint-placeholder-val="{{true}}">
+        <span class="ra-title-lg">Beli {{buyPlanName}}</span>
+        <div class="field"><span class="ra-label-md">Langganan untuk</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;"><button class="ra-chip" aria-pressed="{{ownerPersonalPressed}}" onClick="{{pickPersonal}}">Pribadi</button><button class="ra-chip" aria-pressed="{{ownerOrgPressed}}" disabled="{{orgDisabled}}" onClick="{{pickOrg}}">Organisasi</button></div>
+          <span class="ra-caption" style="display:block;margin-top:6px;">{{orgNote}}</span></div>
+        <dl class="kv" style="grid-template-columns:130px 1fr;"><dt>Harga</dt><dd>{{buyPrice}}</dd><dt>Masa aktif</dt><dd>{{buyDuration}}</dd></dl>
+        <sc-if value="{{hasStack}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span class="ra-body-md">{{stackNote}}</span></div></sc-if>
+        <div class="banner banner-info"><span class="ra-body-md">Kuota Pro dihitung dari pembelian ini dan reset tiap siklus bulanan. Sisa kuota Pro dari pembelian sebelumnya hilang. Kuota Gratis tidak berubah. Harga dihitung server, nominal final dikonfirmasi di halaman pembayaran.</span></div>
+        <sc-if value="{{buyErr}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span class="ra-body-md">{{buyErrText}}</span></div></sc-if>
+        <button class="ra-btn ra-btn-primary"  onClick="{{createOrder}}">Buat Pesanan</button>
+        <button class="ra-btn ra-btn-secondary"  onClick="{{closeBuy}}">Batal</button>
+      </sc-if>
+      <sc-if value="{{isStepDibuat}}" hint-placeholder-val="{{false}}">
+        <span class="ra-title-lg">Pesanan Dibuat</span>
+        <span class="ra-body-md">Nomor pesanan ORD-20260924-0207 untuk {{buyPlanName}} ({{buyOwnerLabel}}). Selesaikan pembayaran via Midtrans; langganan aktif otomatis setelah pembayaran terverifikasi dan kuota Pro langsung tersedia.</span>
+        <button class="ra-btn ra-btn-primary"  onClick="{{closeBuy}}">Lanjut ke Pembayaran</button>
+        <a class="ra-btn ra-btn-secondary"  href="M14-Pesanan-Kuota.dc.html">Bayar Nanti (Lihat Pesanan)</a>
+      </sc-if>
+    </div></div>
+  </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario daftar"},"skenario":{"editor":"enum","default":"aktif","options":["aktif","segera_berakhir","berakhir","campuran","status_tak_dikenal"],"section":"Kondisi langganan"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario daftar"},"skenario":{"editor":"enum","default":"aktif","options":["aktif","segera_berakhir","berakhir","campuran","status_tak_dikenal"],"section":"Kondisi langganan"},"paket":{"editor":"enum","default":"tersedia","options":["tersedia","memuat","kosong","gagal_muat","tanpa_harga_organisasi"],"section":"Skenario paket Pro"},"peran":{"editor":"enum","default":"leader","options":["leader","member","tanpa_organisasi"],"section":"Skenario paket Pro"},"beli":{"editor":"enum","default":"normal","options":["normal","gagal_konflik","gagal_bukan_leader"],"section":"Skenario paket Pro"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
     this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { ctx: 'all', open: {} });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'openBuy', 'closeBuy', 'pickPersonal', 'pickOrg', 'createOrder'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
   closeDrawer(){ this.setState({ drawerOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  openBuy(id){ this.setState({ buyOpen: true, buyPlan: id, owner: 'personal', step: 'pilih', buyErr: '' }); }
+  closeBuy(){ this.setState({ buyOpen: false }); }
+  pickPersonal(){ this.setState({ owner: 'personal', buyErr: '' }); }
+  pickOrg(){ this.setState({ owner: 'org', buyErr: '' }); }
+  createOrder(){
+    var pr = this.props, owner = this.state.owner || 'personal';
+    var orgOff = (pr.peran || 'leader') !== 'leader' || (pr.paket || 'tersedia') === 'tanpa_harga_organisasi';
+    if (owner === 'org' && orgOff) { this.setState({ buyErr: 'Hanya leader organisasi yang bisa membeli langganan organisasi.' }); return; }
+    if (pr.beli === 'gagal_konflik') { this.setState({ buyErr: 'Paket ini belum bisa dibeli (tidak aktif atau belum punya harga untuk cakupan ini).' }); return; }
+    if (pr.beli === 'gagal_bukan_leader') { this.setState({ buyErr: 'Hanya leader organisasi yang bisa membeli langganan organisasi.' }); return; }
+    this.setState({ step: 'dibuat', buyErr: '' });
+  }
 
   renderVals() {
     var st = this.state, pr = this.props;
@@ -183,21 +236,40 @@ class Component extends DCLogic {
     // Keputusan: tidak ada baris aktif = paket Free.
     var self = this;
     var mode = pr.listState || 'loaded', sk = pr.skenario || 'aktif';
-    var PRODUCT = { free: 'Free', pro_monthly: 'Pro Bulanan', pro_annual: 'Pro Tahunan' };
+    var PRODUCT = { free: 'Free', pro_bulanan: 'Pro Bulanan', pro_tahunan: 'Pro Tahunan', pro_monthly: 'Pro Bulanan', pro_annual: 'Pro Tahunan' };
     var ST = { active: ['Aktif','ra-badge-success'], expiring: ['Segera berakhir','ra-badge-warning'], expired: ['Berakhir','ra-badge-neutral'], cancelled: ['Dibatalkan','ra-badge-neutral'], pending: ['Menunggu pembayaran','ra-badge-info'] };
     var base = {
-      aktif: [{ id: 's1', code: 'pro_monthly', st: 'active', scope: 'personal', org: '', start: '01 Sep 2026', end: '01 Okt 2026', renew: '01 Okt 2026', left: 7, total: 30, snap: [['Harga saat beli', 'Rp 149.000'], ['Manfaat', 'Kuota listing 30, refresh harian']] }],
-      segera_berakhir: [{ id: 's1', code: 'pro_monthly', st: 'expiring', scope: 'personal', org: '', start: '25 Agu 2026', end: '25 Sep 2026', renew: '', left: 1, total: 31, snap: [['Harga saat beli', 'Rp 149.000']] }],
-      berakhir: [{ id: 's1', code: 'pro_monthly', st: 'expired', scope: 'personal', org: '', start: '01 Agu 2026', end: '01 Sep 2026', renew: '', left: 0, total: 31, snap: [] }],
+      aktif: [{ id: 's1', code: 'pro_bulanan', st: 'active', scope: 'personal', org: '', start: '01 Sep 2026', end: '01 Okt 2026', renew: '01 Okt 2026', left: 7, total: 30, snap: [['Harga saat beli', 'Rp 149.000'], ['Manfaat', 'Kuota listing 30, refresh harian']] }],
+      segera_berakhir: [{ id: 's1', code: 'pro_bulanan', st: 'expiring', scope: 'personal', org: '', start: '25 Agu 2026', end: '25 Sep 2026', renew: '', left: 1, total: 31, snap: [['Harga saat beli', 'Rp 149.000']] }],
+      berakhir: [{ id: 's1', code: 'pro_bulanan', st: 'expired', scope: 'personal', org: '', start: '01 Agu 2026', end: '01 Sep 2026', renew: '', left: 0, total: 31, snap: [] }],
       campuran: [
-        { id: 's1', code: 'pro_monthly', st: 'active', scope: 'personal', org: '', start: '01 Sep 2026', end: '01 Okt 2026', renew: '01 Okt 2026', left: 7, total: 30, snap: [['Harga saat beli', 'Rp 149.000']] },
-        { id: 's2', code: 'pro_annual', st: 'active', scope: 'org', org: 'PT Griya Nusantara Properti Indonesia Cabang Surabaya', start: '12 Mar 2026', end: '12 Mar 2027', renew: '12 Mar 2027', left: 169, total: 365, snap: [['Harga saat beli', 'Rp 1.490.000']] },
-        { id: 's3', code: 'pro_monthly', st: 'expired', scope: 'personal', org: '', start: '01 Jul 2026', end: '01 Agu 2026', renew: '', left: 0, total: 31, snap: [] }
+        { id: 's1', code: 'pro_bulanan', st: 'active', scope: 'personal', org: '', start: '01 Sep 2026', end: '01 Okt 2026', renew: '01 Okt 2026', left: 7, total: 30, snap: [['Harga saat beli', 'Rp 149.000']] },
+        { id: 's2', code: 'pro_tahunan', st: 'active', scope: 'org', org: 'PT Griya Nusantara Properti Indonesia Cabang Surabaya', start: '12 Mar 2026', end: '12 Mar 2027', renew: '12 Mar 2027', left: 169, total: 365, snap: [['Harga saat beli', 'Rp 1.490.000']] },
+        { id: 's3', code: 'pro_bulanan', st: 'expired', scope: 'personal', org: '', start: '01 Jul 2026', end: '01 Agu 2026', renew: '', left: 0, total: 31, snap: [] }
       ],
       status_tak_dikenal: [{ id: 's1', code: 'promo_ramadan_plus', st: 'suspended_by_ops', scope: 'personal', org: '', start: '01 Sep 2026', end: '', renew: '', left: -1, total: 0, snap: [] }]
     }[sk] || [];
     var items = mode === 'empty' ? [] : base;
     var filtered = items.filter(function(s){ return st.ctx === 'all' || s.scope === (st.ctx === 'org' ? 'org' : 'personal'); });
+
+    var owner = st.owner || 'personal', peran = pr.peran || 'leader', paketS = pr.paket || 'tersedia';
+    var PLANS = [
+      { id: 'pl1', name: 'Pro Bulanan', dur: 1, duration: '1 bulan', pp: 149000, po: 449000 },
+      { id: 'pl2', name: 'Pro Tahunan', dur: 12, duration: '12 bulan', pp: 1490000, po: 4490000 }
+    ];
+    var fmtR = function(n){ return n ? 'Rp ' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : 'Belum tersedia'; };
+    var noOrgPrice = paketS === 'tanpa_harga_organisasi';
+    var plans = paketS === 'kosong' ? [] : PLANS.map(function(p){ return { name: p.name, duration: p.duration, pricePersonal: fmtR(p.pp), priceOrg: noOrgPrice ? 'Belum tersedia' : fmtR(p.po), quotaPersonal: 75, quotaOrg: 100, buy: function(){ self.openBuy(p.id); } }; });
+    var bp = PLANS.filter(function(p){ return p.id === st.buyPlan; })[0] || PLANS[0];
+    var orgOff = peran !== 'leader' || noOrgPrice;
+    var orgNote = peran === 'member' ? 'Hanya leader organisasi yang dapat membeli langganan organisasi.' : (peran === 'tanpa_organisasi' ? 'Anda belum menjadi anggota organisasi aktif.' : (noOrgPrice ? 'Paket ini belum dijual untuk organisasi.' : 'Langganan menjadi milik organisasi Properti Sejahtera Agency dan berlaku untuk seluruh anggota.'));
+    var activeSame = items.filter(function(s){ return (s.st === 'active' || s.st === 'expiring') && s.scope === (owner === 'org' ? 'org' : 'personal'); })[0];
+    var buyOut = { planLoading: paketS === 'memuat', planError: paketS === 'gagal_muat', planEmpty: paketS === 'kosong', planReady: paketS !== 'memuat' && paketS !== 'gagal_muat' && paketS !== 'kosong', plans: plans,
+      buyOpen: st.buyOpen === true, isStepPilih: (st.step || 'pilih') === 'pilih', isStepDibuat: st.step === 'dibuat', closeBuy: this.closeBuy, pickPersonal: this.pickPersonal, pickOrg: this.pickOrg, createOrder: this.createOrder,
+      buyPlanName: bp.name, buyPrice: fmtR(owner === 'org' ? bp.po : bp.pp), buyDuration: bp.duration, buyOwnerLabel: owner === 'org' ? 'organisasi' : 'pribadi',
+      ownerPersonalPressed: owner === 'personal' ? 'true' : 'false', ownerOrgPressed: owner === 'org' && !orgOff ? 'true' : 'false', orgDisabled: orgOff, orgNote: orgNote,
+      hasStack: !!activeSame, stackNote: activeSame ? 'Anda masih punya Pro aktif sampai ' + (activeSame.end || '—') + '. Masa baru ditumpuk setelahnya, tetapi kuota Pro direset sekarang.' : '',
+      buyErr: !!st.buyErr, buyErrText: st.buyErr || '' };
     var cards = filtered.map(function(s){
       var m = ST[s.st] || [s.st, 'ra-badge-neutral']; var known = !!ST[s.st];
       var pct = s.total > 0 ? Math.max(0, Math.min(100, Math.round(((s.total - s.left) / s.total) * 100))) : 0;
@@ -215,7 +287,7 @@ class Component extends DCLogic {
       cards: cards, ctxChips: ctxChips, hasCur: mode === 'loaded' && !!cur, showFree: showFree || mode === 'empty',
       curName: cur ? (PRODUCT[cur.code] || cur.code) : 'Free', curUntil: cur ? (cur.end || 'Tanpa batas akhir') : '', curOrg: cur && cur.scope === 'org' ? cur.org : '', curIsOrg: !!cur && cur.scope === 'org', curExpiring: !!cur && cur.st === 'expiring',
       hasItems: items.length > 0 };
-    return Object.assign(shell, out);
+    return Object.assign(shell, out, buyOut);
   }
 }
 </script>

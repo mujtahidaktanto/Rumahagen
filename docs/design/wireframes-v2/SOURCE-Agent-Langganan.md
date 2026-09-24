@@ -7,6 +7,8 @@ Dibuat 2026-09-24 dari pemindaian repo `Rumahagen` + database live Supabase (`ja
 Migration `0071` (subscriptions, addons, promotions), `0072`–`0079`, `0081` (order, pembayaran, fulfillment), route `commercial/*`,
 `agents/me/entitlements`, `agents/me/quota`, skema `lib/validation/commercial-*.ts`, policy live, wireframe Agent `M14-Katalog-Komersial` dan `M14-Pesanan-Kuota`.
 
+> **Pembaruan 2026-09-24:** katalog paket, harga, pembelian, dan fulfillment langganan Pro kini ada (migration 0142; lihat `SOURCE-Langganan-Pro.md`). Butir "tidak ada" di bawah adalah kondisi saat dokumen ini dibuat.
+
 ## 2. Yang ada dan yang tidak
 - **Ada:** tabel `subscriptions`, izin, dan RLS baca. **Tidak ada:** route `/subscriptions` atau `/agents/me/subscriptions`, katalog paket langganan, pembelian, fulfillment,
   perpanjangan, pembatalan. `fulfill_commercial_order` menolak order bukan-addon ("fulfillment subscription belum dibangun"). `GET /commercial/catalog` hanya `addons`.
