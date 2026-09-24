@@ -3471,3 +3471,26 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Kode (satu paket):** route admin `GET/POST /admin/commercial/promotions`, `GET/PUT /admin/commercial/promotions/{id}` (GET menyertakan addon yang merujuk), `PATCH /admin/commercial/promotions/{id}/status`; skema `lib/validation/commercial-promotions.ts`; status turunan `lib/commercial/promotion-state.ts` (`effective_status`: draft|scheduled|active|expired|inactive, `is_applicable`, `benefit_label`). Tidak ada DELETE. `rule_configuration`/`eligibility_configuration` belum dievaluasi sistem sehingga API menolak isian tak kosong.
 
 **Hasil uji (rollback, 15 skenario):** aktif dengan percent/amount ok, draf tanpa benefit ok; aktif tanpa benefit, dua kunci, persen 150, persen berupa teks, amount negatif, status salah, kode berspasi, dan window terbalik ditolak; mengaktifkan draf tanpa benefit ditolak, dengan benefit ok; hapus promosi tak terpakai ok, hapus yang dirujuk addon ditolak. Skema Zod (9 kasus) dan status turunan (7 kasus) diuji terpisah; `tsc --noEmit` lolos.
+
+---
+
+## `0134` — Aturan kelayakan promosi M14 dievaluasi server (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback.
+
+**Masalah:** `promotions.eligibility_configuration` (0071) jsonb bebas yang tidak dievaluasi di mana pun; promosi aktif berlaku untuk semua pembeli tanpa batas pemakaian.
+
+**Model (kunci dikenal, semuanya opsional, kunci lain ditolak CHECK):** `roles` (array kode role pembeli), `first_purchase_only` (belum punya pesanan terkonfirmasi), `max_redemptions` (batas total), `max_redemptions_per_user`, `min_list_price` (harga list add-on minimum). Pemakaian = pesanan `pending` + `confirmed` yang membawa promosi; `cancelled`/`expired` mengembalikan kuota.
+
+**Perubahan:**
+1. CHECK `promotions_eligibility_valid` (`promotion_eligibility_valid()`, nilai tak terduga dianggap tidak valid, bukan galat).
+2. `promotion_eligibility_problem()` (definer): alasan penolakan atau NULL.
+3. `compute_addon_order_price(addon, promosi, user)` (3 argumen, menggantikan versi 2 argumen 0131) mengevaluasi kelayakan; pengguna biasa hanya boleh menghitung untuk dirinya sendiri (42501). Trigger pesanan mengambil advisory lock per promosi agar batas total tidak terlampaui oleh pesanan bersamaan; pesanan yang tidak layak ditolak 23514 dengan alasan.
+4. RPC `my_addon_promotion_offers(addon_ids)` (authenticated): per addon, apakah promosi berlaku bagi pengguna yang login, alasan, dan harga akhir; tanpa membuka konfigurasi promosi.
+5. RPC `promotion_redemption_counts(ids)` (hanya staf configure): jumlah pemakaian per promosi untuk admin.
+
+**Kode (satu paket):** skema `eligibility` di `lib/validation/commercial-promotions.ts`; `POST/PUT /admin/commercial/promotions` menulis `eligibility_configuration`, daftar/detail memuat `eligibility_configuration` dan `redemption_count`; `GET /commercial/catalog`, `/commercial/offers`, `/commercial/products/{id}` menambah `promotion_offer` (berlaku/alasan/harga akhir) untuk pengguna login; `POST /commercial/orders` mengembalikan alasan penolakan promosi sebagai 422. Helper `lib/commercial/promotion-usage.ts` dan `promotion-offers.ts`. **Terapkan migration dan kode bersamaan**: tanpa migration, RPC yang dipanggil route katalog/offers/promosi belum ada dan route itu gagal.
+
+**Hasil uji (rollback, 24 skenario):** tujuh bentuk tak valid ditolak CHECK; peran layak diskon 10% (75.000 menjadi 67.500), peran salah, harga di bawah minimum, batas per pengguna, dan kuota total habis ditolak dengan alasan; pembelian pertama ok sebelum ada pesanan terkonfirmasi dan ditolak sesudahnya; pesanan dibatalkan mengembalikan kuota per pengguna; RPC melaporkan layak/tidak beserta alasan; menghitung untuk pengguna lain ditolak 42501; hitung pemakaian oleh admin benar (pending + confirmed = 2, cancelled tidak dihitung) dan ditolak untuk agen. Skema Zod (9 kasus) dan `tsc --noEmit` lolos.
+
+**Belum tercakup:** `rule_configuration` (aturan penumpukan/prioritas) tetap belum dievaluasi; tidak ada pembatasan berdasarkan organisasi, wilayah, atau tanggal daftar akun.

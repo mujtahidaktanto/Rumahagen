@@ -55,6 +55,10 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     .single();
 
   if (error) {
+    if (error.code === "23514") {
+      // Ditolak trigger harga (0131/0134): promosi tidak berlaku, tidak layak, atau kuota habis. Pesan sudah berbahasa pengguna.
+      throw new ApiError("VALIDATION_ERROR", error.message.replace(/^commercial_orders: /, ""));
+    }
     throw error;
   }
 

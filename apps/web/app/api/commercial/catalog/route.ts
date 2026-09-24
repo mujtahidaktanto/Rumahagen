@@ -7,6 +7,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { parsePagination, buildPaginationMeta } from "@/lib/api/pagination";
+import { annotateAddonsWithPromotionOffers } from "@/lib/commercial/promotion-offers";
 import { createClient } from "@/lib/supabase/server";
 
 export const GET = withApiHandler({}, async (ctx) => {
@@ -24,5 +25,7 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw error;
   }
 
-  return { data, pagination: buildPaginationMeta(limit, offset, count ?? 0) };
+  // Pengguna login: setiap addon berpromosi diberi promotion_offer (berlaku/tidak, alasan, harga akhir).
+  const annotated = await annotateAddonsWithPromotionOffers(supabase, ctx.userId, data ?? []);
+  return { data: annotated, pagination: buildPaginationMeta(limit, offset, count ?? 0) };
 });

@@ -67,6 +67,8 @@
   .ra-btn-sm{height:44px;}
   .ra-chip{height:44px;}
   .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+  .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .meter > div{height:100%;background:var(--ra-blue-600);}
 </style>
 </helmet>
 <div class="app">
@@ -76,7 +78,7 @@
     <span class="ra-badge ra-badge-info">{{aktorLabel}}</span>
   </div>
   <div class="main ra-scroll">
-      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi memotong harga <strong>pesanan baru</strong> dan dihitung server; pesanan lama tidak berubah. Promosi hanya berlaku bila berstatus Aktif dan tanggal hari ini berada dalam masa berlakunya, serta dipilih pada sebuah add-on. Promosi yang dipakai add-on atau pesanan tidak bisa dihapus (nonaktifkan saja). Aturan kelayakan (siapa yang berhak) belum tersedia.</p></div>
+      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi memotong harga <strong>pesanan baru</strong> dan dihitung server; pesanan lama tidak berubah. Promosi hanya berlaku bila berstatus Aktif dan tanggal hari ini berada dalam masa berlakunya, serta dipilih pada sebuah add-on. Promosi yang dipakai add-on atau pesanan tidak bisa dihapus (nonaktifkan saja). Aturan kelayakan (peran, pembelian pertama, harga minimum, batas pemakaian) dievaluasi server; pesanan yang tidak layak ditolak dengan alasan.</p></div>
       <sc-if value="{{readOnly}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md">Peran Manager hanya bisa melihat promosi. Mengubah hanya untuk Admin dan Superadmin.</p></div></sc-if>
     <sc-if value="{{canManage}}" hint-placeholder-val="{{true}}"><a class="ra-btn ra-btn-primary" style="width:100%;" href="M14-Form-Promosi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Buat Promosi</a></sc-if>
     <div class="chip-row" role="group" aria-label="Filter status"><sc-for list="{{chips}}" as="c" hint-placeholder-count="6"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for></div>
@@ -88,7 +90,7 @@
         <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada promosi yang cocok</span></div></sc-if></div>
     <sc-if value="{{showRows}}" hint-placeholder-val="{{true}}"><sc-for list="{{rows}}" as="r" hint-placeholder-count="5"><div class="card card-pad" style="display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;align-items:flex-start;gap:10px;"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{r.name}}</div><div class="mono ra-caption">{{r.code}}</div></div><span class="ra-badge {{r.badge}}">{{r.label}}</span></div>
-      <div class="ra-label-lg">{{r.benefit}}</div><div class="ra-caption">{{r.window}} · dipakai {{r.addons}} add-on</div>
+      <div class="ra-label-lg">{{r.benefit}}</div><div class="ra-caption">{{r.window}} · dipakai {{r.addons}} add-on</div><div class="ra-caption">{{r.elig}} · pemakaian {{r.usage}}</div><sc-if value="{{r.full}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-danger">Kuota habis</span></sc-if>
       <div style="display:flex;gap:8px;flex-wrap:wrap;"><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M14-Form-Promosi.dc.html">Ubah</a>
         <sc-if value="{{r.showActivate}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary ra-btn-sm" disabled="{{r.activateOff}}" onClick="{{r.activate}}">Aktifkan</button></sc-if>
         <sc-if value="{{r.showDeactivate}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.deactivate}}">Nonaktifkan</button></sc-if></div>
@@ -168,14 +170,16 @@ class Component extends DCLogic {
     var fmtD = function(iso){ if (!iso) return 'Tanpa batas'; var d = new Date(iso); var M = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; return d.getUTCDate() + ' ' + M[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); };
     var rp = function(n){ return 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
     var PROMOS = [
-      { id: 'p1', code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', pct: 10, off: 0, st: 'active', from: '2026-09-01T00:00:00Z', to: '2026-10-31T00:00:00Z', addons: 2 },
-      { id: 'p2', code: 'HEMAT20K', name: 'Potongan Rp 20.000 Awal Bulan', pct: 0, off: 20000, st: 'active', from: '2026-10-15T00:00:00Z', to: '2026-10-31T00:00:00Z', addons: 1 },
-      { id: 'p3', code: 'LEBARAN25', name: 'Promo Lebaran 25% untuk Semua Paket Refresh dan Poin Belajar', pct: 25, off: 0, st: 'active', from: '2026-03-01T00:00:00Z', to: '2026-04-15T00:00:00Z', addons: 0 },
+      { id: 'p1', code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', pct: 10, off: 0, st: 'active', from: '2026-09-01T00:00:00Z', to: '2026-10-31T00:00:00Z', addons: 2, roles: 'Agen', first: true, maxTotal: 100, maxUser: 1, min: 0, used: 37 },
+      { id: 'p2', code: 'HEMAT20K', name: 'Potongan Rp 20.000 Awal Bulan', pct: 0, off: 20000, st: 'active', from: '2026-10-15T00:00:00Z', to: '2026-10-31T00:00:00Z', addons: 1, roles: '', first: false, maxTotal: 50, maxUser: 0, min: 100000, used: 50 },
+      { id: 'p3', code: 'LEBARAN25', name: 'Promo Lebaran 25% untuk Semua Paket Refresh dan Poin Belajar', pct: 25, off: 0, st: 'active', from: '2026-03-01T00:00:00Z', to: '2026-04-15T00:00:00Z', addons: 0, roles: '', first: false, maxTotal: 0, maxUser: 0, min: 0, used: 210 },
       { id: 'p4', code: 'PROMO_DRAF', name: 'Promo Draf', pct: 5, off: 0, st: 'draft', from: '', to: '', addons: 0 },
       { id: 'p5', code: 'AKHIR_TAHUN', name: 'Diskon Akhir Tahun', pct: 0, off: 50000, st: 'inactive', from: '', to: '', addons: 0 }
     ];
     var eff = function(p){ if (p.st !== 'active') return p.st; if (p.to && new Date(p.to).getTime() < NOW) return 'expired'; if (p.from && new Date(p.from).getTime() > NOW) return 'scheduled'; return 'active'; };
     var STS = { draft: ['Draf','ra-badge-neutral'], scheduled: ['Terjadwal','ra-badge-info'], active: ['Aktif','ra-badge-success'], expired: ['Kedaluwarsa','ra-badge-danger'], inactive: ['Nonaktif','ra-badge-warning'] };
+    var eligText = function(p){ var a = []; if (p.roles) a.push('Untuk ' + p.roles); if (p.first) a.push('Pembelian pertama'); if (p.min) a.push('Min. ' + rp(p.min)); if (p.maxUser) a.push('Maks ' + p.maxUser + ' per pengguna'); return a.length ? a.join(' · ') : 'Semua pembeli'; };
+    var usageText = function(p){ return p.maxTotal ? (p.used || 0) + ' / ' + p.maxTotal : String(p.used || 0); };
     var self = this, mode = pr.state || 'normal', canManage = aktor !== 'manager';
     var all = PROMOS.map(function(p){ return Object.assign({}, p, { st: st.st[p.id] || p.st }); });
     var counts = { all: all.length }; all.forEach(function(p){ var e = eff(p); counts[e] = (counts[e] || 0) + 1; });
@@ -183,7 +187,7 @@ class Component extends DCLogic {
     var q = (st.q || '').toLowerCase();
     var rows = all.filter(function(p){ var e = eff(p); return (st.filter === 'all' || e === st.filter) && (!q || p.name.toLowerCase().indexOf(q) >= 0 || p.code.toLowerCase().indexOf(q) >= 0); }).map(function(p){
       var e = eff(p), m = STS[e]; var expiredWindow = !!p.to && new Date(p.to).getTime() < NOW;
-      return { code: p.code, name: p.name, benefit: p.pct ? p.pct + '%' : rp(p.off), window: fmtD(p.from) + ' – ' + fmtD(p.to), label: m[0], badge: m[1], addons: p.addons, inUse: p.addons > 0, canManage: canManage,
+      return { elig: eligText(p), usage: usageText(p), full: !!p.maxTotal && (p.used || 0) >= p.maxTotal, code: p.code, name: p.name, benefit: p.pct ? p.pct + '%' : rp(p.off), window: fmtD(p.from) + ' – ' + fmtD(p.to), label: m[0], badge: m[1], addons: p.addons, inUse: p.addons > 0, canManage: canManage,
         showActivate: canManage && p.st !== 'active', showDeactivate: canManage && p.st === 'active', activateOff: expiredWindow, hasReason: p.st !== 'active' && expiredWindow, reason: 'Masa berlaku sudah lewat; ubah tanggal akhir dulu.',
         activate: function(){ self.setState({ dialog: 'status', target: p.id, next: 'active', targetName: p.name }); }, deactivate: function(){ self.setState({ dialog: 'status', target: p.id, next: 'inactive', targetName: p.name }); } }; });
     var out = { aktorLabel: aktorLabel, canManage: canManage, readOnly: !canManage, chips: chips, rows: rows, q: st.q, setQ: this.setQ, showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showNoMatch: mode === 'normal' && rows.length === 0, showRows: mode === 'normal' && rows.length > 0,

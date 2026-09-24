@@ -76,6 +76,8 @@
   .radio-card{display:flex;flex-direction:column;gap:6px;padding:16px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);}
   .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
   .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+  .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .meter > div{height:100%;background:var(--ra-blue-600);}
 </style>
 </helmet>
 <div class="app">
@@ -141,9 +143,19 @@
           </div>
           <span class="ra-caption">Kosong berarti tanpa batas. Promosi hanya berlaku bila Aktif dan sekarang berada dalam rentang ini.</span>
         </div>
-        <div class="card card-pad" style="display:flex;flex-direction:column;gap:8px;background:var(--ra-ink-50);">
-          <span class="ra-title-md">Aturan kelayakan</span>
-          <p class="ra-body-md" style="color:var(--ra-ink-500);">Belum tersedia. Saat ini semua pembeli yang memesan add-on berpromosi mendapat potongan; pembatasan siapa yang berhak belum dievaluasi sistem.</p>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Aturan kelayakan <span class="ra-caption">(opsional)</span></span>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);">Kosongkan semua untuk promosi yang berlaku bagi semua pembeli. Server memeriksa aturan ini saat pesanan dibuat; pesanan yang tidak layak ditolak dengan alasan.</p>
+          <div class="field"><span class="ra-label-lg">Untuk peran</span><div class="chip-group" role="group" aria-label="Peran yang berhak"><sc-for list="{{roleChips}}" as="c" hint-placeholder-count="6"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.l}}</button></sc-for></div><span class="ra-caption">Tidak ada yang dipilih berarti semua peran.</span></div>
+          <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Hanya pembelian pertama</span><span class="ra-caption">Pembeli yang belum punya pesanan terkonfirmasi.</span></div><button class="switch {{firstClass}}" role="switch" aria-checked="{{firstChecked}}" aria-label="Hanya pembelian pertama" onClick="{{toggleFirst}}"><div class="switch-knob"></div></button></div>
+          <div class="field-row3" style="">
+            <div class="field"><label class="ra-label-lg" for="e-total">Batas total pemakaian</label><input id="e-total" class="ra-input" type="number" min="1" placeholder="Tanpa batas" value="{{maxTotal}}" onInput="{{onMaxTotal}}"><sc-if value="{{totalErr}}" hint-placeholder-val="{{false}}"><span class="err">{{totalMsg}}</span></sc-if></div>
+            <div class="field"><label class="ra-label-lg" for="e-user">Batas per pengguna</label><input id="e-user" class="ra-input" type="number" min="1" placeholder="Tanpa batas" value="{{maxUser}}" onInput="{{onMaxUser}}"><sc-if value="{{userErr}}" hint-placeholder-val="{{false}}"><span class="err">{{userMsg}}</span></sc-if></div>
+            <div class="field"><label class="ra-label-lg" for="e-min">Harga add-on minimum (Rp)</label><input id="e-min" class="ra-input" type="number" min="1" placeholder="Tanpa minimum" value="{{minPrice}}" onInput="{{onMinPrice}}"><sc-if value="{{minErr}}" hint-placeholder-val="{{false}}"><span class="err">{{minMsg}}</span></sc-if></div>
+          </div>
+          <span class="ra-caption">Pemakaian dihitung dari pesanan menunggu pembayaran dan terkonfirmasi; pesanan dibatalkan atau kedaluwarsa mengembalikan kuota.</span>
+          <div style="background:var(--ra-ink-50);border-radius:var(--ra-radius-md);padding:12px;"><span class="ra-label-lg">Ringkasan: </span><span class="ra-body-md">{{eligSummary}}</span></div>
+          <sc-if value="{{dipakai}}" hint-placeholder-val="{{false}}"><div><div class="ra-caption" style="margin-bottom:6px;">Terpakai {{usedText}}</div><div class="meter" role="progressbar" aria-label="Kuota promosi terpakai"><div style="{{usedStyle}}"></div></div></div></sc-if>
         </div>
         <sc-if value="{{isCreate}}" hint-placeholder-val="{{true}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi baru berstatus Draf dan belum memberi potongan sampai diaktifkan.</p></div></sc-if>
         <div style="display:flex;gap:10px;justify-content:flex-end;"><a class="ra-btn ra-btn-secondary" href="M14-Promosi-Admin.dc.html">Batal</a><button class="ra-btn ra-btn-primary" disabled="{{saving}}" onClick="{{save}}">{{saveLabel}}</button></div></div></div>
@@ -156,7 +168,7 @@ class Component extends DCLogic {
     super(props);
     this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { f: null, tried: false, done: false, failed: false });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'onCode', 'onName', 'onValue', 'onFrom', 'onTo', 'save'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'onCode', 'onName', 'onValue', 'onFrom', 'onTo', 'onMaxTotal', 'onMaxUser', 'onMinPrice', 'toggleFirst', 'save'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
@@ -164,25 +176,33 @@ class Component extends DCLogic {
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
   mode(){ return this.props.mode || 'create'; }
-  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', kind: 'percent', value: '', from: '', to: '' }; return { code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', kind: 'percent', value: '10', from: '2026-09-01T00:00', to: '2026-10-31T00:00' }; }
+  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', kind: 'percent', value: '', from: '', to: '', roles: [], first: false, maxTotal: '', maxUser: '', minPrice: '' }; return { code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', kind: 'percent', value: '10', from: '2026-09-01T00:00', to: '2026-10-31T00:00', roles: ['agent'], first: true, maxTotal: '100', maxUser: '1', minPrice: '' }; }
   up(k, v){ var f = Object.assign({}, this.form()); f[k] = v; this.setState({ f: f }); }
   onCode(e){ this.up('code', e.target.value); }
   onName(e){ this.up('name', e.target.value); }
   onValue(e){ this.up('value', e.target.value); }
   onFrom(e){ this.up('from', e.target.value); }
   onTo(e){ this.up('to', e.target.value); }
+  onMaxTotal(e){ this.up('maxTotal', e.target.value); }
+  onMaxUser(e){ this.up('maxUser', e.target.value); }
+  onMinPrice(e){ this.up('minPrice', e.target.value); }
+  toggleFirst(){ this.up('first', !this.form().first); }
   problems(f){
     var p = {}, v = Number(f.value);
     if (!String(f.code).trim()) p.code = 'Kode wajib diisi.'; else if (!/^[A-Za-z0-9_.-]+$/.test(String(f.code).trim())) p.code = 'Kode hanya huruf, angka, titik, garis bawah, dan strip.';
     if (!String(f.name).trim()) p.name = 'Nama wajib diisi.';
     if (f.kind === 'percent') { if (!(v > 0 && v <= 100)) p.value = 'Persentase harus lebih dari 0 dan paling banyak 100.'; } else { if (!(v > 0)) p.value = 'Nominal harus lebih dari 0.'; }
     if (f.from && f.to && f.to <= f.from) p.to = 'Akhir masa berlaku harus setelah awal.';
+    var isInt = function(s){ return /^[0-9]+$/.test(String(s).trim()) && Number(s) >= 1; };
+    if (String(f.maxTotal).trim() && !isInt(f.maxTotal)) p.total = 'Isi bilangan bulat minimal 1, atau kosongkan.';
+    if (String(f.maxUser).trim() && !isInt(f.maxUser)) p.user = 'Isi bilangan bulat minimal 1, atau kosongkan.';
+    if (String(f.minPrice).trim() && !(Number(f.minPrice) > 0)) p.min = 'Isi angka lebih dari 0, atau kosongkan.';
     return p;
   }
   save(){
     if (this.props.simpan === 'menyimpan') return;
     var p = this.problems(this.form());
-    if (p.code || p.name || p.value || p.to) { this.setState({ tried: true }); return; }
+    if (p.code || p.name || p.value || p.to || p.total || p.user || p.min) { this.setState({ tried: true }); return; }
     if (this.props.simpan === 'gagal') { this.setState({ failed: true, done: false }); return; }
     this.setState({ done: true, failed: false, tried: false });
   }
@@ -201,10 +221,15 @@ class Component extends DCLogic {
     var self = this, f = this.form(), tried = st.tried === true, p = tried ? this.problems(f) : {}, v = Number(f.value);
     var dipakai = this.mode() === 'edit_dipakai';
     var fmt = function(n){ return 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
-    var samples = [75000, 200000].map(function(base){ var ok = v > 0 && (f.kind === 'percent' ? v <= 100 : true); var res = !ok ? base : (f.kind === 'percent' ? Math.round(base * (1 - v / 100)) : base - v); var zero = ok && res <= 0; return { base: fmt(base), res: zero ? 'tidak valid (harga akhir harus lebih dari 0)' : fmt(res), zero: zero, changed: ok && !zero }; });
+    var minP = Number(f.minPrice) > 0 ? Number(f.minPrice) : 0;
+    var samples = [75000, 200000].map(function(base){ var ok = v > 0 && (f.kind === 'percent' ? v <= 100 : true); var res = !ok ? base : (f.kind === 'percent' ? Math.round(base * (1 - v / 100)) : base - v); var zero = ok && res <= 0; var below = minP > 0 && base < minP; return { base: fmt(base), res: below ? 'promosi tidak berlaku (harga di bawah minimum ' + fmt(minP) + ')' : (zero ? 'tidak valid (harga akhir harus lebih dari 0)' : fmt(res)), zero: zero, changed: ok && !zero && !below }; });
     var kinds = [['percent','Persentase (%)'],['amount','Nominal (Rp)']].map(function(k){ return { l: k[1], checked: f.kind === k[0] ? 'true' : 'false', pick: function(){ self.up('kind', k[0]); } }; });
     var out = { aktorLabel: aktorLabel, pageTitle: this.mode() === 'create' ? 'Buat Promosi' : 'Ubah Promosi', code: f.code, name: f.name, value: f.value, from: f.from, to: f.to, onCode: this.onCode, onName: this.onName, onValue: this.onValue, onFrom: this.onFrom, onTo: this.onTo,
-      codeErr: !!p.code, codeMsg: p.code || '', nameErr: !!p.name, valueErr: !!p.value, valueMsg: p.value || '', toErr: !!p.to, toMsg: p.to || '', kinds: kinds, isPercent: f.kind === 'percent', valueLabel: f.kind === 'percent' ? 'Persentase potongan' : 'Nominal potongan (Rp)',
+      codeErr: !!p.code, codeMsg: p.code || '', roleChips: [['agent','Agen'],['developer_partner','Developer Partner'],['buyer','Pembeli'],['manager','Manager'],['admin','Admin'],['superadmin','Superadmin']].map(function(c){ var on = f.roles.indexOf(c[0]) >= 0; return { l: c[1], pressed: on ? 'true' : 'false', pick: function(){ var l = f.roles.slice(); if (on) l.splice(l.indexOf(c[0]), 1); else l.push(c[0]); self.up('roles', l); } }; }),
+      firstChecked: f.first ? 'true' : 'false', firstClass: f.first ? 'is-on' : '', toggleFirst: this.toggleFirst, maxTotal: f.maxTotal, maxUser: f.maxUser, minPrice: f.minPrice, onMaxTotal: this.onMaxTotal, onMaxUser: this.onMaxUser, onMinPrice: this.onMinPrice,
+      totalErr: !!p.total, totalMsg: p.total || '', userErr: !!p.user, userMsg: p.user || '', minErr: !!p.min, minMsg: p.min || '',
+      eligSummary: (function(){ var a = []; if (f.roles.length) a.push('Untuk ' + f.roles.length + ' peran'); if (f.first) a.push('pembelian pertama'); if (String(f.minPrice).trim() && Number(f.minPrice) > 0) a.push('harga add-on min. ' + fmt(Number(f.minPrice))); if (String(f.maxUser).trim() && !p.user) a.push('maks ' + f.maxUser + ' per pengguna'); if (String(f.maxTotal).trim() && !p.total) a.push('maks ' + f.maxTotal + ' total'); return a.length ? a.join(' · ') : 'Berlaku untuk semua pembeli'; })(),
+      usedText: '37 dari ' + (f.maxTotal || 'tanpa batas'), usedStyle: 'width:' + (Number(f.maxTotal) > 0 ? Math.min(100, Math.round(37 / Number(f.maxTotal) * 100)) : 0) + '%;', nameErr: !!p.name, valueErr: !!p.value, valueMsg: p.value || '', toErr: !!p.to, toMsg: p.to || '', kinds: kinds, isPercent: f.kind === 'percent', valueLabel: f.kind === 'percent' ? 'Persentase potongan' : 'Nominal potongan (Rp)',
       samples: samples, dipakai: dipakai, isCreate: this.mode() === 'create', saving: pr.simpan === 'menyimpan', saveLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : (this.mode() === 'create' ? 'Simpan Draf' : 'Simpan Perubahan'), save: this.save,
       done: st.done === true, failed: st.failed === true && st.done !== true };
     return Object.assign(shell, out);

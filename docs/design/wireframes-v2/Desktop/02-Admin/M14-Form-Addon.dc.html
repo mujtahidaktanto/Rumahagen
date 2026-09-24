@@ -76,6 +76,8 @@
   .radio-card{display:flex;flex-direction:column;gap:6px;padding:16px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);}
   .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
   .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+  .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .meter > div{height:100%;background:var(--ra-blue-600);}
 </style>
 </helmet>
 <div class="app">
@@ -215,9 +217,9 @@ class Component extends DCLogic {
     // Promosi kedaluwarsa tidak bisa dipilih baru, tetapi tetap tampil bila sedang terhubung ke add-on ini (dengan peringatan).
     var NOW = new Date('2026-09-24T00:00:00Z').getTime();
     var PL = [
-      { id: 'p1', code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', pct: 10, off: 0, from: '2026-09-01T00:00:00Z', to: '2026-10-31T00:00:00Z', win: '1 Sep – 31 Okt 2026' },
-      { id: 'p2', code: 'HEMAT20K', name: 'Potongan Rp 20.000 Awal Bulan', pct: 0, off: 20000, from: '2026-10-15T00:00:00Z', to: '2026-10-31T00:00:00Z', win: '15 – 31 Okt 2026' },
-      { id: 'p3', code: 'LEBARAN25', name: 'Promo Lebaran 25% untuk Semua Paket Refresh dan Poin Belajar', pct: 25, off: 0, from: '2026-03-01T00:00:00Z', to: '2026-04-15T00:00:00Z', win: '1 Mar – 15 Apr 2026' }
+      { id: 'p1', code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', pct: 10, off: 0, from: '2026-09-01T00:00:00Z', to: '2026-10-31T00:00:00Z', win: '1 Sep – 31 Okt 2026', elig: 'Untuk Agen · pembelian pertama' },
+      { id: 'p2', code: 'HEMAT20K', name: 'Potongan Rp 20.000 Awal Bulan', pct: 0, off: 20000, from: '2026-10-15T00:00:00Z', to: '2026-10-31T00:00:00Z', win: '15 – 31 Okt 2026', elig: 'Min. Rp 100.000 · kuota terbatas' },
+      { id: 'p3', code: 'LEBARAN25', name: 'Promo Lebaran 25% untuk Semua Paket Refresh dan Poin Belajar', pct: 25, off: 0, from: '2026-03-01T00:00:00Z', to: '2026-04-15T00:00:00Z', win: '1 Mar – 15 Apr 2026', elig: 'Semua pembeli' }
     ];
     var plMode = pr.promoList || 'loaded';
     var eff = function(x){ if (new Date(x.to).getTime() < NOW) return 'expired'; if (new Date(x.from).getTime() > NOW) return 'scheduled'; return 'active'; };
@@ -233,7 +235,7 @@ class Component extends DCLogic {
     var promoOptions = [{ id: 'none', name: 'Tanpa promosi', meta: 'Add-on dijual dengan harga normal', badge: '', badgeClass: '', hasBadge: false, checked: f.promo === 'none' ? 'true' : 'false', dis: false, reason: '', hasReason: false, pick: function(){ self.up('promo', 'none'); } }];
     if (plMode !== 'empty') { PL.forEach(function(x){
       var e = eff(x), b = EFFL[e]; var dis = e === 'expired' && f.promo !== x.id;
-      promoOptions.push({ id: x.id, name: x.name, meta: x.code + ' · ' + (x.pct ? x.pct + '%' : fmt(x.off)) + ' · ' + x.win, badge: b[0], badgeClass: b[1], hasBadge: true, checked: f.promo === x.id ? 'true' : 'false', dis: dis, reason: dis ? 'Sudah kedaluwarsa; perbarui masa berlakunya di Promosi.' : '', hasReason: dis, pick: function(){ if (dis) return; self.up('promo', x.id); } });
+      promoOptions.push({ id: x.id, name: x.name, meta: x.code + ' · ' + (x.pct ? x.pct + '%' : fmt(x.off)) + ' · ' + x.win + ' · ' + x.elig, badge: b[0], badgeClass: b[1], hasBadge: true, checked: f.promo === x.id ? 'true' : 'false', dis: dis, reason: dis ? 'Sudah kedaluwarsa; perbarui masa berlakunya di Promosi.' : '', hasReason: dis, pick: function(){ if (dis) return; self.up('promo', x.id); } });
     }); }
     var vts = [['days','Berlaku beberapa hari'],['unlimited','Tanpa batas waktu']].map(function(t){ return { l: t[1], checked: f.vtype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('vtype', t[0]); }, dis: locked }; });
     var ctypes = [['listing_refresh','Refresh Listing'],['learning_point','Poin Belajar']].map(function(t){ return { l: t[1], pressed: f.ctype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('ctype', t[0]); }, dis: locked }; });

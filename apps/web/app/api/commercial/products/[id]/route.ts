@@ -4,6 +4,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { annotateAddonsWithPromotionOffers } from "@/lib/commercial/promotion-offers";
 import { createClient } from "@/lib/supabase/server";
 
 export const GET = withApiHandler({}, async (ctx) => {
@@ -21,5 +22,6 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw new ApiError("NOT_FOUND", "Produk tidak ditemukan atau Anda tidak punya akses.");
   }
 
-  return { data };
+  const [annotated] = await annotateAddonsWithPromotionOffers(supabase, ctx.userId, [data]);
+  return { data: annotated };
 });

@@ -1,11 +1,15 @@
 // lib/validation/commercial-promotions.ts
 // Skema Zod untuk promosi M14 (admin). Promosi mengubah harga pesanan lewat benefit_configuration (migration 0131):
-// tepat SATU dari percent_off (0 < n <= 100) atau amount_off (> 0). CHECK yang sama ditegakkan database (migration 0133).
-// rule_configuration/eligibility_configuration belum dievaluasi sistem, jadi API menolak isian tak kosong.
+// tepat SATU dari percent_off (0 < n <= 100) atau amount_off (> 0). Aturan kelayakan (eligibility) dievaluasi server saat pesanan dibuat
+// (migration 0134): kunci yang dikenal roles, first_purchase_only, max_redemptions, max_redemptions_per_user, min_list_price.
+// CHECK yang sama ditegakkan database (migration 0133/0134). rule_configuration belum dievaluasi sistem, jadi API menolak isian tak kosong.
 
 import { z } from "zod";
 
 export const promotionStatusEnum = z.enum(["draft", "active", "inactive", "expired"]);
+
+// Role yang punya izin pembelian (m14.commercial_purchase_access.access).
+export const promotionEligibleRoleEnum = z.enum(["agent", "developer_partner", "buyer", "manager", "admin", "superadmin"]);
 
 const benefitSchema = z
   .object({
@@ -17,6 +21,17 @@ const benefitSchema = z
     message: "Isi tepat satu: percent_off atau amount_off.",
   });
 
+export const eligibilitySchema = z
+  .object({
+    roles: z.array(promotionEligibleRoleEnum).min(1).max(6).optional(),
+    first_purchase_only: z.boolean().optional(),
+    max_redemptions: z.coerce.number().int().min(1).max(1000000000).optional(),
+    max_redemptions_per_user: z.coerce.number().int().min(1).max(1000000).optional(),
+    min_list_price: z.coerce.number().gt(0).max(999999999999).optional(),
+  })
+  .strict();
+export type PromotionEligibility = z.infer<typeof eligibilitySchema>;
+
 const emptyObject = z
   .record(z.string(), z.unknown())
   .refine((v) => Object.keys(v).length === 0, { message: "Belum dievaluasi sistem; kosongkan." });
@@ -25,10 +40,10 @@ const promotionBase = z.object({
   code: z.string().trim().min(1).max(100).regex(/^[A-Za-z0-9_.-]+$/, "Kode hanya huruf, angka, titik, garis bawah, dan strip."),
   name: z.string().trim().min(1).max(200),
   benefit: benefitSchema,
+  eligibility: eligibilitySchema.optional(),
   valid_from: z.string().datetime({ offset: true }).nullable().optional(),
   valid_to: z.string().datetime({ offset: true }).nullable().optional(),
   rule_configuration: emptyObject.optional(),
-  eligibility_configuration: emptyObject.optional(),
 });
 
 type PromotionShape = z.infer<typeof promotionBase>;
@@ -44,7 +59,7 @@ export const createPromotionSchema = promotionBase
   .superRefine(checkWindow);
 export type CreatePromotionInput = z.infer<typeof createPromotionSchema>;
 
-// PUT = form penuh; status diubah lewat PATCH /status.
+// PUT = form penuh (eligibility yang tidak dikirim dikosongkan); status diubah lewat PATCH /status.
 export const updatePromotionSchema = promotionBase.superRefine(checkWindow);
 export type UpdatePromotionInput = z.infer<typeof updatePromotionSchema>;
 
