@@ -144,6 +144,9 @@
       </div>
     </div>
     <div class="main ra-scroll">
+      <sc-if value="{{pageLoading}}" hint-placeholder-val="{{false}}"><div class="card card-pad" style="display:flex;flex-direction:column;gap:14px;"><div class="ra-skel" style="height:72px;"></div><div class="ra-skel" style="height:20px;width:60%;"></div><div class="ra-skel" style="height:120px;"></div></div></sc-if>
+      <sc-if value="{{pageError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Proyek gagal dimuat</span><p class="ra-body-md">Periksa koneksi Anda lalu coba lagi.</p><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+      <sc-if value="{{pageReady}}" hint-placeholder-val="{{true}}">
       <div class="card card-pad" style="display:flex;align-items:center;gap:20px;">
         <div class="thumb" style="width:96px;height:72px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
         <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:6px;">
@@ -184,22 +187,23 @@
             <p class="ra-body-md">Persetujuan klaim hanya membuka pembuatan listing draft oleh agen. Anda tidak mengelola listing agen.</p>
             <div><a class="ra-btn ra-btn-primary" href="M06-Review-Klaim.dc.html">Buka Review Klaim</a></div>
           </div></sc-if>
+      </sc-if>
     </div>
 
   <sc-if value="{{statusOpen}}" hint-placeholder-val="{{false}}">
-    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" onClick="{{stopClick}}">
+    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
       <span class="ra-title-lg">Ubah status proyek</span>
       <div style="display:flex;flex-direction:column;gap:8px;" role="radiogroup" aria-label="Status proyek">
         <sc-for list="{{statusOptions}}" as="o" hint-placeholder-count="4">
           <button class="ra-chip {{o.cls}}" style="height:auto;min-height:44px;justify-content:flex-start;padding:10px 14px;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;" disabled="{{o.disabled}}" onClick="{{o.pick}}"><span>{{o.l}}</span><sc-if value="{{o.hasNote}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="font-weight:400;">{{o.note}}</span></sc-if></button>
         </sc-for>
       </div>
-      <sc-if value="{{warnInactive}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Proyek yang dinonaktifkan tidak bisa Anda aktifkan lagi. Tim RumahAgen yang harus mengaktifkannya.</p></div></sc-if>
+      <sc-if value="{{warnInactive}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Proyek nonaktif tidak tampil publik dan tidak bisa Anda jadikan Aktif lagi. Anda masih bisa mengembalikannya ke Coming Soon atau Sold Out.</p></div></sc-if>
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{confirmStatus}}">Simpan Status</button></div>
     </div></div>
   </sc-if>
   <sc-if value="{{deleteOpen}}" hint-placeholder-val="{{false}}">
-    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" onClick="{{stopClick}}">
+    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
       <span class="ra-title-lg">Hapus proyek ini?</span>
       <div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Semua media, marketing kit, dan klaim agen pada proyek ini ikut terhapus dan tidak bisa dikembalikan. Listing yang sudah dibuat agen tetap ada, tetapi tidak lagi tertaut ke proyek.</p></div>
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-danger" onClick="{{confirmDelete}}">Ya, Hapus Proyek</button></div>
@@ -209,7 +213,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"status":{"editor":"enum","default":"coming_soon","options":["coming_soon","active","sold_out","inactive"],"section":"Skenario proyek"},"media":{"editor":"enum","default":"ada","options":["ada","kosong","memuat"],"section":"Skenario media"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"status":{"editor":"enum","default":"coming_soon","options":["coming_soon","active","sold_out","inactive"],"section":"Skenario proyek"},"media":{"editor":"enum","default":"ada","options":["ada","kosong","memuat"],"section":"Skenario media"},"halaman":{"editor":"enum","default":"normal","options":["normal","memuat","gagal_muat"],"section":"Skenario halaman"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -249,10 +253,10 @@ class Component extends DCLogic {
     var media = pr.media || 'ada';
     var sm = { active: ['Aktif','ra-badge-success'], coming_soon: ['Coming Soon','ra-badge-info'], sold_out: ['Sold Out','ra-badge-warning'], inactive: ['Nonaktif','ra-badge-neutral'] }[status];
     var bannerMap = {
-      coming_soon: { cls: 'banner-info', title: 'Menunggu aktivasi tim RumahAgen', text: 'Proyek belum tampil ke agen dan publik. Lengkapi media dan marketing kit agar proses peninjauan cepat.' },
+      coming_soon: { cls: 'banner-info', title: 'Menunggu persetujuan tim RumahAgen', text: 'Proyek sudah tampil publik sebagai "Segera hadir". Status Aktif hanya diberikan tim RumahAgen. Lengkapi media dan marketing kit, atau hubungi tim.' },
       active: { cls: 'banner-ok', title: 'Aktif — diaktifkan tim RumahAgen', text: 'Proyek tampil publik dan bisa diklaim agen.' },
       sold_out: { cls: 'banner-warn', title: 'Sold Out', text: 'Proyek tetap tampil sebagai terjual habis. Klaim baru tidak lagi relevan.' },
-      inactive: { cls: 'banner-danger', title: 'Nonaktif', text: 'Proyek tidak tampil publik. Hanya tim RumahAgen yang dapat mengaktifkannya kembali.' }
+      inactive: { cls: 'banner-danger', title: 'Nonaktif', text: 'Proyek tidak tampil publik. Anda bisa mengembalikannya ke Coming Soon atau Sold Out; status Aktif hanya diberikan tim RumahAgen.' }
     };
     var b = bannerMap[status];
     var tabs = [['ringkasan','Ringkasan'],['media','Media'],['klaim','Klaim']].map(function(t){ return { label: t[1], cls: st.tab === t[0] ? 'is-active' : '', sel: function(){ self.selTab(t[0]); }, selected: st.tab === t[0] ? 'true' : 'false' }; });
@@ -262,9 +266,9 @@ class Component extends DCLogic {
       { kind: 'Foto', foto: true, video: false, name: 'kamar-utama.jpg' }
     ];
     var statusOptions = [
-      { v: 'coming_soon', l: 'Coming Soon', sel: st.pickStatus === 'coming_soon', disabled: false, note: '' },
+      { v: 'coming_soon', l: 'Coming Soon', sel: st.pickStatus === 'coming_soon', disabled: false, note: 'Tampil publik sebagai "Segera hadir".' },
       { v: 'sold_out', l: 'Sold Out', sel: st.pickStatus === 'sold_out', disabled: false, note: '' },
-      { v: 'inactive', l: 'Nonaktif', sel: st.pickStatus === 'inactive', disabled: false, note: 'Setelah nonaktif, hanya tim RumahAgen yang bisa mengaktifkan kembali.' },
+      { v: 'inactive', l: 'Nonaktif', sel: st.pickStatus === 'inactive', disabled: false, note: 'Tidak tampil publik.' },
       { v: 'active', l: 'Aktif', sel: false, disabled: true, note: 'Hanya tim RumahAgen.' }
     ].map(function(o){ return { l: o.l, note: o.note, hasNote: !!o.note, disabled: o.disabled, cls: o.sel ? 'is-selected' : '', pick: function(){ if (!o.disabled) self.setState({ pickStatus: o.v }); } }; });
     var out = {
@@ -273,6 +277,7 @@ class Component extends DCLogic {
       mediaLoading: media === 'memuat', mediaEmpty: media === 'kosong', mediaReady: media === 'ada', tiles: tiles,
       openStatus: this.openStatus, closeAll: this.closeAll, confirmStatus: this.confirmStatus, openDelete: this.openDelete, confirmDelete: this.confirmDelete,
       statusOpen: st.statusOpen === true, deleteOpen: st.deleteOpen === true, statusOptions: statusOptions,
+      pageLoading: (pr.halaman || 'normal') === 'memuat', pageError: (pr.halaman || 'normal') === 'gagal_muat', pageReady: (pr.halaman || 'normal') === 'normal',
       warnInactive: st.pickStatus === 'inactive', toast: st.toast, hasToast: !!st.toast
     };
     return Object.assign(shell, out);

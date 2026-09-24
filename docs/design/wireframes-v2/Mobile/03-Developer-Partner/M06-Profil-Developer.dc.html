@@ -60,6 +60,8 @@
   .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
   .kv dd{margin:0;font-size:14px;line-height:20px;}
   .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
 </style>
 </helmet>
 <div class="app">
@@ -80,6 +82,9 @@
         <a class="ra-btn ra-btn-primary" style="width:100%;" href="#">Hubungi Tim RumahAgen</a>
       </div></div>
     </sc-if>
+    <sc-if value="{{isUnlinked}}" hint-placeholder-val="{{false}}">
+      <div class="card card-pad" style="display:flex;flex-direction:column;gap:12px;"><span class="ra-title-md">Akun saya</span><div style="display:flex;align-items:center;gap:12px;"><div class="avatar" style="width:48px;height:48px;">HW</div><div style="min-width:0;"><div class="ra-label-lg">Hendra Wijaya</div><div class="ra-caption ra-truncate-1">hendra@kanaya.example.com</div></div></div><button class="ra-btn ra-btn-secondary ra-btn-sm" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></svg>Ganti foto profil</button></div>
+    </sc-if>
     <sc-if value="{{isLinked}}" hint-placeholder-val="{{true}}">
     <sc-if value="{{isInactive}}" hint-placeholder-val="{{false}}">
       <div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><div><span class="ra-label-lg">Perusahaan Nonaktif</span><p class="ra-body-md" style="margin-top:2px;">Proyek Anda tidak tampil publik. Hubungi tim RumahAgen.</p></div></div>
@@ -87,6 +92,12 @@
     <sc-if value="{{saved}}" hint-placeholder-val="{{false}}">
       <div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="ra-label-lg" style="flex:1;">Profil tersimpan</span><button class="ra-btn ra-btn-ghost ra-btn-sm" onClick="{{dismissSaved}}">Tutup</button></div>
     </sc-if>
+    <sc-if value="{{saveFailed}}" hint-placeholder-val="{{false}}">
+      <div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-label-lg">Profil gagal disimpan. Coba lagi.</span></div>
+    </sc-if>
+    <sc-if value="{{pLoading}}" hint-placeholder-val="{{false}}"><div class="card card-pad" style="display:flex;flex-direction:column;gap:14px;"><div class="ra-skel" style="height:28px;width:40%;"></div><div class="ra-skel" style="height:20px;"></div><div class="ra-skel" style="height:20px;width:80%;"></div><div class="ra-skel" style="height:20px;width:60%;"></div></div></sc-if>
+    <sc-if value="{{pError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Profil gagal dimuat</span><p class="ra-body-md">Periksa koneksi Anda lalu coba lagi.</p><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+    <sc-if value="{{pReady}}" hint-placeholder-val="{{true}}">
     <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:56px;height:56px;border-radius:12px;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;flex:none;">{{initial}}</div>
@@ -136,6 +147,7 @@
       <button class="ra-btn ra-btn-secondary ra-btn-sm" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></svg>Ganti foto profil</button>
     </div>
     </sc-if>
+    </sc-if>
   </div>
   <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
     <div class="drawer-scrim" onClick="{{closeDrawer}}"></div>
@@ -165,7 +177,7 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"izinEdit":{"editor":"boolean","default":true,"section":"Skenario izin (migration 0126)"},"statusPerusahaan":{"editor":"enum","default":"active","options":["active","inactive"],"section":"Skenario perusahaan"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"izinEdit":{"editor":"boolean","default":true,"section":"Skenario izin (migration 0126)"},"statusPerusahaan":{"editor":"enum","default":"active","options":["active","inactive"],"section":"Skenario perusahaan"},"muat":{"editor":"enum","default":"normal","options":["normal","memuat","gagal_muat"],"section":"Skenario muat"},"simpan":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -182,7 +194,7 @@ class Component extends DCLogic {
   onAbout(e){ this.setState({ about: e.target.value, saved: false }); }
   onPicName(e){ this.setState({ picName: e.target.value, saved: false }); }
   onPicContact(e){ this.setState({ picContact: e.target.value, saved: false }); }
-  save(){ if (this.state.name.trim().length > 0) this.setState({ saved: true }); }
+  save(){ if (this.state.name.trim().length === 0) return; if (this.props.simpan === 'gagal') { this.setState({ saved: false, saveFailed: true }); } else { this.setState({ saved: true, saveFailed: false }); } }
   dismissSaved(){ this.setState({ saved: false }); }
   renderVals() {
     var st = this.state, pr = this.props;
@@ -209,7 +221,9 @@ class Component extends DCLogic {
       onName: this.onName, onAbout: this.onAbout, onPicName: this.onPicName, onPicContact: this.onPicContact,
       save: this.save, dismissSaved: this.dismissSaved,
       saveDisabled: st.name.trim().length === 0, nameEmpty: st.name.trim().length === 0,
-      saved: st.saved === true, initial: (st.name.trim().charAt(0) || '?').toUpperCase()
+      saved: st.saved === true, saveFailed: st.saveFailed === true && st.saved !== true,
+      pLoading: (pr.muat || 'normal') === 'memuat', pError: (pr.muat || 'normal') === 'gagal_muat', pReady: (pr.muat || 'normal') === 'normal',
+      initial: (st.name.trim().charAt(0) || '?').toUpperCase()
     };
     return Object.assign(shell, out);
   }

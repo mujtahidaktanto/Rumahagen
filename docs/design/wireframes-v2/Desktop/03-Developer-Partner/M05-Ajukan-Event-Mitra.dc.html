@@ -144,15 +144,6 @@
       </div>
     </div>
     <div class="main ra-scroll">
-      <sc-if value="{{isUnlinked}}" hint-placeholder-val="{{false}}">
-        <div class="card"><div class="empty-big">
-          <div style="width:64px;height:64px;border-radius:50%;background:var(--ra-warning-100);color:var(--ra-warning-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></div>
-          <span class="ra-title-md" style="color:var(--ra-ink-900);">Akun Anda belum terhubung ke perusahaan developer</span>
-          <p class="ra-body-md" style="max-width:460px;">Tim RumahAgen perlu menghubungkan akun ini ke data perusahaan Anda. Selama belum terhubung, proyek, marketing kit, dan klaim belum bisa dikelola.</p>
-          <a class="ra-btn ra-btn-primary" href="#">Hubungi Tim RumahAgen</a>
-        </div></div>
-      </sc-if>
-      <sc-if value="{{isLinked}}" hint-placeholder-val="{{true}}">
       <div class="tabs" role="tablist"><sc-for list="{{tabs}}" as="t" hint-placeholder-count="2"><button class="tab {{t.cls}}" role="tab" aria-selected="{{t.selected}}" onClick="{{t.sel}}">{{t.label}}</button></sc-for></div>
       <sc-if value="{{tabList}}" hint-placeholder-val="{{true}}"><div style="display:flex;flex-direction:column;gap:16px;">
         <div class="card" style="overflow:hidden;">
@@ -174,6 +165,7 @@
         <sc-if value="{{submitted}}" hint-placeholder-val="{{false}}">
           <div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Pengajuan terkirim</span><p class="ra-body-md" style="margin-top:2px;">Status: Menunggu Persetujuan Tim. Event tampil publik setelah tim RumahAgen menerbitkannya. Anda mendapat notifikasi saat ada keputusan.</p></div></div>
         </sc-if>
+        <sc-if value="{{sendFailed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Pengajuan gagal terkirim. Data Anda masih di form; coba lagi.</p></div></sc-if>
         <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Event Anda <strong>tidak langsung tayang</strong>. Tim RumahAgen meninjau setiap pengajuan mitra sebelum diterbitkan.</p></div>
         <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
           <span class="ra-title-md">Informasi dasar</span>
@@ -183,7 +175,7 @@
         </div>
         <div class="card card-pad" style="display:flex;flex-direction:column;gap:14px;">
           <span class="ra-title-md">Lokasi &amp; waktu</span>
-          <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Event online</span><span class="ra-caption">Aktifkan jika lewat video call atau webinar.</span></div><button class="switch {{onlineClass}}" role="switch" aria-label="Event online" onClick="{{toggleOnline}}"><div class="switch-knob"></div></button></div>
+          <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Event online</span><span class="ra-caption">Aktifkan jika lewat video call atau webinar.</span></div><button class="switch {{onlineClass}}" role="switch" aria-checked="{{onlineChecked}}" aria-label="Event online" onClick="{{toggleOnline}}"><div class="switch-knob"></div></button></div>
           <sc-if value="{{isOnline}}" hint-placeholder-val="{{false}}"><div class="field"><label class="ra-label-lg" for="e-link">Link meeting</label><input id="e-link" class="ra-input" type="text" placeholder="https://meet.google.com/xxx-yyyy-zzz"></div></sc-if>
           <sc-if value="{{isOffline}}" hint-placeholder-val="{{true}}"><div class="field"><label class="ra-label-lg" for="e-loc">Lokasi</label><input id="e-loc" class="ra-input" type="text" placeholder="Galeri pemasaran, alamat lengkap"></div></sc-if>
           <div class="field-row"><div class="field"><label class="ra-label-lg" for="e-start">Mulai <span class="req">*</span></label><input id="e-start" class="ra-input" type="datetime-local"></div><div class="field"><label class="ra-label-lg" for="e-end">Selesai</label><input id="e-end" class="ra-input" type="datetime-local"></div></div>
@@ -194,18 +186,16 @@
           <div class="field"><label class="ra-label-lg" for="e-quota">Kuota peserta <span class="ra-caption">(informasi saja)</span></label><input id="e-quota" class="ra-input" style="max-width:180px;" type="text" inputmode="numeric" placeholder="50"></div>
           <div class="field"><span class="ra-label-lg">Mode registrasi</span><div class="chip-group" role="group" aria-label="Mode registrasi"><sc-for list="{{modes}}" as="m" hint-placeholder-count="3"><button class="ra-chip" aria-pressed="{{m.pressed}}" onClick="{{m.pick}}">{{m.label}}</button></sc-for></div><span class="ra-caption">{{modeHelp}}</span></div>
           <div class="field"><span class="ra-label-lg">Visibilitas setelah terbit</span><div class="chip-group" role="group" aria-label="Visibilitas"><sc-for list="{{vis}}" as="v" hint-placeholder-count="2"><button class="ra-chip" aria-pressed="{{v.pressed}}" onClick="{{v.pick}}">{{v.label}}</button></sc-for></div></div>
-          <div class="field"><label class="ra-label-lg" for="e-proj">Proyek terkait</label><select id="e-proj" class="ra-input"><option>Tidak terkait</option><option>Green Valley Residence</option><option>Menara Kertajaya Apartemen</option><option>Cluster Harmoni Residence</option></select><span class="ra-caption">Hanya proyek milik Anda.</span></div>
+          <div class="field"><label class="ra-label-lg" for="e-proj">Proyek terkait</label><select id="e-proj" class="ra-input" disabled="{{projDisabled}}"><sc-for list="{{projOpts}}" as="o" hint-placeholder-count="4"><option>{{o.l}}</option></sc-for></select><span class="ra-caption">{{projHint}}</span></div>
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px;">
-          <button class="ra-btn ra-btn-secondary" style="" type="button">Simpan Draf</button>
-          <button class="ra-btn ra-btn-primary" style="" onClick="{{submit}}">Ajukan untuk Persetujuan</button>
+          <button class="ra-btn ra-btn-primary" style="" onClick="{{submit}}" disabled="{{sending}}">{{sendLabel}}</button>
         </div></div></sc-if>
-      </sc-if>
     </div>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"tab":{"editor":"enum","default":"pengajuan","options":["pengajuan","ajukan"],"section":"Tab awal"},"daftar":{"editor":"enum","default":"normal","options":["normal","memuat","kosong"],"section":"Skenario daftar"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"tab":{"editor":"enum","default":"pengajuan","options":["pengajuan","ajukan"],"section":"Tab awal"},"daftar":{"editor":"enum","default":"normal","options":["normal","memuat","kosong"],"section":"Skenario daftar"},"kirim":{"editor":"enum","default":"normal","options":["normal","mengirim","gagal"],"section":"Skenario kirim"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -220,7 +210,7 @@ class Component extends DCLogic {
 
   onTitle(e){ this.setState({ title: e.target.value, submitted: false }); }
   toggleOnline(){ this.setState({ online: !this.state.online }); }
-  submit(){ if (this.state.title.trim().length === 0) { this.setState({ attempted: true }); } else { this.setState({ submitted: true, attempted: false }); } }
+  submit(){ if (this.props.kirim === 'mengirim') return; if (this.state.title.trim().length === 0) { this.setState({ attempted: true }); return; } if (this.props.kirim === 'gagal') { this.setState({ sendFailed: true, submitted: false }); return; } this.setState({ submitted: true, sendFailed: false, attempted: false }); }
   newSubmission(){ this.setState({ tab: 'ajukan', submitted: false, title: '' }); }
   renderVals() {
     var st = this.state, pr = this.props;
@@ -263,7 +253,11 @@ class Component extends DCLogic {
       cats: cats, modes: modes, modeHelp: modeHelp, vis: vis,
       isOnline: st.online, isOffline: !st.online, onlineClass: st.online ? 'is-on' : '', toggleOnline: this.toggleOnline,
       title: st.title, onTitle: this.onTitle, titleCount: st.title.length, titleError: st.attempted === true && st.title.trim().length === 0,
-      submit: this.submit, submitted: st.submitted === true, newSubmission: this.newSubmission
+      submit: this.submit, submitted: st.submitted === true, newSubmission: this.newSubmission,
+      sending: pr.kirim === 'mengirim', sendLabel: pr.kirim === 'mengirim' ? 'Mengirim…' : 'Ajukan untuk Persetujuan', sendFailed: st.sendFailed === true && st.submitted !== true,
+      onlineChecked: st.online ? 'true' : 'false',
+      projOpts: (linked ? ['Tidak terkait', 'Green Valley Residence', 'Menara Kertajaya Apartemen', 'Cluster Harmoni Residence'] : ['Tidak terkait']).map(function(p){ return { l: p }; }),
+      projDisabled: !linked, projHint: linked ? 'Hanya proyek milik Anda.' : 'Akun belum terhubung ke perusahaan, jadi event belum bisa dikaitkan ke proyek.'
     };
     return Object.assign(shell, out);
   }

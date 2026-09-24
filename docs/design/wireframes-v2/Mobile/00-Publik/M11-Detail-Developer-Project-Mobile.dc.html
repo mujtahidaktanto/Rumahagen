@@ -80,9 +80,11 @@
       <div class="map-box"><span class="ra-caption">Peta lokasi — placeholder</span></div>
     </div>
 
-    <div class="sec" style="padding-top:0;display:flex;align-items:center;gap:10px;border-top:1px solid var(--ra-ink-100);">
+    <div class="sec" style="padding-top:0;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--ra-ink-100);">
+      <div style="display:flex;align-items:center;gap:10px;">
       <div style="width:44px;height:44px;border-radius:var(--ra-radius-sm);background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none;">{{devInitials}}</div>
-      <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1">{{devName}}</div><span class="ra-caption">Developer Partner</span></div>
+      <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1">{{devName}}</div><span class="ra-caption">Developer Partner</span></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;"><span class="ra-label-md" style="color:var(--ra-ink-500);">Tentang Developer</span><p class="ra-body-md ra-truncate-2" style="color:var(--ra-ink-700);">{{devAbout}}</p></div>
     </div>
 
     <sc-if value="{{isAgentViewer}}" hint-placeholder-val="{{true}}">
@@ -91,7 +93,6 @@
           <span class="ra-label-lg" style="color:var(--ra-gold-700);">Info Kemitraan Agen</span>
           <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">Skema Komisi</span><span class="ra-body-md" style="font-weight:700;">{{commissionScheme}}</span></div>
           <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">Komisi Tambahan</span><span class="ra-body-md" style="font-weight:700;">{{extraCommission}}</span></div>
-          <sc-if value="{{isExclusive}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-warning" style="align-self:flex-start;">Eksklusif Per Wilayah</span></sc-if>
         </div>
       </div>
     </sc-if>
@@ -147,10 +148,10 @@ class Component extends DCLogic {
       certificateLabel: 'SHM', imbLabel: 'Sudah Ada', disputeFree: true,
       yearBuilt: 2025, furnishingLabel: 'Unfurnished', waterSourceLabel: 'PDAM',
       devInitials: 'KG', devName: 'PT Kanaya Group Developer',
+      devAbout: 'Pengembang kawasan hunian dan komersial di Tangerang Selatan sejak 2009, fokus pada rumah tapak dengan fasilitas kawasan terpadu.',
       isAgentViewer: viewer === 'agent', isGuestViewer: viewer === 'guest',
       commissionScheme: '2.5% dari harga jual',
-      extraCommission: 'Bonus Rp 5 Jt / unit',
-      isExclusive: true
+      extraCommission: 'Bonus Rp 5 Jt / unit'
     };
   }
 }

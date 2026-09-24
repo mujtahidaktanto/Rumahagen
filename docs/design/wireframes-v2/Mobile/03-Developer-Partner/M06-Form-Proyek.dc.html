@@ -60,6 +60,8 @@
   .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
   .kv dd{margin:0;font-size:14px;line-height:20px;}
   .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
 </style>
 </helmet>
 <div class="app">
@@ -101,8 +103,8 @@
                 <span class="ra-caption">{{cityHint}}</span>
                 <sc-if value="{{cityError}}" hint-placeholder-val="{{false}}"><span class="err">Pilih kota / kabupaten.</span></sc-if></div>
             </div>
-            <div class="field"><label class="ra-label-lg" for="p-dist">Kecamatan <span class="req">*</span></label><select id="p-dist" class="ra-input"><option>Pilih kecamatan</option><option>Serpong</option><option>Pagedangan</option></select></div>
-            <div class="field"><label class="ra-label-lg" for="p-loc">Alamat / lokasi proyek</label><input id="p-loc" class="ra-input" type="text" maxlength="255" placeholder="Nama kawasan, jalan"></div>
+            <div class="field"><label class="ra-label-lg" for="p-dist">Kecamatan <span class="req">*</span></label><select id="p-dist" class="ra-input" disabled="{{distDisabled}}" onChange="{{onDistrict}}"><sc-for list="{{dists}}" as="o" hint-placeholder-count="3"><option value="{{o.v}}" selected="{{o.sel}}">{{o.l}}</option></sc-for></select><span class="ra-caption">{{distHint}}</span><sc-if value="{{distError}}" hint-placeholder-val="{{false}}"><span class="err">Pilih kecamatan.</span></sc-if></div>
+            <div class="field"><label class="ra-label-lg" for="p-loc">Alamat / lokasi proyek</label><input id="p-loc" class="ra-input" type="text" maxlength="255" placeholder="Nama kawasan, jalan" value="{{location}}"></div>
             <div class="field-row">
               <div class="field"><label class="ra-label-lg" for="p-kw">Kata kunci area</label><input id="p-kw" class="ra-input" type="text" maxlength="20" placeholder="mis. BSD"><span class="ra-caption">Maksimal 20 karakter.</span></div>
               <div class="field"><label class="ra-label-lg">Koordinat <span class="ra-caption">(opsional)</span></label><div style="display:flex;gap:8px;"><input class="ra-input" style="min-width:0;flex:1;" type="text" placeholder="Lintang" aria-label="Lintang"><input class="ra-input" style="min-width:0;flex:1;" type="text" placeholder="Bujur" aria-label="Bujur"></div></div>
@@ -110,14 +112,14 @@
           </sc-if>
           <sc-if value="{{isStep3}}" hint-placeholder-val="{{false}}">
             <div class="field-row">
-              <div class="field"><label class="ra-label-lg" for="p-pmin">Harga minimum (Rp)</label><input id="p-pmin" class="ra-input" type="text" inputmode="numeric" placeholder="850000000"></div>
-              <div class="field"><label class="ra-label-lg" for="p-pmax">Harga maksimum (Rp)</label><input id="p-pmax" class="ra-input" type="text" inputmode="numeric" placeholder="1400000000"></div>
+              <div class="field"><label class="ra-label-lg" for="p-pmin">Harga minimum (Rp)</label><input id="p-pmin" class="ra-input" type="text" inputmode="numeric" placeholder="850000000" value="{{pmin}}" onInput="{{onPmin}}"></div>
+              <div class="field"><label class="ra-label-lg" for="p-pmax">Harga maksimum (Rp)</label><input id="p-pmax" class="ra-input" type="text" inputmode="numeric" placeholder="1400000000" value="{{pmax}}" onInput="{{onPmax}}"><sc-if value="{{priceError}}" hint-placeholder-val="{{false}}"><span class="err">Harga maksimum tidak boleh lebih kecil dari harga minimum.</span></sc-if></div>
             </div>
             <div class="field-row">
               <div class="field"><label class="ra-label-lg" for="p-unit">Satuan harga</label><select id="p-unit" class="ra-input"><option>Total</option><option>Per bulan</option><option>Per tahun</option></select></div>
               <div class="field"><label class="ra-label-lg" for="p-avail">Unit tersedia</label><input id="p-avail" class="ra-input" type="text" inputmode="numeric" placeholder="42"></div>
             </div>
-            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Harga bisa dinegosiasi</span><span class="ra-caption">Ditampilkan sebagai keterangan pada listing agen.</span></div><button class="switch {{negClass}}" role="switch" aria-label="Harga bisa dinegosiasi" onClick="{{togNeg}}"><div class="switch-knob"></div></button></div>
+            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Harga bisa dinegosiasi</span><span class="ra-caption">Ditampilkan sebagai keterangan pada listing agen.</span></div><button class="switch {{negClass}}" role="switch" aria-checked="{{negChecked}}" aria-label="Harga bisa dinegosiasi" onClick="{{togNeg}}"><div class="switch-knob"></div></button></div>
           </sc-if>
           <sc-if value="{{isStep4}}" hint-placeholder-val="{{false}}">
             <div class="field-row">
@@ -144,19 +146,20 @@
               <div class="field"><label class="ra-label-lg" for="l-cert">Jenis sertifikat</label><select id="l-cert" class="ra-input"><option>SHM</option><option>HGB</option><option>Girik</option><option>PPJB</option><option>Strata title</option><option>Lainnya</option></select></div>
               <div class="field"><label class="ra-label-lg" for="l-imb">Status IMB</label><select id="l-imb" class="ra-input"><option>Ada</option><option>Tidak ada</option><option>Dalam proses</option></select></div>
             </div>
-            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Sertifikat sudah balik nama</span></div><button class="switch {{transferClass}}" role="switch" aria-label="Sertifikat sudah balik nama" onClick="{{togTransfer}}"><div class="switch-knob"></div></button></div>
-            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Bebas sengketa</span><span class="ra-caption">Pernyataan Anda bahwa proyek bebas sengketa.</span></div><button class="switch {{disputeClass}}" role="switch" aria-label="Bebas sengketa" onClick="{{togDispute}}"><div class="switch-knob"></div></button></div>
+            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Sertifikat sudah balik nama</span></div><button class="switch {{transferClass}}" role="switch" aria-checked="{{transferChecked}}" aria-label="Sertifikat sudah balik nama" onClick="{{togTransfer}}"><div class="switch-knob"></div></button></div>
+            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Bebas sengketa</span><span class="ra-caption">Pernyataan Anda bahwa proyek bebas sengketa.</span></div><button class="switch {{disputeClass}}" role="switch" aria-checked="{{disputeChecked}}" aria-label="Bebas sengketa" onClick="{{togDispute}}"><div class="switch-knob"></div></button></div>
             <div class="field"><label class="ra-label-lg" for="l-scheme">Skema komisi</label><input id="l-scheme" class="ra-input" type="text" maxlength="255" placeholder="mis. 2,5% dari harga jual"></div>
             <div class="field"><label class="ra-label-lg" for="l-extra">Komisi tambahan</label><textarea id="l-extra" class="ra-input" rows="2" placeholder="Bonus penjualan, insentif, dan sebagainya"></textarea></div>
             <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Proyek RumahAgen bersifat non-eksklusif: beberapa agen yang disetujui boleh memasarkan proyek yang sama.</p></div>
           </sc-if>
           <sc-if value="{{isStep6}}" hint-placeholder-val="{{false}}">
             <sc-if value="{{saved}}" hint-placeholder-val="{{false}}">
-              <div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Proyek tersimpan sebagai Coming Soon</span><p class="ra-body-md" style="margin-top:2px;">Tim RumahAgen akan meninjau dan mengaktifkan proyek Anda. Lanjutkan dengan mengunggah media dan marketing kit.</p></div></div>
+              <div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Proyek tersimpan sebagai Coming Soon</span><p class="ra-body-md" style="margin-top:2px;">Proyek tampil publik sebagai "Segera hadir" selagi menunggu persetujuan tim RumahAgen untuk status Aktif. Lanjutkan dengan mengunggah media dan marketing kit.</p></div></div>
             </sc-if>
             <sc-if value="{{notSaved}}" hint-placeholder-val="{{true}}">
               <dl class="kv"><dt>Nama proyek</dt><dd>{{sumName}}</dd><dt>Lokasi</dt><dd>{{sumLoc}}</dd><dt>Judul listing</dt><dd>{{sumTitle}}</dd><dt>Status awal</dt><dd><span class="ra-badge ra-badge-info"><span class="ra-dot"></span>Coming Soon</span></dd></dl>
-              <div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Anda tidak bisa mengaktifkan proyek sendiri. Setelah disimpan, proyek menunggu peninjauan tim RumahAgen.</p></div>
+              <div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Anda tidak bisa mengaktifkan proyek sendiri. Setelah disimpan, proyek tampil publik sebagai "Segera hadir" dan menunggu persetujuan tim RumahAgen (<a href="#">hubungi tim</a> bila perlu).</p></div>
+              <sc-if value="{{saveFailed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Proyek gagal disimpan. Data Anda masih di form; coba lagi.</p></div></sc-if>
             </sc-if>
           </sc-if>
     </div>
@@ -164,37 +167,47 @@
   <div style="flex:none;background:#fff;border-top:1px solid var(--ra-ink-100);padding:12px 16px;display:flex;gap:10px;">
     <button class="ra-btn ra-btn-secondary" style="flex:1;" disabled="{{cantBack}}" onClick="{{back}}">Kembali</button>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;" onClick="{{next}}">Lanjut</button></sc-if>
-    <sc-if value="{{isLast}}" hint-placeholder-val="{{false}}"><sc-if value="{{notSaved}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;" onClick="{{save}}">Simpan Proyek</button></sc-if><sc-if value="{{saved}}" hint-placeholder-val="{{false}}"><a class="ra-btn ra-btn-primary" style="flex:2;" href="M06-Detail-Proyek.dc.html">Buka Detail</a></sc-if></sc-if>
+    <sc-if value="{{isLast}}" hint-placeholder-val="{{false}}"><sc-if value="{{notSaved}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;" onClick="{{save}}" disabled="{{saving}}">{{saveLabel}}</button></sc-if><sc-if value="{{saved}}" hint-placeholder-val="{{false}}"><a class="ra-btn ra-btn-primary" style="flex:2;" href="M06-Detail-Proyek.dc.html">Buka Detail</a></sc-if></sc-if>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","default":"create","options":["create","edit"],"section":"Skenario form"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","default":"create","options":["create","edit"],"section":"Skenario form"},"simpanState":{"editor":"enum","default":"normal","options":["normal","menyimpan","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { step: 1, attempted: false, saved: false, name: '', metaTitle: '', metaDesc: '', province: '', city: '', negotiable: false, dispute: false, transferred: false, seeded: false });
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { step: 1, attempted: false, saved: false, failed: false, negotiable: false, dispute: false, transferred: false });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'next', 'back', 'save', 'onName', 'onMetaTitle', 'onMetaDesc', 'onProvince', 'onCity', 'togNeg', 'togDispute', 'togTransfer'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'next', 'back', 'save', 'onName', 'onMetaTitle', 'onMetaDesc', 'onProvince', 'onCity', 'onDistrict', 'onPmin', 'onPmax', 'togNeg', 'togDispute', 'togTransfer'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
   closeDrawer(){ this.setState({ drawerOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
+  val(k){
+    var s = this.state; if (s[k] !== undefined) return s[k];
+    if ((this.props.mode || 'create') !== 'edit') return '';
+    var seed = { name: 'Green Valley Residence', province: 'Banten', city: 'Tangerang Selatan', district: 'Serpong', location: 'BSD City, Tangerang Selatan', pmin: '850000000', pmax: '1400000000', metaTitle: 'Rumah 2 Lantai Green Valley BSD', metaDesc: 'Hunian 2 lantai di kawasan hijau BSD dengan klub warga dan akses tol.' };
+    return seed[k] || '';
+  }
+  priceBad(){ var mn = Number(String(this.val('pmin')).replace(/[^0-9]/g, '') || 0), mx = Number(String(this.val('pmax')).replace(/[^0-9]/g, '') || 0); return mn > 0 && mx > 0 && mx < mn; }
   next(){
-    var s = this.state, isEdit = (this.props.mode || 'create') === 'edit';
-    var name = s.seeded || !isEdit ? s.name : 'Green Valley Residence';
-    if (s.step === 1 && name.trim().length === 0) { this.setState({ attempted: true }); return; }
-    if (s.step === 2 && (!(s.province || (isEdit && !s.seeded)) || !(s.city || (isEdit && !s.seeded)))) { this.setState({ attempted: true }); return; }
+    var s = this.state;
+    if (s.step === 1 && this.val('name').trim().length === 0) { this.setState({ attempted: true }); return; }
+    if (s.step === 2 && (!this.val('province') || !this.val('city') || !this.val('district'))) { this.setState({ attempted: true }); return; }
+    if (s.step === 3 && this.priceBad()) { this.setState({ attempted: true }); return; }
     this.setState({ step: Math.min(6, s.step + 1), attempted: false });
   }
   back(){ this.setState({ step: Math.max(1, this.state.step - 1), attempted: false }); }
-  save(){ this.setState({ saved: true }); }
-  onName(e){ this.setState({ name: e.target.value, seeded: true }); }
+  save(){ if (this.props.simpanState === 'menyimpan') return; if (this.props.simpanState === 'gagal') { this.setState({ failed: true }); return; } this.setState({ saved: true, failed: false }); }
+  onName(e){ this.setState({ name: e.target.value }); }
   onMetaTitle(e){ this.setState({ metaTitle: e.target.value.slice(0, 70) }); }
   onMetaDesc(e){ this.setState({ metaDesc: e.target.value.slice(0, 160) }); }
-  onProvince(e){ this.setState({ province: e.target.value, city: '', seeded: true }); }
-  onCity(e){ this.setState({ city: e.target.value, seeded: true }); }
+  onProvince(e){ this.setState({ province: e.target.value, city: '', district: '' }); }
+  onCity(e){ this.setState({ city: e.target.value, district: '' }); }
+  onDistrict(e){ this.setState({ district: e.target.value }); }
+  onPmin(e){ this.setState({ pmin: e.target.value }); }
+  onPmax(e){ this.setState({ pmax: e.target.value }); }
   togNeg(){ this.setState({ negotiable: !this.state.negotiable }); }
   togDispute(){ this.setState({ dispute: !this.state.dispute }); }
   togTransfer(){ this.setState({ transferred: !this.state.transferred }); }
@@ -213,16 +226,15 @@ class Component extends DCLogic {
     // Field mengikuti createDeveloperProjectSchema / kolom developer_projects (0034). Field tujuan-listing memakai
     // nama kanonik M03 (land_area, building_area, meta_title -> judul listing, meta_description -> deskripsi listing).
     // is_exclusive_by_region SENGAJA tidak ditampilkan (non-eksklusivitas dikunci; DB default false).
-    // Status tidak bisa dipilih di form: proyek baru selalu coming_soon; aktivasi hanya staf.
+    // Status tidak bisa dipilih di form: proyek baru selalu coming_soon (tampil publik sebagai "Segera hadir"); aktivasi hanya staf (trigger 0034 + 0127).
     var self = this;
     var isEdit = (pr.mode || 'create') === 'edit';
-    var seeded = st.seeded === true;
-    var name = (isEdit && !seeded) ? 'Green Valley Residence' : st.name;
-    var province = (isEdit && !seeded) ? 'Banten' : st.province;
-    var city = (isEdit && !seeded) ? 'Tangerang Selatan' : st.city;
+    var name = this.val('name'), province = this.val('province'), city = this.val('city'), district = this.val('district');
     var cityMap = { 'DKI Jakarta': ['Jakarta Selatan','Jakarta Utara','Jakarta Barat'], 'Banten': ['Tangerang Selatan','Tangerang','Serang'], 'Jawa Barat': ['Bekasi','Bogor','Depok'], 'Jawa Timur': ['Surabaya','Malang','Sidoarjo'] };
+    var distMap = { 'Tangerang Selatan': ['Serpong','Pagedangan','Pamulang'] };
     var provs = [''].concat(Object.keys(cityMap)).map(function(p){ return { v: p, l: p || 'Pilih provinsi', sel: p === province }; });
     var cities = [''].concat(province ? cityMap[province] : []).map(function(c){ return { v: c, l: c || 'Pilih kota / kabupaten', sel: c === city }; });
+    var dists = [''].concat(city ? (distMap[city] || ['Kecamatan 1','Kecamatan 2']) : []).map(function(d){ return { v: d, l: d || 'Pilih kecamatan', sel: d === district }; });
     var stepsDef = ["Identitas","Lokasi","Harga & Unit","Spesifikasi","Legalitas & Komisi","Tinjau & Simpan"];
     var stepsList = stepsDef.map(function(label, i){
       var n = i + 1;
@@ -230,6 +242,7 @@ class Component extends DCLogic {
         go: function(){ if (n <= st.step) self.setState({ step: n, attempted: false }); } };
     });
     var attempted = st.attempted === true;
+    var saving = pr.simpanState === 'menyimpan';
     var out = {
       isEdit: isEdit, pageTitle: isEdit ? 'Edit Proyek' : 'Buat Proyek Baru',
       step: st.step, stepLabel: 'Langkah ' + st.step + ' dari 6 · ' + stepsDef[st.step - 1], progress: Math.round(st.step / 6 * 100) + '%',
@@ -237,17 +250,20 @@ class Component extends DCLogic {
       isStep1: st.step === 1, isStep2: st.step === 2, isStep3: st.step === 3, isStep4: st.step === 4, isStep5: st.step === 5, isStep6: st.step === 6,
       canBack: st.step > 1, cantBack: st.step === 1, notLast: st.step < 6, isLast: st.step === 6,
       next: this.next, back: this.back, save: this.save, saved: st.saved === true, notSaved: st.saved !== true,
+      saving: saving, saveLabel: saving ? 'Menyimpan…' : 'Simpan Proyek', saveFailed: st.failed === true && st.saved !== true,
       name: name, onName: this.onName, nameError: attempted && st.step === 1 && name.trim().length === 0,
-      metaTitle: st.metaTitle, onMetaTitle: this.onMetaTitle, metaTitleCount: st.metaTitle.length,
-      metaDesc: st.metaDesc, onMetaDesc: this.onMetaDesc, metaDescCount: st.metaDesc.length,
-      provs: provs, cities: cities, onProvince: this.onProvince, onCity: this.onCity,
-      cityDisabled: !province, cityHint: province ? '' : 'Pilih provinsi lebih dulu.',
-      provError: attempted && st.step === 2 && !province, cityError: attempted && st.step === 2 && !!province && !city,
-      negClass: st.negotiable ? 'is-on' : '', togNeg: this.togNeg,
-      disputeClass: st.dispute ? 'is-on' : '', togDispute: this.togDispute,
-      transferClass: st.transferred ? 'is-on' : '', togTransfer: this.togTransfer,
+      metaTitle: this.val('metaTitle'), onMetaTitle: this.onMetaTitle, metaTitleCount: String(this.val('metaTitle')).length,
+      metaDesc: this.val('metaDesc'), onMetaDesc: this.onMetaDesc, metaDescCount: String(this.val('metaDesc')).length,
+      provs: provs, cities: cities, dists: dists, onProvince: this.onProvince, onCity: this.onCity, onDistrict: this.onDistrict,
+      cityDisabled: !province, distDisabled: !city, cityHint: province ? '' : 'Pilih provinsi lebih dulu.', distHint: city ? '' : 'Pilih kota lebih dulu.',
+      provError: attempted && st.step === 2 && !province, cityError: attempted && st.step === 2 && !!province && !city, distError: attempted && st.step === 2 && !!city && !district,
+      location: this.val('location'), pmin: this.val('pmin'), pmax: this.val('pmax'), onPmin: this.onPmin, onPmax: this.onPmax,
+      priceError: attempted && st.step === 3 && this.priceBad(),
+      negClass: st.negotiable ? 'is-on' : '', negChecked: st.negotiable ? 'true' : 'false', togNeg: this.togNeg,
+      disputeClass: st.dispute ? 'is-on' : '', disputeChecked: st.dispute ? 'true' : 'false', togDispute: this.togDispute,
+      transferClass: st.transferred ? 'is-on' : '', transferChecked: st.transferred ? 'true' : 'false', togTransfer: this.togTransfer,
       sumName: name.trim() || '(belum diisi)', sumLoc: (city && province) ? city + ', ' + province : '(belum diisi)',
-      sumTitle: st.metaTitle || '(kosong — listing memakai nama proyek)'
+      sumTitle: this.val('metaTitle') || '(kosong — listing memakai nama proyek)'
     };
     return Object.assign(shell, out);
   }

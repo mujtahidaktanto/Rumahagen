@@ -159,7 +159,7 @@
       <div class="card" style="overflow:hidden;">
         <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:56px;"></div><div class="ra-skel" style="height:56px;"></div><div class="ra-skel" style="height:56px;"></div></div></sc-if>
         <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Klaim gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></sc-if>
-        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="42" height="42"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada klaim masuk</span><p class="ra-body-md" style="max-width:380px;">Klaim muncul di sini setelah agen mengklaim proyek Anda yang berstatus Aktif.</p></div></sc-if>
+        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="42" height="42"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada klaim masuk</span><p class="ra-body-md" style="max-width:380px;">Klaim muncul di sini setelah agen mengklaim proyek Anda.</p></div></sc-if>
         <sc-if value="{{showNoRows}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada klaim pada filter ini</span><p class="ra-body-md">Pilih status atau proyek lain.</p></div></sc-if>
         <sc-if value="{{showList}}" hint-placeholder-val="{{true}}">
           <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
@@ -180,7 +180,8 @@
     </div>
 
   <sc-if value="{{dialogOpen}}" hint-placeholder-val="{{false}}">
-    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" onClick="{{stopClick}}">
+    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
+      <sc-if value="{{actionFailed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Gagal memperbarui klaim. Tidak ada yang berubah; coba lagi.</p></div></sc-if>
       <sc-if value="{{dApprove}}" hint-placeholder-val="{{false}}">
         <span class="ra-title-lg">Setujui klaim {{tAgent}}?</span>
         <p class="ra-body-md">{{tAgent}} boleh membuat listing draft dari <strong>{{tProject}}</strong>. Listing dimiliki dan dikelola agen; Anda tidak mendapat akses ke listing itu. Approval Claim (PDF) dibuat otomatis dan bisa diunduh Anda dan agen.</p>
@@ -202,7 +203,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"daftar":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario daftar"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"daftar":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario daftar"},"aksi":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario aksi setuju/tolak/cabut"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -215,9 +216,10 @@ class Component extends DCLogic {
   closeDrawer(){ this.setState({ drawerOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
-  closeAll(){ this.setState({ dialog: '' }); }
+  closeAll(){ this.setState({ dialog: '', actionFailed: false }); }
   confirmDialog(){
     var d = this.state.dialog, id = this.state.targetId;
+    if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
     var map = { approve: 'approved', reject: 'rejected', revoke: 'revoked' };
     var msg = { approve: 'Klaim disetujui. Approval Claim dibuat otomatis.', reject: 'Klaim ditolak.', revoke: 'Klaim dicabut.' };
     var dec = Object.assign({}, this.state.decided); dec[id] = map[d];
@@ -275,7 +277,7 @@ class Component extends DCLogic {
       showList: mode === 'normal' && rows.length > 0, showNoRows: mode === 'normal' && rows.length === 0,
       dApprove: d === 'approve', dReject: d === 'reject', dRevoke: d === 'revoke', dialogOpen: d !== '',
       tAgent: st.targetAgent || '', tProject: st.targetProject || '', closeAll: this.closeAll, confirmDialog: this.confirmDialog,
-      toast: st.toast, hasToast: !!st.toast
+      actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast
     };
     return Object.assign(shell, out);
   }

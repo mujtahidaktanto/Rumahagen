@@ -63,7 +63,8 @@ Harga: `price_min`, `price_max` (dua field terpisah), `price_unit total|per_bula
 Spesifikasi (identik listing): `bedrooms`, `bathrooms`, `land_area`, `building_area`, `floors`, `carport_capacity`, `electrical_power`, `water_source pdam|sumur|lainnya`, `furnishing`, `year_built`.
 Legalitas: `certificate_type shm|hgb|girik|ppjb|strata_title|lainnya`, `certificate_transferred`, `imb_status ada|tidak_ada|dalam_proses`, `dispute_free_declared`.
 Komersial: `commission_scheme` (≤255), `extra_commission` (teks bebas), `is_exclusive_by_region` (**tidak boleh** dipresentasikan sebagai fitur eksklusivitas wilayah: non-eksklusivitas dikunci).
-Lifecycle: **update biasa ≠ publish**. Transisi ke `active` hanya oleh pemegang `developer_project.publish` (staf) — trigger DB.
+Lifecycle: **update biasa ≠ publish**. Transisi ke `active` hanya oleh pemegang `developer_project.publish` (staf) — trigger DB (UPDATE) dan trigger INSERT (0127).
+**Keputusan produk 2026-09-24:** proyek `coming_soon` **boleh tampil publik** ("Segera hadir") selagi menunggu persetujuan tim untuk `active`. RLS memang mengizinkan publik melihat `coming_soon`/`active`/`sold_out` (perusahaan aktif); `inactive` tidak tampil publik. Tidak ada mekanisme "minta aktivasi" di backend; mitra menghubungi tim.
 
 ### developer_project_media — 0034
 `type photo|video`, `url`. **Bukan** brosur/price list (itu Marketing Kit). Unggah jamak.
@@ -127,7 +128,7 @@ Hanya Superadmin dan pemilik yang melihat (Admin/Manager tidak). "Partner Learni
 2. **[DIUJI] Developer Partner bisa INSERT proyek langsung berstatus `active`** (trigger publish-gate hanya `BEFORE UPDATE`). Lewat API tidak bisa (skema tidak menerima `status`), tetapi lewat REST langsung bisa. Termasuk di tugas perbaikan yang sama.
    **[DIUJI] Hal serupa pada event:** Developer Partner bisa INSERT `events` langsung berstatus `published` (trigger lifecycle hanya `BEFORE UPDATE`), sehingga "subject to approval" (PRE-00-G §15) hanya berlaku lewat route API, bukan di DB.
 3. **Transisi klaim tidak dibatasi di DB**: siapa pun yang lolos policy bisa mengubah status ke nilai apa saja (mis. `rejected → approved`).
-4. **Proyek yang dinonaktifkan tidak bisa diaktifkan kembali oleh mitra** (transisi `→ active` butuh izin publish staf). Wireframe memberi peringatan sebelum "Nonaktifkan".
+4. **Hanya status `active` yang tidak bisa dicapai mitra.** Proyek nonaktif tetap bisa dikembalikan mitra ke `coming_soon` (tampil publik lagi) atau `sold_out`. Wireframe memberi peringatan sebelum "Nonaktifkan".
 5. Tidak ada filter "milik saya" pada daftar proyek/perusahaan, tidak ada agregat klaim masuk, tidak ada unggah file (semua dicatat di §6).
 
 ## 9. Keputusan produk yang tertunda (wireframe menyiapkan kedua sisi)

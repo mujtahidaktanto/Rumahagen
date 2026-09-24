@@ -60,6 +60,8 @@
   .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
   .kv dd{margin:0;font-size:14px;line-height:20px;}
   .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
 </style>
 </helmet>
 <div class="app">
@@ -82,7 +84,7 @@
     </sc-if>
     <sc-if value="{{isLinked}}" hint-placeholder-val="{{true}}">
     <a class="ra-btn ra-btn-primary" style="width:100%;" href="M06-Form-Proyek.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Buat Proyek</a>
-    <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Status <strong>Aktif</strong> hanya bisa diberikan tim RumahAgen.</p></div>
+    <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Coming Soon tampil publik sebagai "Segera hadir". Status <strong>Aktif</strong> hanya diberikan tim RumahAgen.</p></div>
     <div class="chip-row" role="group" aria-label="Filter status">
       <sc-for list="{{chips}}" as="c" hint-placeholder-count="5"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for>
     </div>

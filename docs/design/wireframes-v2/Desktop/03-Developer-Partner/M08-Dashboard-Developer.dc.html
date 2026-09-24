@@ -163,9 +163,12 @@
       <sc-if value="{{showActivationBanner}}" hint-placeholder-val="{{true}}">
         <div class="banner banner-info">
           <span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span>
-          <div><span class="ra-label-lg">1 proyek berstatus Coming Soon menunggu aktivasi</span>
-          <p class="ra-body-md" style="margin-top:2px;">Aktivasi (status Aktif) dilakukan tim RumahAgen, bukan oleh Anda. Lengkapi media dan marketing kit agar proses lebih cepat.</p></div>
+          <div><span class="ra-label-lg">1 proyek Coming Soon menunggu persetujuan tim</span>
+          <p class="ra-body-md" style="margin-top:2px;">Proyek Coming Soon sudah tampil publik sebagai "Segera hadir". Status Aktif hanya diberikan tim RumahAgen. Lengkapi media dan marketing kit, atau <a href="#">hubungi tim</a>.</p></div>
         </div>
+      </sc-if>
+      <sc-if value="{{hasError}}" hint-placeholder-val="{{false}}">
+        <div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><div style="flex:1;"><span class="ra-label-lg">Ringkasan gagal dimuat</span><p class="ra-body-md" style="margin-top:2px;">Periksa koneksi Anda lalu coba lagi.</p></div><button class="ra-btn ra-btn-secondary ra-btn-sm">Coba Lagi</button></div>
       </sc-if>
 
       <div class="stat-grid">
@@ -224,7 +227,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"loading":{"editor":"boolean","default":false,"section":"Skenario widget"},"notifEmpty":{"editor":"boolean","default":false,"section":"Skenario widget"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"loading":{"editor":"boolean","default":false,"section":"Skenario widget"},"notifEmpty":{"editor":"boolean","default":false,"section":"Skenario widget"},"error":{"editor":"boolean","default":false,"section":"Skenario widget"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -251,7 +254,7 @@ class Component extends DCLogic {
     
     // GET /dashboard/summary hanya mengembalikan jumlah notifikasi (API-137). Angka proyek/klaim di bawah
     // dihitung dari GET /developer-projects dan GET /developer-projects/{id}/claims yang sudah ada.
-    var loading = pr.loading === true, notifEmpty = pr.notifEmpty === true;
+    var loading = pr.loading === true, notifEmpty = pr.notifEmpty === true, hasError = pr.error === true;
     var pending = [
       { id: 'k1', agent: 'Rian Saputra', initials: 'RS', project: 'Menara Kertajaya Apartemen', when: '20 Sep 2026' },
       { id: 'k2', agent: 'Dewi Lestari', initials: 'DL', project: 'Green Valley Residence', when: '22 Sep 2026' }
@@ -262,7 +265,7 @@ class Component extends DCLogic {
       { name: 'Cluster Harmoni Residence', place: 'Bekasi', label: 'Coming Soon', badge: 'ra-badge-info' }
     ];
     var out = {
-      loading: loading, loaded: !loading, notifEmpty: notifEmpty, hasNotif: !notifEmpty,
+      loading: loading, loaded: !loading && !hasError, hasError: hasError, notifEmpty: notifEmpty, hasNotif: !notifEmpty,
       showActivationBanner: linked && !loading,
       pending: pending, projects: projects, pendingCount: pending.length
     };

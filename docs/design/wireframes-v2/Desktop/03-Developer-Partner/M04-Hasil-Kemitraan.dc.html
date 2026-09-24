@@ -144,15 +144,7 @@
       </div>
     </div>
     <div class="main ra-scroll">
-      <sc-if value="{{isUnlinked}}" hint-placeholder-val="{{false}}">
-        <div class="card"><div class="empty-big">
-          <div style="width:64px;height:64px;border-radius:50%;background:var(--ra-warning-100);color:var(--ra-warning-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></div>
-          <span class="ra-title-md" style="color:var(--ra-ink-900);">Akun Anda belum terhubung ke perusahaan developer</span>
-          <p class="ra-body-md" style="max-width:460px;">Tim RumahAgen perlu menghubungkan akun ini ke data perusahaan Anda. Selama belum terhubung, proyek, marketing kit, dan klaim belum bisa dikelola.</p>
-          <a class="ra-btn ra-btn-primary" href="#">Hubungi Tim RumahAgen</a>
-        </div></div>
-      </sc-if>
-      <sc-if value="{{isLinked}}" hint-placeholder-val="{{true}}">
+
         <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Hasil kemitraan dicatat bersama <strong>asal data</strong>-nya. Validasi dilakukan tim RumahAgen dan tidak bisa Anda ubah. Hasil ini terpisah dari poin dan sertifikat Learning RumahAgen.</p></div>
         <div class="card" style="overflow:hidden;">
           <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:72px;"></div><div class="ra-skel" style="height:72px;"></div></div></sc-if>
@@ -169,15 +161,15 @@
                   <sc-if value="{{r.hasSession}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Sesi terkait: {{r.session}}</span></sc-if>
                 </div>
                 <span class="ra-badge {{r.badge}}">{{r.label}}</span>
+                <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.edit}}">Ubah</button>
               </div>
             </sc-for>
           </sc-if>
         </div>
-      </sc-if>
     </div>
 
   <sc-if value="{{formOpen}}" hint-placeholder-val="{{false}}">
-    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" style="width:560px;" onClick="{{stopClick}}">
+    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" role="dialog" aria-modal="true" aria-label="Jendela dialog" style="width:560px;" onClick="{{stopClick}}">
       <span class="ra-title-lg">Catat hasil kemitraan</span>
       <div class="field"><label class="ra-label-lg" for="h-type">Jenis hasil <span class="req">*</span></label><input id="h-type" class="ra-input" type="text" maxlength="100" placeholder="mis. Evaluasi pelatihan produk" value="{{rType}}" onInput="{{onType}}"><sc-if value="{{typeErr}}" hint-placeholder-val="{{false}}"><span class="err">Jenis hasil wajib diisi.</span></sc-if></div>
       <div class="field"><label class="ra-label-lg" for="h-sum">Ringkasan</label><textarea id="h-sum" class="ra-input" rows="3" placeholder="Hasil singkat yang perlu diketahui tim"></textarea></div>
@@ -189,6 +181,16 @@
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{saveForm}}">Simpan Hasil</button></div>
     </div></div>
   </sc-if>
+  <sc-if value="{{editOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeEdit}}"><div class="dialog" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
+      <span class="ra-title-lg">Ubah hasil kemitraan</span>
+      <dl class="kv"><dt>Jenis hasil</dt><dd>{{editTarget}}</dd></dl>
+      <p class="ra-caption">Jenis hasil, asal data, dan referensi tidak bisa diubah agar jejaknya tetap utuh. Status validasi hanya diubah tim RumahAgen.</p>
+      <div class="field"><label class="ra-label-lg" for="he-sum">Ringkasan</label><textarea id="he-sum" class="ra-input" rows="3"></textarea></div>
+      <div class="field"><label class="ra-label-lg" for="he-pl">Data tambahan <span class="ra-caption">(JSON)</span></label><textarea id="he-pl" class="ra-input" rows="2"></textarea></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeEdit}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{saveEdit}}">Simpan Perubahan</button></div>
+    </div></div>
+  </sc-if>
   <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="ra-label-lg">{{toast}}</span></div></sc-if>
   </div>
 </div>
@@ -197,9 +199,9 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { open: false, detail: '', rType: '', rSource: '', rRef: '', attempted: false, toast: '', added: false });
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { editOpen: false, editTarget: '', open: false, detail: '', rType: '', rSource: '', rRef: '', attempted: false, toast: '', added: false });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'openForm', 'closeAll', 'saveForm', 'onType', 'onSource', 'onRef'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'openForm', 'closeAll', 'saveForm', 'onType', 'onSource', 'onRef', 'closeEdit', 'saveEdit'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
@@ -207,6 +209,8 @@ class Component extends DCLogic {
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
   openForm(){ this.setState({ open: true, attempted: false, rType: '', rSource: '', rRef: '' }); }
+  closeEdit(){ this.setState({ editOpen: false }); }
+  saveEdit(){ this.setState({ editOpen: false, toast: 'Hasil diperbarui. Status validasi tidak berubah.' }); }
   closeAll(){ this.setState({ open: false }); }
   onType(e){ this.setState({ rType: e.target.value }); }
   onSource(e){ this.setState({ rSource: e.target.value }); }
@@ -240,13 +244,14 @@ class Component extends DCLogic {
       { type: 'Kehadiran workshop', summary: 'Daftar hadir workshop closing Cluster Harmoni.', source: 'Absensi lapangan', ref: 'ABS-CH-0830', when: '30 Agu 2026', v: 'rejected', session: '' }
     ];
     if (st.added) data.unshift({ type: st.rType || 'Hasil baru', summary: '', source: st.rSource, ref: st.rRef, when: 'Baru saja', v: 'pending', session: '' });
-    var list = data.map(function(d){ var m = vMap[d.v]; return { type: d.type, summary: d.summary, hasSummary: !!d.summary, source: d.source, ref: d.ref, when: d.when, label: m[0], badge: m[1], hasSession: !!d.session, session: d.session }; });
+    var list = data.map(function(d){ var m = vMap[d.v]; return { edit: function(){ self.setState({ editOpen: true, editTarget: d.type }); }, type: d.type, summary: d.summary, hasSummary: !!d.summary, source: d.source, ref: d.ref, when: d.when, label: m[0], badge: m[1], hasSession: !!d.session, session: d.session }; });
     var att = st.attempted === true;
     var out = {
       list: list, showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showRows: mode === 'normal',
       formOpen: st.open === true, openForm: this.openForm, closeAll: this.closeAll, saveForm: this.saveForm,
       rType: st.rType, rSource: st.rSource, rRef: st.rRef, onType: this.onType, onSource: this.onSource, onRef: this.onRef,
       typeErr: att && !st.rType.trim(), sourceErr: att && !st.rSource.trim(), refErr: att && !st.rRef.trim(),
+      editOpen: st.editOpen === true, editTarget: st.editTarget, closeEdit: this.closeEdit, saveEdit: this.saveEdit,
       toast: st.toast, hasToast: !!st.toast
     };
     return Object.assign(shell, out);

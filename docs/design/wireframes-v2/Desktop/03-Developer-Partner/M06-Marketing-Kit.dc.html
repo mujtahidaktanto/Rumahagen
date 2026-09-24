@@ -201,7 +201,7 @@
     </div>
 
   <sc-if value="{{deleteOpen}}" hint-placeholder-val="{{false}}">
-    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" onClick="{{stopClick}}">
+    <div class="scrim" onClick="{{closeAll}}"><div class="dialog" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
       <span class="ra-title-lg">Hapus berkas?</span>
       <p class="ra-body-md">{{deleteName}} akan dihapus dan tidak lagi bisa diunduh agen.</p>
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-danger" onClick="{{confirmDelete}}">Ya, Hapus</button></div>
