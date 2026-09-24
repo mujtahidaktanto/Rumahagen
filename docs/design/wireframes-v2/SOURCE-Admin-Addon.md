@@ -24,3 +24,10 @@ tanpa layar/route ini staf tidak punya cara mengisi harga.
 - Add-on baru selalu berstatus Draf; aktif hanya bila harga > 0 dan kapasitas utama terisi.
 - Harga hanya berlaku untuk pesanan baru; kode, masa berlaku, dan kapasitas terkunci setelah ada pesanan (buat add-on baru untuk syarat berbeda).
 - Mata uang dikunci IDR pada form (kolom mendukung 3 huruf, tetapi pembayaran memakai Midtrans IDR).
+
+## 5. Layar Admin Promosi (ditambahkan 2026-09-24)
+Melengkapi API `/admin/commercial/promotions` (+ migration 0133). Dua layar Admin (desktop + mobile): **M14 Promosi** (daftar; filter status efektif Draf/Aktif/Terjadwal/Kedaluwarsa/Nonaktif, cari nama/kode, aktifkan/nonaktifkan dengan konfirmasi, jumlah add-on pemakai, alasan bila tak bisa diaktifkan karena masa berlaku lewat) dan **M14 Form Promosi** (kode, nama, jenis potongan persentase atau nominal dengan validasi, contoh harga langsung pada Rp 75.000 dan Rp 200.000, masa berlaku opsional, mode "dipakai add-on", kartu Aturan kelayakan belum tersedia). Nav Admin +1 item "Promosi" (ditambahkan ke semua layar Admin).
+- Status efektif mengikuti `derivePromotionState`: berstatus `active` tetapi lewat `valid_to` tampil Kedaluwarsa, sebelum `valid_from` tampil Terjadwal.
+- Manager hanya melihat (izin `configure` hanya Admin/Superadmin).
+- Promosi baru berstatus Draf dan tidak memberi potongan sampai diaktifkan dari daftar.
+- Pilihan promosi pada Form Add-on masih berisi contoh; ketika layar diintegrasikan, daftarnya dari `GET /admin/commercial/promotions?status=active`.

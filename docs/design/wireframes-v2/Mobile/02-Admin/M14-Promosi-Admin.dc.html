@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Pengalihan URL — Admin Mobile</title>
+<title>Promosi — Admin Mobile</title>
 <script src="./support.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../tokens.css">
@@ -72,33 +72,27 @@
 <div class="app">
   <div class="topbar">
     <button class="ra-iconbtn" style="margin-left:-8px;" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-    <span class="ra-title-md ra-truncate-1" style="flex:1;">Pengalihan URL</span>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">Promosi</span>
     <span class="ra-badge ra-badge-info">{{aktorLabel}}</span>
   </div>
   <div class="main ra-scroll">
-      <div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md"><strong>Belum berlaku untuk pengunjung.</strong> Aplikasi publik belum membaca tabel ini dan slug yang berubah belum membuat pengalihan otomatis, jadi entri di sini baru tersimpan (butuh perbaikan backend).</p></div>
-      <sc-if value="{{readOnly}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md">Peran Manager hanya bisa melihat pengalihan. Menambah dan menghapus hanya untuk Admin dan Superadmin.</p></div></sc-if>
-    <sc-if value="{{canManage}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openAdd}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Tambah Pengalihan</button></sc-if>
-    <div class="chip-row" role="group" aria-label="Filter alasan"><sc-for list="{{chips}}" as="c" hint-placeholder-count="5"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for></div>
-    <div style="position:relative;"><span style="position:absolute;left:12px;top:12px;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input class="ra-input" style="width:100%;padding-left:40px;" type="search" placeholder="Cari jalur…" aria-label="Cari jalur" value="{{q}}" onInput="{{setQ}}"></div>
+      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi memotong harga <strong>pesanan baru</strong> dan dihitung server; pesanan lama tidak berubah. Promosi hanya berlaku bila berstatus Aktif dan tanggal hari ini berada dalam masa berlakunya, serta dipilih pada sebuah add-on. Promosi yang dipakai add-on atau pesanan tidak bisa dihapus (nonaktifkan saja). Aturan kelayakan (siapa yang berhak) belum tersedia.</p></div>
+      <sc-if value="{{readOnly}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md">Peran Manager hanya bisa melihat promosi. Mengubah hanya untuk Admin dan Superadmin.</p></div></sc-if>
+    <sc-if value="{{canManage}}" hint-placeholder-val="{{true}}"><a class="ra-btn ra-btn-primary" style="width:100%;" href="M14-Form-Promosi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Buat Promosi</a></sc-if>
+    <div class="chip-row" role="group" aria-label="Filter status"><sc-for list="{{chips}}" as="c" hint-placeholder-count="6"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for></div>
+    <div style="position:relative;"><span style="position:absolute;left:12px;top:12px;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input class="ra-input" style="width:100%;padding-left:40px;" type="search" placeholder="Cari nama atau kode…" aria-label="Cari promosi" value="{{q}}" onInput="{{setQ}}"></div>
     <div class="card">
-        <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:56px;"></div><div class="ra-skel" style="height:56px;"></div><div class="ra-skel" style="height:56px;"></div></div></sc-if>
-        <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Pengalihan gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></sc-if>
-        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M4 8h12M12 4l4 4-4 4"/><path d="M20 16H8m4 4-4-4 4-4"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada pengalihan</span><p class="ra-body-md" style="max-width:380px;">Tambahkan pengalihan agar tautan lama tetap mengarah ke halaman yang benar.</p></div></sc-if>
-        <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada pengalihan yang cocok</span></div></sc-if></div>
-    <sc-if value="{{showRows}}" hint-placeholder-val="{{true}}"><sc-for list="{{rows}}" as="r" hint-placeholder-count="4"><div class="card card-pad" style="display:flex;flex-direction:column;gap:8px;">
-      <div style="display:flex;align-items:center;gap:8px;"><span class="mono ra-truncate-1" style="flex:1;">{{r.old}}</span><span class="ra-badge ra-badge-neutral">{{r.type}}</span></div>
-      <div style="display:flex;align-items:center;gap:8px;color:var(--ra-ink-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 8h12M12 4l4 4-4 4"/><path d="M20 16H8m4 4-4-4 4-4"/></svg><span class="mono ra-truncate-1">{{r.neu}}</span></div>
-      <div class="ra-caption">{{r.reason}} · {{r.at}}</div>
-      <sc-if value="{{r.canManage}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.del}}">Hapus</button></sc-if></div></sc-for><button class="ra-btn ra-btn-secondary" style="width:100%;">Muat Lebih Banyak</button></sc-if>
-    
-      <div class="card card-pad" style="display:flex;flex-direction:column;gap:10px;">
-        <span class="ra-title-md">Uji jalur</span>
-        <div class="field"><label class="ra-label-lg" for="p-in">Jalur lama</label><input id="p-in" class="ra-input mono" type="text" placeholder="/listing/contoh" value="{{probe}}" onInput="{{onProbe}}"></div>
-        <sc-if value="{{probeIdle}}" hint-placeholder-val="{{true}}"><span class="ra-caption">Ketik jalur untuk melihat ke mana ia dialihkan. Aturan jalur (harus diawali "/", bukan URL luar, tanpa putaran, maksimal 10 lompatan) juga ditegakkan database.</span></sc-if>
-        <sc-if value="{{probeHit}}" hint-placeholder-val="{{false}}"><div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><p class="ra-body-md">Dialihkan ke <span class="mono">{{hitNew}}</span> (kode {{hitType}}).</p></div></sc-if>
-        <sc-if value="{{probeMiss}}" hint-placeholder-val="{{false}}"><span class="ra-body-md" style="color:var(--ra-ink-500);">Tidak ada pengalihan untuk jalur ini.</span></sc-if>
-      </div>
+        <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:60px;"></div><div class="ra-skel" style="height:60px;"></div><div class="ra-skel" style="height:60px;"></div></div></sc-if>
+        <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Promosi gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></sc-if>
+        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M3 10l9-6 9 6"/><path d="M5 10v9m14-9v9M9 10v9m6-9v9M3 20h18"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada promosi</span><p class="ra-body-md" style="max-width:380px;">Buat promosi untuk memberi potongan harga pada add-on.</p></div></sc-if>
+        <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada promosi yang cocok</span></div></sc-if></div>
+    <sc-if value="{{showRows}}" hint-placeholder-val="{{true}}"><sc-for list="{{rows}}" as="r" hint-placeholder-count="5"><div class="card card-pad" style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:flex-start;gap:10px;"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{r.name}}</div><div class="mono ra-caption">{{r.code}}</div></div><span class="ra-badge {{r.badge}}">{{r.label}}</span></div>
+      <div class="ra-label-lg">{{r.benefit}}</div><div class="ra-caption">{{r.window}} · dipakai {{r.addons}} add-on</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;"><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M14-Form-Promosi.dc.html">Ubah</a>
+        <sc-if value="{{r.showActivate}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary ra-btn-sm" disabled="{{r.activateOff}}" onClick="{{r.activate}}">Aktifkan</button></sc-if>
+        <sc-if value="{{r.showDeactivate}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.deactivate}}">Nonaktifkan</button></sc-if></div>
+      <sc-if value="{{r.hasReason}}" hint-placeholder-val="{{false}}"><span class="ra-caption">{{r.reason}}</span></sc-if></div></sc-for><button class="ra-btn ra-btn-secondary" style="width:100%;">Muat Lebih Banyak</button></sc-if>
   </div>
   <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
     <div class="drawer-scrim" onClick="{{closeDrawer}}"></div>
@@ -119,11 +113,11 @@
         <a class="nav-item" href="M04-Kelola-Kursus.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M8 7h7M8 11h5"/></svg>Kelola Kursus</a>
         <a class="nav-item" href="M14-Komersial-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2M10 21v-3h4v3"/></svg>Komersial &amp; Rekonsiliasi</a>
         <a class="nav-item" href="M14-Katalog-Addon.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 10l9-6 9 6"/><path d="M5 10v9m14-9v9M9 10v9m6-9v9M3 20h18"/></svg>Katalog Add-on</a>
-        <a class="nav-item" href="M14-Promosi-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg>Promosi</a>
+        <a class="nav-item is-active" href="M14-Promosi-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg>Promosi</a>
         <a class="nav-item" href="M15-Award-Appeal.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>Banding Penghargaan</a>
         <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M8 21h8M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/></svg>Jalur Penghargaan</a>
         <a class="nav-item" href="M06-Developer-Project-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Proyek Developer</a>
-        <a class="nav-item is-active" href="M11-Pengalihan-URL.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 8h12M12 4l4 4-4 4"/><path d="M20 16H8m4 4-4-4 4-4"/></svg>Pengalihan URL</a>
+        <a class="nav-item" href="M11-Pengalihan-URL.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 8h12M12 4l4 4-4 4"/><path d="M20 16H8m4 4-4-4 4-4"/></svg>Pengalihan URL</a>
         <a class="nav-item" href="../01-Agent/M02-Profil-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Profil Saya</a>
       </div>
     </div>
@@ -131,15 +125,9 @@
 
   <sc-if value="{{dialogOpen}}" hint-placeholder-val="{{false}}"><div class="scrim" onClick="{{closeAll}}"><div class="sheet" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
     <sc-if value="{{actionFailed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Gagal menyimpan. Tidak ada yang berubah; coba lagi.</p></div></sc-if>
-    <sc-if value="{{dAdd}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Tambah pengalihan</span>
-      <div class="field"><label class="ra-label-lg" for="r-old">Jalur lama <span class="req">*</span></label><input id="r-old" class="ra-input mono" type="text" maxlength="300" placeholder="/listing/nama-lama" value="{{fOld}}" onInput="{{onOld}}"><sc-if value="{{hasErrOld}}" hint-placeholder-val="{{false}}"><span class="err">{{errOld}}</span></sc-if></div>
-      <div class="field"><label class="ra-label-lg" for="r-new">Jalur tujuan <span class="req">*</span></label><input id="r-new" class="ra-input mono" type="text" maxlength="300" placeholder="/listing/nama-baru" value="{{fNew}}" onInput="{{onNew}}"><sc-if value="{{hasErrNew}}" hint-placeholder-val="{{false}}"><span class="err">{{errNew}}</span></sc-if></div>
-      <div class="field"><span class="ra-label-lg">Jenis pengalihan</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" role="radiogroup" aria-label="Jenis pengalihan"><sc-for list="{{types}}" as="t" hint-placeholder-count="2"><button class="radio-card" role="radio" aria-checked="{{t.checked}}" onClick="{{t.pick}}"><span class="ra-label-lg">{{t.l}}</span></button></sc-for></div></div>
-      <div class="field"><span class="ra-label-lg">Alasan</span><div class="chip-group" role="group" aria-label="Alasan"><sc-for list="{{reasons}}" as="r" hint-placeholder-count="4"><button class="ra-chip" aria-pressed="{{r.pressed}}" onClick="{{r.pick}}">{{r.l}}</button></sc-for></div></div>
-      <div class="field-row" style="grid-template-columns:1fr;"><div class="field"><label class="ra-label-lg" for="r-et">Jenis entitas <span class="ra-caption">(opsional)</span></label><input id="r-et" class="ra-input" type="text" maxlength="50" value="{{fEt}}" onInput="{{onEt}}"></div><div class="field"><label class="ra-label-lg" for="r-eid">ID entitas <span class="ra-caption">(opsional)</span></label><input id="r-eid" class="ra-input mono" type="text" value="{{fEid}}" onInput="{{onEid}}"></div></div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{save}}">Simpan</button></div></sc-if>
-    <sc-if value="{{dDel}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Hapus pengalihan?</span><p class="ra-body-md">Pengalihan dari <span class="mono">{{tName}}</span> akan dihapus dan tautan lama tidak lagi diarahkan.</p>
-      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{confirmDel}}">Hapus</button></div></sc-if>
+    <sc-if value="{{toActive}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Aktifkan "{{tName}}"?</span><p class="ra-body-md">Potongan berlaku untuk pesanan baru pada add-on yang memakai promosi ini, selama masa berlakunya.</p></sc-if>
+    <sc-if value="{{toInactive}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Nonaktifkan "{{tName}}"?</span><p class="ra-body-md">Pesanan baru tidak lagi mendapat potongan ini. Pesanan yang sudah dibuat tidak berubah.</p></sc-if>
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{confirm}}">Lanjutkan</button></div>
   </div></div></sc-if>
   <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="ra-label-lg">{{toast}}</span></div></sc-if>
 </div>
@@ -148,45 +136,21 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { filter: 'all', q: '', items: null, dialog: '', target: null, f: { old: '', neu: '', type: 301, reason: 'slug_changed', et: '', eid: '' }, tried: false, toast: '', actionFailed: false, probe: '' });
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { filter: 'all', q: '', st: {}, dialog: '', target: null, next: '', toast: '', actionFailed: false });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'setQ', 'closeAll', 'onOld', 'onNew', 'onEt', 'onEid', 'save', 'confirmDel', 'onProbe'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'setQ', 'closeAll', 'confirm'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
   closeDrawer(){ this.setState({ drawerOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
-  list(){ return this.state.items || [
-    { id: 'r1', old: '/listing/rumah-cluster-harmoni-lama', neu: '/listing/rumah-cluster-harmoni', type: 301, reason: 'slug_changed', et: 'listing', at: '20 Sep 2026' },
-    { id: 'r2', old: '/listing/ruko-pasar-baru', neu: '/cari?tipe=ruko', type: 302, reason: 'listing_deleted', et: 'listing', at: '18 Sep 2026' },
-    { id: 'r3', old: '/proyek/green-valley-a', neu: '/proyek/green-valley', type: 301, reason: 'listing_merged', et: 'developer_project', at: '12 Sep 2026' },
-    { id: 'r4', old: '/promo-lebaran', neu: '/promo', type: 301, reason: 'lainnya', et: '', at: '01 Sep 2026' }
-  ]; }
   setQ(e){ this.setState({ q: e.target.value }); }
-  onProbe(e){ this.setState({ probe: e.target.value }); }
-  onOld(e){ this.setState({ f: Object.assign({}, this.state.f, { old: e.target.value }) }); }
-  onNew(e){ this.setState({ f: Object.assign({}, this.state.f, { neu: e.target.value }) }); }
-  onEt(e){ this.setState({ f: Object.assign({}, this.state.f, { et: e.target.value }) }); }
-  onEid(e){ this.setState({ f: Object.assign({}, this.state.f, { eid: e.target.value }) }); }
-  closeAll(){ this.setState({ dialog: '', actionFailed: false, tried: false }); }
-  problems(f){
-    var o = String(f.old || '').trim(), n = String(f.neu || '').trim(), list = this.list(), p = {};
-    if (!o) p.old = 'Jalur lama wajib diisi.'; else if (o.charAt(0) !== '/') p.old = 'Jalur harus diawali "/".'; else if (o.length > 300) p.old = 'Maksimal 300 karakter.'; else if (list.some(function(r){ return r.old === o; })) p.old = 'Jalur lama ini sudah punya pengalihan.';
-    if (!n) p.neu = 'Jalur tujuan wajib diisi.'; else if (/^(https?:)?\/\//i.test(n)) p.neu = 'Hanya jalur internal (diawali "/"); alamat luar tidak diizinkan.'; else if (n.charAt(0) !== '/') p.neu = 'Jalur harus diawali "/".'; else if (n === o) p.neu = 'Tujuan tidak boleh sama dengan jalur lama.'; else if (list.some(function(r){ return r.old === n && r.neu === o; })) p.neu = 'Membentuk putaran: tujuan ini sudah dialihkan kembali ke jalur lama.';
-    return p;
-  }
-  save(){
-    var f = this.state.f, p = this.problems(f);
-    if (p.old || p.neu) { this.setState({ tried: true }); return; }
+  closeAll(){ this.setState({ dialog: '', actionFailed: false }); }
+  confirm(){
     if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
-    var l = this.list().slice(); l.unshift({ id: 'n' + Date.now(), old: f.old.trim(), neu: f.neu.trim(), type: f.type, reason: f.reason, et: f.et, at: 'Baru saja' });
-    this.setState({ items: l, dialog: '', tried: false, toast: 'Pengalihan ditambahkan.' });
-  }
-  confirmDel(){
-    if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
-    var id = this.state.target;
-    this.setState({ items: this.list().filter(function(r){ return r.id !== id; }), dialog: '', toast: 'Pengalihan dihapus.' });
+    var s = Object.assign({}, this.state.st); s[this.state.target] = this.state.next;
+    this.setState({ st: s, dialog: '', toast: this.state.next === 'active' ? 'Promosi diaktifkan.' : 'Promosi dinonaktifkan.' });
   }
   renderVals() {
     var st = this.state, pr = this.props;
@@ -200,23 +164,30 @@ class Component extends DCLogic {
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
     var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var NOW = new Date('2026-09-24T00:00:00Z').getTime();
+    var fmtD = function(iso){ if (!iso) return 'Tanpa batas'; var d = new Date(iso); var M = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; return d.getUTCDate() + ' ' + M[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); };
+    var rp = function(n){ return 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+    var PROMOS = [
+      { id: 'p1', code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', pct: 10, off: 0, st: 'active', from: '2026-09-01T00:00:00Z', to: '2026-10-31T00:00:00Z', addons: 2 },
+      { id: 'p2', code: 'HEMAT20K', name: 'Potongan Rp 20.000 Awal Bulan', pct: 0, off: 20000, st: 'active', from: '2026-10-15T00:00:00Z', to: '2026-10-31T00:00:00Z', addons: 1 },
+      { id: 'p3', code: 'LEBARAN25', name: 'Promo Lebaran 25% untuk Semua Paket Refresh dan Poin Belajar', pct: 25, off: 0, st: 'active', from: '2026-03-01T00:00:00Z', to: '2026-04-15T00:00:00Z', addons: 0 },
+      { id: 'p4', code: 'PROMO_DRAF', name: 'Promo Draf', pct: 5, off: 0, st: 'draft', from: '', to: '', addons: 0 },
+      { id: 'p5', code: 'AKHIR_TAHUN', name: 'Diskon Akhir Tahun', pct: 0, off: 50000, st: 'inactive', from: '', to: '', addons: 0 }
+    ];
+    var eff = function(p){ if (p.st !== 'active') return p.st; if (p.to && new Date(p.to).getTime() < NOW) return 'expired'; if (p.from && new Date(p.from).getTime() > NOW) return 'scheduled'; return 'active'; };
+    var STS = { draft: ['Draf','ra-badge-neutral'], scheduled: ['Terjadwal','ra-badge-info'], active: ['Aktif','ra-badge-success'], expired: ['Kedaluwarsa','ra-badge-danger'], inactive: ['Nonaktif','ra-badge-warning'] };
     var self = this, mode = pr.state || 'normal', canManage = aktor !== 'manager';
-    var RS = { slug_changed: 'Slug berubah', listing_deleted: 'Listing dihapus', listing_merged: 'Listing digabung', lainnya: 'Lainnya' };
-    var all = this.list();
+    var all = PROMOS.map(function(p){ return Object.assign({}, p, { st: st.st[p.id] || p.st }); });
+    var counts = { all: all.length }; all.forEach(function(p){ var e = eff(p); counts[e] = (counts[e] || 0) + 1; });
+    var chips = [['all','Semua'],['draft','Draf'],['active','Aktif'],['scheduled','Terjadwal'],['expired','Kedaluwarsa'],['inactive','Nonaktif']].map(function(c){ return { label: c[1], count: counts[c[0]] || 0, pressed: st.filter === c[0] ? 'true' : 'false', pick: function(){ self.setState({ filter: c[0] }); } }; });
     var q = (st.q || '').toLowerCase();
-    var rows = all.filter(function(r){ return (st.filter === 'all' || r.reason === st.filter) && (!q || r.old.toLowerCase().indexOf(q) >= 0 || r.neu.toLowerCase().indexOf(q) >= 0); }).map(function(r){
-      return { old: r.old, neu: r.neu, type: r.type, reason: RS[r.reason], et: r.et || '—', at: r.at, canManage: canManage, del: function(){ self.setState({ dialog: 'del', target: r.id, targetName: r.old }); } }; });
-    var counts = { all: all.length }; all.forEach(function(r){ counts[r.reason] = (counts[r.reason] || 0) + 1; });
-    var chips = [['all','Semua'],['slug_changed','Slug berubah'],['listing_deleted','Listing dihapus'],['listing_merged','Digabung'],['lainnya','Lainnya']].map(function(c){ return { label: c[1], count: counts[c[0]] || 0, pressed: st.filter === c[0] ? 'true' : 'false', pick: function(){ self.setState({ filter: c[0] }); } }; });
-    var f = st.f, tried = st.tried === true, pb = tried ? this.problems(f) : {};
-    var types = [301, 302].map(function(t){ return { l: t === 301 ? '301 · Permanen' : '302 · Sementara', checked: f.type === t ? 'true' : 'false', pick: function(){ self.setState({ f: Object.assign({}, st.f, { type: t }) }); } }; });
-    var reasons = Object.keys(RS).map(function(k){ return { l: RS[k], pressed: f.reason === k ? 'true' : 'false', pick: function(){ self.setState({ f: Object.assign({}, st.f, { reason: k }) }); } }; });
-    var probe = String(st.probe || '').trim(), hit = probe ? all.filter(function(r){ return r.old === probe; })[0] : null;
+    var rows = all.filter(function(p){ var e = eff(p); return (st.filter === 'all' || e === st.filter) && (!q || p.name.toLowerCase().indexOf(q) >= 0 || p.code.toLowerCase().indexOf(q) >= 0); }).map(function(p){
+      var e = eff(p), m = STS[e]; var expiredWindow = !!p.to && new Date(p.to).getTime() < NOW;
+      return { code: p.code, name: p.name, benefit: p.pct ? p.pct + '%' : rp(p.off), window: fmtD(p.from) + ' – ' + fmtD(p.to), label: m[0], badge: m[1], addons: p.addons, inUse: p.addons > 0, canManage: canManage,
+        showActivate: canManage && p.st !== 'active', showDeactivate: canManage && p.st === 'active', activateOff: expiredWindow, hasReason: p.st !== 'active' && expiredWindow, reason: 'Masa berlaku sudah lewat; ubah tanggal akhir dulu.',
+        activate: function(){ self.setState({ dialog: 'status', target: p.id, next: 'active', targetName: p.name }); }, deactivate: function(){ self.setState({ dialog: 'status', target: p.id, next: 'inactive', targetName: p.name }); } }; });
     var out = { aktorLabel: aktorLabel, canManage: canManage, readOnly: !canManage, chips: chips, rows: rows, q: st.q, setQ: this.setQ, showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showNoMatch: mode === 'normal' && rows.length === 0, showRows: mode === 'normal' && rows.length > 0,
-      probe: st.probe, onProbe: this.onProbe, probeIdle: !probe, probeHit: !!hit, probeMiss: !!probe && !hit, hitNew: hit ? hit.neu : '', hitType: hit ? hit.type : '',
-      openAdd: function(){ self.setState({ dialog: 'add', f: { old: '', neu: '', type: 301, reason: 'slug_changed', et: '', eid: '' }, tried: false }); },
-      dAdd: st.dialog === 'add', dDel: st.dialog === 'del', dialogOpen: st.dialog !== '', fOld: f.old, fNew: f.neu, fEt: f.et, fEid: f.eid, onOld: this.onOld, onNew: this.onNew, onEt: this.onEt, onEid: this.onEid,
-      errOld: pb.old || '', errNew: pb.neu || '', hasErrOld: !!pb.old, hasErrNew: !!pb.neu, types: types, reasons: reasons, save: this.save, confirmDel: this.confirmDel, closeAll: this.closeAll, tName: st.targetName || '', actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast };
+      dialogOpen: st.dialog !== '', toActive: st.next === 'active', toInactive: st.next !== 'active', tName: st.targetName || '', closeAll: this.closeAll, confirm: this.confirm, actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast };
     return Object.assign(shell, out);
   }
 }

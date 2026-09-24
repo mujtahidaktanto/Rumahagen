@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Form Promosi — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+
+  .drawer{background:var(--ra-ink-900);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <a class="ra-iconbtn" href="M14-Promosi-Admin.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">{{pageTitle}}</span>
+    <span class="ra-badge ra-badge-info">{{aktorLabel}}</span>
+  </div>
+  <div class="main ra-scroll">
+        <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Promosi tersimpan</span><p class="ra-body-md" style="margin-top:2px;">Aktifkan dari <a href="M14-Promosi-Admin.dc.html">daftar Promosi</a>, lalu pilih promosi ini pada add-on.</p></div></div></sc-if>
+        <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi gagal disimpan (mis. kode sudah dipakai). Data Anda masih di form; coba lagi.</p></div></sc-if>
+        <sc-if value="{{dipakai}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi ini dipakai oleh <strong>2 add-on</strong>. Perubahan hanya memengaruhi pesanan baru; pesanan lama sudah membekukan promosinya dan tidak berubah.</p></div></sc-if>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Identitas</span>
+          <div class="field" style="gap:16px;">
+            <div class="field"><label class="ra-label-lg" for="p-code">Kode <span class="req">*</span></label><input id="p-code" class="ra-input mono" type="text" maxlength="100" value="{{code}}" onInput="{{onCode}}"><sc-if value="{{codeErr}}" hint-placeholder-val="{{false}}"><span class="err">{{codeMsg}}</span></sc-if><span class="ra-caption">Unik. Huruf, angka, titik, garis bawah, strip.</span></div>
+            <div class="field"><label class="ra-label-lg" for="p-name">Nama <span class="req">*</span></label><input id="p-name" class="ra-input" type="text" maxlength="200" value="{{name}}" onInput="{{onName}}"><sc-if value="{{nameErr}}" hint-placeholder-val="{{false}}"><span class="err">Nama wajib diisi.</span></sc-if></div>
+          </div>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Potongan</span>
+          <div style="display:grid;grid-template-columns:1fr;gap:10px;" role="radiogroup" aria-label="Jenis potongan"><sc-for list="{{kinds}}" as="k" hint-placeholder-count="2"><button class="radio-card" role="radio" aria-checked="{{k.checked}}" onClick="{{k.pick}}"><span class="ra-label-lg">{{k.l}}</span></button></sc-for></div>
+          <div class="field"><label class="ra-label-lg" for="p-val">{{valueLabel}} <span class="req">*</span></label><input id="p-val" class="ra-input" type="number" min="1" style="max-width:220px;" value="{{value}}" onInput="{{onValue}}"><sc-if value="{{valueErr}}" hint-placeholder-val="{{false}}"><span class="err">{{valueMsg}}</span></sc-if><span class="ra-caption">Tepat satu jenis potongan. Harga akhir setelah promosi harus lebih dari 0.</span></div>
+          <div style="background:var(--ra-blue-50);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;"><span class="ra-label-lg">Contoh harga</span>
+            <sc-for list="{{samples}}" as="s" hint-placeholder-count="2"><div class="ra-body-md">{{s.base}} menjadi <strong>{{s.res}}</strong></div></sc-for></div>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Masa berlaku <span class="ra-caption">(opsional)</span></span>
+          <div class="field" style="gap:16px;">
+            <div class="field"><label class="ra-label-lg" for="p-from">Mulai</label><input id="p-from" class="ra-input" type="datetime-local" value="{{from}}" onInput="{{onFrom}}"></div>
+            <div class="field"><label class="ra-label-lg" for="p-to">Berakhir</label><input id="p-to" class="ra-input" type="datetime-local" value="{{to}}" onInput="{{onTo}}"><sc-if value="{{toErr}}" hint-placeholder-val="{{false}}"><span class="err">{{toMsg}}</span></sc-if></div>
+          </div>
+          <span class="ra-caption">Kosong berarti tanpa batas. Promosi hanya berlaku bila Aktif dan sekarang berada dalam rentang ini.</span>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:8px;background:var(--ra-ink-50);">
+          <span class="ra-title-md">Aturan kelayakan</span>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);">Belum tersedia. Saat ini semua pembeli yang memesan add-on berpromosi mendapat potongan; pembatasan siapa yang berhak belum dievaluasi sistem.</p>
+        </div>
+        <sc-if value="{{isCreate}}" hint-placeholder-val="{{true}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi baru berstatus Draf dan belum memberi potongan sampai diaktifkan.</p></div></sc-if>
+        <div style="display:flex;gap:10px;flex-direction:column;"><a class="ra-btn ra-btn-secondary" href="M14-Promosi-Admin.dc.html">Batal</a><button class="ra-btn ra-btn-primary" disabled="{{saving}}" onClick="{{save}}">{{saveLabel}}</button></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"mode":{"editor":"enum","default":"create","options":["create","edit","edit_dipakai"],"section":"Skenario form"},"simpan":{"editor":"enum","default":"normal","options":["normal","menyimpan","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { f: null, tried: false, done: false, failed: false });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'onCode', 'onName', 'onValue', 'onFrom', 'onTo', 'save'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  mode(){ return this.props.mode || 'create'; }
+  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', kind: 'percent', value: '', from: '', to: '' }; return { code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', kind: 'percent', value: '10', from: '2026-09-01T00:00', to: '2026-10-31T00:00' }; }
+  up(k, v){ var f = Object.assign({}, this.form()); f[k] = v; this.setState({ f: f }); }
+  onCode(e){ this.up('code', e.target.value); }
+  onName(e){ this.up('name', e.target.value); }
+  onValue(e){ this.up('value', e.target.value); }
+  onFrom(e){ this.up('from', e.target.value); }
+  onTo(e){ this.up('to', e.target.value); }
+  problems(f){
+    var p = {}, v = Number(f.value);
+    if (!String(f.code).trim()) p.code = 'Kode wajib diisi.'; else if (!/^[A-Za-z0-9_.-]+$/.test(String(f.code).trim())) p.code = 'Kode hanya huruf, angka, titik, garis bawah, dan strip.';
+    if (!String(f.name).trim()) p.name = 'Nama wajib diisi.';
+    if (f.kind === 'percent') { if (!(v > 0 && v <= 100)) p.value = 'Persentase harus lebih dari 0 dan paling banyak 100.'; } else { if (!(v > 0)) p.value = 'Nominal harus lebih dari 0.'; }
+    if (f.from && f.to && f.to <= f.from) p.to = 'Akhir masa berlaku harus setelah awal.';
+    return p;
+  }
+  save(){
+    if (this.props.simpan === 'menyimpan') return;
+    var p = this.problems(this.form());
+    if (p.code || p.name || p.value || p.to) { this.setState({ tried: true }); return; }
+    if (this.props.simpan === 'gagal') { this.setState({ failed: true, done: false }); return; }
+    this.setState({ done: true, failed: false, tried: false });
+  }
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var self = this, f = this.form(), tried = st.tried === true, p = tried ? this.problems(f) : {}, v = Number(f.value);
+    var dipakai = this.mode() === 'edit_dipakai';
+    var fmt = function(n){ return 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+    var samples = [75000, 200000].map(function(base){ var ok = v > 0 && (f.kind === 'percent' ? v <= 100 : true); var res = !ok ? base : (f.kind === 'percent' ? Math.round(base * (1 - v / 100)) : base - v); var zero = ok && res <= 0; return { base: fmt(base), res: zero ? 'tidak valid (harga akhir harus lebih dari 0)' : fmt(res), zero: zero, changed: ok && !zero }; });
+    var kinds = [['percent','Persentase (%)'],['amount','Nominal (Rp)']].map(function(k){ return { l: k[1], checked: f.kind === k[0] ? 'true' : 'false', pick: function(){ self.up('kind', k[0]); } }; });
+    var out = { aktorLabel: aktorLabel, pageTitle: this.mode() === 'create' ? 'Buat Promosi' : 'Ubah Promosi', code: f.code, name: f.name, value: f.value, from: f.from, to: f.to, onCode: this.onCode, onName: this.onName, onValue: this.onValue, onFrom: this.onFrom, onTo: this.onTo,
+      codeErr: !!p.code, codeMsg: p.code || '', nameErr: !!p.name, valueErr: !!p.value, valueMsg: p.value || '', toErr: !!p.to, toMsg: p.to || '', kinds: kinds, isPercent: f.kind === 'percent', valueLabel: f.kind === 'percent' ? 'Persentase potongan' : 'Nominal potongan (Rp)',
+      samples: samples, dipakai: dipakai, isCreate: this.mode() === 'create', saving: pr.simpan === 'menyimpan', saveLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : (this.mode() === 'create' ? 'Simpan Draf' : 'Simpan Perubahan'), save: this.save,
+      done: st.done === true, failed: st.failed === true && st.done !== true };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>
