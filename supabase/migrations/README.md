@@ -3341,3 +3341,19 @@ withApiHandler, tanpa service role) dan `GET /api/admin/analytics/export?format=
 (Superadmin via `m09.administrative_export.export`, tercatat di audit log SEBELUM file
 dikirim, Excel ditulis tanpa dependency baru). `/api/admin/reports/export` yang sudah
 ada TIDAK berubah: itu export baris `audit_logs`, bukan analitik.
+
+---
+
+## `0125` — Statistik Saya (analitik agen): fungsi baca, perbandingan anonim, izin export, cek pemimpin organisasi (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Hasil uji (transaksi rollback, 33 pengguna sementara, sudah dibersihkan): pemimpin melihat data sendiri dan organisasinya; anggota biasa dan orang luar organisasi ditolak 42501; perbandingan anonim tersedia pada sampel 33 agen (persentil 100/100/100 untuk agen dengan tayangan tertinggi); ringkasan organisasi tidak memuat `learning`/`dbr`. Manager memanggil cakupan "sendiri" tanpa ditolak (memang punya `m08.dashboard_projection.read` own; hanya mendapat datanya sendiri).
+
+**Permission baru (ADD-NEW):** `m08.dashboard_projection.export` (scope own; superadmin=all, agent=own). Read memakai `m08.dashboard_projection.read` yang sudah ada.
+
+**Fungsi (SECURITY DEFINER, otorisasi di DB, R-02):**
+- `_agent_stats_scope(org)` (internal, tanpa EXECUTE untuk peran mana pun): NULL → `[auth.uid()]`; org → wajib `is_org_leader(org)` dan organisasi `active`/`closing`, tidak dihapus; mengembalikan anggota aktif. Selain itu 42501.
+- `agent_statistics_daily(from, to, org?)`: dilihat, lead, refresh terpakai (semua cakupan); poin diperoleh dan simulasi DBR (hanya sendiri). Rentang maks. 366 hari; bucket hari WIB.
+- `agent_statistics_summary(from, to, org?)`: status listing, pipeline lead, listing basi >7 hari, 5 listing teratas; cakupan sendiri menambah kuota, entitlement, learning, DBR; cakupan organisasi menambah rincian per anggota (tanpa learning/DBR demi privasi).
+- `agent_statistics_benchmark(from, to)`: persentil anonim terhadap agen dengan ≥1 listing terbit; `available:false` bila sampel <30 atau pemanggil tidak ada di sampel. Identitas agen lain tidak pernah dikembalikan.
+
+**Route (kode ada, belum di-commit):** `GET /api/agents/me/statistics` dan `GET /api/agents/me/statistics/export?format=xlsx|pdf` (izin `m08.dashboard_projection.export` dicek dengan `p_owner_id`, sehingga Permission Preset ikut berlaku; audit `agent_statistics.export` dicatat SEBELUM file dikirim). Route bergantung pada migration ini (kini sudah tersedia di DB).

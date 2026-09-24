@@ -38,3 +38,16 @@ export type AnalyticsExportQuery = z.infer<typeof analyticsExportQuerySchema>;
 
 /** Perbandingan periode aktif kecuali eksplisit compare=false. */
 export const compareOf = (q: { compare?: "true" | "false" | undefined }): boolean => q.compare !== "false";
+
+// Statistik Saya (analitik agen, 0125). organization_id opsional: tanpa itu =
+// data agen sendiri; dengan itu = statistik organisasi (khusus pemimpin,
+// dicek di DB).
+export const agentStatsQuerySchema = z
+  .object({ ...rangeShape, organization_id: z.string().uuid().optional() })
+  .refine(rangeOk, rangeMessage);
+export type AgentStatsQuery = z.infer<typeof agentStatsQuerySchema>;
+
+export const agentStatsExportQuerySchema = z
+  .object({ ...rangeShape, organization_id: z.string().uuid().optional(), format: z.enum(["xlsx", "pdf"]) })
+  .refine(rangeOk, rangeMessage);
+export type AgentStatsExportQuery = z.infer<typeof agentStatsExportQuerySchema>;

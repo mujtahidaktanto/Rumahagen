@@ -62,13 +62,13 @@ function zip(files: { name: string; data: Buffer }[]): Buffer {
 
 // ------------------------------------------------------------------ SpreadsheetML
 
-type StyleKey = "default" | "title" | "header" | "int" | "idr" | "pct" | "date" | "note" | "bold" | "warn" | "delta" | "dec1" | "wrap" | "label";
+export type StyleKey = "default" | "title" | "header" | "int" | "idr" | "pct" | "date" | "note" | "bold" | "warn" | "delta" | "dec1" | "wrap" | "label";
 const STYLE_INDEX: Record<StyleKey, number> = { default: 0, title: 1, header: 2, int: 3, idr: 4, pct: 5, date: 6, note: 7, bold: 8, warn: 9, delta: 10, dec1: 11, wrap: 12, label: 13 };
 
 type CellValue = string | number | null;
 interface CellObj { v?: CellValue; f?: string; s?: StyleKey }
-type Cell = CellValue | CellObj;
-interface SheetDef { name: string; rows: Cell[][]; widths: number[]; freezeRow?: number }
+export type Cell = CellValue | CellObj;
+export interface SheetDef { name: string; rows: Cell[][]; widths: number[]; freezeRow?: number }
 
 const xmlEsc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
   // eslint-disable-next-line no-control-regex
@@ -140,7 +140,7 @@ const STYLES_XML = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </cellXfs>
 </styleSheet>`;
 
-function packWorkbook(sheets: SheetDef[]): Buffer {
+export function packWorkbook(sheets: SheetDef[]): Buffer {
   const files: { name: string; data: Buffer }[] = [];
   const add = (name: string, xml: string) => files.push({ name, data: Buffer.from(xml, "utf8") });
   add("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}</Types>`);
@@ -154,7 +154,7 @@ function packWorkbook(sheets: SheetDef[]): Buffer {
 
 // ------------------------------------------------------------------ isi workbook
 
-const serial = (d: string): number => Date.parse(`${d}T00:00:00Z`) / 86400000 + 25569; // serial Excel
+export const serial = (d: string): number => Date.parse(`${d}T00:00:00Z`) / 86400000 + 25569; // serial Excel
 const unitStyle = (u: Unit): StyleKey => (u === "idr" ? "idr" : u === "pct" ? "pct" : u === "days" ? "dec1" : "int");
 const valueFor = (u: Unit, v: number | null): number | null => (v === null ? null : u === "pct" ? v / 100 : v);
 

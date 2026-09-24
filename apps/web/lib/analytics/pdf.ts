@@ -9,11 +9,11 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { GROUP_LABELS, GROUP_NOTES, GROUP_ORDER, type Dashboard, type SeriesResult, type Unit } from "./dashboard";
 
-const A4: [number, number] = [595.28, 841.89];
-const M = 40;
-const NAVY = rgb(0.122, 0.227, 0.373);
+export const A4: [number, number] = [595.28, 841.89];
+export const M = 40;
+export const NAVY = rgb(0.122, 0.227, 0.373);
 const BLUE = rgb(0.145, 0.388, 0.922);
-const GRAY = rgb(0.4, 0.4, 0.4);
+export const GRAY = rgb(0.4, 0.4, 0.4);
 const LINE = rgb(0.816, 0.843, 0.886);
 const INK = rgb(0.1, 0.12, 0.16);
 
@@ -35,9 +35,9 @@ export function formatValue(unit: Unit, v: number | null): string {
   }
   return group3(v);
 }
-const formatDelta = (d: number | null): string => (d === null ? "-" : `${d >= 0 ? "+" : "-"}${Math.abs(d).toFixed(1).replace(".", ",")}%`);
+export const formatDelta = (d: number | null): string => (d === null ? "-" : `${d >= 0 ? "+" : "-"}${Math.abs(d).toFixed(1).replace(".", ",")}%`);
 
-class Doc {
+export class Doc {
   page: PDFPage;
   y: number;
   constructor(readonly doc: PDFDocument, readonly font: PDFFont, readonly bold: PDFFont) {
@@ -108,7 +108,7 @@ function polyline(d: Doc, pts: number[], x: number, y: number, w: number, h: num
   }
 }
 
-function chartCard(d: Doc, s: SeriesResult, x: number, top: number, w: number, h: number): void {
+export function chartCard(d: Doc, s: SeriesResult, x: number, top: number, w: number, h: number): void {
   d.page.drawRectangle({ x, y: top - h, width: w, height: h, borderColor: LINE, borderWidth: 0.8 });
   d.text(d.fit(s.label, 8, w - 12, true), x + 6, top - 12, 8, { bold: true, color: NAVY });
   d.text(formatValue(s.unit, s.value), x + 6, top - 28, 13, { bold: true });
