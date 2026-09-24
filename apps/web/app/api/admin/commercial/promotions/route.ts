@@ -2,14 +2,14 @@
 // ADD-NEW — GET daftar promosi (filter status/q) dan POST buat promosi. Otorisasi lewat RLS promotions_manage
 // (m14.commercial_administration.configure: Superadmin/Admin); bukan staf mendapat daftar kosong dan ditolak saat menulis.
 // Aturan bentuk promosi ditegakkan juga oleh CHECK migration 0133/0134. Respons memuat effective_status/is_applicable/benefit_label,
-// eligibility_configuration, dan redemption_count (pesanan pending + confirmed yang membawa promosi).
+// eligibility_configuration, redemption_count (pesanan pending + confirmed yang membawa promosi), serta linked_addon_count dan linked_plan_count (add-on / paket langganan yang memakai promosi).
 
 import { withApiHandler } from "@/lib/api/handler";
 import { parsePagination, buildPaginationMeta } from "@/lib/api/pagination";
 import { validateJsonBody, validateSearchParams } from "@/lib/api/validate";
 import { createPromotionSchema, listPromotionsQuerySchema } from "@/lib/validation/commercial-promotions";
 import { derivePromotionState } from "@/lib/commercial/promotion-state";
-import { getRedemptionCounts } from "@/lib/commercial/promotion-usage";
+import { getLinkedCounts, getRedemptionCounts } from "@/lib/commercial/promotion-usage";
 import { ApiError } from "@/lib/api/errors";
 import { createClient } from "@/lib/supabase/server";
 
@@ -35,8 +35,16 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw error;
   }
   const now = new Date();
-  const counts = await getRedemptionCounts(supabase, (data ?? []).map((row) => row.id));
-  const rows = (data ?? []).map((row) => ({ ...row, ...derivePromotionState(row, now), redemption_count: counts.get(row.id) ?? 0 }));
+  const ids = (data ?? []).map((row) => row.id);
+  const counts = await getRedemptionCounts(supabase, ids);
+  const linked = await getLinkedCounts(supabase, ids);
+  const rows = (data ?? []).map((row) => ({
+    ...row,
+    ...derivePromotionState(row, now),
+    redemption_count: counts.get(row.id) ?? 0,
+    linked_addon_count: linked.get(row.id)?.addons ?? 0,
+    linked_plan_count: linked.get(row.id)?.plans ?? 0,
+  }));
   return { data: rows, pagination: buildPaginationMeta(limit, offset, count ?? 0) };
 });
 

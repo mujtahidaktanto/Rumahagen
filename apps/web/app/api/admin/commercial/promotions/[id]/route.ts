@@ -1,5 +1,5 @@
 // app/api/admin/commercial/promotions/[id]/route.ts
-// ADD-NEW — GET satu promosi (dengan addon yang merujuknya) dan PUT ubah. Tidak ada DELETE: promosi dinonaktifkan lewat PATCH /status
+// ADD-NEW — GET satu promosi (dengan addon dan paket langganan yang merujuknya) dan PUT ubah. Tidak ada DELETE: promosi dinonaktifkan lewat PATCH /status
 // (promosi yang masih dirujuk addon/pesanan tidak bisa dihapus, migration 0133). Perubahan promosi hanya memengaruhi pesanan BARU;
 // pesanan lama membekukan promosi di commercial_snapshot (0131). Aturan kelayakan (0134) dievaluasi server pada pesanan baru; respons memuat
 // redemption_count (pesanan pending + confirmed).
@@ -22,8 +22,9 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw new ApiError("NOT_FOUND", "Promosi tidak ditemukan atau Anda tidak punya akses.");
   }
   const { data: addons } = await supabase.from("addons").select("id, code, name, status").eq("promotion_id", ctx.params.id);
+  const { data: plans } = await supabase.from("subscription_plans").select("id, code, name, status").eq("promotion_id", ctx.params.id);
   const counts = await getRedemptionCounts(supabase, [data.id]);
-  return { data: { ...data, ...derivePromotionState(data), linked_addons: addons ?? [], redemption_count: counts.get(data.id) ?? 0 } };
+  return { data: { ...data, ...derivePromotionState(data), linked_addons: addons ?? [], linked_plans: plans ?? [], redemption_count: counts.get(data.id) ?? 0 } };
 });
 
 export const PUT = withApiHandler({}, async (ctx) => {
