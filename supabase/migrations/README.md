@@ -3268,11 +3268,9 @@ Admin/Manager/Superadmin → harus 0 baris terpengaruh (`USING` tidak
 lolos); Superadmin tidak terpengaruh. Data uji 0121 (4 throwaway user)
 sudah dihapus total sebelum bug lapisan kedua ini ditemukan.
 
-## `0123` — Tabel `metrics_daily_snapshot` + `capture_daily_metrics()` (⏳ DITULIS, BELUM DITERAPKAN)
+## `0123` — Tabel `metrics_daily_snapshot` + `capture_daily_metrics()` (✅ DITERAPKAN)
 
-**STATUS:** file ditulis dan SQL-nya diuji di transaksi yang di-rollback (fungsi
-jalan tanpa error, DB kembali bersih), tapi BELUM diterapkan ke database live.
-Menunggu izin eksplisit pengguna untuk `apply_migration`.
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna. Verifikasi pasca-terapan: RLS aktif, 1 policy SELECT, tabel kosong (belum ada yang memanggil fungsi), `EXECUTE` hanya untuk `service_role` (`anon` dan `authenticated` ditolak). Sebelumnya SQL-nya diuji di transaksi rollback.
 
 Mendukung Dashboard Analytics Admin (`docs/analytics/METRIC_DEFINITIONS_v1.md`
 v1.1). Menyimpan potret harian metrik STOK yang tidak bisa direkonstruksi:
