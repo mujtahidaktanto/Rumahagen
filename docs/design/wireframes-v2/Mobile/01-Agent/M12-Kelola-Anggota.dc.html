@@ -24,6 +24,12 @@
   .modal-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:flex-end;z-index:20;}
   .modal{background:#fff;border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;display:flex;flex-direction:column;gap:12px;max-height:80%;}
   .search-result-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--ra-ink-50);}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
 </style>
 </helmet>
 <div class="app">
@@ -32,7 +38,7 @@
     <button class="tb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M15 5l-7 7 7 7"/></svg></button>
     <span class="ra-title-md" style="flex:1;">Kelola Anggota</span>
     <button class="ra-iconbtn" aria-label="Undang Anggota" onClick="{{openInviteModal}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg></button>
-  </div>
+  <button class="ra-iconbtn" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button></div>
 
   <div class="ra-scroll" style="flex:1;overflow-y:auto;">
 
@@ -107,6 +113,24 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}"></div>
+    <div class="drawer">
+      <div class="drawer-head"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;"><button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;margin:8px 12px 0;border-radius:var(--ra-radius-md);background:rgba(255,255,255,.08);"><div style="width:26px;height:26px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div><div style="min-width:0;flex:1;"><div class="ra-caption" style="color:rgba(255,255,255,.55);">Konteks aktif</div><div class="ra-label-lg" style="color:#fff;">Personal</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;">
+        <a class="nav-item" href="M08-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>Dashboard</a>
+        <a class="nav-item" href="M03-Listing-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg>Listing Saya</a>
+        <a class="nav-item" href="M04-Pembelajaran.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg>Pembelajaran</a>
+        <a class="nav-item" href="M05-Event-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Event</a>
+        <a class="nav-item is-active" href="M12-Organisasi-Dashboard.dc.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>Organisasi</a>
+        <a class="nav-item" href="M14-Katalog-Komersial.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg>Komersial</a>
+        <a class="nav-item" href="M13-Koneksi-AI.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>AI Assistant</a>
+        <a class="nav-item" href="M02-Profil-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Profil Saya</a>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;"><div style="width:34px;height:34px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">RS</div><div><div class="ra-label-lg" style="color:#fff;">Rian Saputra</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div></div></div>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"hasJoinRequestsProp":{"editor":"boolean","default":true,"section":"Skenario"},"hasSentInvitesProp":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
@@ -121,7 +145,8 @@ class Component extends DCLogic {
   openInviteModal(){ this.setState({ inviteModalOpen: true }); }
   closeInviteModal(){ this.setState({ inviteModalOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
-  renderVals() {
+  renderVals() { var self = this, st = this.state || {}; var open = st.drawerOpen === true; var shell = { drawerOpen: open, openDrawer: function(){ self.setState({ drawerOpen: true }); }, closeDrawer: function(){ self.setState({ drawerOpen: false }); }, stopClick: function(e){ if (e && e.stopPropagation) e.stopPropagation(); } }; return Object.assign(shell, this.renderVals_page()); }
+  renderVals_page() {
     const hasJoinRequests = this.props.hasJoinRequestsProp ?? true;
     const hasSentInvites = this.props.hasSentInvitesProp ?? true;
 
