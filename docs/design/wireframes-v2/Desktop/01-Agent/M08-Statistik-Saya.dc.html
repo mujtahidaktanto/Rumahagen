@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Statistik Saya — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+  .filterbar{flex:none;display:flex;align-items:center;gap:14px;padding:12px 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .seg{display:flex;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-pill);overflow:hidden;}
+  .seg-item{padding:7px 16px;font-size:13px;font-weight:600;color:var(--ra-ink-500);cursor:pointer;}
+  .seg-item.is-on{background:var(--ra-blue-600);color:#fff;}
+  .chip-row{display:flex;gap:8px;}
+  .date-in{height:36px;width:150px;}
+  .switch{width:38px;height:21px;border-radius:11px;background:var(--ra-ink-200);position:relative;flex:none;cursor:pointer;}
+  .switch[aria-checked="true"]{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .15s ease;}
+  .switch[aria-checked="true"] .switch-knob{left:19px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
+  .kpi{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;}
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+  .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+  .chart-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:4px;}
+  .panel{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:18px;display:flex;flex-direction:column;gap:12px;}
+  .tile{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:4px;}
+  .sec-head{display:flex;flex-direction:column;gap:2px;margin-bottom:12px;}
+  .bar-track{height:10px;border-radius:5px;background:var(--ra-ink-50);overflow:hidden;flex:1;}
+  .bar-fill{height:100%;border-radius:5px;background:var(--ra-blue-600);}
+  table{width:100%;border-collapse:collapse;}
+  thead th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--ra-ink-100);}
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--ra-ink-50);vertical-align:middle;}
+  td.n,th.n{text-align:right;}
+  .menu{position:absolute;top:42px;right:0;width:290px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);box-shadow:var(--ra-shadow-3);z-index:12;padding:8px;display:flex;flex-direction:column;gap:2px;}
+  .menu-item{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:var(--ra-radius-sm);cursor:pointer;}
+  .menu-item:hover{background:var(--ra-ink-50);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:20;}
+  .dialog{width:460px;background:#fff;border-radius:var(--ra-radius-lg);box-shadow:var(--ra-shadow-3);padding:28px;display:flex;flex-direction:column;gap:14px;}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:80px 20px;color:var(--ra-ink-300);text-align:center;}
+  .pctl{display:flex;align-items:center;gap:10px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;position:relative;">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="M08-Dashboard.dc.html">Dashboard</a><span>/</span>
+        <span class="ra-label-lg" style="color:var(--ra-ink-900);">Statistik Saya</span>
+      </div>
+      <div style="position:relative;">
+        <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{toggleExportMenu}}">Export ▾</button>
+        <sc-if value="{{exportMenuOpen}}" hint-placeholder-val="{{false}}">
+          <div class="menu">
+            <div class="menu-item" onClick="{{chooseExcel}}"><span class="ra-label-lg">Excel (.xlsx)</span><span class="ra-caption">Data per hari dan per listing, siap diolah</span></div>
+            <div class="menu-item" onClick="{{choosePdf}}"><span class="ra-label-lg">PDF</span><span class="ra-caption">Laporan ringkas dengan grafik, bisa dibagikan</span></div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div class="filterbar">
+      <div class="seg">
+        <div class="seg-item {{ownOn}}" onClick="{{pickOwn}}">Milik Saya</div>
+        <sc-if value="{{isLeader}}" hint-placeholder-val="{{true}}"><div class="seg-item {{orgOn}}" onClick="{{pickOrg}}">Organisasi</div></sc-if>
+      </div>
+      <div class="chip-row">
+        <sc-for list="{{rangeChips}}" as="c" hint-placeholder-count="5">
+          <span class="ra-chip" aria-pressed="{{c.isActive}}" onClick="{{c.pick}}">{{c.label}}</span>
+        </sc-for>
+      </div>
+      <sc-if value="{{isCustom}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input class="ra-input date-in" type="date" value="{{customFrom}}" onChange="{{onFrom}}">
+          <span class="ra-caption">s.d.</span>
+          <input class="ra-input date-in" type="date" value="{{customTo}}" onChange="{{onTo}}">
+        </div>
+      </sc-if>
+      <span class="ra-label-lg" style="color:var(--ra-ink-700);">{{rangeLabel}}</span>
+      <div style="flex:1;"></div>
+      <span class="ra-caption">Bandingkan periode sebelumnya</span>
+      <div class="switch" aria-checked="{{compareOn}}" onClick="{{toggleCompare}}"><div class="switch-knob"></div></div>
+    </div>
+
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:24px 40px 48px;display:flex;flex-direction:column;gap:28px;">
+
+      <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+        <div class="kpi-grid"><div class="ra-skel" style="height:92px;"></div><div class="ra-skel" style="height:92px;"></div><div class="ra-skel" style="height:92px;"></div><div class="ra-skel" style="height:92px;"></div><div class="ra-skel" style="height:92px;"></div></div>
+        <div class="grid2"><div class="ra-skel" style="height:190px;"></div><div class="ra-skel" style="height:190px;"></div></div>
+      </sc-if>
+
+      <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+        <div class="empty-wrap">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" width="52" height="52"><path d="M10 54V10M10 54h44"/><path d="M18 42l10-12 8 6 14-18"/></svg>
+          <span class="ra-body-md">Belum ada data statistik</span>
+          <span class="ra-caption">Statistik muncul setelah listing Anda dipublikasikan dan mulai dilihat pengunjung.</span>
+          <a class="ra-btn ra-btn-primary ra-btn-sm" href="M03-Create-Listing-Wizard.dc.html" style="margin-top:6px;">Buat Listing</a>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showOwn}}" hint-placeholder-val="{{true}}">
+
+        <div>
+          <div class="sec-head"><span class="ra-title-md">Ringkasan</span></div>
+          <div class="kpi-grid">
+            <sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
+              <div class="kpi">
+                <span class="ra-caption">{{k.title}}</span>
+                <span class="ra-headline" style="font-size:24px;">{{k.value}}</span>
+                <sc-if value="{{k.showDelta}}" hint-placeholder-val="{{true}}"><span class="ra-badge {{k.deltaClass}}" style="align-self:flex-start;">{{k.deltaLabel}}</span></sc-if>
+                <sc-if value="{{k.hasSub}}" hint-placeholder-val="{{false}}"><span class="ra-caption">{{k.sub}}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec-head"><span class="ra-title-md">Performa Listing</span><span class="ra-caption">Dilihat = kunjungan ke halaman listing publik Anda. Konversi = lead dibagi dilihat.</span></div>
+          <div class="grid2">
+            <sc-for list="{{perfCards}}" as="c" hint-placeholder-count="3">
+              <div class="chart-card">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span class="ra-label-lg">{{c.title}}</span><sc-if value="{{c.showDelta}}" hint-placeholder-val="{{true}}"><span class="ra-badge {{c.deltaClass}}">{{c.deltaLabel}}</span></sc-if></div>
+                <span class="ra-headline" style="font-size:26px;">{{c.value}}</span>
+                <span class="ra-caption">{{c.sub}}</span>
+                <svg viewBox="0 0 320 90" preserveAspectRatio="none" width="100%" height="90" style="margin-top:6px;">
+                  <path d="{{c.areaPath}}" fill="var(--ra-blue-100)" opacity="0.6"></path>
+                  <sc-if value="{{c.showPrev}}" hint-placeholder-val="{{true}}"><path d="{{c.prevPath}}" fill="none" stroke="var(--ra-ink-300)" stroke-width="1.5" stroke-dasharray="4 3"></path></sc-if>
+                  <path d="{{c.linePath}}" fill="none" stroke="var(--ra-blue-600)" stroke-width="2"></path>
+                </svg>
+                <div style="display:flex;justify-content:space-between;"><span class="ra-caption">{{c.x0}}</span><span class="ra-caption">{{c.x1}}</span></div>
+              </div>
+            </sc-for>
+            <div class="panel" style="padding:0;overflow:hidden;">
+              <div style="padding:16px 18px 4px;"><span class="ra-label-lg">Listing terbaik</span></div>
+              <table>
+                <thead><tr><th class="ra-label-md" style="color:var(--ra-ink-300);">Listing</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Dilihat</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Lead</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Konversi</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{topListings}}" as="l" hint-placeholder-count="5">
+                    <tr><td><div class="ra-label-lg ra-truncate-1" style="max-width:220px;">{{l.title}}</div><span class="ra-caption">{{l.location}}</span></td><td class="n">{{l.views}}</td><td class="n">{{l.leads}}</td><td class="n">{{l.conv}}</td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec-head"><span class="ra-title-md">Lead</span><span class="ra-caption">Status lead yang Anda perbarui sendiri di Listing Saya. Waktu respons belum bisa dihitung karena perubahan status tidak menyimpan waktunya.</span></div>
+          <div class="grid2">
+            <div class="panel">
+              <span class="ra-label-lg">Pipeline lead (periode ini)</span>
+              <sc-for list="{{pipeline}}" as="p" hint-placeholder-count="4">
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <div style="display:flex;justify-content:space-between;"><span class="ra-body-md">{{p.label}}</span><span class="ra-label-lg">{{p.count}} · {{p.pct}}</span></div>
+                  <div class="bar-track"><div class="bar-fill" style="width:{{p.width}}%;background:{{p.color}};"></div></div>
+                </div>
+              </sc-for>
+            </div>
+            <div class="panel">
+              <span class="ra-label-lg">Kondisi listing</span>
+              <sc-for list="{{listingStatus}}" as="s" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span class="ra-body-md" style="width:120px;">{{s.label}}</span>
+                  <div class="bar-track"><div class="bar-fill" style="width:{{s.width}}%;"></div></div>
+                  <span class="ra-label-lg" style="width:30px;text-align:right;">{{s.count}}</span>
+                </div>
+              </sc-for>
+              <span class="ra-caption">Jumlah saat ini. Riwayat harian jumlah listing aktif belum tersimpan.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec-head"><span class="ra-title-md">Kuota Refresh</span><span class="ra-caption">Refresh menaikkan posisi listing. Jatah harian dari paket dan add-on aktif.</span></div>
+          <div class="grid2">
+            <div class="panel">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="ra-label-lg">Terpakai hari ini</span><span class="ra-headline" style="font-size:22px;">{{quota.used}} / {{quota.allow}}</span></div>
+              <div class="bar-track" style="height:12px;"><div class="bar-fill" style="width:{{quota.pct}}%;"></div></div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{entitlements}}" as="e" hint-placeholder-count="2"><span class="ra-badge ra-badge-info"><span class="ra-dot"></span>{{e.label}}</span></sc-for>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;"><span class="ra-caption">{{staleNote}}</span><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M03-Listing-Saya.dc.html">Refresh listing</a></div>
+            </div>
+            <div class="chart-card">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span class="ra-label-lg">{{refreshCard.title}}</span><sc-if value="{{refreshCard.showDelta}}" hint-placeholder-val="{{true}}"><span class="ra-badge {{refreshCard.deltaClass}}">{{refreshCard.deltaLabel}}</span></sc-if></div>
+              <span class="ra-headline" style="font-size:26px;">{{refreshCard.value}}</span>
+              <span class="ra-caption">{{refreshCard.sub}}</span>
+              <svg viewBox="0 0 320 90" preserveAspectRatio="none" width="100%" height="90" style="margin-top:6px;">
+                <path d="{{refreshCard.areaPath}}" fill="var(--ra-blue-100)" opacity="0.6"></path>
+                <sc-if value="{{refreshCard.showPrev}}" hint-placeholder-val="{{true}}"><path d="{{refreshCard.prevPath}}" fill="none" stroke="var(--ra-ink-300)" stroke-width="1.5" stroke-dasharray="4 3"></path></sc-if>
+                <path d="{{refreshCard.linePath}}" fill="none" stroke="var(--ra-blue-600)" stroke-width="2"></path>
+              </svg>
+              <div style="display:flex;justify-content:space-between;"><span class="ra-caption">{{refreshCard.x0}}</span><span class="ra-caption">{{refreshCard.x1}}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec-head"><span class="ra-title-md">Learning &amp; Kalkulator DBR</span></div>
+          <div class="grid4">
+            <sc-for list="{{learnTiles}}" as="t" hint-placeholder-count="4">
+              <div class="tile"><span class="ra-caption">{{t.label}}</span><span class="ra-headline" style="font-size:22px;">{{t.value}}</span><span class="ra-caption">{{t.sub}}</span></div>
+            </sc-for>
+          </div>
+          <div class="panel" style="margin-top:16px;">
+            <span class="ra-label-lg">Hasil simulasi DBR (periode ini)</span>
+            <div style="display:flex;height:14px;border-radius:7px;overflow:hidden;">
+              <sc-for list="{{dbrSplit}}" as="d" hint-placeholder-count="3"><div style="width:{{d.width}}%;background:{{d.color}};"></div></sc-for>
+            </div>
+            <div style="display:flex;gap:24px;flex-wrap:wrap;">
+              <sc-for list="{{dbrSplit}}" as="d" hint-placeholder-count="3"><span class="ra-body-md"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:{{d.color}};margin-right:6px;"></span>{{d.label}}: <strong>{{d.count}}</strong></span></sc-for>
+              <span class="ra-body-md">Disimpan sebagai prospek: <strong>{{dbrSaved}}</strong></span>
+              <span class="ra-body-md">Dibagikan ke prospek: <strong>{{dbrShared}}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="sec-head"><span class="ra-title-md">Posisi Anda dibanding agen lain</span><span class="ra-caption">Perbandingan anonim dengan agen aktif lain. Tidak ada nama atau angka agen lain yang ditampilkan.</span></div>
+          <sc-if value="{{benchOn}}" hint-placeholder-val="{{true}}">
+            <div class="panel">
+              <sc-for list="{{bench}}" as="b" hint-placeholder-count="3">
+                <div class="pctl">
+                  <span class="ra-body-md" style="width:180px;">{{b.label}}</span>
+                  <div class="bar-track" style="height:12px;"><div class="bar-fill" style="width:{{b.pctl}}%;"></div></div>
+                  <span class="ra-label-lg" style="width:190px;text-align:right;">{{b.text}}</span>
+                </div>
+              </sc-for>
+              <span class="ra-caption">Dibandingkan dengan {{benchSample}} agen aktif dalam rentang yang sama.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{benchOff}}" hint-placeholder-val="{{false}}">
+            <div class="panel"><span class="ra-body-md" style="color:var(--ra-ink-500);">Perbandingan belum tersedia: jumlah agen pembanding belum mencukupi (minimal 30 agen aktif) agar tetap anonim.</span></div>
+          </sc-if>
+        </div>
+
+        <div class="panel" style="background:var(--ra-ink-50);">
+          <span class="ra-label-lg">Yang belum tersedia</span>
+          <span class="ra-caption">Kunjungan ke profil publik, sumber trafik dan demografi pengunjung, waktu respons ke lead, lead yang menjadi transaksi, dan tren jumlah listing aktif per hari belum bisa ditampilkan karena datanya belum dicatat sistem.</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showOrg}}" hint-placeholder-val="{{false}}">
+        <div>
+          <div class="sec-head"><span class="ra-title-md">Performa Organisasi</span><span class="ra-caption">Hanya untuk pemimpin organisasi. Menampilkan aktivitas listing tiap anggota; data pribadi anggota tidak ditampilkan.</span></div>
+          <div class="kpi-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px;">
+            <sc-for list="{{orgKpis}}" as="k" hint-placeholder-count="4">
+              <div class="kpi"><span class="ra-caption">{{k.title}}</span><span class="ra-headline" style="font-size:24px;">{{k.value}}</span></div>
+            </sc-for>
+          </div>
+          <div class="panel" style="padding:0;overflow:hidden;">
+            <table>
+              <thead><tr><th class="ra-label-md" style="color:var(--ra-ink-300);">Anggota</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Listing aktif</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Dilihat</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Lead</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Konversi</th><th class="ra-label-md n" style="color:var(--ra-ink-300);">Refresh</th></tr></thead>
+              <tbody>
+                <sc-for list="{{orgMembers}}" as="m" hint-placeholder-count="5">
+                  <tr><td><span class="ra-label-lg">{{m.name}}</span> <span class="ra-caption">{{m.role}}</span></td><td class="n">{{m.active}}</td><td class="n">{{m.views}}</td><td class="n">{{m.leads}}</td><td class="n">{{m.conv}}</td><td class="n">{{m.refresh}}</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{exportKind}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeExport}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">Export {{exportKindLabel}}</h2>
+        <div style="background:var(--ra-ink-50);border-radius:var(--ra-radius-sm);padding:12px 14px;display:flex;flex-direction:column;gap:4px;">
+          <span class="ra-caption">Cakupan data</span><span class="ra-label-lg">{{scopeLabel}}</span>
+          <span class="ra-caption" style="margin-top:6px;">Rentang</span><span class="ra-label-lg">{{rangeLabel}}</span>
+          <span class="ra-caption" style="margin-top:6px;">Perbandingan</span><span class="ra-label-lg">{{compareLabel}}</span>
+        </div>
+        <span class="ra-caption">Export hanya berisi data milik Anda dan dicatat di riwayat aktivitas akun.</span>
+        <div style="display:flex;gap:12px;justify-content:flex-end;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeExport}}">Batal</button>
+          <button class="ra-btn ra-btn-primary" onClick="{{closeExport}}">Unduh {{exportKindLabel}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"agentRole":{"editor":"enum","default":"leader","options":["member","leader"],"section":"Skenario agen — tab Organisasi hanya untuk pemimpin"},"dataState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario data"},"benchmarkAvailable":{"editor":"boolean","default":true,"section":"Perbandingan anonim (butuh minimal 30 agen pembanding)"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { tab: 'own', rangeKey: '30', compare: true, exportMenu: false, exportKind: null, customFrom: '2026-08-01', customTo: '2026-09-25' };
+    this.toggleCompare = this.toggleCompare.bind(this);
+    this.toggleExportMenu = this.toggleExportMenu.bind(this);
+    this.chooseExcel = this.chooseExcel.bind(this);
+    this.choosePdf = this.choosePdf.bind(this);
+    this.closeExport = this.closeExport.bind(this);
+    this.onFrom = this.onFrom.bind(this);
+    this.onTo = this.onTo.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+    this.pickOwn = this.pickOwn.bind(this);
+    this.pickOrg = this.pickOrg.bind(this);
+  }
+  pickRange(k){ this.setState({ rangeKey: k }); }
+  pickOwn(){ this.setState({ tab: 'own' }); }
+  pickOrg(){ this.setState({ tab: 'org' }); }
+  toggleCompare(){ this.setState({ compare: !this.state.compare }); }
+  toggleExportMenu(){ this.setState({ exportMenu: !this.state.exportMenu }); }
+  chooseExcel(){ this.setState({ exportKind: 'excel', exportMenu: false }); }
+  choosePdf(){ this.setState({ exportKind: 'pdf', exportMenu: false }); }
+  closeExport(){ this.setState({ exportKind: null }); }
+  onFrom(e){ this.setState({ customFrom: e && e.target ? e.target.value : this.state.customFrom }); }
+  onTo(e){ this.setState({ customTo: e && e.target ? e.target.value : this.state.customTo }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  renderVals() {
+    const agentRole = this.props.agentRole ?? 'leader';
+    const isLeader = agentRole === 'leader';
+    const dataState = this.props.dataState ?? 'loaded';
+    const benchAvail = this.props.benchmarkAvailable ?? true;
+    const tab = isLeader ? (this.state.tab ?? 'own') : 'own';
+    const rangeKey = this.state.rangeKey ?? '30';
+    const compare = this.state.compare ?? true;
+    const DAY = 86400000;
+    const MON = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    const fmtD = (d) => d.getDate() + ' ' + MON[d.getMonth()] + ' ' + d.getFullYear();
+    const fmtS = (d) => d.getDate() + ' ' + MON[d.getMonth()];
+    const parseD = (s) => { const p = String(s || '').split('-'); return p.length === 3 ? new Date(+p[0], +p[1] - 1, +p[2]) : null; };
+    const today = new Date(2026, 8, 25);
+    let start, end = today, n;
+    if (rangeKey === 'custom') {
+      const f = parseD(this.state.customFrom), t = parseD(this.state.customTo);
+      if (f && t && t >= f) { start = f; end = t; n = Math.min(120, Math.round((t - f) / DAY) + 1); }
+      else { n = 45; start = new Date(end.getTime() - (n - 1) * DAY); }
+    } else if (rangeKey === 'month') { n = 25; start = new Date(2026, 8, 1); }
+    else { n = Number(rangeKey); start = new Date(end.getTime() - (n - 1) * DAY); }
+    const rangeLabel = fmtD(start) + ' – ' + fmtD(end) + ' (' + n + ' hari)';
+    const prevEnd = new Date(start.getTime() - DAY);
+    const prevStart = new Date(prevEnd.getTime() - (n - 1) * DAY);
+    const compareLabel = compare ? ('Dibanding ' + fmtD(prevStart) + ' – ' + fmtD(prevEnd)) : 'Tanpa perbandingan';
+
+    const rand = (i, seed) => { const x = Math.sin(i * 12.9898 + seed * 78.233) * 43758.5453; return x - Math.floor(x); };
+    const flow = (base, trend, seed, scale) => Array.from({ length: n }, (_, i) => Math.max(0, base * (scale || 1) * (1 + 0.22 * Math.sin(i * 0.8 + seed) + 0.12 * (rand(i, seed) - 0.5)) * (1 + trend * (i / n))));
+    const sum = (a) => a.reduce((x, y) => x + y, 0);
+    const fInt = (v) => Math.round(v).toLocaleString('id-ID');
+    const fPct = (v) => v.toFixed(1).replace('.', ',') + '%';
+    const W = 320, H = 90, P = 6;
+    const pathOf = (arr, lo, hi) => arr.map((v, i) => {
+      const x = n === 1 ? 0 : (i / (n - 1)) * W;
+      const y = H - P - ((v - lo) / ((hi - lo) || 1)) * (H - 2 * P);
+      return (i === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1);
+    }).join(' ');
+    const mkSeries = (cur, prev, title, sub, isPct) => {
+      const val = isPct ? (sum(cur.num) / (sum(cur.den) || 1)) * 100 : sum(cur);
+      const pval = isPct ? (sum(prev.num) / (sum(prev.den) || 1)) * 100 : sum(prev);
+      const line = isPct ? cur.num.map((v, i) => (cur.den[i] ? v / cur.den[i] * 100 : 0)) : cur;
+      const pline = isPct ? prev.num.map((v, i) => (prev.den[i] ? v / prev.den[i] * 100 : 0)) : prev;
+      const d = pval ? (val - pval) / pval * 100 : 0;
+      const all = line.concat(pline);
+      const lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
+      const p = pathOf(line, lo, hi);
+      return { title, value: isPct ? fPct(val) : fInt(val), raw: val, sub, showDelta: compare, deltaLabel: (d >= 0 ? '▲ ' : '▼ ') + Math.abs(d).toFixed(1).replace('.', ',') + '%', deltaClass: d >= 0 ? 'ra-badge-success' : 'ra-badge-danger',
+        linePath: p, areaPath: p + ' L' + W + ' ' + H + ' L0 ' + H + ' Z', prevPath: pathOf(pline, lo, hi), showPrev: compare, x0: fmtS(start), x1: fmtS(end) };
+    };
+    const vC = flow(72, 0.25, 1), vP = flow(72, 0.1, 8, 0.9);
+    const lC = vC.map((v, i) => Math.round(v * (0.042 + 0.012 * Math.sin(i * 0.5)))), lP = vP.map((v, i) => Math.round(v * (0.039 + 0.01 * Math.sin(i * 0.5))));
+    const rC = flow(8, 0.1, 3).map(Math.round), rP = flow(8, 0.05, 11, 0.9).map(Math.round);
+    const viewsCard = mkSeries(vC.map(Math.round), vP.map(Math.round), 'Dilihat', 'Kunjungan ke halaman listing Anda');
+    const leadsCard = mkSeries(lC, lP, 'Lead Masuk', 'Klik tombol WhatsApp di listing Anda');
+    const convCard = mkSeries({ num: lC, den: vC.map(Math.round) }, { num: lP, den: vP.map(Math.round) }, 'Konversi Dilihat ke Lead', 'Lead dibagi dilihat', true);
+    const refreshCard = mkSeries(rC, rP, 'Refresh Terpakai', 'Jumlah refresh per hari pada rentang ini');
+    const kpiFrom = (c, sub) => ({ title: c.title, value: c.value, showDelta: c.showDelta, deltaLabel: c.deltaLabel, deltaClass: c.deltaClass, hasSub: !!sub, sub: sub || '' });
+    const kpis = [kpiFrom(viewsCard), kpiFrom(leadsCard), kpiFrom(convCard),
+      { title: 'Listing Aktif', value: '18', showDelta: false, deltaLabel: '', deltaClass: '', hasSub: true, sub: 'Jumlah saat ini' },
+      { title: 'Refresh Hari Ini', value: '7 / 10', showDelta: false, deltaLabel: '', deltaClass: '', hasSub: true, sub: 'Sisa jatah 3' }];
+
+    const k = n / 30;
+    const topDefs = [['Rumah Minimalis 2 Lantai', 'BSD City', 420, 21], ['Ruko 3 Lantai Siap Pakai', 'Bekasi Timur', 310, 16], ['Apartemen Studio Furnished', 'Jakarta Selatan', 260, 11], ['Rumah Cluster Modern', 'Tangerang', 190, 6], ['Tanah Kavling Siap Bangun', 'Bogor', 120, 3]];
+    const topListings = topDefs.map(t => { const v = Math.round(t[2] * k), l = Math.max(0, Math.round(t[3] * k)); return { title: t[0], location: t[1], views: fInt(v), leads: fInt(l), conv: fPct(v ? l / v * 100 : 0) }; });
+
+    const pipeRaw = [['Baru', 9, 'var(--ra-blue-600)'], ['Dihubungi', 14, 'var(--ra-warning-600)'], ['Berhasil (converted)', 5, 'var(--ra-success-600)'], ['Batal (lost)', 6, 'var(--ra-danger-600)']];
+    const pipeTotal = sum(pipeRaw.map(p => Math.round(p[1] * k)));
+    const pipeline = pipeRaw.map(p => { const c = Math.round(p[1] * k); return { label: p[0], count: c, pct: fPct(pipeTotal ? c / pipeTotal * 100 : 0), width: pipeTotal ? c / pipeTotal * 100 : 0, color: p[2] }; });
+
+    const stRaw = [['Dipublikasikan', 18], ['Menunggu review', 2], ['Kedaluwarsa', 4], ['Terjual', 3], ['Tersewa', 1], ['Ditolak', 1]];
+    const listingStatus = stRaw.map(s => ({ label: s[0], count: s[1], width: s[1] / 18 * 100 }));
+
+    const quota = { used: 7, allow: 10, pct: 70 };
+    const entitlements = [{ label: 'Paket Pro: 10 refresh/hari' }, { label: 'Add-on: sisa 12 refresh' }];
+    const staleNote = '3 listing belum di-refresh lebih dari 7 hari.';
+
+    const learnTiles = [
+      { label: 'Course berjalan', value: '2', sub: 'Rata-rata progres 46%' },
+      { label: 'Learning Points', value: '320', sub: '+' + Math.round(60 * k) + ' pada rentang ini' },
+      { label: 'Sertifikat & title', value: '3 / 1', sub: 'Sertifikat / title aktif' },
+      { label: 'Simulasi DBR', value: fInt(12 * k), sub: 'Pada rentang ini' }
+    ];
+    const dbrRaw = [['Layak', 7, 'var(--ra-success-600)'], ['Perlu review', 3, 'var(--ra-warning-600)'], ['Tidak layak', 2, 'var(--ra-danger-600)']];
+    const dbrTotal = 12;
+    const dbrSplit = dbrRaw.map(d => ({ label: d[0], count: Math.round(d[1] * k), width: d[1] / dbrTotal * 100, color: d[2] }));
+
+    const bench = [
+      { label: 'Dilihat', pctl: 68, text: 'Lebih tinggi dari 68% agen' },
+      { label: 'Lead masuk', pctl: 74, text: 'Lebih tinggi dari 74% agen' },
+      { label: 'Konversi dilihat ke lead', pctl: 52, text: 'Lebih tinggi dari 52% agen' }
+    ];
+
+    const memberDefs = [['Rian Saputra', '(Anda)', 18, 1420, 72, 7], ['Dewi Anggraini', '', 12, 980, 41, 5], ['Fajar Nugroho', '', 9, 640, 22, 4], ['Siti Rahma', '', 15, 1210, 58, 8], ['Yusuf Hidayat', '', 6, 310, 9, 2]];
+    const orgMembers = memberDefs.map(m => { const v = Math.round(m[3] * k), l = Math.round(m[4] * k); return { name: m[0], role: m[1], active: m[2], views: fInt(v), leads: fInt(l), conv: fPct(v ? l / v * 100 : 0), refresh: fInt(m[5] * n) }; });
+    const orgV = sum(memberDefs.map(m => Math.round(m[3] * k))), orgL = sum(memberDefs.map(m => Math.round(m[4] * k)));
+    const orgKpis = [{ title: 'Anggota aktif', value: '5' }, { title: 'Listing aktif tim', value: fInt(sum(memberDefs.map(m => m[2]))) }, { title: 'Dilihat (tim)', value: fInt(orgV) }, { title: 'Lead (tim)', value: fInt(orgL) }];
+
+    const chips = [['7', '7 Hari'], ['14', '14 Hari'], ['30', '30 Hari'], ['month', 'Bulan Ini'], ['custom', 'Kustom']];
+    const rangeChips = chips.map(c => ({ label: c[1], isActive: c[0] === rangeKey, pick: () => this.pickRange(c[0]) }));
+    const exportKind = this.state.exportKind ?? null;
+    const hasData = dataState === 'loaded';
+    return {
+      isLeader, ownOn: tab === 'own' ? 'is-on' : '', orgOn: tab === 'org' ? 'is-on' : '', pickOwn: this.pickOwn, pickOrg: this.pickOrg,
+      isLoading: dataState === 'loading', isEmpty: dataState === 'empty',
+      showOwn: hasData && tab === 'own', showOrg: hasData && tab === 'org',
+      rangeChips, isCustom: rangeKey === 'custom', rangeLabel, compareLabel, customFrom: this.state.customFrom, customTo: this.state.customTo, onFrom: this.onFrom, onTo: this.onTo,
+      compareOn: compare, toggleCompare: this.toggleCompare,
+      exportMenuOpen: this.state.exportMenu ?? false, toggleExportMenu: this.toggleExportMenu, chooseExcel: this.chooseExcel, choosePdf: this.choosePdf, closeExport: this.closeExport, stopClick: this.stopClick,
+      exportKind, exportKindLabel: exportKind === 'excel' ? 'Excel (.xlsx)' : 'PDF', scopeLabel: tab === 'org' ? 'Organisasi PT Properti Jaya (semua anggota)' : 'Milik saya (Rian Saputra)',
+      kpis, perfCards: [viewsCard, leadsCard, convCard], topListings, pipeline, listingStatus, quota, entitlements, staleNote, refreshCard,
+      learnTiles, dbrSplit, dbrSaved: fInt(5 * k), dbrShared: fInt(4 * k),
+      benchOn: benchAvail, benchOff: !benchAvail, bench, benchSample: '412',
+      orgKpis, orgMembers
+    };
+  }
+}
+</script>
+</body>
+</html>
