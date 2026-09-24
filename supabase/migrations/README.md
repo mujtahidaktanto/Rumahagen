@@ -3115,16 +3115,13 @@ nama dari "Preset Agent" ke "Preset", ditambah selector role target
 (hanya tampil untuk Superadmin — Manager/Admin tetap terkunci ke Agent
 di UI karena tulisan mereka toh selalu ditolak backend untuk role lain).
 
-## `0120` — Manager boleh onboarding Agent jadi Instructor/Buyer/Developer Partner (⏳ DITULIS, BELUM DITERAPKAN)
+## `0120` — Manager boleh onboarding Agent jadi Instructor/Buyer/Developer Partner (✅ DITERAPKAN, tapi lihat `0121` — sendirian TIDAK CUKUP)
 
-**STATUS: migration file sudah ditulis (`0120_manager_partner_onboarding_
-role_change.sql`) tapi BELUM diterapkan ke database live** —
-`apply_migration` ditolak classifier permission Claude Code (perubahan
-menyentuh `enforce_users_protected_columns`, trigger yang menjaga
-privilege escalation — butuh persetujuan eksplisit pengguna, bukan
-sesuatu yang pantas dijalankan otomatis). Menunggu pengguna menjalankan
-migration ini sendiri (lewat Supabase Dashboard/CLI) atau memberi izin
-eksplisit di sesi berikutnya.
+**STATUS: DITERAPKAN ke database live (2026-09-25)**, atas izin
+eksplisit pengguna. **Tapi live-testing dengan throwaway test users
+(Manager/Agent/Admin) menemukan bug: 0120 SENDIRIAN tidak benar-benar
+mengizinkan Manager mengubah apa pun** — lihat `0121` di bawah untuk
+penyebab dan fix-nya. Baca keduanya sebagai satu paket.
 
 **Latar belakang**: pertanyaan user (2026-09-24/25) soal cara membuat
 akun Instructor/Buyer/Developer Partner mengungkap satu-satunya jalur
@@ -3154,16 +3151,52 @@ generik). Route `PUT /admin/users/{id}/role` TIDAK perlu diubah sama
 sekali — R-02, otorisasi murni di RLS+trigger, route sudah generik
 sejak awal.
 
-**Setelah migration ini diterapkan**, wajib diuji nyata (pola sama
-seperti fix lain di sesi ini) sebelum dianggap selesai: Manager
-mengubah Agent→Instructor → harus 201; Manager mengubah Agent→Admin →
-harus 403 dengan pesan trigger yang jelas; Manager mengubah baris yang
-SUDAH Developer Partner → apa pun → harus 403 (RLS USING tidak lolos,
-baris bukan Agent); Superadmin tidak terpengaruh (tetap bisa apa saja).
-
 Wireframe sudah diperbarui MENDAHULUI migration ini (M09-Direktori-
 Pengguna dapat aksi "Ubah Role" baru + M06-Developer-Project-Admin
 dapat tab "Developer Partner" untuk company profile `developer_
-partners`, terpisah dari akun login) — merepresentasikan perilaku yang
-DIMAKSUDKAN, bukan yang sudah live, sampai migration ini benar-benar
-diterapkan.
+partners`, terpisah dari akun login).
+
+## `0121` — Fix: Manager tetap tidak bisa UPDATE apa pun tanpa SELECT policy yang cocok (⏳ DITULIS, BELUM DITERAPKAN)
+
+**STATUS: migration file sudah ditulis
+(`0121_manager_select_agent_rows_for_partner_onboarding.sql`) tapi
+BELUM diterapkan** — `apply_migration` ditolak classifier permission
+Claude Code (kedua kalinya di fitur ini; pengguna sudah mengizinkan
+0120 secara eksplisit tapi belum untuk migration baru ini). Menunggu
+pengguna menjalankan migration ini sendiri (lewat Supabase Dashboard/
+CLI) atau memberi izin eksplisit di sesi berikutnya.
+
+**Bug yang ditemukan lewat live-testing 0120** (throwaway test users:
+1 Manager, 2 Agent, 1 Admin, dibuat & dihapus lewat `execute_sql`):
+PostgreSQL RLS untuk command `UPDATE` **meng-AND-kan** USING clause
+dari policy UPDATE yang match **DENGAN** SELECT policy tabel yang sama
+— karena UPDATE secara implisit butuh bisa "melihat" baris lama
+sebelum mengubahnya (perilaku resmi Postgres, bukan bug Supabase).
+`users_select_self_or_admin` (migrasi awal) hanya mengizinkan
+`id=self`, `is_superadmin()`, atau `current_role_code()='admin'` —
+Manager TIDAK termasuk. Akibatnya `users_update_manager_partner_
+onboarding` (0120) SENDIRI sudah benar (USING & WITH CHECK lolos untuk
+transisi agent→partner), tapi gabungan AND dengan SELECT policy yang
+tidak mengizinkan Manager membuat SETIAP percobaan UPDATE oleh Manager
+selalu ter-filter jadi 0 baris — **tanpa error**, sehingga rute API
+tetap merespons sukses padahal tidak mengubah apa pun. Dikonfirmasi via
+`EXPLAIN (ANALYZE)` yang menunjukkan filter gabungan tiga klausa AND,
+klausa ketiga (dari SELECT policy) yang menggagalkan Manager.
+
+**Fix**: tambah SELECT policy permissive baru, SEMPIT — sama persis
+scope 0120 — HANYA untuk baris yang `role_id`-nya `'agent'`. Manager
+tetap TIDAK BISA melihat baris Admin/Manager/Superadmin lain lewat
+policy ini; di-OR-kan dengan `users_select_self_or_admin` yang sudah
+ada (tidak diubah/dihapus).
+
+**Setelah migration ini diterapkan**, wajib diuji ulang nyata sebelum
+dianggap selesai (test sebelumnya baru sampai menemukan bug ini):
+Manager mengubah Agent→Instructor → harus benar-benar berubah di DB
+(bukan cuma 200/201 palsu); Manager mengubah Agent→Admin → harus
+gagal (RLS `WITH CHECK` atau trigger, dengan pesan jelas); Manager
+menyentuh baris yang SUDAH Admin/Manager/Superadmin/Developer Partner
+→ harus 0 baris terpengaruh (RLS `USING` tidak lolos sama sekali,
+konsisten dengan permintaan pengguna "hanya dapat merubah role agen
+saja"); Superadmin tidak terpengaruh (tetap bisa apa saja). Data uji
+sebelumnya (4 throwaway user) sudah dihapus total sebelum menemukan
+bug ini butuh migration tambahan.
