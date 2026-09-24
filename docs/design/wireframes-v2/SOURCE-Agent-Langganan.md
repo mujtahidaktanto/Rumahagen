@@ -22,7 +22,7 @@ Catatan: langganan milik organisasi (`organization_id` tanpa `user_id`) tidak te
 ## 4. Temuan
 1. **[DIUJI] Harga pesanan ditentukan klien.** `POST /commercial/orders` mengambil `amount` dari body dan DB menerima INSERT `commercial_orders` dengan `amount=1` untuk addon yang harganya 500.000 (tanpa tabel harga otoritatif; webhook hanya mencocokkan gross_amount dengan `amount` order itu sendiri). Wireframe Katalog menulis "Harga ditentukan platform, bukan diisi manual", yang **tidak ditegakkan backend**. Ini celah pembayaran, di luar layar Langganan tetapi ditemukan di sini.
 2. **[DIUJI]** `commercial_orders.subscription_id` menerima id langganan sembarang (mis. milik orang lain) pada INSERT; tidak ada tautan bermakna karena pembelian langganan belum dibangun.
-3. **[KODE] Tidak ada API baca langganan**; layar butuh `GET /agents/me/subscriptions` (paginasi, `user_id = pengguna`).
+3. **[DITUTUP 2026-09-24] API baca langganan** ditambahkan: `GET /agents/me/subscriptions` (paginasi, filter `status`, `active_only`, hanya baris `user_id` = pengguna) dengan status turunan `effective_status` (active|expiring|expired|pending|cancelled|unknown), `days_left`, `is_current` (ambang "segera berakhir" 7 hari, sama dengan layar). Tidak ada endpoint tulis. Langganan milik organisasi tanpa `user_id` tetap tak terbaca anggota.
 4. **[KODE]** `renews_at` hanya kolom; tidak ada perpanjangan otomatis, sehingga layar menyebutnya "jadwal perpanjangan", bukan janji tagihan.
 5. **[KODE]** `status` bebas: layar memetakan `active`, `pending`, `expired`, `cancelled`, ditambah "segera berakhir" (aktif dan berakhir dalam 7 hari), dan menampilkan status tak dikenal apa adanya dengan peringatan.
 
