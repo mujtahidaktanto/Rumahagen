@@ -117,6 +117,20 @@
           <div style="background:var(--ra-ink-50);border-radius:var(--ra-radius-md);padding:12px;"><span class="ra-label-lg">Ringkasan: </span><span class="ra-body-md">{{eligSummary}}</span></div>
           <sc-if value="{{dipakai}}" hint-placeholder-val="{{false}}"><div><div class="ra-caption" style="margin-bottom:6px;">Terpakai {{usedText}}</div><div class="meter" role="progressbar" aria-label="Kuota promosi terpakai"><div style="{{usedStyle}}"></div></div></div></sc-if>
         </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Aturan tambahan <span class="ra-caption">(opsional)</span></span>
+          <p class="ra-body-md" style="color:var(--ra-ink-500);">Membatasi kapan, untuk siapa, dan untuk produk apa promosi berlaku, serta batas potongannya. Semua aturan dicek server saat pesanan dibuat; pesanan yang tidak memenuhi ditolak dengan alasan, dan penawaran di layar pembeli menampilkan alasannya.</p>
+          <div class="field"><label class="ra-label-lg" for="r-cap">Batas potongan maksimum (Rp)</label><input id="r-cap" class="ra-input" type="number" min="1" placeholder="Tanpa batas" style="max-width:260px;" value="{{cap}}" onInput="{{onCap}}"><sc-if value="{{capErr}}" hint-placeholder-val="{{false}}"><span class="err">{{capMsg}}</span></sc-if><span class="ra-caption">Potongan persen atau nominal tidak akan melebihi nilai ini. Contoh: 50% dengan batas Rp20.000 pada harga Rp100.000 menjadi Rp80.000.</span></div>
+          <div class="field"><span class="ra-label-lg">Berlaku untuk pembelian</span><div style="display:grid;grid-template-columns:1fr;gap:10px;" role="radiogroup" aria-label="Cakupan pembelian"><sc-for list="{{scopes}}" as="s" hint-placeholder-count="3"><button class="radio-card" role="radio" aria-checked="{{s.checked}}" onClick="{{s.pick}}"><span class="ra-label-lg">{{s.l}}</span></button></sc-for></div><span class="ra-caption">Pribadi = pembelian atas nama sendiri; Organisasi = pembelian atas nama organisasi (leader).</span></div>
+          <div class="field"><label class="ra-label-lg" for="r-codes">Produk tertentu</label><input id="r-codes" class="ra-input mono" type="text" placeholder="Semua produk yang terhubung" value="{{codes}}" onInput="{{onCodes}}"><sc-if value="{{codesErr}}" hint-placeholder-val="{{false}}"><span class="err">{{codesMsg}}</span></sc-if><span class="ra-caption">Kode add-on atau paket, dipisah koma (maks 50). Kosong = semua produk yang memakai promosi ini.</span><sc-if value="{{hasCodeChips}}" hint-placeholder-val="{{false}}"><div class="chip-group"><sc-for list="{{codeChips}}" as="c" hint-placeholder-count="2"><span class="ra-badge ra-badge-neutral mono">{{c}}</span></sc-for></div></sc-if></div>
+          <div class="field"><span class="ra-label-lg">Hari berlaku</span><div class="chip-group" role="group" aria-label="Hari berlaku"><sc-for list="{{dayChips}}" as="c" hint-placeholder-count="7"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.l}}</button></sc-for></div><span class="ra-caption">Tidak ada yang dipilih berarti setiap hari. Hari dihitung menurut waktu WIB.</span></div>
+          <div class="field" style="gap:16px;">
+            <div class="field"><label class="ra-label-lg" for="r-tf">Jam mulai (WIB)</label><input id="r-tf" class="ra-input" type="time" value="{{tFrom}}" onInput="{{onTFrom}}"></div>
+            <div class="field"><label class="ra-label-lg" for="r-tt">Jam selesai (WIB)</label><input id="r-tt" class="ra-input" type="time" value="{{tTo}}" onInput="{{onTTo}}"><sc-if value="{{timeErr}}" hint-placeholder-val="{{false}}"><span class="err">{{timeMsg}}</span></sc-if></div></div>
+          <span class="ra-caption" style="margin-top:-8px;">Isi keduanya atau kosongkan keduanya. Rentang tidak boleh melewati tengah malam; untuk promo malam hari, gunakan dua promosi.</span>
+          <div class="field"><label class="ra-label-lg" for="r-new">Hanya pengguna baru (hari sejak mendaftar)</label><input id="r-new" class="ra-input" type="number" min="1" max="3650" placeholder="Semua pengguna" style="max-width:260px;" value="{{newDays}}" onInput="{{onNewDays}}"><sc-if value="{{newErr}}" hint-placeholder-val="{{false}}"><span class="err">{{newMsg}}</span></sc-if><span class="ra-caption">Dihitung dari tanggal akun dibuat. Contoh: 7 = hanya akun yang mendaftar dalam 7 hari terakhir.</span></div>
+          <div style="background:var(--ra-ink-50);border-radius:var(--ra-radius-md);padding:12px;"><span class="ra-label-lg">Ringkasan: </span><span class="ra-body-md">{{rulesSummary}}</span></div>
+        </div>
         <sc-if value="{{isCreate}}" hint-placeholder-val="{{true}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Promosi baru berstatus Draf dan belum memberi potongan sampai diaktifkan.</p></div></sc-if>
         <div style="display:flex;gap:10px;flex-direction:column;"><a class="ra-btn ra-btn-secondary" href="M14-Promosi-Admin.dc.html">Batal</a><button class="ra-btn ra-btn-primary" disabled="{{saving}}" onClick="{{save}}">{{saveLabel}}</button></div></div>
 </div>
@@ -127,7 +141,7 @@ class Component extends DCLogic {
     super(props);
     this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { f: null, tried: false, done: false, failed: false });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'onCode', 'onName', 'onValue', 'onFrom', 'onTo', 'onMaxTotal', 'onMaxUser', 'onMinPrice', 'toggleFirst', 'save'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'onCode', 'onName', 'onValue', 'onFrom', 'onTo', 'onMaxTotal', 'onMaxUser', 'onMinPrice', 'toggleFirst', 'onCap', 'onCodes', 'onTFrom', 'onTTo', 'onNewDays', 'save'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
@@ -135,7 +149,7 @@ class Component extends DCLogic {
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
   mode(){ return this.props.mode || 'create'; }
-  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', kind: 'percent', value: '', from: '', to: '', roles: [], first: false, maxTotal: '', maxUser: '', minPrice: '' }; return { code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', kind: 'percent', value: '10', from: '2026-09-01T00:00', to: '2026-10-31T00:00', roles: ['agent'], first: true, maxTotal: '100', maxUser: '1', minPrice: '' }; }
+  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', kind: 'percent', value: '', from: '', to: '', roles: [], first: false, maxTotal: '', maxUser: '', minPrice: '', cap: '', applies: 'both', codes: '', days: [], tFrom: '', tTo: '', newDays: '' }; return { code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', kind: 'percent', value: '10', from: '2026-09-01T00:00', to: '2026-10-31T00:00', roles: ['agent'], first: true, maxTotal: '100', maxUser: '1', minPrice: '', cap: '25000', applies: 'both', codes: '', days: [], tFrom: '', tTo: '', newDays: '' }; }
   up(k, v){ var f = Object.assign({}, this.form()); f[k] = v; this.setState({ f: f }); }
   onCode(e){ this.up('code', e.target.value); }
   onName(e){ this.up('name', e.target.value); }
@@ -146,6 +160,12 @@ class Component extends DCLogic {
   onMaxUser(e){ this.up('maxUser', e.target.value); }
   onMinPrice(e){ this.up('minPrice', e.target.value); }
   toggleFirst(){ this.up('first', !this.form().first); }
+  onCap(e){ this.up('cap', e.target.value); }
+  onCodes(e){ this.up('codes', e.target.value); }
+  onTFrom(e){ this.up('tFrom', e.target.value); }
+  onTTo(e){ this.up('tTo', e.target.value); }
+  onNewDays(e){ this.up('newDays', e.target.value); }
+  codeList(f){ return String(f.codes).split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s; }); }
   problems(f){
     var p = {}, v = Number(f.value);
     if (!String(f.code).trim()) p.code = 'Kode wajib diisi.'; else if (!/^[A-Za-z0-9_.-]+$/.test(String(f.code).trim())) p.code = 'Kode hanya huruf, angka, titik, garis bawah, dan strip.';
@@ -156,12 +176,17 @@ class Component extends DCLogic {
     if (String(f.maxTotal).trim() && !isInt(f.maxTotal)) p.total = 'Isi bilangan bulat minimal 1, atau kosongkan.';
     if (String(f.maxUser).trim() && !isInt(f.maxUser)) p.user = 'Isi bilangan bulat minimal 1, atau kosongkan.';
     if (String(f.minPrice).trim() && !(Number(f.minPrice) > 0)) p.min = 'Isi angka lebih dari 0, atau kosongkan.';
+    if (String(f.cap).trim() && !(Number(f.cap) > 0)) p.cap = 'Isi angka lebih dari 0, atau kosongkan.';
+    var cl = this.codeList(f);
+    if (cl.length > 50) p.codes = 'Maksimal 50 kode.'; else if (cl.some(function(c){ return c.length > 100; })) p.codes = 'Setiap kode maksimal 100 karakter.';
+    if ((f.tFrom && !f.tTo) || (!f.tFrom && f.tTo)) p.time = 'Isi jam mulai dan jam selesai bersamaan.'; else if (f.tFrom && f.tTo && f.tFrom >= f.tTo) p.time = 'Jam selesai harus setelah jam mulai (tidak melewati tengah malam).';
+    if (String(f.newDays).trim() && !(/^[0-9]+$/.test(String(f.newDays).trim()) && Number(f.newDays) >= 1 && Number(f.newDays) <= 3650)) p.newd = 'Isi bilangan bulat 1–3650, atau kosongkan.';
     return p;
   }
   save(){
     if (this.props.simpan === 'menyimpan') return;
     var p = this.problems(this.form());
-    if (p.code || p.name || p.value || p.to || p.total || p.user || p.min) { this.setState({ tried: true }); return; }
+    if (p.code || p.name || p.value || p.to || p.total || p.user || p.min || p.cap || p.codes || p.time || p.newd) { this.setState({ tried: true }); return; }
     if (this.props.simpan === 'gagal') { this.setState({ failed: true, done: false }); return; }
     this.setState({ done: true, failed: false, tried: false });
   }
@@ -181,12 +206,18 @@ class Component extends DCLogic {
     var dipakai = this.mode() === 'edit_dipakai';
     var fmt = function(n){ return 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
     var minP = Number(f.minPrice) > 0 ? Number(f.minPrice) : 0;
-    var samples = [75000, 200000].map(function(base){ var ok = v > 0 && (f.kind === 'percent' ? v <= 100 : true); var res = !ok ? base : (f.kind === 'percent' ? Math.round(base * (1 - v / 100)) : base - v); var zero = ok && res <= 0; var below = minP > 0 && base < minP; return { base: fmt(base), res: below ? 'promosi tidak berlaku (harga di bawah minimum ' + fmt(minP) + ')' : (zero ? 'tidak valid (harga akhir harus lebih dari 0)' : fmt(res)), zero: zero, changed: ok && !zero && !below }; });
+    var capV = Number(f.cap) > 0 ? Number(f.cap) : 0;
+    var samples = [75000, 200000].map(function(base){ var ok = v > 0 && (f.kind === 'percent' ? v <= 100 : true); var res = !ok ? base : (f.kind === 'percent' ? Math.round(base * (1 - v / 100)) : base - v); if (ok && capV > 0 && base - res > capV) res = base - capV; var zero = ok && res <= 0; var below = minP > 0 && base < minP; return { base: fmt(base), res: below ? 'promosi tidak berlaku (harga di bawah minimum ' + fmt(minP) + ')' : (zero ? 'tidak valid (harga akhir harus lebih dari 0)' : fmt(res)), zero: zero, changed: ok && !zero && !below }; });
     var kinds = [['percent','Persentase (%)'],['amount','Nominal (Rp)']].map(function(k){ return { l: k[1], checked: f.kind === k[0] ? 'true' : 'false', pick: function(){ self.up('kind', k[0]); } }; });
     var out = { aktorLabel: aktorLabel, pageTitle: this.mode() === 'create' ? 'Buat Promosi' : 'Ubah Promosi', code: f.code, name: f.name, value: f.value, from: f.from, to: f.to, onCode: this.onCode, onName: this.onName, onValue: this.onValue, onFrom: this.onFrom, onTo: this.onTo,
       codeErr: !!p.code, codeMsg: p.code || '', roleChips: [['agent','Agen'],['developer_partner','Developer Partner'],['buyer','Pembeli'],['manager','Manager'],['admin','Admin'],['superadmin','Superadmin']].map(function(c){ var on = f.roles.indexOf(c[0]) >= 0; return { l: c[1], pressed: on ? 'true' : 'false', pick: function(){ var l = f.roles.slice(); if (on) l.splice(l.indexOf(c[0]), 1); else l.push(c[0]); self.up('roles', l); } }; }),
       firstChecked: f.first ? 'true' : 'false', firstClass: f.first ? 'is-on' : '', toggleFirst: this.toggleFirst, maxTotal: f.maxTotal, maxUser: f.maxUser, minPrice: f.minPrice, onMaxTotal: this.onMaxTotal, onMaxUser: this.onMaxUser, onMinPrice: this.onMinPrice,
       totalErr: !!p.total, totalMsg: p.total || '', userErr: !!p.user, userMsg: p.user || '', minErr: !!p.min, minMsg: p.min || '',
+      cap: f.cap, onCap: this.onCap, capErr: !!p.cap, capMsg: p.cap || '', codes: f.codes, onCodes: this.onCodes, codesErr: !!p.codes, codesMsg: p.codes || '', codeChips: this.codeList(f).slice(0, 8), hasCodeChips: this.codeList(f).length > 0,
+      tFrom: f.tFrom, tTo: f.tTo, onTFrom: this.onTFrom, onTTo: this.onTTo, timeErr: !!p.time, timeMsg: p.time || '', newDays: f.newDays, onNewDays: this.onNewDays, newErr: !!p.newd, newMsg: p.newd || '',
+      scopes: [['both','Pribadi dan organisasi'],['personal','Hanya pribadi'],['organization','Hanya organisasi']].map(function(s){ return { l: s[1], checked: f.applies === s[0] ? 'true' : 'false', pick: function(){ self.up('applies', s[0]); } }; }),
+      dayChips: [[1,'Sen'],[2,'Sel'],[3,'Rab'],[4,'Kam'],[5,'Jum'],[6,'Sab'],[7,'Min']].map(function(d){ var on = f.days.indexOf(d[0]) >= 0; return { l: d[1], pressed: on ? 'true' : 'false', pick: function(){ var l = f.days.slice(); if (on) l.splice(l.indexOf(d[0]), 1); else l.push(d[0]); l.sort(); self.up('days', l); } }; }),
+      rulesSummary: (function(){ var a = []; if (capV > 0) a.push('potongan maks ' + fmt(capV)); if (f.applies === 'personal') a.push('hanya pembelian pribadi'); if (f.applies === 'organization') a.push('hanya pembelian organisasi'); var cl = self.codeList(f); if (cl.length) a.push(cl.length + ' produk tertentu'); if (f.days.length) a.push('hari ' + f.days.map(function(x){ return ['','Sen','Sel','Rab','Kam','Jum','Sab','Min'][x]; }).join(', ')); if (f.tFrom && f.tTo && !p.time) a.push('pukul ' + f.tFrom + '–' + f.tTo + ' WIB'); if (String(f.newDays).trim() && !p.newd) a.push('pengguna baru ≤ ' + f.newDays + ' hari'); return a.length ? a.join(' · ') : 'Tanpa aturan tambahan'; })(),
       eligSummary: (function(){ var a = []; if (f.roles.length) a.push('Untuk ' + f.roles.length + ' peran'); if (f.first) a.push('pembelian pertama'); if (String(f.minPrice).trim() && Number(f.minPrice) > 0) a.push('harga min. ' + fmt(Number(f.minPrice))); if (String(f.maxUser).trim() && !p.user) a.push('maks ' + f.maxUser + ' per pengguna'); if (String(f.maxTotal).trim() && !p.total) a.push('maks ' + f.maxTotal + ' total'); return a.length ? a.join(' · ') : 'Berlaku untuk semua pembeli'; })(),
       usedText: '37 dari ' + (f.maxTotal || 'tanpa batas'), usedStyle: 'width:' + (Number(f.maxTotal) > 0 ? Math.min(100, Math.round(37 / Number(f.maxTotal) * 100)) : 0) + '%;', nameErr: !!p.name, valueErr: !!p.value, valueMsg: p.value || '', toErr: !!p.to, toMsg: p.to || '', kinds: kinds, isPercent: f.kind === 'percent', valueLabel: f.kind === 'percent' ? 'Persentase potongan' : 'Nominal potongan (Rp)',
       samples: samples, dipakai: dipakai, isCreate: this.mode() === 'create', saving: pr.simpan === 'menyimpan', saveLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : (this.mode() === 'create' ? 'Simpan Draf' : 'Simpan Perubahan'), save: this.save,
