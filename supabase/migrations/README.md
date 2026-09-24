@@ -3393,3 +3393,19 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Perbaikan:** (1) INSERT evaluasi hanya staf (`has_permission` tanpa owner) dan `evaluator_type` dibatasi `system_automated|staff|instructor`; (2) `evaluate_qualification` hanya staf/konteks server, dan hanya evidence bersumber `m04.session_completion_outcomes` yang otomatis qualified (evidence manual selalu pending); (3) trigger evidence: pengguna biasa hanya boleh `upload|external_link` dan tidak boleh mengikat ke evaluasi; (4) INSERT/UPDATE `award_instances` hanya staf, dan acuan evaluasi harus qualified milik user yang sama; (5) `title_presentations` aktif hanya untuk award `active|restored`, dan presentation otomatis nonaktif saat award dicabut/kedaluwarsa.
 
 **Hasil uji (16 skenario, rollback):** semua jalur self-service di atas ditolak (42501/23514) atau 0 baris; staf tetap bisa mengevaluasi, memberi, dan mencabut award; Agent tetap bisa mengajukan evidence upload dan menampilkan title dari award aktifnya.
+
+---
+
+## `0129` — Akses tim sesi, pendaftar event untuk penyelenggara, dan pemicu notifikasi (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Menutup 4 celah dari `SOURCE-Instructor.md` §7.
+
+**Perubahan:**
+1. **Roster & akses tim sesi:** fungsi `is_session_team` (pemilik atau penugasan ACTIVE), policy SELECT untuk sesi, peserta, bukti, hasil kehadiran/penyelesaian, artefak; Host dan Instructor penugasan boleh mengubah **status** sesi saja (trigger `trg_session_assignee_columns`); menilai kehadiran/penyelesaian dan mengelola artefak: pemilik + Instructor penugasan (Host hanya membaca). Trigger `trg_no_self_*_eval`: tim non-staf tidak boleh menilai enrollment miliknya sendiri.
+2. **Pendaftar event:** penyelenggara (`events.submitted_by`) boleh melihat pendaftar dan mengubah **status** saja (pending_approval/waitlist -> registered|cancelled, registered -> attended|cancelled), trigger `trg_event_registration_organizer_rules`.
+3. **Notifikasi:** `notify_user()` internal (tidak bisa dipanggil pengguna, kegagalan hanya WARNING, tidak mengirim ke pelaku sendiri) + trigger untuk event (terbit/ditolak/batal + pendaftar), keputusan pendaftaran event, status proyek developer, klaim proyek, sertifikat, lead baru, sesi (live/batal/gagal), aktivasi enrollment, penugasan sesi, award diterima/dicabut, banding award.
+4. `send_event_reminders()` dan `notify_expiring_listings()` disediakan (staf/server, idempoten) tetapi **belum dijadwalkan** (pg_cron belum terpasang).
+
+**Hasil uji (rollback, 20 skenario):** pemilik dan penugasan melihat roster (1 baris); agent lain 0 baris; penugasan bisa ubah status, ubah visibilitas ditolak 42501; penilaian kehadiran oleh Instructor penugasan ok, peserta menilai diri ditolak 42501; penyelenggara melihat 1 pendaftar, approve ok, pending->attended ditolak 23514, ubah email ditolak; notifikasi terbentuk untuk peserta dan penyelenggara; `notify_user` oleh pengguna ditolak 42501.
+
+**Belum tercakup:** route `GET /events/{id}/registrations` dan perubahan status pendaftaran oleh penyelenggara perlu ditambah di aplikasi; pemanggil `send_event_reminders`/`notify_expiring_listings` perlu penjadwal.
