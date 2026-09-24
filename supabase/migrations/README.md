@@ -3445,3 +3445,15 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Hasil uji (rollback, 11 skenario):** amount klien=1 menjadi 75.000 (harga addon), currency klien USD ditimpa IDR, snapshot palsu klien diganti; promosi 10% pada 500.000 menjadi 450.000; addon draft, promosi tak terkait, promosi kedaluwarsa, order langganan, dan order tanpa addon ditolak 23514; payment amount klien=1 menjadi 450.000 (nominal order); staf dan server bisa mengisi amount manual.
 
 **Belum tercakup:** belum ada UI/route admin untuk mengisi `price` (staf harus lewat SQL/konsol), `organization_id` pada order belum diverifikasi keanggotaannya, dan definisi promosi di luar `percent_off`/`amount_off` belum ada.
+
+---
+
+## `0132` — Integritas katalog add-on M14 (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Pengaman untuk layar/route Admin Katalog Add-on (`SOURCE-Admin-Addon.md`).
+
+**Masalah:** `fulfill_commercial_order()` membaca addon saat ini (bukan snapshot pesanan), jadi mengubah kapasitas/masa berlaku setelah ada pesanan mengubah syarat pembeli lama, dan menghapus addon membuat `addon_id` order menjadi NULL sehingga fulfillment gagal. `status`/`validity_type`/`capacity_type` juga teks bebas tanpa CHECK.
+
+**Perubahan:** CHECK `status` (draft|active|inactive), `validity_type` (days dengan `validity_days` wajib | unlimited tanpa hari), `capacity_type` (listing_refresh|learning_point), `capacity_value > 0`, addon aktif wajib kapasitas primer, `additional_capacities` array objek valid (fungsi `addon_capacities_valid`); trigger `trg_addon_terms_locked` mengunci `code`, `validity_*`, `capacity_*`, `additional_capacities` dan melarang DELETE bila addon sudah punya pesanan (harga, nama, status, promosi tetap bisa diubah).
+
+**Hasil uji (rollback, 14 skenario):** tiap pelanggaran CHECK ditolak; addon tanpa pesanan bebas diubah/dihapus; addon dengan pesanan menolak ubah kapasitas/masa berlaku dan hapus, tetapi harga/nama/status boleh.

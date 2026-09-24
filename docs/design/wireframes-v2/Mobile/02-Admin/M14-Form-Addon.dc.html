@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Form Add-on — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+
+  .drawer{background:var(--ra-ink-900);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <a class="ra-iconbtn" href="M14-Katalog-Addon.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">{{pageTitle}}</span>
+    <span class="ra-badge ra-badge-info">{{aktorLabel}}</span>
+  </div>
+  <div class="main ra-scroll">
+        <sc-if value="{{done}}" hint-placeholder-val="{{false}}"><div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Add-on tersimpan</span><p class="ra-body-md" style="margin-top:2px;">Add-on berstatus Draf dan belum tampil di katalog. Aktifkan dari <a href="M14-Katalog-Addon.dc.html">Katalog Add-on</a>.</p></div></div></sc-if>
+        <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Add-on gagal disimpan (mis. kode sudah dipakai). Data Anda masih di form; coba lagi.</p></div></sc-if>
+        <sc-if value="{{locked}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md">Add-on ini sudah punya pesanan. <strong>Kode, masa berlaku, dan kapasitas dikunci</strong> agar pembeli lama tidak menerima syarat berbeda. Harga, nama, dan promosi tetap bisa diubah; harga baru hanya berlaku untuk pesanan baru. Untuk syarat berbeda, buat add-on baru.</p></div></sc-if>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Identitas</span>
+          <div class="field" style="gap:16px;">
+            <div class="field"><label class="ra-label-lg" for="a-code">Kode <span class="req">*</span></label><input id="a-code" class="ra-input mono" type="text" maxlength="100" disabled="{{locked}}" value="{{code}}" onInput="{{onCode}}"><sc-if value="{{codeErr}}" hint-placeholder-val="{{false}}"><span class="err">{{codeMsg}}</span></sc-if><span class="ra-caption">Unik. Dipakai di sistem; tidak bisa diubah setelah ada pesanan.</span></div>
+            <div class="field"><label class="ra-label-lg" for="a-name">Nama <span class="req">*</span></label><input id="a-name" class="ra-input" type="text" maxlength="200" value="{{name}}" onInput="{{onName}}"><sc-if value="{{nameErr}}" hint-placeholder-val="{{false}}"><span class="err">Nama wajib diisi.</span></sc-if></div>
+          </div>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Harga</span>
+          <div class="field"><label class="ra-label-lg" for="a-price">Harga (Rp) <span class="req">*</span></label><input id="a-price" class="ra-input" type="number" min="1" inputmode="numeric" style="max-width:240px;" value="{{price}}" onInput="{{onPrice}}"><sc-if value="{{priceErr}}" hint-placeholder-val="{{false}}"><span class="err">Harga wajib lebih dari 0.</span></sc-if><span class="ra-caption">Mata uang IDR. Ini satu-satunya sumber harga pesanan.</span></div>
+          <div class="field"><label class="ra-label-lg" for="a-promo">Promosi terkait <span class="ra-caption">(opsional)</span></label><select id="a-promo" class="ra-input" value="{{promo}}" onChange="{{onPromo}}"><option value="none">Tanpa promosi</option><option value="p10">Diskon 10% (aktif)</option><option value="p20k">Potongan Rp 20.000 (aktif)</option><option value="plama">Promo Lebaran (kedaluwarsa)</option></select>
+            <span class="ra-caption">Daftar promosi hanya bisa dibaca; membuat atau mengubah promosi belum tersedia. Promosi berlaku bila aktif dan dalam masa berlaku.</span></div>
+          <sc-if value="{{hasPromoNote}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">{{promoNote}}</p></div></sc-if>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Masa berlaku</span>
+          <div style="display:grid;grid-template-columns:1fr;gap:10px;" role="radiogroup" aria-label="Masa berlaku"><sc-for list="{{vts}}" as="t" hint-placeholder-count="2"><button class="radio-card" role="radio" aria-checked="{{t.checked}}" disabled="{{t.dis}}" onClick="{{t.pick}}"><span class="ra-label-lg">{{t.l}}</span></button></sc-for></div>
+          <sc-if value="{{isDays}}" hint-placeholder-val="{{true}}"><div class="field"><label class="ra-label-lg" for="a-days">Jumlah hari <span class="req">*</span></label><input id="a-days" class="ra-input" type="number" min="1" style="max-width:160px;" disabled="{{locked}}" value="{{days}}" onInput="{{onDays}}"><sc-if value="{{daysErr}}" hint-placeholder-val="{{false}}"><span class="err">Isi jumlah hari lebih dari 0.</span></sc-if></div></sc-if>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+          <span class="ra-title-md">Isi paket</span>
+          <div class="field"><span class="ra-label-lg">Kapasitas utama <span class="req">*</span></span><div class="chip-group" role="group" aria-label="Jenis kapasitas utama"><sc-for list="{{ctypes}}" as="t" hint-placeholder-count="2"><button class="ra-chip" aria-pressed="{{t.pressed}}" disabled="{{t.dis}}" onClick="{{t.pick}}">{{t.l}}</button></sc-for></div></div>
+          <div class="field"><label class="ra-label-lg" for="a-cval">Jumlah <span class="req">*</span></label><input id="a-cval" class="ra-input" type="number" min="1" style="max-width:200px;" disabled="{{locked}}" value="{{cval}}" onInput="{{onCapVal}}"><sc-if value="{{capErr}}" hint-placeholder-val="{{false}}"><span class="err">Jumlah wajib lebih dari 0.</span></sc-if></div>
+          <div class="field"><span class="ra-label-lg">Kapasitas tambahan <span class="ra-caption">(maksimal 10)</span></span>
+            <sc-if value="{{hasCaps}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;gap:8px;"><sc-for list="{{caps}}" as="c" hint-placeholder-count="2"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><button class="ra-chip" disabled="{{c.dis}}" onClick="{{c.toggle}}">{{c.t}}</button><input class="ra-input" type="number" min="1" style="width:120px;" aria-label="Jumlah kapasitas tambahan {{c.n}}" disabled="{{c.dis}}" value="{{c.v}}" onInput="{{c.onV}}"><button class="ra-iconbtn" aria-label="Hapus kapasitas tambahan {{c.n}}" disabled="{{c.dis}}" onClick="{{c.del}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div></sc-for></div></sc-if>
+            <div><button class="ra-btn ra-btn-secondary ra-btn-sm" disabled="{{capAddOff}}" onClick="{{addCap}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah kapasitas</button></div>
+            <span class="ra-caption">Hanya jenis yang dikonsumsi sistem: Refresh Listing dan Poin Belajar. Add-on "slot listing tambahan" belum punya konsumen di sistem sehingga belum bisa dijual.</span></div>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:8px;background:var(--ra-blue-50);">
+          <span class="ra-title-md">Ringkasan untuk pembeli</span>
+          <div class="ra-body-md">{{sumCap}} · {{sumVal}}</div>
+          <div class="ra-label-lg">Harga {{listPrice}}</div>
+          <sc-if value="{{showFinal}}" hint-placeholder-val="{{false}}"><div class="ra-label-lg" style="color:var(--ra-success-600);">Setelah promosi {{finalPrice}}</div></sc-if>
+        </div>
+        <div style="display:flex;gap:10px;flex-direction:column;"><a class="ra-btn ra-btn-secondary" href="M14-Katalog-Addon.dc.html">Batal</a><button class="ra-btn ra-btn-primary" disabled="{{saving}}" onClick="{{save}}">{{saveLabel}}</button></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"mode":{"editor":"enum","default":"create","options":["create","edit","edit_terkunci"],"section":"Skenario form"},"simpan":{"editor":"enum","default":"normal","options":["normal","menyimpan","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { f: null, tried: false, done: false, failed: false, caps: null });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'onCode', 'onName', 'onPrice', 'onDays', 'onCapVal', 'save', 'addCap', 'onPromo'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  mode(){ return this.props.mode || 'create'; }
+  locked(){ return this.mode() === 'edit_terkunci'; }
+  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', price: '', vtype: 'days', days: '30', ctype: 'listing_refresh', cval: '', promo: 'none' }; return { code: 'REFRESH_50', name: 'Paket 50 Refresh', price: '75000', vtype: 'days', days: '30', ctype: 'listing_refresh', cval: '50', promo: 'none' }; }
+  capsList(){ if (this.state.caps) return this.state.caps; return this.mode() === 'create' ? [] : [{ t: 'learning_point', v: '100' }]; }
+  up(k, v){ var f = Object.assign({}, this.form()); f[k] = v; this.setState({ f: f }); }
+  onCode(e){ this.up('code', e.target.value); }
+  onName(e){ this.up('name', e.target.value); }
+  onPrice(e){ this.up('price', e.target.value); }
+  onDays(e){ this.up('days', e.target.value); }
+  onCapVal(e){ this.up('cval', e.target.value); }
+  onPromo(e){ this.up('promo', e.target.value); }
+  addCap(){ var l = this.capsList().slice(); if (l.length >= 10) return; l.push({ t: 'learning_point', v: '' }); this.setState({ caps: l }); }
+  save(){
+    if (this.props.simpan === 'menyimpan') return;
+    var f = this.form(), p = Number(f.price), ok = String(f.code).trim() && String(f.name).trim() && /^[A-Za-z0-9_.-]+$/.test(String(f.code).trim()) && p > 0 && (f.vtype !== 'days' || Number(f.days) > 0) && Number(f.cval) > 0;
+    if (!ok) { this.setState({ tried: true }); return; }
+    if (this.props.simpan === 'gagal') { this.setState({ failed: true, done: false }); return; }
+    this.setState({ done: true, failed: false, tried: false });
+  }
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var self = this, f = this.form(), tried = st.tried === true, locked = this.locked();
+    var p = Number(f.price), days = Number(f.days), cv = Number(f.cval);
+    var codeBad = !String(f.code).trim() ? 'Kode wajib diisi.' : (!/^[A-Za-z0-9_.-]+$/.test(String(f.code).trim()) ? 'Kode hanya huruf, angka, titik, garis bawah, dan strip.' : '');
+    var promos = { none: null, p10: { name: 'Diskon 10%', pct: 10 }, p20k: { name: 'Potongan Rp 20.000', off: 20000 }, plama: { name: 'Promo Lebaran (kedaluwarsa)', expired: true } };
+    var pm = promos[f.promo] || null, base = p > 0 ? p : 0, finalPrice = base, promoNote = '';
+    if (pm && pm.pct) finalPrice = Math.round(base * (1 - pm.pct / 100)); else if (pm && pm.off) finalPrice = Math.max(0, base - pm.off);
+    if (pm && pm.expired) promoNote = 'Promosi ini sudah berakhir dan tidak akan diterapkan pada pesanan.'; else if (pm) promoNote = 'Diskon dihitung server saat pesanan dibuat dari aturan promosi.';
+    var fmt = function(n){ return n > 0 ? 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : 'Rp 0'; };
+    var vts = [['days','Berlaku beberapa hari'],['unlimited','Tanpa batas waktu']].map(function(t){ return { l: t[1], checked: f.vtype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('vtype', t[0]); }, dis: locked }; });
+    var ctypes = [['listing_refresh','Refresh Listing'],['learning_point','Poin Belajar']].map(function(t){ return { l: t[1], pressed: f.ctype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('ctype', t[0]); }, dis: locked }; });
+    var caps = this.capsList().map(function(c, i){ return { n: i + 1, t: c.t === 'learning_point' ? 'Poin Belajar' : 'Refresh Listing', v: c.v, dis: locked,
+      toggle: function(){ if (locked) return; var l = self.capsList().slice(); l[i] = { t: l[i].t === 'learning_point' ? 'listing_refresh' : 'learning_point', v: l[i].v }; self.setState({ caps: l }); },
+      onV: function(e){ var l = self.capsList().slice(); l[i] = { t: l[i].t, v: e.target.value }; self.setState({ caps: l }); },
+      del: function(){ if (locked) return; var l = self.capsList().slice(); l.splice(i, 1); self.setState({ caps: l }); } }; });
+    var out = { aktorLabel: aktorLabel, pageTitle: this.mode() === 'create' ? 'Buat Add-on' : 'Ubah Add-on', code: f.code, name: f.name, price: f.price, days: f.days, cval: f.cval, promo: f.promo, onCode: this.onCode, onName: this.onName, onPrice: this.onPrice, onDays: this.onDays, onCapVal: this.onCapVal, onPromo: this.onPromo,
+      locked: locked, isCreate: this.mode() === 'create', codeErr: tried && !!codeBad, codeMsg: codeBad, nameErr: tried && !String(f.name).trim(), priceErr: tried && !(p > 0), daysErr: tried && f.vtype === 'days' && !(days > 0), capErr: tried && !(cv > 0),
+      isDays: f.vtype === 'days', vts: vts, ctypes: ctypes, caps: caps, hasCaps: caps.length > 0, addCap: this.addCap, capAddOff: !(caps.length < 10 && !locked),
+      finalPrice: fmt(finalPrice), listPrice: fmt(base), hasPromoNote: !!promoNote, promoNote: promoNote, showFinal: !!pm && !pm.expired && finalPrice !== base,
+      saving: pr.simpan === 'menyimpan', saveLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : 'Simpan Draf', save: this.save, done: st.done === true, failed: st.failed === true && st.done !== true,
+      sumCap: (f.ctype === 'learning_point' ? 'Poin Belajar' : 'Refresh Listing') + ' ' + (cv > 0 ? cv : '—'), sumVal: f.vtype === 'days' ? (days > 0 ? days + ' hari' : '—') : 'Tanpa batas waktu' };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>
