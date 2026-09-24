@@ -51,6 +51,12 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw new ApiError("FORBIDDEN", "Anda harus enroll ke course ini sebelum mengerjakan quiz.");
   }
 
+  // Kuis yang rusak (tanpa soal, soal tanpa jawaban benar, dst.; migration 0135) tidak boleh dikerjakan karena tidak bisa dinilai wajar.
+  const { data: problems } = await supabase.rpc("quiz_problems", { p_quiz_id: ctx.params.id });
+  if (Array.isArray(problems) && problems.length > 0) {
+    throw new ApiError("CONFLICT", "Kuis ini belum siap dikerjakan.");
+  }
+
   const { data: questions, error: questionsError } = await supabase
     .from("quiz_questions")
     .select("id, question_text, question_type")

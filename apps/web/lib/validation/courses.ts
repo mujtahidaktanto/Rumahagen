@@ -5,7 +5,7 @@
 import { z } from "zod";
 
 export const courseCategoryEnum = z.enum(["sales_skill", "legal_regulasi", "produk_developer", "financial_kpr", "lainnya"]);
-export const courseStatusEnum = z.enum(["draft", "published", "archived"]);
+export const courseStatusEnum = z.enum(["draft", "pending_review", "published", "archived"]);
 
 export const createCourseSchema = z.object({
   title: z.string().min(1).max(200),
@@ -32,7 +32,21 @@ export const courseStatusSchema = z.object({
 
 export const listCoursesQuerySchema = z.object({
   category: courseCategoryEnum.optional(),
+  status: courseStatusEnum.optional(),
+  owner: z.enum(["me"]).optional(),
+  q: z.string().trim().max(100).optional(),
 });
+
+// Keputusan tinjauan kursus (migration 0136): menolak wajib menyertakan catatan.
+export const courseReviewDecisionSchema = z
+  .object({
+    decision: z.enum(["approve", "reject"]),
+    note: z.string().trim().max(2000).optional(),
+  })
+  .refine((v) => v.decision === "approve" || (v.note !== undefined && v.note.length > 0), {
+    message: "Menolak pengajuan wajib menyertakan catatan.",
+    path: ["note"],
+  });
 
 export const createCourseLessonSchema = z.object({
   title: z.string().max(200).optional(),

@@ -44,7 +44,9 @@ Kursus: `GET/POST /courses`, `GET/PUT /courses/{id}`, `PATCH /courses/{id}/statu
 daftar peserta per kursus untuk staf (hanya `GET /enrollments/{id}`), hitungan pelajaran/kuis/peserta pada daftar kursus.
 
 ## 5. Temuan celah (dibuktikan / terbaca)
-> **Pembaruan 2026-09-24:** celah 1, 2, 3, dan 8 sudah ditutup oleh migration `0130` (diterapkan) plus perubahan route `quizzes/[id]/submit` dan skema `url-redirects`. Sisanya (4, 5, 6 sebagian, 7) masih terbuka. Teks di bawah adalah kondisi saat ditemukan.
+> **Pembaruan 2026-09-24 (batch 0135–0137, diterapkan):** celah 4 (ubah/hapus kuis-soal-opsi) ditutup migration `0135` + route baru `PATCH/DELETE quizzes|quiz-questions|quiz-options`, celah 7 (pengalihan URL tidak dipakai) ditutup middleware `apps/web/middleware.ts` + migration `0137` (pengalihan otomatis saat slug berubah), dan mekanisme "minta terbit" Instruktur (status `pending_review`) ditambahkan migration `0136`. Layar Admin diperbarui: chip "Menunggu Tinjauan", tombol Tinjau, Setujui/Tolak dengan catatan, kesiapan terbit, kunci kuis yang sudah dikerjakan. Layar Instruktur ada di `SOURCE-Instructor-Kursus.md`.
+>
+> **Pembaruan sebelumnya 2026-09-24:** celah 1, 2, 3, dan 8 sudah ditutup oleh migration `0130` (diterapkan) plus perubahan route `quizzes/[id]/submit` dan skema `url-redirects`. Sisanya (4, 5, 6 sebagian, 7) masih terbuka. Teks di bawah adalah kondisi saat ditemukan.
 1. **[DITUTUP 0130] [DIUJI] Agent bisa menyelesaikan kursusnya sendiri.** `enrollments_update` memakai izin `view` scope own, jadi Agent bisa `UPDATE` baris enrollment-nya:
    `status='completed'`, `progress_percent=100`, `completed_at=now()` berhasil (1 baris) tanpa mengerjakan kuis. Pola yang sama dengan celah M15 (izin baca dipakai untuk menulis).
 2. **[DITUTUP 0130] [DIUJI] Instructor bisa langsung menerbitkan kursus sendiri** (`status='published'` pada INSERT tanpa tinjauan); membuat kursus atas nama orang lain ditolak (42501).
@@ -76,4 +78,4 @@ Nav Admin bertambah 2 item: **Kelola Kursus** dan **Pengalihan URL** (ditambahka
 ## 7. Keputusan yang dibuat / perlu diputuskan
 1. Kursus diasumsikan dikelola Admin/Manager/Superadmin di layar Admin; Manager tidak melihat menu Pengalihan URL (izin hanya Admin/Superadmin).
 2. Menandai "benar" pada opsi, minimal 1 benar per soal, `single_choice` tepat 1 benar: divalidasi di UI (DB tidak menegakkan).
-3. **Perlu keputusan:** apakah Instructor mendapat layar "Kursus Saya" (versi scope own dari layar ini). Soal persetujuan sudah diputuskan lewat `0130`: kursus Instruktur tetap Draf sampai staf menerbitkannya (izin `m04.course.publish`); belum ada mekanisme "minta terbit".
+3. **Diputuskan:** Instructor mendapat layar "Kursus Saya" (scope own, `SOURCE-Instructor-Kursus.md`). Kursus Instruktur tetap Draf; Instruktur mengajukan (`pending_review`), staf menyetujui (terbit) atau mengembalikan ke Draf dengan catatan wajib. Selama ditinjau, isi kursus terkunci untuk pemilik non-staf.

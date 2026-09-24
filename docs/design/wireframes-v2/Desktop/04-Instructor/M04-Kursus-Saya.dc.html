@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Sesi Saya — Desktop</title>
+<title>Kelola Kursus — Desktop</title>
 <script src="./support.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../tokens.css">
@@ -72,10 +72,12 @@
   .kv dd{margin:0;font-size:14px;line-height:20px;}
   .btn-danger-ghost{color:var(--ra-danger-600);}
 
-  .grid2{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:20px;align-items:start;}
+  .nav{background:var(--ra-ink-900);}
   .radio-card{display:flex;flex-direction:column;gap:6px;padding:16px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);}
   .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
-  .radio-card:focus-visible{outline:2.5px solid var(--ra-blue-500);outline-offset:2px;}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+  .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .meter > div{height:100%;background:var(--ra-blue-600);}
 </style>
 </helmet>
 <div class="app">
@@ -89,8 +91,8 @@
     </div>
     <div class="nav-list">
       <a class="nav-item" href="M08-Dashboard-Instruktur.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Dashboard</span></a>
-      <a class="nav-item is-active" href="M04-Sesi-Saya.dc.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M10 9l4 2.5-4 2.5V9Z"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Sesi Saya</span></a>
-      <a class="nav-item" href="M04-Kursus-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M8 7h7M8 11h5"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Kursus Saya</span></a>
+      <a class="nav-item" href="M04-Sesi-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M10 9l4 2.5-4 2.5V9Z"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Sesi Saya</span></a>
+      <a class="nav-item is-active" href="M04-Kursus-Saya.dc.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M8 7h7M8 11h5"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Kursus Saya</span></a>
       <a class="nav-item" href="M05-Event-Instruktur.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Event</span></a>
       <a class="nav-item" href="../06-Bersama/M08-Pusat-Notifikasi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Notifikasi</span><sc-if value="{{navExpanded}}" hint-placeholder-val="{{true}}"><span class="nav-badge">3</span></sc-if></a>
       <a class="nav-item" href="M02-Profil-Instruktur.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Profil Saya</span></a>
@@ -102,32 +104,31 @@
   </div>
   <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
     <div class="topbar">
-      <h1 class="ra-title-lg">Sesi Saya</h1>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <a class="ra-btn ra-btn-primary" href="M04-Form-Sesi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Buat Sesi</a>
-        <a class="ra-iconbtn" href="../06-Bersama/M08-Pusat-Notifikasi.dc.html" aria-label="Notifikasi, 3 belum dibaca" style="position:relative;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span style="position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--ra-danger-600);border:1.5px solid #fff;"></span></a>
-        <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">DP</div>
-      </div>
+      <div><h1 class="ra-title-lg">Kursus Saya</h1><p class="ra-caption">Kursus yang Anda tulis</p></div>
+      <div style="display:flex;align-items:center;gap:12px;"><a class="ra-btn ra-btn-primary" href="M04-Form-Kursus.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Buat Kursus</a><span class="ra-badge ra-badge-info">{{aktorLabel}}</span></div>
     </div>
     <div class="main ra-scroll">
+      <sc-if value="{{hasPending}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md"><strong>{{pendingCount}} kursus menunggu tinjauan.</strong> Buka kursus untuk menyetujui atau mengembalikan ke draf dengan catatan.</p></div></sc-if>
+      <sc-if value="{{isIns}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Kursus baru berstatus Draf. Setelah pelajaran dan kuis lengkap, ajukan terbit; tim RumahAgen meninjau, lalu menerbitkan atau mengembalikan dengan catatan. Selama ditinjau isi kursus tidak bisa diubah.</p></div></sc-if>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-        <div class="chip-group" role="group" aria-label="Filter status"><sc-for list="{{chips}}" as="c" hint-placeholder-count="7"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for></div>
+        <div class="chip-group" role="group" aria-label="Filter status"><sc-for list="{{chips}}" as="c" hint-placeholder-count="5"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for></div>
         <div style="flex:1;"></div>
-        <div style="position:relative;width:260px;"><span style="position:absolute;left:12px;top:12px;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input class="ra-input" style="width:100%;padding-left:40px;" type="search" placeholder="Cari sesi…" aria-label="Cari sesi" value="{{q}}" onInput="{{setQ}}"></div>
+        <select class="ra-input" style="width:200px;" aria-label="Filter kategori" value="{{cat}}" onChange="{{setCat}}"><option value="all">Semua kategori</option><option value="sales_skill">Sales Skill</option><option value="legal_regulasi">Legal &amp; Regulasi</option><option value="produk_developer">Produk Developer</option><option value="financial_kpr">Financial &amp; KPR</option><option value="lainnya">Lainnya</option></select>
+        <div style="position:relative;width:240px;"><span style="position:absolute;left:12px;top:12px;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input class="ra-input" style="width:100%;padding-left:40px;" type="search" placeholder="Cari judul…" aria-label="Cari kursus" value="{{q}}" onInput="{{setQ}}"></div>
       </div>
       <div class="card" style="overflow:hidden;">
         <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:60px;"></div><div class="ra-skel" style="height:60px;"></div><div class="ra-skel" style="height:60px;"></div></div></sc-if>
-        <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Daftar sesi gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></sc-if>
-        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M10 9l4 2.5-4 2.5V9Z"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada sesi</span><p class="ra-body-md" style="max-width:380px;">Buat sesi pembelajaran pertama Anda, atau tunggu tim RumahAgen menugaskan Anda sebagai Host atau Instruktur.</p></div></sc-if>
-        <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada sesi yang cocok</span></div></sc-if>
+        <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Daftar kursus gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></sc-if>
+        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M8 7h7M8 11h5"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada kursus</span><p class="ra-body-md" style="max-width:380px;">Buat kursus pertama untuk katalog pembelajaran.</p></div></sc-if>
+        <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada kursus yang cocok</span></div></sc-if>
         <sc-if value="{{showRows}}" hint-placeholder-val="{{true}}">
           <table>
-            <thead><tr><th class="ra-label-md" style="color:var(--ra-ink-500);">Sesi</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Tipe</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Jadwal</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Visibilitas</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Peserta</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Peran</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Status</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Aksi</th></tr></thead>
+            <thead><tr><th class="ra-label-md" style="color:var(--ra-ink-500);">Kursus</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Kategori</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Pelajaran</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Kuis</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Status</th><th class="ra-label-md" style="color:var(--ra-ink-500);">Aksi</th></tr></thead>
             <tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="5"><tr>
-              <td><div class="ra-label-lg ra-truncate-1" style="max-width:260px;">{{r.title}}</div><div class="ra-caption">{{r.rel}}</div></td><td><span class="ra-body-md">{{r.type}}</span></td><td><span class="ra-body-md" style="white-space:nowrap;">{{r.when}}</span></td><td><span class="ra-body-md">{{r.vis}}</span></td><td><span class="ra-body-md">{{r.people}}</span></td><td><span class="ra-badge ra-badge-neutral">{{r.role}}</span></td>
-              <td><span class="ra-badge {{r.badge}}"><span class="ra-dot"></span>{{r.label}}</span></td><td><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M04-Detail-Sesi.dc.html">Kelola</a></td></tr></sc-for></tbody>
+              <td><div class="ra-label-lg ra-truncate-2" style="max-width:300px;">{{r.title}}</div><div class="ra-caption">Nilai lulus {{r.pass}}</div><sc-if value="{{r.hasNote}}" hint-placeholder-val="{{false}}"><div class="ra-caption" style="color:var(--ra-danger-600);max-width:300px;">Dikembalikan: {{r.note}}</div></sc-if></td><td><span class="ra-body-md">{{r.cat}}</span></td><td><span class="ra-body-md">{{r.les}}</span></td><td><span class="ra-body-md">{{r.quiz}}</span></td>
+              <td><span class="ra-badge {{r.badge}}"><span class="ra-dot"></span>{{r.label}}</span><sc-if value="{{r.hasWhen}}" hint-placeholder-val="{{false}}"><div class="ra-caption">{{r.when}}</div></sc-if></td><td><a class="ra-btn {{r.actionCls}} ra-btn-sm" href="M04-Detail-Kursus.dc.html">{{r.actionLabel}}</a></td></tr></sc-for></tbody>
           </table>
-          <div style="padding:12px 16px;border-top:1px solid var(--ra-ink-100);display:flex;justify-content:space-between;align-items:center;"><span class="ra-caption">Menampilkan sesi milik Anda dan sesi tempat Anda ditugaskan</span><button class="ra-btn ra-btn-secondary ra-btn-sm">Muat Lebih Banyak</button></div>
+          <div style="padding:12px 16px;border-top:1px solid var(--ra-ink-100);display:flex;justify-content:flex-end;"><button class="ra-btn ra-btn-secondary ra-btn-sm">Muat Lebih Banyak</button></div>
         </sc-if>
       </div>
     </div>
@@ -138,15 +139,16 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { filter: 'all', q: '' });
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { filter: 'all', cat: 'all', q: '' });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'setQ'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'setQ', 'setCat'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
   closeDrawer(){ this.setState({ drawerOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   setQ(e){ this.setState({ q: e.target.value }); }
+  setCat(e){ this.setState({ cat: e.target.value }); }
   renderVals() {
     var st = this.state, pr = this.props;
     var linked = (pr.akun || 'terhubung') === 'terhubung';
@@ -158,25 +160,26 @@ class Component extends DCLogic {
       isLinked: linked, isUnlinked: !linked,
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
-    
-    var TYPE = { broadcast: 'Siaran (webinar)', interactive: 'Interaktif', on_demand: 'On-demand' };
-    var VIS = { public: 'Publik', organization: 'Organisasi', partner: 'Mitra', private: 'Privat' };
-    var STS = { draft: ['Draf','ra-badge-neutral'], scheduled: ['Terjadwal','ra-badge-info'], live: ['Sedang Live','ra-badge-success'], ended: ['Selesai','ra-badge-neutral'], cancelled: ['Dibatalkan','ra-badge-danger'], failed: ['Gagal','ra-badge-danger'] };
-    // Sesi tidak punya kolom judul (learning_sessions): judul diturunkan dari kursus/event terkait.
-    var SESSIONS = [
-      { id: 's1', title: 'Strategi Closing Properti Q4', rel: 'Kursus: Sales Skill', type: 'interactive', when: '02 Okt 2026, 19.00', vis: 'partner', people: 18, st: 'scheduled', role: 'Pemilik' },
-      { id: 's2', title: 'Analisis DBR untuk Konsultasi KPR', rel: 'Event: Workshop KPR', type: 'broadcast', when: '27 Sep 2026, 10.00', vis: 'public', people: 64, st: 'live', role: 'Pemilik' },
-      { id: 's3', title: 'Negosiasi Lanjutan', rel: 'Kursus: Sales Skill', type: 'on_demand', when: '20 Sep 2026, 14.00', vis: 'private', people: 12, st: 'ended', role: 'Instruktur' },
-      { id: 's4', title: 'Onboarding Agen Baru', rel: 'Tanpa kursus/event', type: 'interactive', when: '05 Okt 2026, 09.00', vis: 'organization', people: 0, st: 'draft', role: 'Pemilik' },
-      { id: 's5', title: 'Foto Properti dengan Ponsel', rel: 'Kursus: Konten Listing', type: 'broadcast', when: '10 Sep 2026, 16.00', vis: 'public', people: 41, st: 'cancelled', role: 'Host' }
+    var IS_INS = true; var aktorLabel = 'Instruktur';
+    var CAT = { sales_skill: 'Sales Skill', legal_regulasi: 'Legal & Regulasi', produk_developer: 'Produk Developer', financial_kpr: 'Financial & KPR', lainnya: 'Lainnya' };
+    var STS = { draft: ['Draf','ra-badge-neutral'], pending_review: ['Menunggu Tinjauan','ra-badge-info'], published: ['Terbit','ra-badge-success'], archived: ['Diarsipkan','ra-badge-warning'] };
+    var ALL = [
+      { id: 'c1', title: 'Strategi Closing Properti Primary', cat: 'sales_skill', st: 'published', owner: 'Dewi Prasetya (Instruktur)', les: 8, quiz: 2, enr: 46, pass: 70, note: '', when: '' },
+      { id: 'c2', title: 'Dasar Legal Jual Beli Rumah dan Sertifikat Tanah untuk Agen Pemula', cat: 'legal_regulasi', st: 'published', owner: 'Tim RumahAgen', les: 12, quiz: 1, enr: 31, pass: 80, note: '', when: '' },
+      { id: 'c3', title: 'Menghitung DBR dan Simulasi KPR', cat: 'financial_kpr', st: 'draft', owner: 'Dewi Prasetya (Instruktur)', les: 3, quiz: 1, enr: 0, pass: 70, note: 'Tambahkan materi PDF dan perbaiki soal 3 (belum ada jawaban benar).', when: '' },
+      { id: 'c4', title: 'Mengenal Produk Developer Mitra', cat: 'produk_developer', st: 'draft', owner: 'Tim RumahAgen', les: 0, quiz: 0, enr: 0, pass: 70, note: '', when: '' },
+      { id: 'c5', title: 'Foto Properti dengan Ponsel', cat: 'lainnya', st: 'archived', owner: 'Dewi Prasetya (Instruktur)', les: 5, quiz: 1, enr: 88, pass: 60, note: '', when: '' },
+      { id: 'c6', title: 'Negosiasi Harga dengan Pembeli Sulit', cat: 'sales_skill', st: 'pending_review', owner: 'Dewi Prasetya (Instruktur)', les: 6, quiz: 1, enr: 0, pass: 70, note: '', when: 'Diajukan 22 Sep 2026' },
+      { id: 'c7', title: 'Prosedur AJB dan Balik Nama', cat: 'legal_regulasi', st: 'pending_review', owner: 'Anton Wijaya (Instruktur)', les: 4, quiz: 0, enr: 0, pass: 70, note: '', when: 'Diajukan 23 Sep 2026' }
     ];
+    var COURSES = IS_INS ? ALL.filter(function(c){ return c.owner.indexOf('Dewi') === 0; }) : ALL;
     var self = this, mode = pr.state || 'normal';
-    var counts = { all: SESSIONS.length }; SESSIONS.forEach(function(s){ counts[s.st] = (counts[s.st] || 0) + 1; });
-    var chipDefs = [['all','Semua'],['draft','Draf'],['scheduled','Terjadwal'],['live','Live'],['ended','Selesai'],['cancelled','Dibatalkan'],['failed','Gagal']];
-    var chips = chipDefs.map(function(c){ return { label: c[1], count: counts[c[0]] || 0, pressed: st.filter === c[0] ? 'true' : 'false', pick: function(){ self.setState({ filter: c[0] }); } }; });
+    var counts = { all: COURSES.length }; COURSES.forEach(function(c){ counts[c.st] = (counts[c.st] || 0) + 1; });
+    var pending = counts.pending_review || 0;
+    var chips = [['all','Semua'],['draft','Draf'],['pending_review','Menunggu Tinjauan'],['published','Terbit'],['archived','Diarsipkan']].map(function(c){ return { label: c[1], count: counts[c[0]] || 0, pressed: st.filter === c[0] ? 'true' : 'false', pick: function(){ self.setState({ filter: c[0] }); } }; });
     var q = (st.q || '').toLowerCase();
-    var rows = SESSIONS.filter(function(s){ return (st.filter === 'all' || s.st === st.filter) && (!q || s.title.toLowerCase().indexOf(q) >= 0); }).map(function(s){ var m = STS[s.st]; return { title: s.title, rel: s.rel, type: TYPE[s.type], when: s.when, vis: VIS[s.vis], people: s.people, label: m[0], badge: m[1], role: s.role }; });
-    var out = { chips: chips, rows: rows, q: st.q, setQ: this.setQ, showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showNoMatch: mode === 'normal' && rows.length === 0, showRows: mode === 'normal' && rows.length > 0 };
+    var rows = COURSES.filter(function(c){ return (st.filter === 'all' || c.st === st.filter) && (st.cat === 'all' || c.cat === st.cat) && (!q || c.title.toLowerCase().indexOf(q) >= 0); }).map(function(c){ var m = STS[c.st]; return { title: c.title, cat: CAT[c.cat], label: m[0], badge: m[1], owner: c.owner, les: c.les, quiz: c.quiz, enr: c.enr, pass: c.pass, note: c.note, hasNote: !!c.note && c.st === 'draft', when: c.when, hasWhen: !!c.when, actionCls: (!IS_INS && c.st === 'pending_review') ? 'ra-btn-primary' : 'ra-btn-secondary', canReview: !IS_INS && c.st === 'pending_review', actionLabel: (!IS_INS && c.st === 'pending_review') ? 'Tinjau' : 'Kelola', actionPrimary: (!IS_INS && c.st === 'pending_review') }; });
+    var out = { aktorLabel: aktorLabel, isIns: IS_INS, notIns: !IS_INS, hasPending: !IS_INS && pending > 0, pendingCount: pending, chips: chips, rows: rows, q: st.q, setQ: this.setQ, cat: st.cat, setCat: this.setCat, showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showNoMatch: mode === 'normal' && rows.length === 0, showRows: mode === 'normal' && rows.length > 0 };
     return Object.assign(shell, out);
   }
 }

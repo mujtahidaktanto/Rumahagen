@@ -3494,3 +3494,54 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Hasil uji (rollback, 24 skenario):** tujuh bentuk tak valid ditolak CHECK; peran layak diskon 10% (75.000 menjadi 67.500), peran salah, harga di bawah minimum, batas per pengguna, dan kuota total habis ditolak dengan alasan; pembelian pertama ok sebelum ada pesanan terkonfirmasi dan ditolak sesudahnya; pesanan dibatalkan mengembalikan kuota per pengguna; RPC melaporkan layak/tidak beserta alasan; menghitung untuk pengguna lain ditolak 42501; hitung pemakaian oleh admin benar (pending + confirmed = 2, cancelled tidak dihitung) dan ditolak untuk agen. Skema Zod (9 kasus) dan `tsc --noEmit` lolos.
 
 **Belum tercakup:** `rule_configuration` (aturan penumpukan/prioritas) tetap belum dievaluasi; tidak ada pembatasan berdasarkan organisasi, wilayah, atau tanggal daftar akun.
+
+---
+
+## `0135` — Integritas kuis M04 untuk API ubah/hapus (✅ DITERAPKAN 2026-09-24)
+
+**STATUS:** Ditulis 2026-09-24, diuji rollback pada DB live, **menunggu izin "terapkan 0135"**.
+
+**Masalah:** API kuis sebelumnya hanya bisa menambah. Setelah ada ubah/hapus, menghapus kuis/soal/opsi atau membalik `is_correct` setelah peserta mengerjakan mengubah makna nilai lama, dan menghapus kuis menghapus berantai `quiz_attempts` (FK CASCADE). Kuis tanpa soal, soal tanpa jawaban benar, atau `single_choice` dengan lebih dari satu jawaban benar tidak bisa dinilai wajar tetapi kursusnya tetap bisa diterbitkan.
+
+**Perubahan:**
+1. `quiz_has_attempts()` dan `quiz_problems()` (masalah kesiapan: tanpa soal, kurang dari 2 opsi, tanpa jawaban benar, pilihan tunggal dengan jawaban benar selain satu).
+2. Kuis yang sudah punya percobaan: opsi tidak bisa dihapus, ditambah, atau diubah `is_correct`-nya; soal tidak bisa dihapus atau diubah jenisnya; kuis tidak bisa dihapus. Teks soal/opsi, judul kuis, dan penambahan soal tetap boleh. Kuis/soal/opsi tidak bisa dipindah induknya.
+3. Kursus tidak bisa diterbitkan (INSERT/UPDATE ke `published`, semua peran) bila salah satu kuisnya bermasalah.
+
+**Kode (satu paket):** `GET/PUT/DELETE /quizzes/{id}`, `GET /quizzes/{id}/editor` (soal + opsi + `is_correct` + `problems` + `has_attempts`, hanya pengelola), `PUT/DELETE /quiz-questions/{id}`, `PUT/DELETE /quiz-options/{id}`; skema update di `lib/validation/quizzes.ts`; `lib/api/integrity-error.ts` mengubah pelanggaran 23514 menjadi 409 berpesan bahasa pengguna (dipakai juga oleh POST opsi dan PATCH status kursus); `take` dan `submit` menolak kuis yang belum siap (409). **Terapkan migration dan kode bersamaan**: tanpa migration, RPC `quiz_problems`/`quiz_has_attempts` belum ada sehingga editor, `take`, dan `submit` gagal.
+
+**Hasil uji (rollback, 19 skenario):** kesiapan (siap, tanpa soal, dua jawaban benar pada pilihan tunggal, tanpa jawaban benar, pilihan ganda dengan dua benar valid); menerbitkan kursus dengan kuis kosong ditolak, dengan kuis siap ok; pada kuis yang sudah dikerjakan: ubah teks opsi/soal/judul dan tambah soal ok, membalik kunci, hapus opsi, tambah opsi, hapus soal, ubah jenis soal, hapus kuis, dan pindah kursus ditolak; kuis tanpa percobaan bebas dihapus berantai. `tsc --noEmit` lolos.
+
+---
+
+## `0136` — Alur "minta terbit" kursus (✅ DITERAPKAN 2026-09-24; prasyarat 0135)
+
+**STATUS:** Ditulis 2026-09-24, diuji rollback pada DB live (dengan `quiz_problems` versi uji karena 0135 belum diterapkan), **menunggu izin "terapkan 0136"**. **Terapkan setelah 0135**: memakai `quiz_problems()`.
+
+**Masalah:** sejak 0130 hanya staf yang boleh menerbitkan kursus, tetapi Instruktur tidak punya cara meminta: tidak ada status antara, catatan penolakan, atau pemberitahuan.
+
+**Perubahan:**
+1. Status baru `pending_review` (CHECK `courses_status_check` diperluas) dan kolom `review_note`, `submitted_for_review_at`, `reviewed_by`, `reviewed_at`.
+2. Trigger alur status `trg_course_status_workflow`: draft -> pending_review (pemilik/staf; wajib minimal 1 pelajaran dan semua kuis siap), pending_review -> draft (pemilik menarik kembali; staf menolak WAJIB dengan catatan), pending_review -> published (hanya staf). Non-staf hanya boleh: draft->pending_review/archived, pending_review->draft, published->archived, archived->draft; INSERT non-staf hanya `draft`.
+3. Selama `pending_review` non-staf tidak bisa mengubah kursus, pelajaran, kuis, soal, dan opsi (trigger `*_review_lock`); staf tetap bisa. Kursus yang sudah terbit tetap bisa diedit pemiliknya (tidak diubah).
+4. Notifikasi ke pemilik saat disetujui atau dikembalikan (catatan disertakan).
+
+**Kode (satu paket):** `POST /courses/{id}/submit-review`, `POST /courses/{id}/withdraw-review`, `POST /courses/{id}/review` (`{decision: approve|reject, note}`; reject wajib catatan; staf); `GET /courses` mendapat filter `status`, `owner=me`, `q` (antrean tinjauan staf = `status=pending_review`; layar "Kursus Saya" = `owner=me`); enum status kursus memuat `pending_review`; `throwIntegrityError` memetakan 42501 ke 403. `tsc --noEmit` lolos.
+
+**Hasil uji (rollback, 19 skenario):** INSERT non-staf berstatus pending_review ditolak; ajukan tanpa pelajaran ditolak, dengan pelajaran ok dan `submitted_for_review_at` terisi; saat ditinjau edit kursus, tambah dan hapus pelajaran ditolak; instruktur tak bisa menerbitkan; instruktur lain tak bisa menarik kembali (0 baris), pemilik bisa dan bisa mengedit lagi; staf menolak tanpa catatan ditolak, dengan catatan ok (notifikasi 1, `reviewed_by` terisi); ajukan ulang mengosongkan catatan; staf menyetujui (notifikasi 1); pemilik bisa mengarsipkan kursus terbit tetapi tidak bisa menerbitkannya lagi.
+
+---
+
+## `0137` — Pengalihan URL otomatis saat slug berubah + middleware pembaca (✅ DITERAPKAN 2026-09-24)
+
+**STATUS:** Ditulis 2026-09-24, diuji rollback pada DB live (listing dan profil agen), **menunggu izin "terapkan 0137"**.
+
+**Masalah:** `url_redirects` (0051) hanya berisi input manual staf dan tidak dipakai aplikasi publik. Saat slug listing, proyek developer, atau profil agen berubah, tautan lama (yang sudah diindeks atau dibagikan) menjadi 404.
+
+**Perubahan:** `create_slug_redirect()` (definer) dan trigger AFTER UPDATE OF slug pada `listings` (hanya bila status lama `published`), `developer_projects` (status lama `active|coming_soon|sold_out`), dan `agent_profiles.public_slug`. Membuat/memperbarui pengalihan 301 `/listing/{lama}` -> `/listing/{baru}` (juga `/project/`, `/agent/`) dengan alasan `slug_changed` dan `entity_type/id`. Rantai diratakan (A->B lalu B->C menjadi A->C dan B->C); slug dikembalikan ke nilai lama menghapus pengalihan dari slug itu (tanpa putaran); kegagalan hanya WARNING dan tidak menggagalkan perubahan slug.
+
+**Kode (satu paket):** `apps/web/middleware.ts` membaca seluruh `url_redirects` lewat REST anon (SELECT publik sesuai RLS), menyimpannya di memori 60 detik (disegarkan di latar belakang; gagal baca tidak menghalangi halaman) dan mengalihkan GET/HEAD dengan kode 301/302 dari tabel; matcher melewati `/api`, aset Next, dan berkas berekstensi. Logika murni di `lib/seo/url-redirects.ts`: cocokkan pathname+query lalu pathname, ikuti rantai sampai 5 lompatan, hentikan bila berputar, hanya jalur internal.
+
+**Hasil uji (rollback):** listing published berganti slug menjadi 301 `slug_changed`; rantai diratakan (`rumah-lama` dan `rumah-baru` menuju `rumah-terbaru`); kembali ke slug lama tidak berputar; listing draf tidak dialihkan; profil agen dialihkan; ubah non-slug tidak menambah baris. Logika middleware diuji 10 kasus (rantai, query, 302 menang, URL luar dan `//host` ditolak, putaran tidak dialihkan). Trigger proyek developer tidak diuji langsung (baris uji terlalu banyak kolom wajib) tetapi sama dengan trigger listing. `tsc --noEmit` lolos; middleware belum dijalankan di server Next (belum ada halaman publik selain `/`).
+
+**Belum tercakup:** pengalihan saat listing dihapus atau digabung (`listing_deleted`/`listing_merged`, tujuan tidak diketahui), slug organisasi dan konten statis, dan pratinjau/penguji di layar Admin memakai data nyata.

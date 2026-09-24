@@ -9,6 +9,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { courseStatusSchema } from "@/lib/validation/courses";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 export const PATCH = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -23,7 +24,8 @@ export const PATCH = withApiHandler({ requireIdempotencyKey: true }, async (ctx)
     .maybeSingle();
 
   if (error) {
-    throw error;
+    // 23514 dari migration 0135: kursus tidak bisa diterbitkan bila ada kuis yang belum siap (pesan menyebut kuis dan masalah pertamanya).
+    throwIntegrityError(error);
   }
   if (!data) {
     throw new ApiError("NOT_FOUND", "Course tidak ditemukan atau Anda tidak punya akses.");

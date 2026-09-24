@@ -8,6 +8,7 @@
 import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { createQuizOptionSchema } from "@/lib/validation/quizzes";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -21,7 +22,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     .single();
 
   if (error) {
-    throw error;
+    throwIntegrityError(error);
   }
 
   return { data, status: 201 };

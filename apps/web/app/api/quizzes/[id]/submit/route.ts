@@ -45,6 +45,12 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
 
   const admin = createAdminClient();
 
+  // Kuis yang rusak tidak bisa dinilai wajar (migration 0135).
+  const { data: quizProblems } = await admin.rpc("quiz_problems", { p_quiz_id: ctx.params.id });
+  if (Array.isArray(quizProblems) && quizProblems.length > 0) {
+    throw new ApiError("CONFLICT", "Kuis ini belum siap dikerjakan.");
+  }
+
   const { data: quiz, error: quizError } = await admin
     .from("quizzes")
     .select("id, course_id")

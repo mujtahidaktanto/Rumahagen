@@ -35,3 +35,21 @@ export const submitQuizAttemptSchema = z.object({
   ).min(1),
 });
 export type SubmitQuizAttemptInput = z.infer<typeof submitQuizAttemptSchema>;
+
+// PUT — ubah kuis/soal/opsi (migration 0135: struktur terkunci setelah ada percobaan peserta; teks tetap bisa diperbaiki).
+export const updateQuizSchema = z.object({
+  title: z.string().trim().max(200).nullable().optional(),
+});
+export type UpdateQuizInput = z.infer<typeof updateQuizSchema>;
+
+export const updateQuizQuestionSchema = z.object({
+  question_text: z.string().trim().min(1).optional(),
+  question_type: z.enum(["single_choice", "multi_choice"]).optional(),
+});
+export type UpdateQuizQuestionInput = z.infer<typeof updateQuizQuestionSchema>;
+
+export const updateQuizOptionSchema = z.object({
+  option_text: z.string().trim().min(1).max(500).optional(),
+  is_correct: z.boolean().optional(),
+});
+export type UpdateQuizOptionInput = z.infer<typeof updateQuizOptionSchema>;

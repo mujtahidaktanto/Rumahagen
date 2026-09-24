@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Editor Kuis — Admin Desktop</title>
+<title>Editor Kuis — Desktop</title>
 <script src="./support.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../tokens.css">
@@ -76,6 +76,8 @@
   .radio-card{display:flex;flex-direction:column;gap:6px;padding:16px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);}
   .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
   .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+  .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .meter > div{height:100%;background:var(--ra-blue-600);}
 </style>
 </helmet>
 <div class="app">
@@ -119,19 +121,21 @@
       <sc-if value="{{pLoading}}" hint-placeholder-val="{{false}}"><div class="card card-pad" style="display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:28px;width:50%;"></div><div class="ra-skel" style="height:120px;"></div></div></sc-if>
       <sc-if value="{{pError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Kuis gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
       <sc-if value="{{pReady}}" hint-placeholder-val="{{true}}">
+      <sc-if value="{{allLocked}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md"><strong>Kursus sedang ditinjau.</strong> Kuis tidak bisa diubah sampai kursus diputuskan atau ditarik kembali.</p></div></sc-if>
+      <sc-if value="{{structLocked}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md"><strong>Kuis ini sudah dikerjakan peserta.</strong> Struktur dikunci agar nilai lama tetap bermakna: opsi tidak bisa ditambah atau dihapus, kunci jawaban dan jenis soal tidak bisa diubah, soal tidak bisa dihapus. Teks soal dan opsi masih bisa diperbaiki dan soal baru bisa ditambah. Untuk perubahan struktur, buat kuis baru.</p></div></sc-if>
       <div class="card card-pad" style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><div style="min-width:0;flex:1;"><div class="ra-headline">Kuis Akhir</div><div class="ra-caption">Strategi Closing Properti Primary · {{qCount}} soal · nilai lulus 70</div></div><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{openAddQuestion}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah Soal</button></div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><div style="min-width:0;flex:1;"><div class="ra-headline">Kuis Akhir</div><div class="ra-caption">Strategi Closing Properti Primary · {{qCount}} soal · nilai lulus 70</div></div><button class="ra-btn ra-btn-primary ra-btn-sm" disabled="{{addQOff}}" onClick="{{openAddQuestion}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah Soal</button></div>
         <sc-if value="{{ready}}" hint-placeholder-val="{{false}}"><div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><p class="ra-body-md">{{readyText}}</p></div></sc-if>
         <sc-if value="{{notReady}}" hint-placeholder-val="{{true}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">{{readyText}}</p></div></sc-if>
       </div>
-      <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Kunci jawaban hanya terlihat oleh pengelola kursus. Peserta melihat soal dan opsi tanpa penanda benar. Nilai dihitung dari seluruh soal kuis (soal yang tidak dijawab dihitung salah) dan kursus selesai otomatis bila semua kuisnya lulus. Kuis tanpa soal tidak bisa dikerjakan. Melihat opsi yang sudah ada, mengubah, dan menghapus soal atau opsi butuh perbaikan backend (API saat ini hanya menambah).</p></div>
-      <sc-if value="{{noQs}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada soal</span><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{openAddQuestion}}">Tambah Soal Pertama</button></div></div></sc-if>
+      <p class="ra-caption">Kunci jawaban hanya terlihat oleh pengelola kursus; peserta melihat soal dan opsi tanpa penanda benar. Nilai dihitung dari seluruh soal (soal tak dijawab dihitung salah). Kuis yang belum siap tidak bisa dikerjakan dan membuat kursus tidak bisa diajukan atau diterbitkan.</p>
+      <sc-if value="{{noQs}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada soal</span><button class="ra-btn ra-btn-primary ra-btn-sm" disabled="{{addQOff}}" onClick="{{openAddQuestion}}">Tambah Soal Pertama</button></div></div></sc-if>
       <sc-if value="{{hasQs}}" hint-placeholder-val="{{true}}"><sc-for list="{{qs}}" as="q" hint-placeholder-count="3">
         <div class="card" style="overflow:hidden;">
-          <div class="card-head" style="align-items:flex-start;"><div style="min-width:0;flex:1;"><span class="ra-caption">Soal {{q.n}} · {{q.typeLabel}}</span><div class="ra-label-lg" style="margin-top:2px;">{{q.text}}</div></div><button class="ra-iconbtn" aria-label="Hapus soal" onClick="{{q.del}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div>
+          <div class="card-head" style="align-items:flex-start;"><div style="min-width:0;flex:1;"><span class="ra-caption">Soal {{q.n}} · {{q.typeLabel}}</span><div class="ra-label-lg" style="margin-top:2px;">{{q.text}}</div></div><button class="ra-iconbtn" aria-label="Ubah soal" disabled="{{q.editOff}}" onClick="{{q.edit}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg></button><button class="ra-iconbtn" aria-label="Hapus soal" disabled="{{q.structOff}}" onClick="{{q.del}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div>
           <sc-if value="{{q.noOpts}}" hint-placeholder-val="{{false}}"><div class="row"><span class="ra-body-md" style="color:var(--ra-ink-500);">Belum ada opsi jawaban.</span></div></sc-if>
-          <sc-for list="{{q.opts}}" as="o" hint-placeholder-count="3"><div class="row"><div style="min-width:0;flex:1;" class="ra-body-md">{{o.t}}</div><span class="ra-badge {{o.cBadge}}">{{o.cLabel}}</span></div></sc-for>
-          <div class="row" style="justify-content:space-between;flex-wrap:wrap;"><sc-if value="{{q.hasProblem}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">{{q.problem}}</span></sc-if><button class="ra-btn ra-btn-secondary ra-btn-sm" style="margin-left:auto;" onClick="{{q.addOpt}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah Opsi</button></div>
+          <sc-for list="{{q.opts}}" as="o" hint-placeholder-count="3"><div class="row"><div style="min-width:0;flex:1;" class="ra-body-md">{{o.t}}</div><button class="ra-badge {{o.cBadge}}" style="border:none;cursor:pointer;min-height:44px;" aria-label="Ubah kunci jawaban" disabled="{{o.flipOff}}" onClick="{{o.flip}}">{{o.cLabel}}</button><button class="ra-iconbtn" aria-label="Ubah opsi" disabled="{{q.editOff}}" onClick="{{o.edit}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg></button><button class="ra-iconbtn" aria-label="Hapus opsi" disabled="{{q.structOff}}" onClick="{{o.del}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div></sc-for>
+          <div class="row" style="justify-content:space-between;flex-wrap:wrap;"><sc-if value="{{q.hasProblem}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">{{q.problem}}</span></sc-if><button class="ra-btn ra-btn-secondary ra-btn-sm" style="margin-left:auto;" disabled="{{q.structOff}}" onClick="{{q.addOpt}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah Opsi</button></div>
         </div></sc-for></sc-if>
       </sc-if></div></div>
 
@@ -145,20 +149,27 @@
       <div class="field"><label class="ra-label-lg" for="o-text">Teks opsi <span class="req">*</span></label><input id="o-text" class="ra-input" type="text" maxlength="500" value="{{oText}}" onInput="{{onOText}}"><sc-if value="{{oTextErr}}" hint-placeholder-val="{{false}}"><span class="err">Teks opsi wajib diisi.</span></sc-if></div>
       <div class="switch-row"><span class="ra-label-lg">Jawaban benar</span><button class="switch {{oClass}}" role="switch" aria-checked="{{oChecked}}" aria-label="Tandai sebagai jawaban benar" onClick="{{toggleCorrect}}"><div class="switch-knob"></div></button></div>
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{saveOption}}">Tambah Opsi</button></div></sc-if>
-    <sc-if value="{{dDel}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Hapus soal?</span><p class="ra-body-md">"{{tName}}" beserta opsinya akan dihapus. Percobaan peserta sebelumnya tidak berubah.</p>
+    <sc-if value="{{dEditQ}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Ubah soal</span>
+      <div class="field"><label class="ra-label-lg" for="e-text">Teks soal <span class="req">*</span></label><textarea id="e-text" class="ra-input" style="height:96px;padding:12px 14px;resize:vertical;" value="{{qText}}" onInput="{{onQText}}"></textarea><sc-if value="{{qTextErr}}" hint-placeholder-val="{{false}}"><span class="err">Teks soal wajib diisi.</span></sc-if></div>
+      <div class="field"><span class="ra-label-lg">Jenis soal</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" role="radiogroup" aria-label="Jenis soal"><sc-for list="{{types}}" as="t" hint-placeholder-count="2"><button class="radio-card" role="radio" aria-checked="{{t.checked}}" disabled="{{t.dis}}" onClick="{{t.pick}}"><span class="ra-label-lg">{{t.l}}</span></button></sc-for></div><sc-if value="{{structLocked}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Jenis soal dikunci karena kuis sudah dikerjakan.</span></sc-if></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{saveEdit}}">Simpan</button></div></sc-if>
+    <sc-if value="{{dEditO}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Ubah opsi</span>
+      <div class="field"><label class="ra-label-lg" for="eo-text">Teks opsi <span class="req">*</span></label><input id="eo-text" class="ra-input" type="text" maxlength="500" value="{{oText}}" onInput="{{onOText}}"><sc-if value="{{oTextErr}}" hint-placeholder-val="{{false}}"><span class="err">Teks opsi wajib diisi.</span></sc-if></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{saveEdit}}">Simpan</button></div></sc-if>
+    <sc-if value="{{dDel}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg"><sc-if value="{{delIsQ}}" hint-placeholder-val="{{true}}">Hapus soal?</sc-if><sc-if value="{{delIsQ}}" hint-placeholder-val="{{false}}">Hapus opsi?</sc-if></span><p class="ra-body-md">"{{tName}}" akan dihapus permanen.</p>
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{confirmDel}}">Hapus</button></div></sc-if>
   </div></div></sc-if>
   <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="ra-label-lg">{{toast}}</span></div></sc-if>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"halaman":{"editor":"enum","default":"normal","options":["normal","memuat","gagal_muat"],"section":"Skenario halaman"},"aksi":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario aksi"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"halaman":{"editor":"enum","default":"normal","options":["normal","memuat","gagal_muat"],"section":"Skenario halaman"},"terkunci":{"editor":"enum","default":"tidak","options":["tidak","ya"],"section":"Kuis sudah dikerjakan"},"kursus":{"editor":"enum","default":"draft","options":["draft","pending_review"],"section":"Status kursus"},"aksi":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario aksi"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { qs: null, dialog: '', target: null, qText: '', qType: 'single_choice', oText: '', oCorrect: false, tried: false, toast: '', actionFailed: false });
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { qs: null, dialog: '', target: null, targetOpt: null, qText: '', qType: 'single_choice', oText: '', oCorrect: false, tried: false, toast: '', actionFailed: false });
     var self = this;
-    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'closeAll', 'saveQuestion', 'saveOption', 'onQText', 'onOText', 'toggleCorrect', 'confirmDel'].forEach(function(m){ self[m] = self[m].bind(self); });
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'closeAll', 'saveQuestion', 'saveOption', 'saveEdit', 'onQText', 'onOText', 'toggleCorrect', 'confirmDel'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   openDrawer(){ this.setState({ drawerOpen: true }); }
@@ -184,13 +195,22 @@ class Component extends DCLogic {
     if (!String(this.state.oText).trim()) { this.setState({ tried: true }); return; }
     if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
     var tid = this.state.target, o = this.state.oText, c = this.state.oCorrect;
-    var l = this.list().map(function(q){ if (q.id !== tid) return q; var opts = q.opts.slice(); opts.push({ id: 'o' + Date.now(), t: o, c: c }); return Object.assign({}, q, { opts: opts }); });
+    var l = this.list().map(function(q){ if (q.id !== tid) return q; var opts = q.opts.slice(); if (c && q.type === 'single_choice') opts = opts.map(function(x){ return { id: x.id, t: x.t, c: false }; }); opts.push({ id: 'o' + Date.now(), t: o, c: c }); return Object.assign({}, q, { opts: opts }); });
     this.setState({ qs: l, dialog: '', oText: '', oCorrect: false, tried: false, toast: 'Opsi ditambahkan.' });
+  }
+  saveEdit(){
+    var isQ = this.state.dialog === 'editQ', text = isQ ? this.state.qText : this.state.oText;
+    if (!String(text).trim()) { this.setState({ tried: true }); return; }
+    if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
+    var tid = this.state.target, oid = this.state.targetOpt, ty = this.state.qType;
+    var l = this.list().map(function(q){ if (q.id !== tid) return q; if (isQ) return Object.assign({}, q, { text: text, type: ty }); return Object.assign({}, q, { opts: q.opts.map(function(x){ return x.id === oid ? { id: x.id, t: text, c: x.c } : x; }) }); });
+    this.setState({ qs: l, dialog: '', tried: false, toast: isQ ? 'Soal diperbarui.' : 'Opsi diperbarui.' });
   }
   confirmDel(){
     if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
-    var tid = this.state.target;
-    this.setState({ qs: this.list().filter(function(q){ return q.id !== tid; }), dialog: '', toast: 'Soal dihapus.' });
+    var tid = this.state.target, oid = this.state.targetOpt, d = this.state.dialog;
+    var l = d === 'delQ' ? this.list().filter(function(q){ return q.id !== tid; }) : this.list().map(function(q){ return q.id === tid ? Object.assign({}, q, { opts: q.opts.filter(function(x){ return x.id !== oid; }) }) : q; });
+    this.setState({ qs: l, dialog: '', toast: d === 'delQ' ? 'Soal dihapus.' : 'Opsi dihapus.' });
   }
   renderVals() {
     var st = this.state, pr = this.props;
@@ -203,22 +223,31 @@ class Component extends DCLogic {
       isLinked: linked, isUnlinked: !linked,
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
-    var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var IS_INS = false; var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
     var self = this, mode = pr.halaman || 'normal';
+    var structLocked = pr.terkunci === 'ya', allLocked = IS_INS && pr.kursus === 'pending_review', structOff = structLocked || allLocked;
     var qs = this.list().map(function(q, i){
       var correct = q.opts.filter(function(o){ return o.c; }).length;
       var problem = q.opts.length < 2 ? 'Minimal 2 opsi jawaban.' : (correct === 0 ? 'Belum ada opsi yang ditandai benar.' : (q.type === 'single_choice' && correct > 1 ? 'Pilihan tunggal hanya boleh punya 1 jawaban benar.' : ''));
-      return { n: i + 1, text: q.text, typeLabel: q.type === 'single_choice' ? 'Pilihan tunggal' : 'Pilihan ganda', opts: q.opts.map(function(o){ return { t: o.t, c: o.c, cLabel: o.c ? 'Benar' : 'Salah', cBadge: o.c ? 'ra-badge-success' : 'ra-badge-neutral' }; }), noOpts: q.opts.length === 0, problem: problem, hasProblem: !!problem,
-        addOpt: function(){ self.setState({ dialog: 'option', target: q.id, oText: '', oCorrect: false, tried: false }); }, del: function(){ self.setState({ dialog: 'delQ', target: q.id, targetName: q.text }); }, invalid: !!problem }; });
+      return { n: i + 1, text: q.text, typeLabel: q.type === 'single_choice' ? 'Pilihan tunggal' : 'Pilihan ganda', noOpts: q.opts.length === 0, problem: problem, hasProblem: !!problem, invalid: !!problem,
+        opts: q.opts.map(function(o){ return { t: o.t, c: o.c, cLabel: o.c ? 'Benar' : 'Salah', cBadge: o.c ? 'ra-badge-success' : 'ra-badge-neutral', flipOff: structOff,
+          flip: function(){ if (structOff) return; var l = self.list().map(function(x){ if (x.id !== q.id) return x; return Object.assign({}, x, { opts: x.opts.map(function(y){ if (y.id === o.id) return { id: y.id, t: y.t, c: !y.c }; if (x.type === 'single_choice' && !o.c) return { id: y.id, t: y.t, c: false }; return y; }) }); }); self.setState({ qs: l }); },
+          edit: function(){ if (allLocked) return; self.setState({ dialog: 'editO', target: q.id, targetOpt: o.id, oText: o.t, tried: false }); },
+          del: function(){ if (structOff) return; self.setState({ dialog: 'delO', target: q.id, targetOpt: o.id, targetName: o.t }); } }; }),
+        editOff: allLocked, structOff: structOff,
+        addOpt: function(){ if (structOff) return; self.setState({ dialog: 'option', target: q.id, oText: '', oCorrect: false, tried: false }); },
+        edit: function(){ if (allLocked) return; self.setState({ dialog: 'editQ', target: q.id, qText: q.text, qType: q.type, tried: false }); },
+        del: function(){ if (structOff) return; self.setState({ dialog: 'delQ', target: q.id, targetName: q.text }); } }; });
     var bad = qs.filter(function(q){ return q.invalid; }).length;
-    var types = [['single_choice','Pilihan tunggal'],['multi_choice','Pilihan ganda']].map(function(t){ return { l: t[1], checked: st.qType === t[0] ? 'true' : 'false', pick: function(){ self.setState({ qType: t[0] }); } }; });
+    var types = [['single_choice','Pilihan tunggal'],['multi_choice','Pilihan ganda']].map(function(t){ return { l: t[1], checked: st.qType === t[0] ? 'true' : 'false', dis: st.dialog === 'editQ' && structLocked, pick: function(){ if (st.dialog === 'editQ' && structLocked) return; self.setState({ qType: t[0] }); } }; });
     var out = { aktorLabel: aktorLabel, pLoading: mode === 'memuat', pError: mode === 'gagal_muat', pReady: mode === 'normal', qs: qs, hasQs: qs.length > 0, noQs: qs.length === 0, qCount: qs.length, badCount: bad, ready: qs.length > 0 && bad === 0, notReady: !(qs.length > 0 && bad === 0),
-      readyText: qs.length === 0 ? 'Kuis belum punya soal.' : (bad === 0 ? 'Semua soal valid dan siap dipakai.' : bad + ' soal perlu diperbaiki sebelum kuis dipakai peserta.'),
-      dQuestion: st.dialog === 'question', dOption: st.dialog === 'option', dDel: st.dialog === 'delQ', dialogOpen: st.dialog !== '', types: types,
+      readyText: qs.length === 0 ? 'Kuis belum punya soal.' : (bad === 0 ? 'Semua soal valid dan siap dipakai.' : bad + ' soal perlu diperbaiki sebelum kursus bisa diterbitkan dan kuis dipakai peserta.'),
+      structLocked: structLocked, allLocked: allLocked, addQOff: allLocked,
+      dQuestion: st.dialog === 'question', dOption: st.dialog === 'option', dEdit: st.dialog === 'editQ' || st.dialog === 'editO', dEditQ: st.dialog === 'editQ', dEditO: st.dialog === 'editO', dDel: st.dialog === 'delQ' || st.dialog === 'delO', delIsQ: st.dialog === 'delQ', dialogOpen: st.dialog !== '', types: types,
       qText: st.qText, onQText: this.onQText, oText: st.oText, onOText: this.onOText, oChecked: st.oCorrect ? 'true' : 'false', oClass: st.oCorrect ? 'is-on' : '', toggleCorrect: this.toggleCorrect,
       qTextErr: st.tried === true && !String(st.qText).trim(), oTextErr: st.tried === true && !String(st.oText).trim(),
-      openAddQuestion: function(){ self.setState({ dialog: 'question', qText: '', qType: 'single_choice', tried: false }); },
-      saveQuestion: this.saveQuestion, saveOption: this.saveOption, confirmDel: this.confirmDel, closeAll: this.closeAll, tName: st.targetName || '', actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast };
+      openAddQuestion: function(){ if (allLocked) return; self.setState({ dialog: 'question', qText: '', qType: 'single_choice', tried: false }); },
+      saveQuestion: this.saveQuestion, saveOption: this.saveOption, saveEdit: this.saveEdit, confirmDel: this.confirmDel, closeAll: this.closeAll, tName: st.targetName || '', actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast };
     return Object.assign(shell, out);
   }
 }

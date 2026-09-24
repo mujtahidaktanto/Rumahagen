@@ -74,7 +74,7 @@
 <div class="app">
   <div class="topbar">
     <button class="ra-iconbtn" style="margin-left:-8px;" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-    <span class="ra-title-md ra-truncate-1" style="flex:1;">Kelola Kursus</span>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">Kursus Saya</span>
     <span class="ra-badge ra-badge-info">{{aktorLabel}}</span>
   </div>
   <div class="main ra-scroll">
@@ -93,40 +93,26 @@
       <a class="card card-pad" style="display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;" href="M04-Detail-Kursus.dc.html">
         <div style="display:flex;align-items:flex-start;gap:10px;"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{r.title}}</div><div class="ra-caption">{{r.cat}} · nilai lulus {{r.pass}}</div></div><span class="ra-badge {{r.badge}}">{{r.label}}</span></div>
         <sc-if value="{{r.hasNote}}" hint-placeholder-val="{{false}}"><div class="ra-caption" style="color:var(--ra-danger-600);">Dikembalikan: {{r.note}}</div></sc-if><sc-if value="{{r.hasWhen}}" hint-placeholder-val="{{false}}"><div class="ra-caption">{{r.when}}</div></sc-if>
-        <div class="ra-caption">{{r.les}} pelajaran · {{r.quiz}} kuis · {{r.enr}} peserta · {{r.owner}}</div>
+        <div class="ra-caption">{{r.les}} pelajaran · {{r.quiz}} kuis</div>
       </a></sc-for><button class="ra-btn ra-btn-secondary" style="width:100%;">Muat Lebih Banyak</button></sc-if>
   </div>
   <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
     <div class="drawer-scrim" onClick="{{closeDrawer}}"></div>
     <div class="drawer">
       <div class="drawer-head"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;"><button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-      <div style="display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;">
-        <a class="nav-item" href="M09-Dashboard-Analytics.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Dashboard Analytics</a>
-        <a class="nav-item" href="M09-Direktori-Pengguna.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Direktori Pengguna</a>
-        <a class="nav-item" href="M09-Staf-Internal.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Staf Internal</a>
-        <a class="nav-item" href="M10-Matriks-Izin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>Matriks Izin</a>
-        <a class="nav-item" href="M09-Konten-Notifikasi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Konten &amp; Notifikasi</a>
-        <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>Konfigurasi Sistem</a>
-        <a class="nav-item" href="M09-Audit-Oversight.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 14l2 2 4-4"/></svg>Audit &amp; Oversight</a>
-        <a class="nav-item" href="M03-Moderasi-Listing.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Moderasi Listing</a>
-        <a class="nav-item" href="M07-Bank-Master.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 10l9-6 9 6"/><path d="M5 10v9m14-9v9M9 10v9m6-9v9M3 20h18"/></svg>Bank Master</a>
-        <a class="nav-item" href="M13-Provider-Catalogue.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Provider AI</a>
-        <a class="nav-item" href="M04-Learning-Economy-Config.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>Ekonomi Pembelajaran</a>
-        <a class="nav-item is-active" href="M04-Kelola-Kursus.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M8 7h7M8 11h5"/></svg>Kelola Kursus</a>
-        <a class="nav-item" href="M14-Komersial-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2M10 21v-3h4v3"/></svg>Komersial &amp; Rekonsiliasi</a>
-        <a class="nav-item" href="M14-Katalog-Addon.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 10l9-6 9 6"/><path d="M5 10v9m14-9v9M9 10v9m6-9v9M3 20h18"/></svg>Katalog Add-on</a>
-        <a class="nav-item" href="M14-Promosi-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="8.5" r="1.2"/></svg>Promosi</a>
-        <a class="nav-item" href="M15-Award-Appeal.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>Banding Penghargaan</a>
-        <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M8 21h8M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/></svg>Jalur Penghargaan</a>
-        <a class="nav-item" href="M06-Developer-Project-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Proyek Developer</a>
-        <a class="nav-item" href="M11-Pengalihan-URL.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 8h12M12 4l4 4-4 4"/><path d="M20 16H8m4 4-4-4 4-4"/></svg>Pengalihan URL</a>
-        <a class="nav-item" href="../01-Agent/M02-Profil-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Profil Saya</a>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;">
+        <a class="nav-item" href="M08-Dashboard-Instruktur.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>Dashboard</a>
+        <a class="nav-item" href="M04-Sesi-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M10 9l4 2.5-4 2.5V9Z"/></svg>Sesi Saya</a>
+        <a class="nav-item is-active" href="M04-Kursus-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M8 7h7M8 11h5"/></svg>Kursus Saya</a>
+        <a class="nav-item" href="M05-Event-Instruktur.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Event</a>
+        <a class="nav-item" href="../06-Bersama/M08-Pusat-Notifikasi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Notifikasi<span class="nav-badge">3</span></a>
+        <a class="nav-item" href="M02-Profil-Instruktur.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Profil Saya</a>
       </div>
     </div>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"state":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario daftar"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario daftar"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -151,7 +137,7 @@ class Component extends DCLogic {
       isLinked: linked, isUnlinked: !linked,
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
-    var IS_INS = false; var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var IS_INS = true; var aktorLabel = 'Instruktur';
     var CAT = { sales_skill: 'Sales Skill', legal_regulasi: 'Legal & Regulasi', produk_developer: 'Produk Developer', financial_kpr: 'Financial & KPR', lainnya: 'Lainnya' };
     var STS = { draft: ['Draf','ra-badge-neutral'], pending_review: ['Menunggu Tinjauan','ra-badge-info'], published: ['Terbit','ra-badge-success'], archived: ['Diarsipkan','ra-badge-warning'] };
     var ALL = [

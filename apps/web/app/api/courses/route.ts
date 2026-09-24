@@ -46,6 +46,16 @@ export const GET = withApiHandler({}, async (ctx) => {
     .range(offset, offset + limit - 1);
 
   if (filters.category) query = query.eq("category", filters.category);
+  if (filters.status) query = query.eq("status", filters.status);
+  // owner=me: kursus milik sendiri (mis. layar "Kursus Saya"); antrean tinjauan staf memakai status=pending_review (RLS courses_select: staf melihat semua status).
+  if (filters.owner === "me") {
+    if (!ctx.userId) throw new ApiError("UNAUTHENTICATED", "Login diperlukan.");
+    query = query.eq("created_by", ctx.userId);
+  }
+  if (filters.q) {
+    const term = filters.q.replace(/[%,()]/g, " ");
+    query = query.ilike("title", `%${term}%`);
+  }
 
   const { data, count, error } = await query;
   if (error) {
