@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Presentasi Title di Profil — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+
+  .main{flex:1;overflow-y:auto;padding:16px 16px 24px;display:flex;flex-direction:column;gap:16px;}
+
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:0;overflow:hidden;}
+  .title-row{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--ra-ink-50);}
+  .title-row:last-child{border-bottom:none;}
+  .title-icon{width:36px;height:36px;border-radius:50%;background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;flex:none;}
+  .order-btns{display:flex;flex-direction:column;gap:2px;flex:none;}
+  .order-btn{width:22px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid var(--ra-ink-100);background:#fff;color:var(--ra-ink-500);font-size:10px;}
+  .switch{width:38px;height:21px;border-radius:11px;background:var(--ra-ink-200);position:relative;flex:none;}
+  .switch[aria-checked="true"]{background:var(--ra-success-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .15s ease;}
+  .switch[aria-checked="true"] .switch-knob{left:19px;}
+
+  .preview-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+  .avatar-xl{width:56px;height:56px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:36px 16px;color:var(--ra-ink-300);text-align:center;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M15-Evaluasi.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md">Presentasi Title</span>
+  </div>
+
+  <div class="main">
+    <div style="display:flex;gap:10px;background:var(--ra-info-100);border:1px solid var(--ra-blue-200);border-radius:var(--ra-radius-md);padding:14px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" width="18" height="18" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="var(--ra-info-600)" stroke="none"/></svg>
+      <span class="ra-body-md" style="color:var(--ra-ink-700);">Title yang dinonaktifkan tetap sah Anda miliki — hanya soal ditampilkan atau tidak di profil publik.</span>
+    </div>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+      <div class="card empty-wrap">
+        <span class="ra-body-md">Belum ada title yang bisa ditampilkan</span>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M15-Evidence.dc.html" style="margin-top:4px;">Ajukan Bukti Kualifikasi</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+      <div class="card">
+        <sc-for list="{{titles}}" as="t" hint-placeholder-count="2">
+          <div class="title-row">
+            <div class="order-btns">
+              <div class="order-btn" onClick="{{t.moveUp}}">▲</div>
+              <div class="order-btn" onClick="{{t.moveDown}}">▼</div>
+            </div>
+            <div class="title-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></div>
+            <div style="flex:1;min-width:0;">
+              <div class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{t.name}}</div>
+              <span class="ra-caption">Diberikan {{t.issuedAt}}</span>
+            </div>
+            <div class="switch" aria-checked="{{t.active}}" onClick="{{t.toggle}}"><div class="switch-knob"></div></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <div class="preview-card">
+      <span class="ra-caption" style="align-self:flex-start;color:var(--ra-ink-300);">Pratinjau Profil Publik</span>
+      <div class="avatar-xl">RS</div>
+      <span class="ra-title-md">Rian Saputra</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:2px;">
+        <sc-if value="{{previewEmpty}}" hint-placeholder-val="{{false}}">
+          <span class="ra-caption" style="color:var(--ra-ink-300);">Tidak ada title ditampilkan</span>
+        </sc-if>
+        <sc-for list="{{activeTitlesPreview}}" as="pt" hint-placeholder-count="1">
+          <span class="ra-badge" style="background:var(--ra-gold-100);color:var(--ra-gold-700);"><span class="ra-dot"></span>{{pt.name}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      titleDefs: [
+        { id: 't1', name: 'Top Performer Regional 2026', issuedAt: '20 Sep 2026', active: true, order: 0 },
+        { id: 't2', name: 'Agen Bersertifikat Kalkulator DBR', issuedAt: '05 Jul 2026', active: false, order: 1 }
+      ]
+    };
+    this.toggleTitle = this.toggleTitle.bind(this);
+    this.moveTitle = this.moveTitle.bind(this);
+  }
+  toggleTitle(id){
+    this.setState({ titleDefs: this.state.titleDefs.map(t => t.id === id ? { ...t, active: !t.active } : t) });
+  }
+  moveTitle(id, dir){
+    const list = [...this.state.titleDefs].sort((a,b) => a.order - b.order);
+    const idx = list.findIndex(t => t.id === id);
+    const swapIdx = idx + dir;
+    if (swapIdx < 0 || swapIdx >= list.length) return;
+    const tmp = list[idx].order;
+    list[idx].order = list[swapIdx].order;
+    list[swapIdx].order = tmp;
+    this.setState({ titleDefs: list });
+  }
+  renderVals() {
+    const listState = this.props.listState ?? 'loaded';
+    const sorted = [...(this.state.titleDefs ?? [])].sort((a,b) => a.order - b.order);
+    const titles = sorted.map(t => ({
+      name: t.name,
+      issuedAt: t.issuedAt,
+      active: t.active,
+      toggle: () => this.toggleTitle(t.id),
+      moveUp: () => this.moveTitle(t.id, -1),
+      moveDown: () => this.moveTitle(t.id, 1)
+    }));
+    const activeTitlesPreview = sorted.filter(t => t.active).map(t => ({ name: t.name }));
+    return {
+      titles,
+      isEmpty: listState === 'empty',
+      isLoaded: listState === 'loaded',
+      activeTitlesPreview,
+      previewEmpty: activeTitlesPreview.length === 0
+    };
+  }
+}
+</script>
+</body>
+</html>

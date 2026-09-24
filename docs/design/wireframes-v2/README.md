@@ -74,7 +74,10 @@ wireframes-v2/
 │   │   ├── M13-Koneksi-AI.dc.html
 │   │   ├── M13-AI-Assistant.dc.html
 │   │   ├── M14-Katalog-Komersial.dc.html
-│   │   └── M14-Pesanan-Kuota.dc.html
+│   │   ├── M14-Pesanan-Kuota.dc.html
+│   │   ├── M15-Evidence.dc.html
+│   │   ├── M15-Evaluasi.dc.html
+│   │   └── M15-Title-Award-Presentation.dc.html
 │   ├── 02-Admin/
 │   │   ├── M09-Direktori-Pengguna.dc.html
 │   │   ├── M09-Staf-Internal.dc.html
@@ -123,7 +126,7 @@ permission, migration, audit) jadi itu yang dipakai sebagai struktur folder, buk
 | **Fase B — Agent core** | `01-Agent/M08-Dashboard.dc.html`, `01-Agent/M03-Listing-Saya.dc.html`, `01-Agent/M01-Akun-Dibatasi.dc.html`, `01-Agent/M02-Profil-Saya.dc.html`, `01-Agent/M03-Create-Listing-Wizard.dc.html`, `01-Agent/M03-Listing-Detail.dc.html`, `01-Agent/M12-Organisasi-Dashboard.dc.html`, `01-Agent/M12-Buat-Organisasi.dc.html`, `01-Agent/M12-Kelola-Anggota.dc.html`, `01-Agent/M04-Pembelajaran.dc.html`, `01-Agent/M04-Belajar-Course.dc.html`, `01-Agent/M05-Event-Saya.dc.html`, `01-Agent/M05-Ajukan-Event.dc.html` | ✅ Selesai | — |
 | **Fase C — Agent fitur baru** | `01-Agent/M06-Klaim-Proyek.dc.html`, `01-Agent/M07-Kalkulator-DBR.dc.html`, `01-Agent/M07-Riwayat-DBR.dc.html`, `01-Agent/M13-Koneksi-AI.dc.html`, `01-Agent/M13-AI-Assistant.dc.html`, `01-Agent/M14-Katalog-Komersial.dc.html`, `01-Agent/M14-Pesanan-Kuota.dc.html` | ✅ Selesai | — |
 | **Fase D — Admin** | `02-Admin/M09-Direktori-Pengguna.dc.html`, `M09-Staf-Internal.dc.html`, `M10-Matriks-Izin.dc.html` (baseline Role×Permission + Preset Agent + assign), `M09-Konten-Notifikasi.dc.html` (Banner + Notification Templates + Push manual), `M09-Konfigurasi-Sistem.dc.html` (System Config + SEO Config, Superadmin-only), `M09-Audit-Oversight.dc.html` (Audit Log + Export + antrean Review Agent), `M03-Moderasi-Listing.dc.html` (+ tab Leads), `M07-Bank-Master.dc.html` (+ tab oversight simulasi DBR), `M13-Provider-Catalogue.dc.html` (+ tab Koneksi Agent/force-action), `M04-Learning-Economy-Config.dc.html` (+ tab Katalog Aktivitas + Poin/Sertifikat), `M14-Komersial-Admin.dc.html` (Reconciliation + Manual Correction terpisah), `M15-Award-Appeal.dc.html` (decide + restore terpisah), `M15-Awarding-Path-Admin.dc.html` (Title + Path/Versi + Cakupan Otoritas), `M06-Developer-Project-Admin.dc.html` (sisi staf, bukan self-service Developer Partner) | ✅ Selesai | — |
-| **Fase E — Qualification/Award** | — | ⬜ Belum dimulai | M15-Title-Award-Presentation, M15-Evidence, M15-Evaluasi |
+| **Fase E — Qualification/Award** | `01-Agent/M15-Evidence.dc.html` (ajukan bukti kualifikasi), `01-Agent/M15-Evaluasi.dc.html` (riwayat evaluasi + Penghargaan Saya), `01-Agent/M15-Title-Award-Presentation.dc.html` (atur title mana + urutan tampil di profil publik) — dijangkau dari kartu "Kualifikasi & Penghargaan" di Dashboard dan kartu "Title & Penghargaan" di Profil Saya (M02), sama seperti Kalkulator DBR/Klaim Proyek — TIDAK ada slot nav rail 8-item baru (STEP13-E §4.2 mengunci 8 destinasi, tidak diubah) | ✅ Selesai | — |
 | **Fase F — Developer Partner** | — | ⬜ Belum dimulai — persona ke-3, belum punya shell nav sama sekali | M06-Developer-Profile, M06-Kelola-Proyek, M06-Marketing-Kit, M06-Review-Klaim, M05-Submit-Event |
 
 ## Prinsip desain (ringkas)

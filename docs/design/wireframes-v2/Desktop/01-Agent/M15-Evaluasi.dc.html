@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Status Evaluasi & Penghargaan — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+
+  .main{flex:1;overflow-y:auto;padding:28px 40px;display:flex;flex-direction:column;gap:24px;max-width:1000px;}
+
+  table{width:100%;border-collapse:collapse;}
+  thead th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--ra-ink-100);}
+  tbody td{padding:12px 12px;border-bottom:1px solid var(--ra-ink-50);vertical-align:middle;}
+
+  .award-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  .award-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:10px;}
+  .award-icon{width:44px;height:44px;border-radius:50%;background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;flex:none;}
+
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;color:var(--ra-ink-300);}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="M08-Dashboard.dc.html">Dashboard</a><span>/</span>
+        <span class="ra-label-lg" style="color:var(--ra-ink-900);">Status Evaluasi &amp; Penghargaan</span>
+      </div>
+      <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M15-Evidence.dc.html">+ Ajukan Bukti Baru</a>
+    </div>
+
+    <div class="main">
+
+      <div>
+        <span class="ra-title-lg" style="display:block;margin-bottom:12px;">Riwayat Evaluasi Kualifikasi</span>
+        <div class="ra-card" style="padding:0;overflow:hidden;">
+          <sc-if value="{{evalEmpty}}" hint-placeholder-val="{{false}}">
+            <div class="empty-wrap">
+              <span class="ra-body-md">Belum ada evaluasi kualifikasi</span>
+              <span class="ra-caption">Evaluasi muncul di sini setelah bukti yang Anda ajukan diproses.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{evalLoaded}}" hint-placeholder-val="{{true}}">
+            <table>
+              <thead>
+                <tr>
+                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Title/Jalur Dituju</th>
+                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Hasil</th>
+                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Dievaluasi Oleh</th>
+                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Tanggal</th>
+                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{evaluations}}" as="ev" hint-placeholder-count="3">
+                  <tr>
+                    <td><span class="ra-label-lg">{{ev.titleName}}</span></td>
+                    <td><span class="ra-badge {{ev.badgeClass}}"><span class="ra-dot"></span>{{ev.resultLabel}}</span></td>
+                    <td><span class="ra-body-md" style="color:var(--ra-ink-500);">{{ev.evaluatorLabel}}</span></td>
+                    <td><span class="ra-body-md" style="color:var(--ra-ink-500);">{{ev.evaluatedAt}}</span></td>
+                    <td><a class="ra-label-lg" href="M15-Evidence.dc.html">Lihat Bukti</a></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </sc-if>
+        </div>
+        <p class="ra-caption" style="margin-top:10px;max-width:640px;">Kualifikasi bukan otorisasi tambahan — title dan penghargaan di sini murni pengakuan pencapaian, tidak mengubah role atau izin akun Anda di sistem.</p>
+      </div>
+
+      <div>
+        <span class="ra-title-lg" style="display:block;margin-bottom:12px;">Penghargaan Saya</span>
+        <sc-if value="{{awardsEmpty}}" hint-placeholder-val="{{false}}">
+          <div class="ra-card empty-wrap">
+            <span class="ra-body-md">Belum ada penghargaan aktif</span>
+            <span class="ra-caption">Lulus evaluasi kualifikasi untuk mendapatkan title/penghargaan pertama Anda.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{awardsLoaded}}" hint-placeholder-val="{{true}}">
+          <div class="award-grid">
+            <sc-for list="{{awards}}" as="a" hint-placeholder-count="2">
+              <div class="award-card">
+                <div class="award-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></div>
+                <span class="ra-label-lg">{{a.titleName}}</span>
+                <span class="ra-caption">Diberikan {{a.issuedAt}}{{a.expiresSuffix}}</span>
+                <span class="ra-badge {{a.badgeClass}}" style="align-self:flex-start;"><span class="ra-dot"></span>{{a.statusLabel}}</span>
+                <a class="ra-btn ra-btn-secondary ra-btn-sm" style="margin-top:4px;" href="M15-Title-Award-Presentation.dc.html">Kelola Tampilan di Profil</a>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"evalState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario evaluasi"},"awardState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario penghargaan"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const evalState = this.props.evalState ?? 'loaded';
+    const awardState = this.props.awardState ?? 'loaded';
+
+    // qualification_evaluations (0026): result CHECK IN (qualified,not_qualified,
+    // pending,failed,revoked); evaluator_type bebas TEXT (Sistem Otomatis/
+    // Instruktur/Tim RumahAgen dst).
+    const evalDefs = [
+      { titleName: 'Top Performer Regional', result: 'qualified', evaluator: 'Sistem Otomatis', evaluatedAt: '19 Sep 2026' },
+      { titleName: 'Agen Bersertifikat Kalkulator DBR', result: 'pending', evaluator: 'Tim RumahAgen', evaluatedAt: '—' },
+      { titleName: 'Instruktur Bersertifikat', result: 'not_qualified', evaluator: 'Instruktur Peninjau', evaluatedAt: '12 Agu 2026' }
+    ];
+    const resultMap = {
+      qualified: { label: 'Lulus', badge: 'ra-badge-success' },
+      not_qualified: { label: 'Tidak Lulus', badge: 'ra-badge-danger' },
+      pending: { label: 'Menunggu', badge: 'ra-badge-warning' },
+      failed: { label: 'Gagal', badge: 'ra-badge-danger' },
+      revoked: { label: 'Dicabut', badge: 'ra-badge-neutral' }
+    };
+    const evaluations = evalDefs.map(e => {
+      const rm = resultMap[e.result];
+      return { titleName: e.titleName, resultLabel: rm.label, badgeClass: rm.badge, evaluatorLabel: e.evaluator, evaluatedAt: e.evaluatedAt };
+    });
+
+    // award_instances (0026): status CHECK IN (active,expired,revoked,restored).
+    const awardDefs = [
+      { titleName: 'Top Performer Regional 2026', issuedAt: '20 Sep 2026', expiresAt: null, status: 'active' }
+    ];
+    const awardStatusMap = {
+      active: { label: 'Aktif', badge: 'ra-badge-success' },
+      expired: { label: 'Kedaluwarsa', badge: 'ra-badge-neutral' },
+      revoked: { label: 'Dicabut', badge: 'ra-badge-danger' },
+      restored: { label: 'Dipulihkan', badge: 'ra-badge-info' }
+    };
+    const awards = awardDefs.map(a => {
+      const sm = awardStatusMap[a.status];
+      return {
+        titleName: a.titleName,
+        issuedAt: a.issuedAt,
+        expiresSuffix: a.expiresAt ? ` · berlaku s.d. ${a.expiresAt}` : '',
+        statusLabel: sm.label,
+        badgeClass: sm.badge
+      };
+    });
+
+    return {
+      evaluations,
+      evalEmpty: evalState === 'empty',
+      evalLoaded: evalState === 'loaded',
+      awards,
+      awardsEmpty: awardState === 'empty',
+      awardsLoaded: awardState === 'loaded'
+    };
+  }
+}
+</script>
+</body>
+</html>

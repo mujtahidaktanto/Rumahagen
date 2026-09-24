@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Status Evaluasi & Penghargaan — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+
+  .main{flex:1;overflow-y:auto;padding:16px 16px 24px;display:flex;flex-direction:column;gap:20px;}
+  .section-title{display:block;margin-bottom:10px;}
+  .u-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:6px;}
+  .award-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:8px;}
+  .award-icon{width:40px;height:40px;border-radius:50%;background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;flex:none;}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:28px 16px;color:var(--ra-ink-300);text-align:center;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M08-Dashboard.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md">Status Evaluasi</span>
+    <a class="iconbtn" href="M15-Evidence.dc.html" aria-label="Ajukan Bukti" style="margin-left:auto;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="20" height="20"><path d="M12 5v14M5 12h14"/></svg></a>
+  </div>
+
+  <div class="main">
+    <div>
+      <span class="ra-title-md section-title">Riwayat Evaluasi</span>
+      <sc-if value="{{evalEmpty}}" hint-placeholder-val="{{false}}">
+        <div class="u-card empty-wrap">
+          <span class="ra-body-md">Belum ada evaluasi</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{evalLoaded}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{evaluations}}" as="ev" hint-placeholder-count="3">
+            <div class="u-card">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span class="ra-label-lg ra-truncate-1">{{ev.titleName}}</span>
+                <span class="ra-badge {{ev.badgeClass}}"><span class="ra-dot"></span>{{ev.resultLabel}}</span>
+              </div>
+              <span class="ra-caption">{{ev.evaluatorLabel}} · {{ev.evaluatedAt}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <p class="ra-caption" style="margin-top:10px;">Kualifikasi bukan otorisasi tambahan — title/penghargaan murni pengakuan pencapaian, tidak mengubah role atau izin akun Anda.</p>
+    </div>
+
+    <div>
+      <span class="ra-title-md section-title">Penghargaan Saya</span>
+      <sc-if value="{{awardsEmpty}}" hint-placeholder-val="{{false}}">
+        <div class="u-card empty-wrap">
+          <span class="ra-body-md">Belum ada penghargaan aktif</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{awardsLoaded}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{awards}}" as="a" hint-placeholder-count="1">
+            <div class="award-card">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="award-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></div>
+                <div style="flex:1;min-width:0;">
+                  <div class="ra-label-lg ra-truncate-1">{{a.titleName}}</div>
+                  <span class="ra-caption">Diberikan {{a.issuedAt}}</span>
+                </div>
+              </div>
+              <span class="ra-badge {{a.badgeClass}}" style="align-self:flex-start;"><span class="ra-dot"></span>{{a.statusLabel}}</span>
+              <a class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" href="M15-Title-Award-Presentation.dc.html">Kelola Tampilan di Profil</a>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"evalState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario evaluasi"},"awardState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario penghargaan"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const evalState = this.props.evalState ?? 'loaded';
+    const awardState = this.props.awardState ?? 'loaded';
+    const evalDefs = [
+      { titleName: 'Top Performer Regional', result: 'qualified', evaluator: 'Sistem Otomatis', evaluatedAt: '19 Sep 2026' },
+      { titleName: 'Agen Bersertifikat Kalkulator DBR', result: 'pending', evaluator: 'Tim RumahAgen', evaluatedAt: '—' },
+      { titleName: 'Instruktur Bersertifikat', result: 'not_qualified', evaluator: 'Instruktur Peninjau', evaluatedAt: '12 Agu 2026' }
+    ];
+    const resultMap = {
+      qualified: { label: 'Lulus', badge: 'ra-badge-success' },
+      not_qualified: { label: 'Tidak Lulus', badge: 'ra-badge-danger' },
+      pending: { label: 'Menunggu', badge: 'ra-badge-warning' },
+      failed: { label: 'Gagal', badge: 'ra-badge-danger' },
+      revoked: { label: 'Dicabut', badge: 'ra-badge-neutral' }
+    };
+    const evaluations = evalDefs.map(e => {
+      const rm = resultMap[e.result];
+      return { titleName: e.titleName, resultLabel: rm.label, badgeClass: rm.badge, evaluatorLabel: e.evaluator, evaluatedAt: e.evaluatedAt };
+    });
+    const awardDefs = [{ titleName: 'Top Performer Regional 2026', issuedAt: '20 Sep 2026', status: 'active' }];
+    const awardStatusMap = {
+      active: { label: 'Aktif', badge: 'ra-badge-success' },
+      expired: { label: 'Kedaluwarsa', badge: 'ra-badge-neutral' },
+      revoked: { label: 'Dicabut', badge: 'ra-badge-danger' },
+      restored: { label: 'Dipulihkan', badge: 'ra-badge-info' }
+    };
+    const awards = awardDefs.map(a => {
+      const sm = awardStatusMap[a.status];
+      return { titleName: a.titleName, issuedAt: a.issuedAt, statusLabel: sm.label, badgeClass: sm.badge };
+    });
+    return {
+      evaluations,
+      evalEmpty: evalState === 'empty',
+      evalLoaded: evalState === 'loaded',
+      awards,
+      awardsEmpty: awardState === 'empty',
+      awardsLoaded: awardState === 'loaded'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Bukti Kualifikasi — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+
+  .main{flex:1;overflow-y:auto;padding:16px 16px 90px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;}
+  .u-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;margin-bottom:6px;}
+
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:36px 16px;color:var(--ra-ink-300);text-align:center;}
+  .fab{position:absolute;right:16px;bottom:16px;width:52px;height:52px;border-radius:50%;background:var(--ra-blue-600);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--ra-shadow-3);border:none;}
+  .scrim{position:fixed;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:flex-end;z-index:20;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;display:flex;flex-direction:column;gap:6px;max-height:85vh;overflow-y:auto;}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto 10px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <a class="iconbtn" href="M08-Dashboard.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md">Bukti Kualifikasi</span>
+    <a class="iconbtn" href="M15-Evaluasi.dc.html" aria-label="Status Evaluasi" style="margin-left:auto;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 3"/></svg></a>
+  </div>
+
+  <div class="main">
+    <div class="card" style="display:flex;gap:10px;background:var(--ra-info-100);border-color:var(--ra-blue-200);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" width="18" height="18" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="var(--ra-info-600)" stroke="none"/></svg>
+      <span class="ra-body-md" style="color:var(--ra-ink-700);">Ajukan bukti untuk kualifikasi title/penghargaan. Tim RumahAgen atau instruktur akan mengevaluasinya.</span>
+    </div>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+      <div class="card empty-wrap">
+        <span class="ra-body-md">Belum ada bukti diajukan</span>
+        <span class="ra-caption">Ketuk tombol + untuk mulai.</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+      <sc-for list="{{evidenceList}}" as="ev" hint-placeholder-count="3">
+        <div class="u-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="ra-label-lg ra-truncate-1">{{ev.titleName}}</span>
+            <span class="ra-badge {{ev.badgeClass}}"><span class="ra-dot"></span>{{ev.statusLabel}}</span>
+          </div>
+          <span class="ra-caption">{{ev.evidenceTypeLabel}} · {{ev.sourceLabel}} · {{ev.capturedAt}}</span>
+        </div>
+      </sc-for>
+    </sc-if>
+  </div>
+
+  <button class="fab" aria-label="Ajukan Bukti Baru" onClick="{{openForm}}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="22" height="22"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <sc-if value="{{formOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeForm}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <span class="ra-title-md" style="margin-bottom:8px;">Ajukan Bukti Kualifikasi</span>
+        <div class="field">
+          <label class="ra-label-md">Title/Jalur yang Dituju</label>
+          <select class="ra-input">
+            <sc-for list="{{titleOptions}}" as="t" hint-placeholder-count="4">
+              <option value="{{t.value}}">{{t.label}}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div class="field">
+          <label class="ra-label-md">Jenis Bukti</label>
+          <select class="ra-input">
+            <option value="sertifikat">Sertifikat</option>
+            <option value="dokumen">Dokumen Resmi</option>
+            <option value="tautan">Tautan Eksternal</option>
+            <option value="aktivitas">Bukti Aktivitas</option>
+            <option value="lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="ra-label-md">Sumber</label>
+          <select class="ra-input">
+            <option value="upload">Upload Manual</option>
+            <option value="external_link">Tautan Eksternal</option>
+            <option value="system">Otomatis dari Sistem</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="ra-label-md">Referensi / Link Bukti</label>
+          <input class="ra-input" type="text" placeholder="URL atau nomor dokumen">
+        </div>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeForm}}">Ajukan Bukti</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeForm}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { formOpen: false };
+    this.openForm = this.openForm.bind(this);
+    this.closeForm = this.closeForm.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openForm(){ this.setState({ formOpen: true }); }
+  closeForm(){ this.setState({ formOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  renderVals() {
+    const listState = this.props.listState ?? 'loaded';
+    const titleOptions = [
+      { value: 'top_performer', label: 'Top Performer Regional' },
+      { value: 'dbr_certified', label: 'Agen Bersertifikat Kalkulator DBR' },
+      { value: 'instruktur', label: 'Instruktur Bersertifikat' },
+      { value: 'komunitas', label: 'Kontributor Komunitas' }
+    ];
+    const evidenceDefs = [
+      { titleName: 'Top Performer Regional', evidenceType: 'aktivitas', source: 'system', capturedAt: '18 Sep 2026', status: 'qualified' },
+      { titleName: 'Agen Bersertifikat Kalkulator DBR', evidenceType: 'sertifikat', source: 'upload', capturedAt: '02 Sep 2026', status: 'pending' },
+      { titleName: 'Instruktur Bersertifikat', evidenceType: 'dokumen', source: 'upload', capturedAt: '10 Agu 2026', status: 'not_qualified' }
+    ];
+    const evidenceTypeLabels = { sertifikat: 'Sertifikat', dokumen: 'Dokumen Resmi', tautan: 'Tautan Eksternal', aktivitas: 'Bukti Aktivitas', lainnya: 'Lainnya' };
+    const sourceLabels = { upload: 'Upload Manual', external_link: 'Tautan Eksternal', system: 'Otomatis Sistem' };
+    const statusMap = {
+      qualified: { label: 'Lulus', badge: 'ra-badge-success' },
+      not_qualified: { label: 'Tidak Lulus', badge: 'ra-badge-danger' },
+      pending: { label: 'Menunggu', badge: 'ra-badge-warning' },
+      failed: { label: 'Gagal', badge: 'ra-badge-danger' },
+      revoked: { label: 'Dicabut', badge: 'ra-badge-neutral' }
+    };
+    const evidenceList = evidenceDefs.map(e => {
+      const sm = statusMap[e.status];
+      return {
+        titleName: e.titleName,
+        evidenceTypeLabel: evidenceTypeLabels[e.evidenceType],
+        sourceLabel: sourceLabels[e.source],
+        capturedAt: e.capturedAt,
+        statusLabel: sm.label,
+        badgeClass: sm.badge
+      };
+    });
+    return {
+      titleOptions,
+      evidenceList,
+      isEmpty: listState === 'empty',
+      isLoaded: listState === 'loaded',
+      formOpen: this.state.formOpen ?? false,
+      openForm: this.openForm,
+      closeForm: this.closeForm,
+      stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>

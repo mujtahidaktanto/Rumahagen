@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Presentasi Title di Profil — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
+
+  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+
+  .main{flex:1;overflow-y:auto;padding:28px 40px;}
+  .layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;max-width:1100px;}
+
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:0;overflow:hidden;}
+  .title-row{display:flex;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid var(--ra-ink-50);}
+  .title-row:last-child{border-bottom:none;}
+  .title-icon{width:40px;height:40px;border-radius:50%;background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;flex:none;}
+  .order-btns{display:flex;flex-direction:column;gap:2px;flex:none;}
+  .order-btn{width:24px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid var(--ra-ink-100);background:#fff;color:var(--ra-ink-500);cursor:pointer;}
+  .order-btn:hover{background:var(--ra-ink-50);}
+  .switch{width:40px;height:22px;border-radius:11px;background:var(--ra-ink-200);position:relative;flex:none;cursor:pointer;transition:background .15s ease;}
+  .switch[aria-checked="true"]{background:var(--ra-success-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s ease;box-shadow:var(--ra-shadow-1);}
+  .switch[aria-checked="true"] .switch-knob{left:20px;}
+
+  .preview-card{position:sticky;top:0;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:22px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;}
+  .avatar-xl{width:64px;height:64px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;}
+
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 20px;color:var(--ra-ink-300);}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
+      <a class="nav-item is-active" href="M15-Title-Award-Presentation.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="M08-Dashboard.dc.html">Dashboard</a><span>/</span>
+        <a href="M15-Evaluasi.dc.html">Penghargaan Saya</a><span>/</span>
+        <span class="ra-label-lg" style="color:var(--ra-ink-900);">Presentasi Title</span>
+      </div>
+      <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M02-Profil-Saya.dc.html">Lihat Profil Saya</a>
+    </div>
+
+    <div class="main">
+      <div class="layout">
+        <div>
+          <div style="display:flex;align-items:flex-start;gap:14px;background:var(--ra-info-100);border:1px solid var(--ra-blue-200);border-radius:var(--ra-radius-md);padding:16px 18px;margin-bottom:16px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="var(--ra-info-600)" stroke="none"/></svg>
+            <span class="ra-body-md" style="color:var(--ra-ink-700);">Pilih title mana yang ditampilkan di profil publik Anda, dan atur urutannya. Title yang dinonaktifkan di sini <strong>tetap sah</strong> Anda miliki — hanya soal ditampilkan atau tidak.</span>
+          </div>
+
+          <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+            <div class="card empty-wrap">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" width="44" height="44"><path d="M32 8 27 20l-13 2 9.5 9-2.5 13 12-6.5 12 6.5-2.5-13 9.5-9-13-2Z"/></svg>
+              <span class="ra-body-md">Anda belum punya title yang bisa ditampilkan</span>
+              <a class="ra-btn ra-btn-primary ra-btn-sm" href="M15-Evidence.dc.html" style="margin-top:6px;">Ajukan Bukti Kualifikasi</a>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
+            <div class="card">
+              <sc-for list="{{titles}}" as="t" hint-placeholder-count="3">
+                <div class="title-row">
+                  <div class="order-btns">
+                    <div class="order-btn" onClick="{{t.moveUp}}">▲</div>
+                    <div class="order-btn" onClick="{{t.moveDown}}">▼</div>
+                  </div>
+                  <div class="title-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div class="ra-label-lg ra-truncate-1">{{t.name}}</div>
+                    <span class="ra-caption">Diberikan {{t.issuedAt}}</span>
+                  </div>
+                  <div class="switch" aria-checked="{{t.active}}" onClick="{{t.toggle}}"><div class="switch-knob"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <div class="preview-card">
+          <span class="ra-caption" style="align-self:flex-start;color:var(--ra-ink-300);">Pratinjau Profil Publik</span>
+          <div class="avatar-xl">RS</div>
+          <span class="ra-title-md">Rian Saputra</span>
+          <span class="ra-caption">BSD City &amp; Sekitarnya</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px;">
+            <sc-if value="{{previewEmpty}}" hint-placeholder-val="{{false}}">
+              <span class="ra-caption" style="color:var(--ra-ink-300);">Tidak ada title ditampilkan</span>
+            </sc-if>
+            <sc-for list="{{activeTitlesPreview}}" as="pt" hint-placeholder-count="1">
+              <span class="ra-badge" style="background:var(--ra-gold-100);color:var(--ra-gold-700);"><span class="ra-dot"></span>{{pt.name}}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    // title_presentations (0068): active BOOLEAN, display_order INT -- state
+    // lokal per title, persis kolom yang sama.
+    this.state = {
+      titleDefs: [
+        { id: 't1', name: 'Top Performer Regional 2026', issuedAt: '20 Sep 2026', active: true, order: 0 },
+        { id: 't2', name: 'Agen Bersertifikat Kalkulator DBR', issuedAt: '05 Jul 2026', active: false, order: 1 }
+      ]
+    };
+    this.toggleTitle = this.toggleTitle.bind(this);
+    this.moveTitle = this.moveTitle.bind(this);
+  }
+  toggleTitle(id){
+    this.setState({ titleDefs: this.state.titleDefs.map(t => t.id === id ? { ...t, active: !t.active } : t) });
+  }
+  moveTitle(id, dir){
+    const list = [...this.state.titleDefs].sort((a,b) => a.order - b.order);
+    const idx = list.findIndex(t => t.id === id);
+    const swapIdx = idx + dir;
+    if (swapIdx < 0 || swapIdx >= list.length) return;
+    const tmp = list[idx].order;
+    list[idx].order = list[swapIdx].order;
+    list[swapIdx].order = tmp;
+    this.setState({ titleDefs: list });
+  }
+  renderVals() {
+    const listState = this.props.listState ?? 'loaded';
+    const sorted = [...(this.state.titleDefs ?? [])].sort((a,b) => a.order - b.order);
+    const titles = sorted.map(t => ({
+      name: t.name,
+      issuedAt: t.issuedAt,
+      active: t.active,
+      toggle: () => this.toggleTitle(t.id),
+      moveUp: () => this.moveTitle(t.id, -1),
+      moveDown: () => this.moveTitle(t.id, 1)
+    }));
+    const activeTitlesPreview = sorted.filter(t => t.active).map(t => ({ name: t.name }));
+
+    return {
+      titles,
+      isEmpty: listState === 'empty',
+      isLoaded: listState === 'loaded',
+      activeTitlesPreview,
+      previewEmpty: activeTitlesPreview.length === 0
+    };
+  }
+}
+</script>
+</body>
+</html>

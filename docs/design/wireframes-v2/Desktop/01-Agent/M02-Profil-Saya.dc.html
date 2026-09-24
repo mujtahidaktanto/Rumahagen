@@ -191,13 +191,39 @@
               <div style="display:flex;align-items:center;gap:12px;">
                 <div style="width:44px;height:44px;border-radius:var(--ra-radius-sm);background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none;">PJ</div>
                 <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1">PT Properti Jaya Sejahtera</div><span class="ra-caption">Nama kantor tampil di profil publik Anda</span></div>
-                <a class="ra-btn ra-btn-secondary ra-btn-sm" href="../00-Publik/M11-Detail-Organisasi-Desktop.dc.html">Lihat</a>
+                <a class="ra-btn ra-btn-secondary ra-btn-sm" href="../public/M11-Detail-Organisasi-Desktop.dc.html">Lihat</a>
               </div>
             </sc-if>
             <sc-if value="{{noOrg}}" hint-placeholder-val="{{false}}">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
                 <span class="ra-body-md" style="color:var(--ra-ink-500);">Anda belum tergabung ke organisasi manapun. Bergabung membuat listing Anda tampil di bawah nama kantor.</span>
                 <a class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:none;" href="M12-Organisasi-Dashboard.dc.html">Jelajahi Organisasi</a>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- Title & Penghargaan (M15) -- STEP11-B8 §11 M02 boundary: "Presentation/
+               public profile may consume awarded-title presentation. M02 does not
+               issue, revoke, qualify, or alter Award" -- kartu ini HANYA ringkasan +
+               pintu masuk, pengaturan sesungguhnya (toggle aktif, urutan tampil) ada
+               di layar M15 tersendiri (37-title-presentation.dc.html). -->
+          <div class="card">
+            <span class="ra-title-md">Title &amp; Penghargaan</span>
+            <sc-if value="{{hasActiveTitles}}" hint-placeholder-val="{{true}}">
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{presentedTitles}}" as="t" hint-placeholder-count="2">
+                  <span class="ra-badge" style="background:var(--ra-gold-100);color:var(--ra-gold-700);"><span class="ra-dot"></span>{{t.name}}</span>
+                </sc-for>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+                <span class="ra-caption">Title yang ditampilkan di profil publik Anda, sesuai urutan yang Anda atur.</span>
+                <a class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:none;" href="M15-Title-Award-Presentation.dc.html">Kelola Presentasi</a>
+              </div>
+            </sc-if>
+            <sc-if value="{{noActiveTitles}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+                <span class="ra-body-md" style="color:var(--ra-ink-500);">Belum ada title yang ditampilkan di profil. Ajukan bukti kualifikasi untuk mulai mendapatkan title/penghargaan.</span>
+                <a class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:none;" href="M15-Evidence.dc.html">Ajukan Bukti Kualifikasi</a>
               </div>
             </sc-if>
           </div>
@@ -225,7 +251,7 @@
           <div class="avatar-xl">RS</div>
           <span class="ra-title-md">Rian Saputra</span>
           <span class="ra-caption">BSD City & Sekitarnya</span>
-          <a class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" href="../00-Publik/M11-Detail-Agen-Desktop.dc.html">Lihat sebagai Publik</a>
+          <a class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" href="../public/M11-Detail-Agen-Desktop.dc.html">Lihat sebagai Publik</a>
           <div class="stat-row-mini">
             <div style="text-align:center;"><div class="ra-title-md">{{soldCount}}</div><span class="ra-caption">Terjual</span></div>
             <div style="text-align:center;"><div class="ra-title-md">{{rentedCount}}</div><span class="ra-caption">Tersewa</span></div>
@@ -265,6 +291,9 @@ class Component extends DCLogic {
     const ctaEnabled = this.props.ctaEnabledProp ?? false;
 
     const specializations = [{ label: 'Rumah Tapak' }, { label: 'Apartemen' }, { label: 'KPR Konsultasi' }];
+    // title_presentations WHERE active=true, sesuai display_order (M15, 0068).
+    const presentedTitles = [{ name: 'Top Performer Regional 2026' }];
+    const hasActiveTitles = presentedTitles.length > 0;
 
     return {
       navCollapsed,
@@ -279,6 +308,9 @@ class Component extends DCLogic {
       isIdle: formState !== 'saving',
       hasOrg,
       noOrg: !hasOrg,
+      presentedTitles,
+      hasActiveTitles,
+      noActiveTitles: !hasActiveTitles,
       profilePublic,
       contactPublic,
       ctaEnabled,
