@@ -3115,13 +3115,41 @@ nama dari "Preset Agent" ke "Preset", ditambah selector role target
 (hanya tampil untuk Superadmin — Manager/Admin tetap terkunci ke Agent
 di UI karena tulisan mereka toh selalu ditolak backend untuk role lain).
 
-## `0120` — Manager boleh onboarding Agent jadi Instructor/Buyer/Developer Partner (✅ DITERAPKAN, tapi lihat `0121`+`0122` — sendirian TIDAK CUKUP)
+## `0120`+`0121`+`0122` — Manager boleh onboarding Agent jadi Instructor/Buyer/Developer Partner (✅ SELESAI, DITERAPKAN, DIUJI NYATA)
 
-**STATUS: DITERAPKAN ke database live (2026-09-25)**, atas izin
-eksplisit pengguna. **Tapi live-testing dengan throwaway test users
-(Manager/Agent/Admin) menemukan bug: 0120 SENDIRIAN tidak benar-benar
-mengizinkan Manager mengubah apa pun** — lihat `0121` dan `0122` di
-bawah untuk penyebab dan fix-nya. Baca ketiganya sebagai satu paket.
+**STATUS: ketiga migration DITERAPKAN ke database live (2026-09-25)**,
+masing-masing atas izin eksplisit pengguna, DAN sudah diuji nyata
+end-to-end setelah 0122 diterapkan (throwaway test users: 2 Manager,
+2 Agent, 1 Admin, dibuat & dihapus total lewat `execute_sql`). Baca
+ketiganya sebagai satu paket — 0120 saja TIDAK CUKUP (lihat riwayat
+bug di bawah), baru setelah ketiganya digabung fitur ini benar-benar
+berfungsi.
+
+**Hasil pengujian nyata (semua sesuai ekspektasi)**:
+1. Manager mengubah Agent → Instructor → **berhasil**, dikonfirmasi
+   `role_code` benar-benar berubah persisten di DB (bukan cuma respons
+   sukses palsu).
+2. Manager mengubah Agent → Admin → **ditolak** dengan pesan trigger
+   eksplisit: `"users.role_id: Manager hanya boleh mengubah role Agent
+   menjadi Instructor/Buyer/Developer Partner (onboarding mitra) --
+   transisi role lain memerlukan Superadmin"`.
+3. Manager menyentuh baris Admin (bukan Agent) → **0 baris
+   terpengaruh**, tanpa error (RLS `USING` tidak lolos sama sekali —
+   baris itu bahkan tidak "terlihat" bagi Manager untuk command ini).
+4. Manager menyentuh baris Manager lain → **0 baris terpengaruh**,
+   sama seperti kasus Admin.
+5. Manager mencoba membalik arah (Instructor hasil onboarding →
+   kembali ke Agent) → **0 baris terpengaruh** (RLS `USING` hanya
+   mengizinkan baris yang SAAT INI `'agent'`).
+
+Kesimpulan: Manager **hanya** bisa mengubah role akun yang saat ini
+`'agent'`, **hanya** menjadi Instructor/Buyer/Developer Partner, dan
+**sama sekali tidak bisa** menyentuh baris Manager/Admin/Superadmin
+lain — persis sesuai permintaan pengguna ("hanya dapat merubah role
+agen saja"). Superadmin tidak terpengaruh sama sekali oleh ketiga
+migration ini (logic bypass `is_superadmin()`-nya tidak diubah di
+manapun — 0121/0122 hanya MENAMBAH kondisi OR baru, tidak pernah
+mengurangi akses yang sudah ada).
 
 **Latar belakang**: pertanyaan user (2026-09-24/25) soal cara membuat
 akun Instructor/Buyer/Developer Partner mengungkap satu-satunya jalur
@@ -3156,12 +3184,13 @@ Pengguna dapat aksi "Ubah Role" baru + M06-Developer-Project-Admin
 dapat tab "Developer Partner" untuk company profile `developer_
 partners`, terpisah dari akun login).
 
-## `0121` — Fix: Manager tetap tidak bisa UPDATE apa pun tanpa SELECT policy yang cocok (✅ DITERAPKAN, tapi lihat `0122` — masih TIDAK CUKUP)
+## `0121` — Fix: Manager tetap tidak bisa UPDATE apa pun tanpa SELECT policy yang cocok (✅ DITERAPKAN)
 
 **STATUS: DITERAPKAN ke database live (2026-09-25)**, atas izin
-eksplisit pengguna. **Tapi live-testing ulang (throwaway test users
-baru) menemukan lapisan bug KEDUA di command UPDATE yang sama** — lihat
-`0122` di bawah. Baca `0120`+`0121`+`0122` sebagai satu paket.
+eksplisit pengguna. Live-testing ulang setelah ini menemukan lapisan
+bug KEDUA di command UPDATE yang sama (baris HASIL update juga harus
+lolos SELECT policy) — fix-nya ada di `0122`. Lihat ringkasan hasil
+uji akhir di bagian atas (`0120`+`0121`+`0122`).
 
 **Bug yang ditemukan lewat live-testing 0120** (throwaway test users:
 1 Manager, 2 Agent, 1 Admin, dibuat & dihapus lewat `execute_sql`):
@@ -3198,15 +3227,13 @@ saja"); Superadmin tidak terpengaruh (tetap bisa apa saja). Data uji
 sebelumnya (4 throwaway user) sudah dihapus total sebelum menemukan
 bug ini butuh migration tambahan.
 
-## `0122` — Fix: baris HASIL onboarding juga harus lolos SELECT policy Manager (⏳ DITULIS, BELUM DITERAPKAN)
+## `0122` — Fix: baris HASIL onboarding juga harus lolos SELECT policy Manager (✅ DITERAPKAN, DIUJI NYATA — fitur ini SELESAI)
 
-**STATUS: migration file sudah ditulis
-(`0122_manager_select_partner_role_rows_after_onboarding.sql`) tapi
-BELUM diterapkan** — `apply_migration` ditolak classifier permission
-Claude Code (ketiga kalinya di fitur ini; pengguna sudah mengizinkan
-0120 dan 0121 secara eksplisit tapi belum untuk migration baru ini).
-Menunggu pengguna menjalankan migration ini sendiri (lewat Supabase
-Dashboard/CLI) atau memberi izin eksplisit di sesi berikutnya.
+**STATUS: DITERAPKAN ke database live (2026-09-25)**, atas izin
+eksplisit pengguna, dan diuji nyata end-to-end setelahnya (5 skenario,
+semua sesuai ekspektasi — lihat ringkasan lengkap di bagian atas
+`0120`+`0121`+`0122`). Tidak ada pekerjaan lanjutan yang menggantung
+untuk fitur ini.
 
 **Bug yang ditemukan lewat live-testing 0121** (throwaway test users
 baru: 1 Manager, 2 Agent, 1 Admin): setelah 0121 diterapkan, percobaan
