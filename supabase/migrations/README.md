@@ -3114,3 +3114,56 @@ Wireframe M10-Matriks-Izin (desktop+mobile) diperbarui: tab berganti
 nama dari "Preset Agent" ke "Preset", ditambah selector role target
 (hanya tampil untuk Superadmin — Manager/Admin tetap terkunci ke Agent
 di UI karena tulisan mereka toh selalu ditolak backend untuk role lain).
+
+## `0120` — Manager boleh onboarding Agent jadi Instructor/Buyer/Developer Partner (⏳ DITULIS, BELUM DITERAPKAN)
+
+**STATUS: migration file sudah ditulis (`0120_manager_partner_onboarding_
+role_change.sql`) tapi BELUM diterapkan ke database live** —
+`apply_migration` ditolak classifier permission Claude Code (perubahan
+menyentuh `enforce_users_protected_columns`, trigger yang menjaga
+privilege escalation — butuh persetujuan eksplisit pengguna, bukan
+sesuatu yang pantas dijalankan otomatis). Menunggu pengguna menjalankan
+migration ini sendiri (lewat Supabase Dashboard/CLI) atau memberi izin
+eksplisit di sesi berikutnya.
+
+**Latar belakang**: pertanyaan user (2026-09-24/25) soal cara membuat
+akun Instructor/Buyer/Developer Partner mengungkap satu-satunya jalur
+(`PUT /admin/users/{id}/role`) murni Superadmin-only (RLS
+`users_update_admin` 0104 + trigger `enforce_users_protected_columns`
+0100/0101 — keduanya sengaja dikunci mencegah privilege escalation).
+User lalu meminta: Manager yang berhadapan langsung dengan calon
+mitra (proses bisnis nyata) tidak harus minta Superadmin setiap kali.
+
+**Scope yang akan diberikan ke Manager (SEMPIT, bukan menyamakan dengan
+Superadmin)** — lihat komentar lengkap di file migration:
+- HANYA transisi `role_id` dari `'agent'` → salah satu dari
+  `{'instructor','buyer','developer_partner'}` (satu-satunya cara akun
+  non-Agent pernah "ada", karena self-registrasi selalu jadi Agent).
+- TIDAK BISA promosi ke role staf (admin/manager/superadmin) — tetap
+  murni Superadmin-only.
+- TIDAK BISA membalik arah (partner-role → agent atau role lain).
+- TIDAK BISA mengubah status/deleted_at/id/created_at sekaligus dalam
+  panggilan yang sama.
+
+Dua lapis yang diubah (pola sama seperti 0100/0101/0104 asli): RLS baru
+`users_update_manager_partner_onboarding` (baris mana yang boleh
+disentuh Manager) + `CREATE OR REPLACE FUNCTION enforce_users_
+protected_columns()` (kolom apa saja yang boleh berubah dalam baris
+itu, exception Manager ditambahkan SEBELUM blok RAISE EXCEPTION
+generik). Route `PUT /admin/users/{id}/role` TIDAK perlu diubah sama
+sekali — R-02, otorisasi murni di RLS+trigger, route sudah generik
+sejak awal.
+
+**Setelah migration ini diterapkan**, wajib diuji nyata (pola sama
+seperti fix lain di sesi ini) sebelum dianggap selesai: Manager
+mengubah Agent→Instructor → harus 201; Manager mengubah Agent→Admin →
+harus 403 dengan pesan trigger yang jelas; Manager mengubah baris yang
+SUDAH Developer Partner → apa pun → harus 403 (RLS USING tidak lolos,
+baris bukan Agent); Superadmin tidak terpengaruh (tetap bisa apa saja).
+
+Wireframe sudah diperbarui MENDAHULUI migration ini (M09-Direktori-
+Pengguna dapat aksi "Ubah Role" baru + M06-Developer-Project-Admin
+dapat tab "Developer Partner" untuk company profile `developer_
+partners`, terpisah dari akun login) — merepresentasikan perilaku yang
+DIMAKSUDKAN, bukan yang sudah live, sampai migration ini benar-benar
+diterapkan.

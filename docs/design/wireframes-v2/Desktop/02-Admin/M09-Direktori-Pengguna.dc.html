@@ -119,6 +119,9 @@
                   <td>
                     <div style="display:flex;align-items:center;gap:14px;">
                       <a href="#" class="ra-label-lg">Detail</a>
+                      <sc-if value="{{u.canChangeRole}}" hint-placeholder-val="{{false}}">
+                        <a href="#" class="ra-label-lg" onClick="{{u.openChangeRole}}">Ubah Role</a>
+                      </sc-if>
                       <sc-if value="{{u.canSuspend}}" hint-placeholder-val="{{false}}">
                         <button class="ra-btn ra-btn-danger ra-btn-sm" onClick="{{u.openSuspend}}">Suspend</button>
                       </sc-if>
@@ -164,25 +167,52 @@
     </div>
   </sc-if>
 
+  <!-- change-role dialog -->
+  <sc-if value="{{roleDialogOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeRoleDialog}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">Ubah Role — {{roleDialogUserName}}</h2>
+        <p class="ra-caption">{{roleDialogHint}}</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label class="ra-label-lg">Role baru</label>
+          <select class="ra-input">
+            <sc-for list="{{roleDialogOptions}}" as="o" hint-placeholder-count="3">
+              <option value="{{o.value}}">{{o.label}}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:flex-end;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeRoleDialog}}">Batal</button>
+          <button class="ra-btn ra-btn-primary" onClick="{{closeRoleDialog}}">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { activeFilter: 'all', dialogOpen: false, dialogUserName: '', reason: '' };
+    this.state = { activeFilter: 'all', dialogOpen: false, dialogUserName: '', reason: '', roleDialogOpen: false, roleDialogUserName: '', roleDialogTargetIsAgent: false };
     this.handleReasonChange = this.handleReasonChange.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.stopClick = this.stopClick.bind(this);
+    this.closeRoleDialog = this.closeRoleDialog.bind(this);
   }
   pickFilter(key){ this.setState({ activeFilter: key }); }
   openSuspend(user){ this.setState({ dialogOpen: true, dialogUserName: user.name, reason: '' }); }
   closeDialog(){ this.setState({ dialogOpen: false, reason: '' }); }
   handleReasonChange(e){ this.setState({ reason: e && e.target ? e.target.value : '' }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  openChangeRole(user){ this.setState({ roleDialogOpen: true, roleDialogUserName: user.name, roleDialogTargetIsAgent: user.role === 'agent' }); }
+  closeRoleDialog(){ this.setState({ roleDialogOpen: false }); }
   renderVals() {
     const viewerRole = this.props.viewerRole ?? 'admin';
     const canManage = viewerRole === 'superadmin' || viewerRole === 'admin';
+    const isSuperadmin = viewerRole === 'superadmin';
+    const isManager = viewerRole === 'manager';
     const users = [
       { name: 'Dewi Anggraini', email: 'dewi.anggraini@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', joined: '12 Jan 2026', initials: 'DA' },
       { name: 'Fajar Nugroho', email: 'fajar.nugroho@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'pending_review', status: 'pending_review', badgeClass: 'ra-badge-warning', joined: '02 Sep 2026', initials: 'FN' },
@@ -201,15 +231,36 @@ class Component extends DCLogic {
     const countFor = (key) => key === 'all' ? users.length : users.filter(u => u.statusKey === key).length;
     const chips = chipDefs.map(c => ({ key: c.key, label: c.label, count: countFor(c.key), isActive: c.key === activeFilter, pick: () => this.pickFilter(c.key) }));
     const filteredBase = activeFilter === 'all' ? users : users.filter(u => u.statusKey === activeFilter);
+    // PUT /admin/users/{id}/role -- Superadmin bisa ubah role SIAPA PUN ke
+    // apa pun (RLS users_update_admin, 0104). Manager HANYA bisa mengubah
+    // baris yang SAAT INI 'agent' (onboarding mitra baru -- RLS+trigger
+    // baru, migration 0120, permintaan user 2026-09-25) -- tidak bisa
+    // membalik arah atau menyentuh baris staf/non-agent lain sama sekali.
     const filtered = filteredBase.map(u => ({
       ...u,
       canSuspend: canManage && u.role === 'agent' && u.statusKey === 'active',
-      openSuspend: () => this.openSuspend(u)
+      openSuspend: () => this.openSuspend(u),
+      canChangeRole: isSuperadmin || (isManager && u.role === 'agent'),
+      openChangeRole: () => this.openChangeRole(u)
     }));
     const activeFilterLabel = (chipDefs.find(c => c.key === activeFilter) || {}).label ?? 'Semua';
     const listState = this.props.listState ?? 'loaded';
     const roleLabels = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' };
     const reason = this.state.reason ?? '';
+
+    const allRoleOptions = [
+      { value: 'agent', label: 'Agent' }, { value: 'instructor', label: 'Instructor' },
+      { value: 'buyer', label: 'Buyer' }, { value: 'developer_partner', label: 'Developer Partner' },
+      { value: 'manager', label: 'Manager' }, { value: 'admin', label: 'Admin' }, { value: 'superadmin', label: 'Superadmin' }
+    ];
+    const partnerRoleOptions = [
+      { value: 'instructor', label: 'Instructor' }, { value: 'buyer', label: 'Buyer' }, { value: 'developer_partner', label: 'Developer Partner' }
+    ];
+    const roleDialogOptions = isSuperadmin ? allRoleOptions : partnerRoleOptions;
+    const roleDialogHint = isSuperadmin
+      ? 'Superadmin bisa mengubah ke role apa pun — perubahan role adalah operasi paling sensitif di seluruh model otorisasi, tercatat di audit log.'
+      : 'Manager hanya bisa mengubah akun Agent menjadi Instructor/Buyer/Developer Partner (onboarding mitra baru) — tidak bisa membalik arah atau mengubah role staf.';
+
     return {
       chips, filtered, activeFilterLabel,
       viewerRoleLabel: roleLabels[viewerRole] ?? 'Admin',
@@ -222,7 +273,11 @@ class Component extends DCLogic {
       confirmDisabled: reason.trim().length === 0,
       handleReasonChange: this.handleReasonChange,
       closeDialog: this.closeDialog,
-      stopClick: this.stopClick
+      stopClick: this.stopClick,
+      roleDialogOpen: this.state.roleDialogOpen ?? false,
+      roleDialogUserName: this.state.roleDialogUserName || '',
+      roleDialogOptions, roleDialogHint,
+      closeRoleDialog: this.closeRoleDialog
     };
   }
 }

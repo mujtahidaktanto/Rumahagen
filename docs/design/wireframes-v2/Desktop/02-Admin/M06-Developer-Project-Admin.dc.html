@@ -28,6 +28,9 @@
   .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:10;}
   .dialog{width:480px;background:#fff;border-radius:var(--ra-radius-lg);box-shadow:var(--ra-shadow-3);padding:28px;display:flex;flex-direction:column;gap:14px;}
   .filter-row{display:flex;gap:10px;margin-bottom:14px;}
+  .tab-row{display:flex;gap:4px;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tab{padding:14px 4px;margin-right:24px;font-size:14px;font-weight:700;color:var(--ra-ink-300);border-bottom:2px solid transparent;cursor:pointer;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
 </style>
 </helmet>
 <div class="app">
@@ -56,9 +59,21 @@
   <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
     <div class="topbar">
       <div><h1 class="ra-title-lg">Proyek Developer</h1><p class="ra-caption">Masuk sebagai <strong>{{viewerRoleLabel}}</strong> — oversight staf, bukan sisi self-service Developer Partner (Fase F, belum dibangun)</p></div>
-      <button class="ra-btn ra-btn-primary" onClick="{{openCreateProject}}">+ Buat Proyek (atas nama Developer)</button>
+      <sc-if value="{{isTabProjects}}" hint-placeholder-val="{{true}}">
+        <button class="ra-btn ra-btn-primary" onClick="{{openCreateProject}}">+ Buat Proyek (atas nama Developer)</button>
+      </sc-if>
+      <sc-if value="{{isTabPartners}}" hint-placeholder-val="{{false}}">
+        <button class="ra-btn ra-btn-primary" onClick="{{openCreatePartner}}">+ Tambah Developer Partner</button>
+      </sc-if>
     </div>
 
+    <div class="tab-row">
+      <span class="tab {{tabProjectsClass}}" onClick="{{selectTabProjects}}">Proyek</span>
+      <span class="tab {{tabPartnersClass}}" onClick="{{selectTabPartners}}">Developer Partner</span>
+    </div>
+
+    <!-- TAB: Proyek -->
+    <sc-if value="{{isTabProjects}}" hint-placeholder-val="{{true}}">
     <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:24px 40px 40px;">
       <div class="filter-row">
         <select class="ra-input" style="width:180px;"><option value="">Semua Kategori</option><option value="primary">Primary</option><option value="secondary">Secondary</option></select>
@@ -90,6 +105,52 @@
       </div>
       <p class="ra-caption" style="margin-top:10px;">Transisi ke 'active' butuh m06.developer_project.publish (permission terpisah dari update biasa, trigger enforce_developer_project_publish_permission) — "ordinary Project Update does not imply activation/publish".</p>
     </div>
+    </sc-if>
+
+    <!-- TAB: Developer Partner (company profile) -->
+    <sc-if value="{{isTabPartners}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:24px 40px 40px;">
+      <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:14px;">developer_partners (company_name/logo/deskripsi/PIC) — berbeda dari akun login. `user_id` opsional: perusahaan bisa terdaftar TANPA akun login (untuk atribusi proyek), dihubungkan belakangan setelah PIC-nya diberi role Developer Partner lewat Direktori Pengguna &gt; "Ubah Role".</p>
+      <div class="ra-card" style="overflow:hidden;">
+        <table>
+          <thead><tr>
+            <th class="ra-label-md" style="color:var(--ra-ink-300);">Perusahaan</th>
+            <th class="ra-label-md" style="color:var(--ra-ink-300);">PIC</th>
+            <th class="ra-label-md" style="color:var(--ra-ink-300);">Kontak PIC</th>
+            <th class="ra-label-md" style="color:var(--ra-ink-300);">Akun Login</th>
+            <th class="ra-label-md" style="color:var(--ra-ink-300);">Status</th>
+            <th class="ra-label-md" style="color:var(--ra-ink-300);">Aksi</th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{partners}}" as="dp" hint-placeholder-count="4">
+              <tr>
+                <td><span class="ra-label-lg">{{dp.companyName}}</span></td>
+                <td><span class="ra-body-md">{{dp.picName}}</span></td>
+                <td><span class="ra-body-md" style="color:var(--ra-ink-500);">{{dp.picContact}}</span></td>
+                <td>
+                  <sc-if value="{{dp.hasAccount}}" hint-placeholder-val="{{false}}">
+                    <span class="ra-badge ra-badge-success">Terhubung — {{dp.linkedEmail}}</span>
+                  </sc-if>
+                  <sc-if value="{{dp.noAccount}}" hint-placeholder-val="{{true}}">
+                    <span class="ra-badge ra-badge-neutral">Belum Terhubung</span>
+                  </sc-if>
+                </td>
+                <td><span class="ra-badge {{dp.badgeClass}}"><span class="ra-dot"></span>{{dp.statusLabel}}</span></td>
+                <td>
+                  <div style="display:flex;gap:10px;">
+                    <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{dp.openEdit}}">Edit</button>
+                    <sc-if value="{{dp.noAccount}}" hint-placeholder-val="{{true}}">
+                      <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{dp.openLink}}">Hubungkan Akun</button>
+                    </sc-if>
+                  </div>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </sc-if>
   </div>
 
   <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
@@ -126,23 +187,69 @@
     </div>
   </sc-if>
 
+  <!-- Create/Edit Developer Partner (company profile) -->
+  <sc-if value="{{partnerFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">{{partnerFormTitle}}</h2>
+        <div style="display:flex;flex-direction:column;gap:6px;"><label class="ra-label-lg">Nama Perusahaan</label><input class="ra-input" type="text" value="{{partnerFormName}}" onInput="{{onPartnerNameInput}}"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;"><label class="ra-label-lg">Logo (URL)</label><input class="ra-input" type="text" placeholder="https://…"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;"><label class="ra-label-lg">Tentang Developer</label><textarea class="ra-input" style="height:70px;padding:10px 14px;resize:none;"></textarea></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="display:flex;flex-direction:column;gap:6px;"><label class="ra-label-lg">Nama PIC</label><input class="ra-input" type="text"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;"><label class="ra-label-lg">Kontak PIC</label><input class="ra-input" type="text"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;"><label class="ra-label-lg">Status</label><select class="ra-input"><option>active</option><option>inactive</option></select></div>
+        <div style="display:flex;gap:12px;justify-content:flex-end;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Batal</button>
+          <button class="ra-btn ra-btn-primary" disabled="{{partnerSaveDisabled}}" onClick="{{closeDialogs}}">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Link Developer Partner company to a login account -->
+  <sc-if value="{{linkOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">Hubungkan Akun — {{linkTargetCompany}}</h2>
+        <p class="ra-body-md" style="color:var(--ra-ink-700);">Pilih akun ber-role Developer Partner yang belum terhubung ke perusahaan mana pun. Kalau PIC belum punya role itu, ubah dulu lewat Direktori Pengguna &gt; "Ubah Role" (Agent → Developer Partner), baru kembali ke sini.</p>
+        <div style="display:flex;flex-direction:column;gap:6px;"><label class="ra-label-lg">Cari akun (role Developer Partner, belum terhubung)</label><input class="ra-input" type="text" placeholder="Nama atau email…"></div>
+        <div style="display:flex;gap:12px;justify-content:flex-end;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Batal</button>
+          <button class="ra-btn ra-btn-primary" onClick="{{closeDialogs}}">Hubungkan</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { createOpen: false, createProjectName: '', statusOpen: false, statusTargetName: '' };
+    this.state = { tab: 'projects', createOpen: false, createProjectName: '', statusOpen: false, statusTargetName: '', partnerFormOpen: false, partnerFormTitle: 'Tambah Developer Partner', partnerFormName: '', linkOpen: false, linkTargetCompany: '' };
     this.openCreateProject = this.openCreateProject.bind(this);
     this.closeDialogs = this.closeDialogs.bind(this);
     this.stopClick = this.stopClick.bind(this);
     this.onCreateNameInput = this.onCreateNameInput.bind(this);
+    this.selectTabProjects = this.selectTabProjects.bind(this);
+    this.selectTabPartners = this.selectTabPartners.bind(this);
+    this.openCreatePartner = this.openCreatePartner.bind(this);
+    this.onPartnerNameInput = this.onPartnerNameInput.bind(this);
   }
   openCreateProject(){ this.setState({ createOpen: true, createProjectName: '' }); }
   openStatus(name){ this.setState({ statusOpen: true, statusTargetName: name }); }
-  closeDialogs(){ this.setState({ createOpen: false, statusOpen: false }); }
+  closeDialogs(){ this.setState({ createOpen: false, statusOpen: false, partnerFormOpen: false, linkOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   onCreateNameInput(e){ this.setState({ createProjectName: e.target.value }); }
+  selectTabProjects(){ this.setState({ tab: 'projects' }); }
+  selectTabPartners(){ this.setState({ tab: 'partners' }); }
+  openCreatePartner(){ this.setState({ partnerFormOpen: true, partnerFormTitle: 'Tambah Developer Partner', partnerFormName: '' }); }
+  openEditPartner(name){ this.setState({ partnerFormOpen: true, partnerFormTitle: 'Edit — ' + name, partnerFormName: name }); }
+  openLinkAccount(name){ this.setState({ linkOpen: true, linkTargetCompany: name }); }
+  onPartnerNameInput(e){ this.setState({ partnerFormName: e.target.value }); }
   renderVals() {
     const viewerRole = this.props.viewerRole ?? 'admin';
     const roleLabels = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' };
@@ -174,14 +281,44 @@ class Component extends DCLogic {
     });
 
     const createProjectName = this.state.createProjectName || '';
+    const tab = this.state.tab || 'projects';
+
+    // developer_partners (0033) -- company profile TERPISAH dari akun
+    // login. user_id OPSIONAL: perusahaan bisa ada tanpa akun login sama
+    // sekali (atribusi proyek saja), dihubungkan belakangan. Manage:
+    // m06.developer_partner.manage (Superadmin/Admin/Manager=ALL).
+    const partnerStatusMap = { active: { badge: 'ra-badge-success', label: 'Aktif' }, inactive: { badge: 'ra-badge-neutral', label: 'Nonaktif' } };
+    const partnerDefs = [
+      { companyName: 'CitraLand Developer', picName: 'Hendra Wijaya', picContact: '021-5551234', linkedEmail: 'hendra@citraland.example.com', status: 'active' },
+      { companyName: 'Sinar Mas Land', picName: 'Rudi Hartono', picContact: '021-5555678', linkedEmail: null, status: 'active' }
+    ];
+    const partners = partnerDefs.map(dp => {
+      const sm = partnerStatusMap[dp.status];
+      const hasAccount = !!dp.linkedEmail;
+      return {
+        companyName: dp.companyName, picName: dp.picName, picContact: dp.picContact,
+        hasAccount, noAccount: !hasAccount, linkedEmail: dp.linkedEmail || '',
+        statusLabel: sm.label, badgeClass: sm.badge,
+        openEdit: () => this.openEditPartner(dp.companyName),
+        openLink: () => this.openLinkAccount(dp.companyName)
+      };
+    });
+    const partnerFormName = this.state.partnerFormName || '';
 
     return {
       viewerRoleLabel: roleLabels[viewerRole] ?? 'Admin',
+      isTabProjects: tab === 'projects', isTabPartners: tab === 'partners',
+      tabProjectsClass: tab === 'projects' ? 'is-active' : '', tabPartnersClass: tab === 'partners' ? 'is-active' : '',
+      selectTabProjects: this.selectTabProjects, selectTabPartners: this.selectTabPartners,
       projects,
       openCreateProject: this.openCreateProject,
       createOpen: this.state.createOpen ?? false, createProjectName, createSaveDisabled: createProjectName.trim().length === 0,
       statusOpen: this.state.statusOpen ?? false, statusTargetName: this.state.statusTargetName || '',
-      closeDialogs: this.closeDialogs, stopClick: this.stopClick, onCreateNameInput: this.onCreateNameInput
+      partners, openCreatePartner: this.openCreatePartner,
+      partnerFormOpen: this.state.partnerFormOpen ?? false, partnerFormTitle: this.state.partnerFormTitle || '', partnerFormName,
+      partnerSaveDisabled: partnerFormName.trim().length === 0,
+      linkOpen: this.state.linkOpen ?? false, linkTargetCompany: this.state.linkTargetCompany || '',
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick, onCreateNameInput: this.onCreateNameInput, onPartnerNameInput: this.onPartnerNameInput
     };
   }
 }

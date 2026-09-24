@@ -22,6 +22,9 @@
   .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
   .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
   .item-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .tab-row{display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tab{padding:8px 14px;border-radius:var(--ra-radius-pill);font-size:12.5px;font-weight:700;color:var(--ra-ink-500);background:var(--ra-ink-50);}
+  .tab.is-active{color:#fff;background:var(--ra-blue-600);}
   .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
   .sheet{width:100%;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--ra-shadow-3);}
   .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
@@ -34,6 +37,12 @@
     <span class="ra-title-md" style="color:#fff;flex:1;">Proyek Developer</span>
   </div>
 
+  <div class="tab-row">
+    <span class="tab {{tabProjectsClass}}" onClick="{{selectTabProjects}}">Proyek</span>
+    <span class="tab {{tabPartnersClass}}" onClick="{{selectTabPartners}}">Developer Partner</span>
+  </div>
+
+  <sc-if value="{{isTabProjects}}" hint-placeholder-val="{{true}}">
   <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
     <sc-for list="{{projects}}" as="p" hint-placeholder-count="4">
       <div class="item-card">
@@ -45,6 +54,31 @@
     </sc-for>
     <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreateProject}}">+ Buat Proyek</button>
   </div>
+  </sc-if>
+
+  <sc-if value="{{isTabPartners}}" hint-placeholder-val="{{false}}">
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+    <sc-for list="{{partners}}" as="dp" hint-placeholder-count="3">
+      <div class="item-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg">{{dp.companyName}}</span><span class="ra-badge {{dp.badgeClass}}">{{dp.statusLabel}}</span></div>
+        <span class="ra-caption">PIC: {{dp.picName}} · {{dp.picContact}}</span>
+        <sc-if value="{{dp.hasAccount}}" hint-placeholder-val="{{false}}">
+          <span class="ra-badge ra-badge-success">Terhubung — {{dp.linkedEmail}}</span>
+        </sc-if>
+        <sc-if value="{{dp.noAccount}}" hint-placeholder-val="{{true}}">
+          <span class="ra-badge ra-badge-neutral">Belum Terhubung</span>
+        </sc-if>
+        <div style="display:flex;gap:10px;">
+          <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{dp.openEdit}}">Edit</button>
+          <sc-if value="{{dp.noAccount}}" hint-placeholder-val="{{true}}">
+            <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{dp.openLink}}">Hubungkan Akun</button>
+          </sc-if>
+        </div>
+      </div>
+    </sc-for>
+    <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreatePartner}}">+ Tambah Developer Partner</button>
+  </div>
+  </sc-if>
 
   <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
     <div class="drawer-scrim" onClick="{{closeDrawer}}">
@@ -99,28 +133,69 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{partnerFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">{{partnerFormTitle}}</h2>
+        <input class="ra-input" type="text" placeholder="Nama Perusahaan" value="{{partnerFormName}}" onInput="{{onPartnerNameInput}}">
+        <input class="ra-input" type="text" placeholder="Logo (URL)">
+        <textarea class="ra-input" style="height:60px;padding:10px 14px;resize:none;" placeholder="Tentang Developer"></textarea>
+        <input class="ra-input" type="text" placeholder="Nama PIC">
+        <input class="ra-input" type="text" placeholder="Kontak PIC">
+        <select class="ra-input"><option>active</option><option>inactive</option></select>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{partnerSaveDisabled}}" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{linkOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Hubungkan Akun — {{linkTargetCompany}}</h2>
+        <p class="ra-body-md">Kalau PIC belum punya role Developer Partner, ubah dulu lewat Direktori Pengguna &gt; "Ubah Role".</p>
+        <input class="ra-input" type="text" placeholder="Cari akun (role Developer Partner)…">
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Hubungkan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { drawerOpen: false, createOpen: false, createProjectName: '', statusOpen: false, statusTargetName: '' };
+    this.state = { drawerOpen: false, tab: 'projects', createOpen: false, createProjectName: '', statusOpen: false, statusTargetName: '', partnerFormOpen: false, partnerFormTitle: 'Tambah Developer Partner', partnerFormName: '', linkOpen: false, linkTargetCompany: '' };
     this.openDrawer = this.openDrawer.bind(this);
     this.closeDrawer = this.closeDrawer.bind(this);
     this.openCreateProject = this.openCreateProject.bind(this);
     this.closeDialogs = this.closeDialogs.bind(this);
     this.stopClick = this.stopClick.bind(this);
     this.onCreateNameInput = this.onCreateNameInput.bind(this);
+    this.selectTabProjects = this.selectTabProjects.bind(this);
+    this.selectTabPartners = this.selectTabPartners.bind(this);
+    this.openCreatePartner = this.openCreatePartner.bind(this);
+    this.onPartnerNameInput = this.onPartnerNameInput.bind(this);
   }
   openDrawer(){ this.setState({ drawerOpen: true }); }
   closeDrawer(){ this.setState({ drawerOpen: false }); }
   openCreateProject(){ this.setState({ createOpen: true, createProjectName: '' }); }
   openStatus(name){ this.setState({ statusOpen: true, statusTargetName: name }); }
-  closeDialogs(){ this.setState({ createOpen: false, statusOpen: false }); }
+  closeDialogs(){ this.setState({ createOpen: false, statusOpen: false, partnerFormOpen: false, linkOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   onCreateNameInput(e){ this.setState({ createProjectName: e.target.value }); }
+  selectTabProjects(){ this.setState({ tab: 'projects' }); }
+  selectTabPartners(){ this.setState({ tab: 'partners' }); }
+  openCreatePartner(){ this.setState({ partnerFormOpen: true, partnerFormTitle: 'Tambah Developer Partner', partnerFormName: '' }); }
+  openEditPartner(name){ this.setState({ partnerFormOpen: true, partnerFormTitle: 'Edit — ' + name, partnerFormName: name }); }
+  openLinkAccount(name){ this.setState({ linkOpen: true, linkTargetCompany: name }); }
+  onPartnerNameInput(e){ this.setState({ partnerFormName: e.target.value }); }
   renderVals() {
+    const tab = this.state.tab || 'projects';
     const statusMap = {
       active: { badge: 'ra-badge-success', label: 'Active' }, coming_soon: { badge: 'ra-badge-info', label: 'Coming Soon' },
       sold_out: { badge: 'ra-badge-warning', label: 'Sold Out' }, inactive: { badge: 'ra-badge-neutral', label: 'Inactive' }
@@ -133,13 +208,33 @@ class Component extends DCLogic {
     ];
     const projects = projectDefs.map(p => { const sm = statusMap[p.status]; return { name: p.name, developerName: p.developerName, categoryLabel: categoryLabels[p.category], transactionLabel: transactionLabels[p.transaction], location: p.location, statusLabel: sm.label, badgeClass: sm.badge, openStatus: () => this.openStatus(p.name) }; });
     const createProjectName = this.state.createProjectName || '';
+
+    const partnerStatusMap = { active: { badge: 'ra-badge-success', label: 'Aktif' }, inactive: { badge: 'ra-badge-neutral', label: 'Nonaktif' } };
+    const partnerDefs = [
+      { companyName: 'CitraLand Developer', picName: 'Hendra Wijaya', picContact: '021-5551234', linkedEmail: 'hendra@citraland.example.com', status: 'active' },
+      { companyName: 'Sinar Mas Land', picName: 'Rudi Hartono', picContact: '021-5555678', linkedEmail: null, status: 'active' }
+    ];
+    const partners = partnerDefs.map(dp => {
+      const sm = partnerStatusMap[dp.status];
+      const hasAccount = !!dp.linkedEmail;
+      return { companyName: dp.companyName, picName: dp.picName, picContact: dp.picContact, hasAccount, noAccount: !hasAccount, linkedEmail: dp.linkedEmail || '', statusLabel: sm.label, badgeClass: sm.badge, openEdit: () => this.openEditPartner(dp.companyName), openLink: () => this.openLinkAccount(dp.companyName) };
+    });
+    const partnerFormName = this.state.partnerFormName || '';
+
     return {
       drawerOpen: this.state.drawerOpen ?? false, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
+      isTabProjects: tab === 'projects', isTabPartners: tab === 'partners',
+      tabProjectsClass: tab === 'projects' ? 'is-active' : '', tabPartnersClass: tab === 'partners' ? 'is-active' : '',
+      selectTabProjects: this.selectTabProjects, selectTabPartners: this.selectTabPartners,
       projects,
       openCreateProject: this.openCreateProject,
       createOpen: this.state.createOpen ?? false, createProjectName, createSaveDisabled: createProjectName.trim().length === 0,
       statusOpen: this.state.statusOpen ?? false, statusTargetName: this.state.statusTargetName || '',
-      closeDialogs: this.closeDialogs, stopClick: this.stopClick, onCreateNameInput: this.onCreateNameInput
+      partners, openCreatePartner: this.openCreatePartner,
+      partnerFormOpen: this.state.partnerFormOpen ?? false, partnerFormTitle: this.state.partnerFormTitle || '', partnerFormName,
+      partnerSaveDisabled: partnerFormName.trim().length === 0,
+      linkOpen: this.state.linkOpen ?? false, linkTargetCompany: this.state.linkTargetCompany || '',
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick, onCreateNameInput: this.onCreateNameInput, onPartnerNameInput: this.onPartnerNameInput
     };
   }
 }
