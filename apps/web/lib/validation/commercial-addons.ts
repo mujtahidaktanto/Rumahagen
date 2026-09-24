@@ -7,7 +7,7 @@ import { z } from "zod";
 export const addonStatusEnum = z.enum(["draft", "active", "inactive"]);
 export const addonValidityTypeEnum = z.enum(["days", "unlimited"]);
 // Hanya jenis yang benar-benar dikonsumsi sistem (0079/0081 dan refresh listing).
-export const addonCapacityTypeEnum = z.enum(["listing_refresh", "learning_point"]);
+export const addonCapacityTypeEnum = z.enum(["listing_refresh", "learning_point", "listing_slot"]);
 
 const capacitySchema = z.object({
   capacity_type: addonCapacityTypeEnum,
