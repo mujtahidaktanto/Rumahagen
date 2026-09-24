@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Langganan Saya — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+
+  .plan-hero{background:linear-gradient(135deg,var(--ra-blue-900),var(--ra-blue-600));color:#fff;border-radius:var(--ra-radius-lg);padding:24px;display:flex;flex-direction:column;gap:10px;}
+  .plan-hero .ra-caption{color:rgba(255,255,255,.75);}
+  .sub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+  .sub-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:18px;display:flex;flex-direction:column;gap:12px;}
+  .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .meter > div{height:100%;background:var(--ra-blue-600);}
+  .meter.is-warn > div{background:var(--ra-gold-500);}
+
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+  .sub-grid{grid-template-columns:1fr;}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <a class="ra-iconbtn" href="M14-Katalog-Komersial.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">Langganan Saya</span>
+    <button class="ra-iconbtn" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  </div>
+  <div class="main ra-scroll">
+    <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Layar ini hanya menampilkan langganan Anda. Membeli, memperpanjang, dan berhenti berlangganan secara mandiri belum tersedia; hubungi tim RumahAgen. Add-on (paket kuota dan poin) dibeli dari katalog dan tampil di Pesanan &amp; Kuota.</p></div>
+      <sc-if value="{{hasCur}}" hint-placeholder-val="{{true}}"><div class="plan-hero">
+        <span class="ra-caption">Paket saat ini</span>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span class="ra-headline" style="color:#fff;">{{curName}}</span><sc-if value="{{curIsOrg}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-info">Organisasi</span></sc-if></div>
+        <span class="ra-body-md" style="color:rgba(255,255,255,.9);">Berlaku sampai {{curUntil}}</span>
+        <sc-if value="{{curIsOrg}}" hint-placeholder-val="{{false}}"><span class="ra-caption ra-truncate-1">Dibayar oleh {{curOrg}}</span></sc-if>
+        <sc-if value="{{curExpiring}}" hint-placeholder-val="{{false}}"><span class="ra-label-lg" style="color:var(--ra-gold-200);">Langganan Anda segera berakhir.</span></sc-if>
+      </div></sc-if>
+      <sc-if value="{{showFree}}" hint-placeholder-val="{{false}}"><div class="plan-hero">
+        <span class="ra-caption">Paket saat ini</span><span class="ra-headline" style="color:#fff;">Free</span>
+        <span class="ra-body-md" style="color:rgba(255,255,255,.9);">Anda belum memiliki langganan aktif, sehingga memakai paket Free dengan fitur dasar.</span>
+      </div></sc-if>
+    <div class="chip-row" role="group" aria-label="Filter konteks"><sc-for list="{{ctxChips}}" as="c" hint-placeholder-count="3"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.l}}</button></sc-for></div>
+        <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div class="card" style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:24px;width:40%;"></div><div class="ra-skel" style="height:64px;"></div><div class="ra-skel" style="height:64px;"></div></div></sc-if>
+        <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Langganan gagal dimuat</span><p class="ra-body-md">Periksa koneksi Anda lalu coba lagi.</p><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+    <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada riwayat langganan</span><p class="ra-body-md">Anda memakai paket Free.</p></div></div></sc-if>
+        <sc-if value="{{showRows}}" hint-placeholder-val="{{true}}"><div class="sub-grid"><sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+          <div class="sub-card">
+            <div style="display:flex;align-items:flex-start;gap:10px;"><div style="min-width:0;flex:1;"><div class="ra-title-md ra-truncate-1">{{c.name}}</div><div class="ra-caption">{{c.scopeLabel}}</div></div><span class="ra-badge {{c.badge}}"><span class="ra-dot"></span>{{c.label}}</span></div>
+            <sc-if value="{{c.unknownStatus}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Status langganan ini ("{{c.label}}") tidak dikenali aplikasi. Hubungi tim RumahAgen bila ada yang tidak sesuai.</p></div></sc-if>
+            <sc-if value="{{c.isOrg}}" hint-placeholder-val="{{false}}"><div class="ra-caption ra-truncate-2">Organisasi: {{c.org}}</div></sc-if>
+            <dl class="kv" style="grid-template-columns:110px 1fr;"><dt>Mulai</dt><dd>{{c.start}}</dd><dt>Berakhir</dt><dd>{{c.end}}</dd><sc-if value="{{c.hasRenew}}" hint-placeholder-val="{{false}}"><dt>Jadwal perpanjangan</dt><dd>{{c.renew}}</dd></sc-if></dl>
+            <sc-if value="{{c.hasMeter}}" hint-placeholder-val="{{false}}"><div><div class="meter {{c.meterClass}}" role="progressbar" aria-label="Masa langganan terpakai"><div style="{{c.meterStyle}}"></div></div><div class="ra-caption" style="margin-top:6px;">{{c.leftText}}</div></div></sc-if>
+            <sc-if value="{{c.expiredNote}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Untuk melanjutkan, lihat katalog. Pembelian langganan belum tersedia mandiri.</span></sc-if>
+            <button class="ra-btn ra-btn-secondary ra-btn-sm" aria-expanded="{{c.snapOpen}}" onClick="{{c.toggle}}">{{c.snapLabel}}</button>
+            <sc-if value="{{c.snapOpen}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-ink-50);border-radius:var(--ra-radius-md);padding:12px;display:flex;flex-direction:column;gap:6px;">
+              <sc-if value="{{c.noSnap}}" hint-placeholder-val="{{false}}"><span class="ra-body-md" style="color:var(--ra-ink-500);">Tidak ada ringkasan pembelian tersimpan.</span></sc-if>
+              <sc-for list="{{c.snap}}" as="r" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;gap:12px;"><span class="ra-caption">{{r.k}}</span><span class="ra-label-lg" style="text-align:right;">{{r.v}}</span></div></sc-for>
+              <span class="ra-caption">Syarat saat pembelian, tidak berubah walau harga berubah.</span></div></sc-if>
+          </div></sc-for></div></sc-if>
+        <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada langganan pada konteks ini</span></div></div></sc-if>
+    <div style="display:flex;flex-direction:column;gap:10px;"><a class="ra-btn ra-btn-primary" href="M14-Katalog-Komersial.dc.html">Lihat Katalog</a><a class="ra-btn ra-btn-secondary" href="M14-Pesanan-Kuota.dc.html">Pesanan &amp; Kuota</a></div>
+  </div>
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}"></div>
+    <div class="drawer">
+      <div class="drawer-head"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;"><button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;margin:8px 12px 0;border-radius:var(--ra-radius-md);background:rgba(255,255,255,.08);"><div style="width:26px;height:26px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div><div style="min-width:0;flex:1;"><div class="ra-caption" style="color:rgba(255,255,255,.55);">Konteks aktif</div><div class="ra-label-lg" style="color:#fff;">Personal</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;">
+        <a class="nav-item" href="M08-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>Dashboard</a>
+        <a class="nav-item" href="M03-Listing-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg>Listing Saya</a>
+        <a class="nav-item" href="M04-Pembelajaran.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg>Pembelajaran</a>
+        <a class="nav-item" href="M05-Event-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Event</a>
+        <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>Organisasi</a>
+        <a class="nav-item is-active" href="M14-Katalog-Komersial.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg>Komersial</a>
+        <a class="nav-item" href="M13-Koneksi-AI.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>AI Assistant</a>
+        <a class="nav-item" href="M02-Profil-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Profil Saya</a>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;"><div style="width:34px;height:34px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">RS</div><div><div class="ra-label-lg" style="color:#fff;">Rian Saputra</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div></div></div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario daftar"},"skenario":{"editor":"enum","default":"aktif","options":["aktif","segera_berakhir","berakhir","campuran","status_tak_dikenal"],"section":"Kondisi langganan"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { ctx: 'all', open: {} });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    
+    // subscriptions (0071): user_id?, organization_id?, product_code*, status* (TEXT bebas, tanpa CHECK), starts_at, ends_at, renews_at,
+    // historical_purchase_snapshot (jsonb). Pemilik hanya bisa MEMBACA (tanpa INSERT/UPDATE untuk pengguna).
+    // Belum ada route /subscriptions, katalog paket, pembelian, atau fulfillment langganan; baris hanya bisa dibuat staf.
+    // Keputusan: tidak ada baris aktif = paket Free.
+    var self = this;
+    var mode = pr.listState || 'loaded', sk = pr.skenario || 'aktif';
+    var PRODUCT = { free: 'Free', pro_monthly: 'Pro Bulanan', pro_annual: 'Pro Tahunan' };
+    var ST = { active: ['Aktif','ra-badge-success'], expiring: ['Segera berakhir','ra-badge-warning'], expired: ['Berakhir','ra-badge-neutral'], cancelled: ['Dibatalkan','ra-badge-neutral'], pending: ['Menunggu pembayaran','ra-badge-info'] };
+    var base = {
+      aktif: [{ id: 's1', code: 'pro_monthly', st: 'active', scope: 'personal', org: '', start: '01 Sep 2026', end: '01 Okt 2026', renew: '01 Okt 2026', left: 7, total: 30, snap: [['Harga saat beli', 'Rp 149.000'], ['Manfaat', 'Kuota listing 30, refresh harian']] }],
+      segera_berakhir: [{ id: 's1', code: 'pro_monthly', st: 'expiring', scope: 'personal', org: '', start: '25 Agu 2026', end: '25 Sep 2026', renew: '', left: 1, total: 31, snap: [['Harga saat beli', 'Rp 149.000']] }],
+      berakhir: [{ id: 's1', code: 'pro_monthly', st: 'expired', scope: 'personal', org: '', start: '01 Agu 2026', end: '01 Sep 2026', renew: '', left: 0, total: 31, snap: [] }],
+      campuran: [
+        { id: 's1', code: 'pro_monthly', st: 'active', scope: 'personal', org: '', start: '01 Sep 2026', end: '01 Okt 2026', renew: '01 Okt 2026', left: 7, total: 30, snap: [['Harga saat beli', 'Rp 149.000']] },
+        { id: 's2', code: 'pro_annual', st: 'active', scope: 'org', org: 'PT Griya Nusantara Properti Indonesia Cabang Surabaya', start: '12 Mar 2026', end: '12 Mar 2027', renew: '12 Mar 2027', left: 169, total: 365, snap: [['Harga saat beli', 'Rp 1.490.000']] },
+        { id: 's3', code: 'pro_monthly', st: 'expired', scope: 'personal', org: '', start: '01 Jul 2026', end: '01 Agu 2026', renew: '', left: 0, total: 31, snap: [] }
+      ],
+      status_tak_dikenal: [{ id: 's1', code: 'promo_ramadan_plus', st: 'suspended_by_ops', scope: 'personal', org: '', start: '01 Sep 2026', end: '', renew: '', left: -1, total: 0, snap: [] }]
+    }[sk] || [];
+    var items = mode === 'empty' ? [] : base;
+    var filtered = items.filter(function(s){ return st.ctx === 'all' || s.scope === (st.ctx === 'org' ? 'org' : 'personal'); });
+    var cards = filtered.map(function(s){
+      var m = ST[s.st] || [s.st, 'ra-badge-neutral']; var known = !!ST[s.st];
+      var pct = s.total > 0 ? Math.max(0, Math.min(100, Math.round(((s.total - s.left) / s.total) * 100))) : 0;
+      var isOpen = !!st.open[s.id];
+      return { name: PRODUCT[s.code] || s.code, label: m[0], badge: m[1], unknownStatus: !known, scopeLabel: s.scope === 'org' ? 'Organisasi' : 'Pribadi', isOrg: s.scope === 'org', org: s.org,
+        start: s.start || '—', end: s.end || 'Tanpa batas akhir', hasRenew: !!s.renew, renew: s.renew, hasMeter: s.total > 0, meterStyle: 'width:' + pct + '%;', meterClass: s.left <= 3 ? 'is-warn' : '',
+        leftText: s.left > 0 ? s.left + ' hari lagi' : (s.left === 0 ? 'Sudah berakhir' : ''), hasSnap: s.snap.length > 0, noSnap: s.snap.length === 0, snap: s.snap.map(function(r){ return { k: r[0], v: r[1] }; }),
+        snapLabel: isOpen ? 'Sembunyikan ringkasan pembelian' : 'Lihat ringkasan pembelian', snapOpen: isOpen, expiredNote: s.st === 'expired' || s.st === 'expiring',
+        toggle: function(){ var o = Object.assign({}, self.state.open); o[s.id] = !o[s.id]; self.setState({ open: o }); } }; });
+    var active = filtered.filter(function(s){ return s.st === 'active' || s.st === 'expiring'; });
+    var cur = active[0];
+    var ctxChips = [['all','Semua'],['personal','Pribadi'],['org','Organisasi']].map(function(c){ return { l: c[1], pressed: st.ctx === c[0] ? 'true' : 'false', pick: function(){ self.setState({ ctx: c[0] }); } }; });
+    var showFree = mode === 'loaded' && !cur;
+    var out = { showLoading: mode === 'loading', showError: mode === 'error', showEmpty: mode === 'empty', showRows: mode === 'loaded' && cards.length > 0, showNoMatch: mode === 'loaded' && cards.length === 0,
+      cards: cards, ctxChips: ctxChips, hasCur: mode === 'loaded' && !!cur, showFree: showFree || mode === 'empty',
+      curName: cur ? (PRODUCT[cur.code] || cur.code) : 'Free', curUntil: cur ? (cur.end || 'Tanpa batas akhir') : '', curOrg: cur && cur.scope === 'org' ? cur.org : '', curIsOrg: !!cur && cur.scope === 'org', curExpiring: !!cur && cur.st === 'expiring',
+      hasItems: items.length > 0 };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>
