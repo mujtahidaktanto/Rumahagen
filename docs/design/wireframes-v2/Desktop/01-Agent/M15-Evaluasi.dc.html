@@ -12,173 +12,240 @@
 <helmet>
 <style>
   body{margin:0;font-family:var(--ra-font);}
-  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);}
-  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;width:76px;overflow:hidden;}
-  .nav-top{height:76px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
-  .nav-item{display:flex;align-items:center;justify-content:center;height:48px;margin:0 12px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .nav{background:var(--ra-blue-900);display:flex;flex-direction:column;flex:none;transition:width .18s ease;overflow:hidden;}
+  .nav-top{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.75);text-decoration:none;white-space:nowrap;position:relative;}
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;text-decoration:none;}
   .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
-  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px 0;flex:1;}
-
-  .topbar{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
-  .breadcrumb{display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);}
-  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
-
-  .main{flex:1;overflow-y:auto;padding:28px 40px;display:flex;flex-direction:column;gap:24px;max-width:1000px;}
-
+  .nav-item svg{flex:none;}
+  .nav-label{opacity:var(--label-op,1);transition:opacity .12s ease;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;}
+  .nav-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;}
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);gap:16px;}
+  .company-chip{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 6px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);background:#fff;max-width:260px;}
+  .company-mark{width:28px;height:28px;border-radius:8px;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none;}
+  .main{flex:1;overflow-y:auto;padding:28px 40px 40px;display:flex;flex-direction:column;gap:20px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:22px;}
+  .card-head{padding:16px 20px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  a.stat-card:hover{border-color:var(--ra-blue-200);background:var(--ra-blue-50);text-decoration:none;}
+  .row{display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{background:var(--ra-ink-50);text-decoration:none;}
+  .banner{display:flex;gap:12px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:14px 16px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:56px 24px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--ra-ink-100);}
+  .tab{padding:12px 4px;margin-right:22px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .tab:focus-visible{outline:2.5px solid var(--ra-blue-500);outline-offset:2px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .field-row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
   table{width:100%;border-collapse:collapse;}
-  thead th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--ra-ink-100);}
-  tbody td{padding:12px 12px;border-bottom:1px solid var(--ra-ink-50);vertical-align:middle;}
+  thead th{text-align:left;padding:10px 16px;border-bottom:1px solid var(--ra-ink-100);white-space:nowrap;background:var(--ra-ink-50);}
+  tbody td{padding:12px 16px;border-bottom:1px solid var(--ra-ink-50);vertical-align:middle;}
+  tbody tr:hover{background:var(--ra-blue-50);}
+  .thumb{width:56px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:20;}
+  .dialog{width:480px;max-height:92%;overflow-y:auto;background:#fff;border-radius:var(--ra-radius-lg);box-shadow:var(--ra-shadow-3);padding:26px;display:flex;flex-direction:column;gap:14px;}
+  .toast{position:absolute;right:32px;bottom:28px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 16px;display:flex;align-items:center;gap:10px;z-index:30;box-shadow:var(--ra-shadow-3);}
+  .avatar{width:40px;height:40px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none;}
+  .kv{display:grid;grid-template-columns:170px 1fr;gap:10px 16px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
 
   .award-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
-  .award-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:10px;}
-  .award-icon{width:44px;height:44px;border-radius:50%;background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;flex:none;}
-
-  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;color:var(--ra-ink-300);}
+  .award-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:18px;display:flex;flex-direction:column;gap:8px;}
+  .award-icon{width:40px;height:40px;border-radius:10px;background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;}
+  .chain{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .chain-step{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--ra-ink-50);font-size:12px;font-weight:700;color:var(--ra-ink-500);}
+  .chain-step.is-done{background:var(--ra-success-100);color:var(--ra-success-600);}
+  .chain-step.is-wait{background:var(--ra-warning-100);color:var(--ra-warning-600);}
+  .chain-sep{color:var(--ra-ink-200);}
+  .savebar{flex:none;background:#fff;border-top:1px solid var(--ra-ink-100);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .order-btn{width:44px;height:44px;border-radius:10px;border:1.5px solid var(--ra-ink-100);background:#fff;color:var(--ra-ink-700);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;padding:0;}
+  .order-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .order-btn:focus-visible,.switch:focus-visible{outline:2.5px solid var(--ra-blue-500);outline-offset:2px;}
 </style>
 </helmet>
 <div class="app">
-
-  <div class="nav">
-    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:24px;width:auto;object-fit:contain;"></div>
+  <!-- NAV RAIL bisa disembunyikan/ditampilkan (tidak terkunci). 8 destinasi STEP13-E §4.2; Kualifikasi & Penghargaan dijangkau dari Dashboard/Profil. -->
+  <div class="nav" style="width:{{navWidth}}px;">
+    <div class="nav-top">
+      <sc-if value="{{navExpanded}}" hint-placeholder-val="{{true}}"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:34px;width:auto;object-fit:contain;"></sc-if>
+      <button class="ra-iconbtn" onClick="{{toggleNav}}" aria-label="Tampilkan atau sembunyikan navigasi">
+        <sc-if value="{{navCollapsed}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M9 5l7 7-7 7"/></svg></sc-if>
+        <sc-if value="{{navExpanded}}" hint-placeholder-val="{{true}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></sc-if>
+      </button>
+    </div>
     <div class="nav-list">
-      <a class="nav-item" href="M08-Dashboard.dc.html" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></a>
-      <a class="nav-item" href="M03-Listing-Saya.dc.html" aria-label="Listing Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg></a>
-      <a class="nav-item" href="M04-Pembelajaran.dc.html" aria-label="Pembelajaran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg></a>
-      <a class="nav-item" href="M05-Event-Saya.dc.html" aria-label="Event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></a>
-      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html" aria-label="Organisasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg></a>
-      <a class="nav-item" href="M02-Profil-Saya.dc.html" aria-label="Profil Saya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></a>
+      <a class="nav-item" href="M08-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Dashboard</span></a>
+      <a class="nav-item" href="M03-Listing-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Listing Saya</span></a>
+      <a class="nav-item" href="M04-Pembelajaran.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Pembelajaran</span></a>
+      <a class="nav-item" href="M05-Event-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Event</span></a>
+      <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Organisasi</span></a>
+      <a class="nav-item" href="M14-Katalog-Komersial.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Komersial</span></a>
+      <a class="nav-item" href="M13-Koneksi-AI.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">AI Assistant</span></a>
+      <a class="nav-item is-active" href="M02-Profil-Saya.dc.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span class="nav-label" style="--label-op:{{labelOp}};">Profil Saya</span></a>
+    </div>
+    <div class="nav-bottom">
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none;">RS</div>
+      <sc-if value="{{navExpanded}}" hint-placeholder-val="{{true}}"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-1" style="color:#fff;">Rian Saputra</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div></div></sc-if>
     </div>
   </div>
-
-  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;position:relative;">
     <div class="topbar">
-      <div class="breadcrumb">
-        <a href="M08-Dashboard.dc.html">Dashboard</a><span>/</span>
-        <span class="ra-label-lg" style="color:var(--ra-ink-900);">Status Evaluasi &amp; Penghargaan</span>
+      <div style="display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);min-width:0;"><a href="M08-Dashboard.dc.html">Dashboard</a><span>/</span><span class="ra-label-lg" style="color:var(--ra-ink-900);">Status Evaluasi &amp; Penghargaan</span></div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M15-Evidence.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Ajukan Bukti Baru</a>
+        <div class="company-chip" title="Konteks aktif"><div class="company-mark" style="background:var(--ra-blue-100);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div><span class="ra-label-lg">Personal</span></div>
+        <div style="position:relative;"><button class="ra-iconbtn" aria-label="Notifikasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></button><div style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--ra-danger-600);border:1.5px solid #fff;"></div></div>
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">RS</div>
       </div>
-      <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M15-Evidence.dc.html">+ Ajukan Bukti Baru</a>
     </div>
-
-    <div class="main">
-
-      <div>
-        <span class="ra-title-lg" style="display:block;margin-bottom:12px;">Riwayat Evaluasi Kualifikasi</span>
-        <div class="ra-card" style="padding:0;overflow:hidden;">
-          <sc-if value="{{evalEmpty}}" hint-placeholder-val="{{false}}">
-            <div class="empty-wrap">
-              <span class="ra-body-md">Belum ada evaluasi kualifikasi</span>
-              <span class="ra-caption">Evaluasi muncul di sini setelah bukti yang Anda ajukan diproses.</span>
-            </div>
-          </sc-if>
+    <div class="main ra-scroll">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <span class="ra-title-lg">Riwayat Evaluasi Kualifikasi</span>
+        <div class="card" style="overflow:hidden;">
+          <sc-if value="{{evalLoading}}" hint-placeholder-val="{{false}}"><div style="padding:16px;display:flex;flex-direction:column;gap:10px;"><div class="ra-skel" style="height:52px;"></div><div class="ra-skel" style="height:52px;"></div></div></sc-if>
+          <sc-if value="{{evalError}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Evaluasi gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></sc-if>
+          <sc-if value="{{evalEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada evaluasi kualifikasi</span><p class="ra-body-md">Evaluasi muncul setelah bukti yang Anda ajukan diproses.</p><a class="ra-btn ra-btn-primary ra-btn-sm" href="M15-Evidence.dc.html">Ajukan Bukti</a></div></sc-if>
           <sc-if value="{{evalLoaded}}" hint-placeholder-val="{{true}}">
-            <table>
-              <thead>
-                <tr>
-                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Title/Jalur Dituju</th>
-                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Hasil</th>
-                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Dievaluasi Oleh</th>
-                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Tanggal</th>
-                  <th class="ra-label-md" style="color:var(--ra-ink-300);">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <sc-for list="{{evaluations}}" as="ev" hint-placeholder-count="3">
-                  <tr>
-                    <td><span class="ra-label-lg">{{ev.titleName}}</span></td>
-                    <td><span class="ra-badge {{ev.badgeClass}}"><span class="ra-dot"></span>{{ev.resultLabel}}</span></td>
-                    <td><span class="ra-body-md" style="color:var(--ra-ink-500);">{{ev.evaluatorLabel}}</span></td>
-                    <td><span class="ra-body-md" style="color:var(--ra-ink-500);">{{ev.evaluatedAt}}</span></td>
-                    <td><a class="ra-label-lg" href="M15-Evidence.dc.html">Lihat Bukti</a></td>
-                  </tr>
-                </sc-for>
-              </tbody>
-            </table>
+            <sc-for list="{{evals}}" as="e" hint-placeholder-count="3">
+              <div style="border-top:1px solid var(--ra-ink-50);padding:14px 20px;display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;align-items:center;gap:16px;">
+                  <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-1">{{e.title}}</div><div class="ra-caption">Dievaluasi oleh {{e.by}} · {{e.when}}</div><div class="ra-caption">{{e.ctx}}</div></div>
+                  <span class="ra-badge {{e.badge}}"><span class="ra-dot"></span>{{e.label}}</span>
+                  <button class="ra-btn ra-btn-ghost ra-btn-sm" onClick="{{e.toggle}}">{{e.toggleLabel}}</button>
+                </div>
+                <sc-if value="{{e.open}}" hint-placeholder-val="{{false}}"><div style="background:var(--ra-ink-50);border-radius:var(--ra-radius-sm);padding:12px 14px;"><span class="ra-label-md" style="color:var(--ra-ink-500);display:block;margin-bottom:6px;">Bukti terkait</span><sc-for list="{{e.ev}}" as="x" hint-placeholder-count="1"><div class="ra-body-md">{{x.t}}</div></sc-for></div></sc-if>
+              </div>
+            </sc-for>
           </sc-if>
         </div>
-        <p class="ra-caption" style="margin-top:10px;max-width:640px;">Kualifikasi bukan otorisasi tambahan — title dan penghargaan di sini murni pengakuan pencapaian, tidak mengubah role atau izin akun Anda di sistem.</p>
+        <p class="ra-caption" style="max-width:680px;">Kualifikasi bukan otorisasi tambahan: title dan penghargaan hanya pengakuan pencapaian dan tidak mengubah role atau izin akun Anda. Kualifikasi juga terpisah dari penyelesaian pembelajaran dan dari poin Learning.</p>
       </div>
-
-      <div>
-        <span class="ra-title-lg" style="display:block;margin-bottom:12px;">Penghargaan Saya</span>
-        <sc-if value="{{awardsEmpty}}" hint-placeholder-val="{{false}}">
-          <div class="ra-card empty-wrap">
-            <span class="ra-body-md">Belum ada penghargaan aktif</span>
-            <span class="ra-caption">Lulus evaluasi kualifikasi untuk mendapatkan title/penghargaan pertama Anda.</span>
-          </div>
-        </sc-if>
-        <sc-if value="{{awardsLoaded}}" hint-placeholder-val="{{true}}">
-          <div class="award-grid">
-            <sc-for list="{{awards}}" as="a" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <span class="ra-title-lg">Penghargaan Saya</span>
+        <sc-if value="{{awardLoading}}" hint-placeholder-val="{{false}}"><div class="award-grid" style=""><div class="ra-skel" style="height:150px;"></div><div class="ra-skel" style="height:150px;"></div></div></sc-if>
+        <sc-if value="{{awardError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Penghargaan gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+        <sc-if value="{{awardEmpty}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada penghargaan</span><p class="ra-body-md">Lulus evaluasi kualifikasi untuk mendapatkan title pertama Anda.</p></div></div></sc-if>
+        <sc-if value="{{awardLoaded}}" hint-placeholder-val="{{true}}">
+          <div class="award-grid" style="">
+            <sc-for list="{{awards}}" as="a" hint-placeholder-count="4">
               <div class="award-card">
-                <div class="award-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></div>
-                <span class="ra-label-lg">{{a.titleName}}</span>
-                <span class="ra-caption">Diberikan {{a.issuedAt}}{{a.expiresSuffix}}</span>
-                <span class="ra-badge {{a.badgeClass}}" style="align-self:flex-start;"><span class="ra-dot"></span>{{a.statusLabel}}</span>
-                <a class="ra-btn ra-btn-secondary ra-btn-sm" style="margin-top:4px;" href="M15-Title-Award-Presentation.dc.html">Kelola Tampilan di Profil</a>
+                <div style="display:flex;align-items:center;gap:10px;"><div class="award-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></div><span class="ra-badge {{a.badge}}"><span class="ra-dot"></span>{{a.label}}</span></div>
+                <span class="ra-label-lg">{{a.title}}</span>
+                <span class="ra-caption">{{a.when}}</span>
+                <sc-if value="{{a.isExpired}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn" style="padding:10px 12px;"><p class="ra-caption" style="color:var(--ra-ink-700);">Award kedaluwarsa dan tidak tampil di profil publik.</p></div></sc-if>
+                <sc-if value="{{a.isRevoked}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger" style="padding:10px 12px;"><p class="ra-caption" style="color:var(--ra-ink-700);">Award dicabut tim RumahAgen dan tidak tampil di profil publik. Anda bisa mengajukan banding satu kali selama belum diputuskan.</p></div></sc-if>
+                <sc-if value="{{a.canAppeal}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{a.onAppeal}}">Ajukan Banding</button></sc-if>
+                <sc-if value="{{a.appealPending}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-warning" style="align-self:flex-start;"><span class="ra-dot"></span>Banding menunggu keputusan</span></sc-if>
+                <sc-if value="{{a.appealRejected}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger" style="padding:10px 12px;"><p class="ra-caption" style="color:var(--ra-ink-700);"><strong>Banding ditolak</strong> (keputusan final). Catatan tim: bukti tidak memenuhi syarat aturan saat ini.</p></div><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{a.onAppeal}}">Ajukan Banding Baru</button></sc-if>
+                <sc-if value="{{a.hasSnap}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-ghost ra-btn-sm" style="align-self:flex-start;" onClick="{{a.toggleSnap}}">{{a.snapLabel}}</button><sc-if value="{{a.snapOpen}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Konteks saat award diberikan: {{a.snap}}</span></sc-if></sc-if>
+                <sc-if value="{{a.canShow}}" hint-placeholder-val="{{true}}"><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M15-Title-Award-Presentation.dc.html">Kelola Tampilan di Profil</a></sc-if>
               </div>
             </sc-for>
           </div>
         </sc-if>
       </div>
     </div>
+
+  <sc-if value="{{appealOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeAppeal}}"><div class="dialog" onClick="{{stopClick}}">
+      <span class="ra-title-lg">Ajukan banding</span>
+      <p class="ra-body-md">Jelaskan mengapa pencabutan award perlu ditinjau ulang. Keputusan tim RumahAgen bersifat final dan hanya satu banding yang bisa menunggu pada satu waktu.</p>
+      <div class="field"><label class="ra-label-lg" for="ap-reason">Alasan banding <span class="req">*</span></label><textarea id="ap-reason" class="ra-input" rows="4" placeholder="Jelaskan alasan dan bukti pendukung" onInput="{{onReason}}">{{reason}}</textarea><sc-if value="{{reasonError}}" hint-placeholder-val="{{false}}"><span class="err">Alasan banding wajib diisi.</span></sc-if></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAppeal}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{sendAppeal}}">Kirim Banding</button></div>
+    </div></div>
+  </sc-if>
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="ra-label-lg">{{toast}}</span></div></sc-if>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"evalState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario evaluasi"},"awardState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario penghargaan"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"evalState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"awardState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"appealState":{"editor":"enum","default":"none","options":["none","pending","rejected"],"section":"Banding award dicabut"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { openEval: {}, appealOpen: false, reason: '', tried: false, sent: false, snapOpen: {}, toast: '' });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'openAppeal', 'closeAppeal', 'onReason', 'sendAppeal'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  openAppeal(){ this.setState({ appealOpen: true, reason: '', tried: false }); }
+  closeAppeal(){ this.setState({ appealOpen: false }); }
+  onReason(e){ this.setState({ reason: e.target.value }); }
+  sendAppeal(){ if (!(this.state.reason || '').trim()) { this.setState({ tried: true }); return; } this.setState({ appealOpen: false, sent: true, toast: 'Banding terkirim. Menunggu keputusan tim RumahAgen.' }); }
   renderVals() {
-    const evalState = this.props.evalState ?? 'loaded';
-    const awardState = this.props.awardState ?? 'loaded';
-
-    // qualification_evaluations (0026): result CHECK IN (qualified,not_qualified,
-    // pending,failed,revoked); evaluator_type bebas TEXT (Sistem Otomatis/
-    // Instruktur/Tim RumahAgen dst).
-    const evalDefs = [
-      { titleName: 'Top Performer Regional', result: 'qualified', evaluator: 'Sistem Otomatis', evaluatedAt: '19 Sep 2026' },
-      { titleName: 'Agen Bersertifikat Kalkulator DBR', result: 'pending', evaluator: 'Tim RumahAgen', evaluatedAt: '—' },
-      { titleName: 'Instruktur Bersertifikat', result: 'not_qualified', evaluator: 'Instruktur Peninjau', evaluatedAt: '12 Agu 2026' }
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    
+    // qualification_evaluations: result qualified|not_qualified|pending|failed|revoked; evaluator_type system_automated|staff|instructor (CHECK 0128);
+    // awarding_path_version_id/awarding_rule_version_id NULLABLE (belum terikat versi formal). award_instances.status active|expired|revoked|restored,
+    // historical_snapshot = konteks aturan saat award. Banding: POST /awards/{id}/appeals hanya untuk award revoked, satu pending per award,
+    // keputusan (approved/rejected) final oleh staf. Approved -> staf memulihkan award (status restored).
+    var self = this;
+    var em = pr.evalState || 'loaded', am = pr.awardState || 'loaded';
+    var rMap = { qualified: ['Lulus','ra-badge-success'], not_qualified: ['Tidak Lulus','ra-badge-danger'], pending: ['Menunggu','ra-badge-warning'], failed: ['Gagal','ra-badge-danger'], revoked: ['Dicabut','ra-badge-neutral'] };
+    var who = { system_automated: 'Sistem otomatis', staff: 'Tim RumahAgen', instructor: 'Instruktur' };
+    var evals = [
+      { id: 'v1', title: 'Top Performer Regional', r: 'qualified', by: 'system_automated', when: '19 Sep 2026', ctx: 'Jalur Top Performer v2 · Aturan v3', ev: ['Bukti aktivitas · dari pembelajaran (otomatis) · 18 Sep 2026'] },
+      { id: 'v2', title: 'Agen Bersertifikat Kalkulator DBR', r: 'pending', by: 'staff', when: '—', ctx: 'Belum terikat versi jalur/aturan', ev: ['Sertifikat · upload manual · 02 Sep 2026'] },
+      { id: 'v3', title: 'Instruktur Bersertifikat', r: 'not_qualified', by: 'instructor', when: '12 Agu 2026', ctx: 'Belum terikat versi jalur/aturan', ev: ['Dokumen resmi · tautan eksternal · 10 Agu 2026'] }
+    ].map(function(e){ var m = rMap[e.r]; var open = !!st.openEval[e.id];
+      return { title: e.title, label: m[0], badge: m[1], by: who[e.by], when: e.when, ctx: e.ctx, ev: e.ev.map(function(x){ return { t: x }; }), open: open, toggleLabel: open ? 'Sembunyikan bukti' : 'Lihat bukti terkait',
+        toggle: function(){ var o = Object.assign({}, st.openEval); o[e.id] = !o[e.id]; self.setState({ openEval: o }); } }; });
+    var appeal = st.sent ? 'pending' : (pr.appealState || 'none');
+    var awardsRaw = [
+      { id: 'a1', title: 'Top Performer Regional 2026', status: 'active', when: 'Diberikan 20 Sep 2026', snap: 'Jalur Top Performer v2 · Aturan v3 · dievaluasi 19 Sep 2026' },
+      { id: 'a2', title: 'Agen Bersertifikat Kalkulator DBR', status: 'expired', when: 'Berlaku sampai 05 Jul 2026', snap: '' },
+      { id: 'a3', title: 'Instruktur Bersertifikat', status: 'revoked', when: 'Dicabut 30 Agu 2026', snap: '' },
+      { id: 'a4', title: 'Kontributor Komunitas', status: 'restored', when: 'Dipulihkan 15 Sep 2026 setelah banding disetujui', snap: 'Jalur Komunitas v1 · Aturan v1' }
     ];
-    const resultMap = {
-      qualified: { label: 'Lulus', badge: 'ra-badge-success' },
-      not_qualified: { label: 'Tidak Lulus', badge: 'ra-badge-danger' },
-      pending: { label: 'Menunggu', badge: 'ra-badge-warning' },
-      failed: { label: 'Gagal', badge: 'ra-badge-danger' },
-      revoked: { label: 'Dicabut', badge: 'ra-badge-neutral' }
+    var sMap = { active: ['Aktif','ra-badge-success'], expired: ['Kedaluwarsa','ra-badge-neutral'], revoked: ['Dicabut','ra-badge-danger'], restored: ['Dipulihkan','ra-badge-info'] };
+    var awards = awardsRaw.map(function(a){ var m = sMap[a.status]; var open = !!st.snapOpen[a.id];
+      var canAppeal = a.status === 'revoked' && appeal === 'none';
+      return { title: a.title, label: m[0], badge: m[1], when: a.when, isActive: a.status === 'active', isRestored: a.status === 'restored', isExpired: a.status === 'expired', isRevoked: a.status === 'revoked',
+        canShow: a.status === 'active' || a.status === 'restored', hasSnap: !!a.snap, snap: a.snap, snapOpen: open, snapLabel: open ? 'Sembunyikan konteks award' : 'Lihat konteks award',
+        toggleSnap: function(){ var o = Object.assign({}, st.snapOpen); o[a.id] = !o[a.id]; self.setState({ snapOpen: o }); },
+        canAppeal: canAppeal, appealPending: a.status === 'revoked' && appeal === 'pending', appealRejected: a.status === 'revoked' && appeal === 'rejected', onAppeal: self.openAppeal }; });
+    var out = {
+      evals: evals, evalLoading: em === 'loading', evalError: em === 'error', evalEmpty: em === 'empty', evalLoaded: em === 'loaded',
+      awards: awards, awardLoading: am === 'loading', awardError: am === 'error', awardEmpty: am === 'empty', awardLoaded: am === 'loaded',
+      appealOpen: st.appealOpen === true, closeAppeal: this.closeAppeal, sendAppeal: this.sendAppeal, reason: st.reason, onReason: this.onReason, reasonError: st.tried === true && !(st.reason || '').trim(),
+      toast: st.toast, hasToast: !!st.toast
     };
-    const evaluations = evalDefs.map(e => {
-      const rm = resultMap[e.result];
-      return { titleName: e.titleName, resultLabel: rm.label, badgeClass: rm.badge, evaluatorLabel: e.evaluator, evaluatedAt: e.evaluatedAt };
-    });
-
-    // award_instances (0026): status CHECK IN (active,expired,revoked,restored).
-    const awardDefs = [
-      { titleName: 'Top Performer Regional 2026', issuedAt: '20 Sep 2026', expiresAt: null, status: 'active' }
-    ];
-    const awardStatusMap = {
-      active: { label: 'Aktif', badge: 'ra-badge-success' },
-      expired: { label: 'Kedaluwarsa', badge: 'ra-badge-neutral' },
-      revoked: { label: 'Dicabut', badge: 'ra-badge-danger' },
-      restored: { label: 'Dipulihkan', badge: 'ra-badge-info' }
-    };
-    const awards = awardDefs.map(a => {
-      const sm = awardStatusMap[a.status];
-      return {
-        titleName: a.titleName,
-        issuedAt: a.issuedAt,
-        expiresSuffix: a.expiresAt ? ` · berlaku s.d. ${a.expiresAt}` : '',
-        statusLabel: sm.label,
-        badgeClass: sm.badge
-      };
-    });
-
-    return {
-      evaluations,
-      evalEmpty: evalState === 'empty',
-      evalLoaded: evalState === 'loaded',
-      awards,
-      awardsEmpty: awardState === 'empty',
-      awardsLoaded: awardState === 'loaded'
-    };
+    return Object.assign(shell, out);
   }
 }
 </script>

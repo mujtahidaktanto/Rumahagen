@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<title>Presentasi Title di Profil — Mobile</title>
+<title>Presentasi Title — Mobile</title>
 <script src="./support.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../tokens.css">
@@ -12,128 +12,172 @@
 <helmet>
 <style>
   body{margin:0;font-family:var(--ra-font);}
-  .app{width:390px;height:844px;display:flex;flex-direction:column;overflow:hidden;background:var(--ra-surface);position:relative;}
-  .topbar{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
-  .iconbtn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--ra-ink-700);flex:none;}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
 
-  .main{flex:1;overflow-y:auto;padding:16px 16px 24px;display:flex;flex-direction:column;gap:16px;}
-
-  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:0;overflow:hidden;}
-  .title-row{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--ra-ink-50);}
-  .title-row:last-child{border-bottom:none;}
-  .title-icon{width:36px;height:36px;border-radius:50%;background:var(--ra-gold-100);color:var(--ra-gold-700);display:flex;align-items:center;justify-content:center;flex:none;}
-  .order-btns{display:flex;flex-direction:column;gap:2px;flex:none;}
-  .order-btn{width:22px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:4px;border:1px solid var(--ra-ink-100);background:#fff;color:var(--ra-ink-500);font-size:10px;}
-  .switch{width:38px;height:21px;border-radius:11px;background:var(--ra-ink-200);position:relative;flex:none;}
-  .switch[aria-checked="true"]{background:var(--ra-success-600);}
-  .switch-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:left .15s ease;}
-  .switch[aria-checked="true"] .switch-knob{left:19px;}
-
-  .preview-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
-  .avatar-xl{width:56px;height:56px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;}
-  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:36px 16px;color:var(--ra-ink-300);text-align:center;}
+  .switch[aria-checked="true"]{background:var(--ra-success-600) !important;}
+  .switch[aria-checked="true"] .switch-knob{transform:translateX(20px);}
+  .preview-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+  .avatar-xl{width:72px;height:72px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;}
 </style>
 </helmet>
 <div class="app">
-
   <div class="topbar">
-    <a class="iconbtn" href="M15-Evaluasi.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
-    <span class="ra-title-md">Presentasi Title</span>
+    <a class="ra-iconbtn" href="M15-Evaluasi.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">Presentasi Title</span>
+    <button class="ra-iconbtn" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   </div>
+  <div class="main ra-scroll">
+    <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Pilih title yang tampil di profil publik. Title yang disembunyikan tetap sah Anda miliki.</p></div>
 
-  <div class="main">
-    <div style="display:flex;gap:10px;background:var(--ra-info-100);border:1px solid var(--ra-blue-200);border-radius:var(--ra-radius-md);padding:14px;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" width="18" height="18" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="var(--ra-info-600)" stroke="none"/></svg>
-      <span class="ra-body-md" style="color:var(--ra-ink-700);">Title yang dinonaktifkan tetap sah Anda miliki — hanya soal ditampilkan atau tidak di profil publik.</span>
-    </div>
-
-    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
-      <div class="card empty-wrap">
-        <span class="ra-body-md">Belum ada title yang bisa ditampilkan</span>
-        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M15-Evidence.dc.html" style="margin-top:4px;">Ajukan Bukti Kualifikasi</a>
-      </div>
-    </sc-if>
-
-    <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
-      <div class="card">
-        <sc-for list="{{titles}}" as="t" hint-placeholder-count="2">
-          <div class="title-row">
-            <div class="order-btns">
-              <div class="order-btn" onClick="{{t.moveUp}}">▲</div>
-              <div class="order-btn" onClick="{{t.moveDown}}">▼</div>
-            </div>
-            <div class="title-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></div>
-            <div style="flex:1;min-width:0;">
-              <div class="ra-label-lg ra-truncate-1" style="font-size:13px;">{{t.name}}</div>
-              <span class="ra-caption">Diberikan {{t.issuedAt}}</span>
-            </div>
-            <div class="switch" aria-checked="{{t.active}}" onClick="{{t.toggle}}"><div class="switch-knob"></div></div>
+        <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;gap:10px;"><div class="ra-skel" style="height:72px;"></div><div class="ra-skel" style="height:72px;"></div></div></sc-if>
+        <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Daftar title gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+        <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="42" height="42"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada title yang bisa ditampilkan</span><p class="ra-body-md">Title muncul di sini setelah award Anda aktif.</p><a class="ra-btn ra-btn-primary ra-btn-sm" href="M15-Evidence.dc.html">Ajukan Bukti Kualifikasi</a></div></div></sc-if>
+        <sc-if value="{{showList}}" hint-placeholder-val="{{true}}">
+          <div class="card" style="overflow:hidden;">
+            <sc-for list="{{titles}}" as="t" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:8px;padding:12px 12px;border-top:1px solid var(--ra-ink-50);">
+                <div style="display:flex;flex-direction:column;gap:6px;flex:none;"><button class="order-btn" aria-label="{{t.upLabel}}" disabled="{{t.upDisabled}}" onClick="{{t.up}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 15l6-6 6 6"/></svg></button><button class="order-btn" aria-label="{{t.downLabel}}" disabled="{{t.downDisabled}}" onClick="{{t.down}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 9l6 6 6-6"/></svg></button></div>
+                <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{t.name}}</div><span class="ra-caption">{{t.issued}}</span></div>
+                <button class="switch" role="switch" aria-checked="{{t.active}}" aria-label="{{t.toggleLabel}}" style="width:52px;height:32px;border-radius:16px;background:var(--ra-ink-200);" onClick="{{t.toggle}}"><div class="switch-knob" style="width:24px;height:24px;top:4px;left:4px;"></div></button>
+              </div>
+            </sc-for>
           </div>
-        </sc-for>
-      </div>
-    </sc-if>
-
-    <div class="preview-card">
-      <span class="ra-caption" style="align-self:flex-start;color:var(--ra-ink-300);">Pratinjau Profil Publik</span>
-      <div class="avatar-xl">RS</div>
-      <span class="ra-title-md">Rian Saputra</span>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:2px;">
-        <sc-if value="{{previewEmpty}}" hint-placeholder-val="{{false}}">
-          <span class="ra-caption" style="color:var(--ra-ink-300);">Tidak ada title ditampilkan</span>
+          <div class="card card-pad" style="display:flex;flex-direction:column;gap:10px;">
+            <span class="ra-title-md">Tidak bisa ditampilkan</span>
+            <sc-for list="{{locked}}" as="l" hint-placeholder-count="2"><div style="display:flex;align-items:flex-start;gap:10px;"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{l.name}}</div><span class="ra-caption">{{l.why}}</span></div><span class="ra-badge {{l.badge}}">{{l.label}}</span></div></sc-for>
+          </div>
         </sc-if>
-        <sc-for list="{{activeTitlesPreview}}" as="pt" hint-placeholder-count="1">
-          <span class="ra-badge" style="background:var(--ra-gold-100);color:var(--ra-gold-700);"><span class="ra-dot"></span>{{pt.name}}</span>
-        </sc-for>
-      </div>
+    <div class="preview-card">
+      <span class="ra-caption" style="align-self:flex-start;color:var(--ra-ink-500);">{{previewLabel}}</span>
+      <div class="avatar-xl">RS</div><span class="ra-title-md">Rian Saputra</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;"><sc-if value="{{previewEmpty}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Tidak ada title ditampilkan</span></sc-if><sc-for list="{{preview}}" as="p" hint-placeholder-count="1"><span class="ra-badge" style="background:var(--ra-gold-100);color:var(--ra-gold-700);">{{p.name}}</span></sc-for></div>
     </div>
   </div>
+  <div style="flex:none;background:#fff;border-top:1px solid var(--ra-ink-100);padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
+    <sc-if value="{{dirty}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-warning" style="align-self:flex-start;"><span class="ra-dot"></span>Perubahan belum disimpan</span></sc-if>
+    <sc-if value="{{savedFlag}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-success" style="align-self:flex-start;"><span class="ra-dot"></span>Tersimpan</span></sc-if>
+    <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-danger" style="align-self:flex-start;"><span class="ra-dot"></span>Gagal menyimpan, coba lagi</span></sc-if>
+    <div style="display:flex;gap:10px;"><button class="ra-btn ra-btn-secondary" style="flex:1;" disabled="{{clean}}" onClick="{{discard}}">Batalkan</button><button class="ra-btn ra-btn-primary" style="flex:2;" disabled="{{clean}}" onClick="{{save}}">Simpan Perubahan</button></div>
+  </div>
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}"></div>
+    <div class="drawer">
+      <div class="drawer-head"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;"><button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;margin:8px 12px 0;border-radius:var(--ra-radius-md);background:rgba(255,255,255,.08);"><div style="width:26px;height:26px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div><div style="min-width:0;flex:1;"><div class="ra-caption" style="color:rgba(255,255,255,.55);">Konteks aktif</div><div class="ra-label-lg" style="color:#fff;">Personal</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;">
+        <a class="nav-item" href="M08-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>Dashboard</a>
+        <a class="nav-item" href="M03-Listing-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg>Listing Saya</a>
+        <a class="nav-item" href="M04-Pembelajaran.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg>Pembelajaran</a>
+        <a class="nav-item" href="M05-Event-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Event</a>
+        <a class="nav-item" href="M12-Organisasi-Dashboard.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>Organisasi</a>
+        <a class="nav-item" href="M14-Katalog-Komersial.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg>Komersial</a>
+        <a class="nav-item" href="M13-Koneksi-AI.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>AI Assistant</a>
+        <a class="nav-item is-active" href="M02-Profil-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Profil Saya</a>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;"><div style="width:34px;height:34px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">RS</div><div><div class="ra-label-lg" style="color:#fff;">Rian Saputra</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Agent</div></div></div>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"saveState":{"editor":"enum","default":"idle","options":["idle","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = {
-      titleDefs: [
-        { id: 't1', name: 'Top Performer Regional 2026', issuedAt: '20 Sep 2026', active: true, order: 0 },
-        { id: 't2', name: 'Agen Bersertifikat Kalkulator DBR', issuedAt: '05 Jul 2026', active: false, order: 1 }
-      ]
-    };
-    this.toggleTitle = this.toggleTitle.bind(this);
-    this.moveTitle = this.moveTitle.bind(this);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { items: [{ id: 't1', name: 'Top Performer Regional 2026', issued: 'Diberikan 20 Sep 2026', active: true }, { id: 't2', name: 'Kontributor Komunitas', issued: 'Dipulihkan 15 Sep 2026', active: false }], saved: [{ id: 't1', active: true }, { id: 't2', active: false }], savedFlag: false });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'save', 'discard'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
-  toggleTitle(id){
-    this.setState({ titleDefs: this.state.titleDefs.map(t => t.id === id ? { ...t, active: !t.active } : t) });
-  }
-  moveTitle(id, dir){
-    const list = [...this.state.titleDefs].sort((a,b) => a.order - b.order);
-    const idx = list.findIndex(t => t.id === id);
-    const swapIdx = idx + dir;
-    if (swapIdx < 0 || swapIdx >= list.length) return;
-    const tmp = list[idx].order;
-    list[idx].order = list[swapIdx].order;
-    list[swapIdx].order = tmp;
-    this.setState({ titleDefs: list });
-  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  save(){ if (this.props.saveState === 'gagal') { this.setState({ savedFlag: false, failed: true }); return; } this.setState({ saved: this.state.items.map(function(t){ return { id: t.id, active: t.active }; }), savedFlag: true, failed: false }); }
+  discard(){ var sv = this.state.saved; this.setState({ items: this.state.items.map(function(t){ var s = sv.filter(function(x){ return x.id === t.id; })[0]; return Object.assign({}, t, { active: s.active }); }), failed: false }); }
   renderVals() {
-    const listState = this.props.listState ?? 'loaded';
-    const sorted = [...(this.state.titleDefs ?? [])].sort((a,b) => a.order - b.order);
-    const titles = sorted.map(t => ({
-      name: t.name,
-      issuedAt: t.issuedAt,
-      active: t.active,
-      toggle: () => this.toggleTitle(t.id),
-      moveUp: () => this.moveTitle(t.id, -1),
-      moveDown: () => this.moveTitle(t.id, 1)
-    }));
-    const activeTitlesPreview = sorted.filter(t => t.active).map(t => ({ name: t.name }));
-    return {
-      titles,
-      isEmpty: listState === 'empty',
-      isLoaded: listState === 'loaded',
-      activeTitlesPreview,
-      previewEmpty: activeTitlesPreview.length === 0
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
+    
+    // title_presentations (0068): active + display_order, UNIQUE(user_id,title_definition_id). PUT /agents/me/awards/presentation = replace-set (upsert).
+    // Setelah 0128: hanya title dengan award active/restored yang bisa ditampilkan; saat award dicabut/kedaluwarsa presentation otomatis nonaktif.
+    var self = this;
+    var mode = pr.listState || 'loaded';
+    var items = st.items.slice();
+    var sv = st.saved;
+    var dirty = items.some(function(t, i){ var s = sv.filter(function(x){ return x.id === t.id; })[0]; return !s || s.active !== t.active; }) || st.orderChanged === true;
+    function move(id, dir){ var a = self.state.items.slice(); var i = a.findIndex(function(t){ return t.id === id; }); var j = i + dir; if (j < 0 || j >= a.length) return; var x = a[i]; a[i] = a[j]; a[j] = x; self.setState({ items: a, orderChanged: true, savedFlag: false }); }
+    var titles = items.map(function(t, i){
+      return { name: t.name, issued: t.issued, active: t.active ? 'true' : 'false', toggleLabel: (t.active ? 'Sembunyikan ' : 'Tampilkan ') + t.name + ' di profil',
+        toggle: function(){ self.setState({ items: self.state.items.map(function(x){ return x.id === t.id ? Object.assign({}, x, { active: !x.active }) : x; }), savedFlag: false }); },
+        up: function(){ move(t.id, -1); }, down: function(){ move(t.id, 1); }, upDisabled: i === 0, downDisabled: i === items.length - 1, upLabel: 'Naikkan ' + t.name, downLabel: 'Turunkan ' + t.name };
+    });
+    var preview = items.filter(function(t){ return t.active; }).map(function(t){ return { name: t.name }; });
+    var locked = [
+      { name: 'Instruktur Bersertifikat', why: 'Award dicabut. Tidak bisa ditampilkan; ajukan banding di Status Evaluasi.', badge: 'ra-badge-danger', label: 'Dicabut' },
+      { name: 'Agen Bersertifikat Kalkulator DBR', why: 'Award kedaluwarsa. Tidak tampil di profil publik.', badge: 'ra-badge-neutral', label: 'Kedaluwarsa' }
+    ];
+    var out = {
+      titles: titles, preview: preview, previewEmpty: preview.length === 0, locked: locked,
+      showLoading: mode === 'loading', showError: mode === 'error', showEmpty: mode === 'empty', showList: mode === 'loaded',
+      dirty: dirty, clean: !dirty, save: this.save, discard: this.discard, savedFlag: st.savedFlag === true && !dirty, failed: st.failed === true,
+      previewLabel: dirty ? 'Pratinjau (belum disimpan)' : 'Pratinjau Profil Publik'
+    };
+    return Object.assign(shell, out);
   }
 }
 </script>

@@ -3383,3 +3383,13 @@ ada TIDAK berubah: itu export baris `audit_logs`, bukan analitik.
 Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 
 **Hasil uji (16 skenario, transaksi rollback):** Agent self-approve ditolak; Agent withdraw klaim pending sendiri ok; Developer Partner approve/revoke pada proyek sendiri ok, pada proyek orang lain 0 baris; transisi tidak sah (revoked->approved, approved->pending, rejected->approved) ditolak; Developer Partner insert proyek active dan event published ditolak, coming_soon dan pending_approval ok; Manager tetap bisa approve, membuat proyek active, dan event published; Agent tetap bisa menerbitkan event miliknya.
+
+---
+
+## `0128` — Tutup celah M15: Agent bisa self-qualify, self-award, restore award, dan menampilkan title yang tidak diberikan (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Celah dibuktikan di DB live saat memindai wireframe Fase E: Agent (scope own pada `m15.qualification.evaluate`, `m15.award.award`, `m15.award.revoke/manage`) bisa membuat evaluasi qualified untuk dirinya, memanggil `evaluate_qualification()` pada evidence buatannya sendiri, memberi dirinya title, memulihkan award yang dicabut, dan menampilkan title yang tidak pernah diberikan.
+
+**Perbaikan:** (1) INSERT evaluasi hanya staf (`has_permission` tanpa owner) dan `evaluator_type` dibatasi `system_automated|staff|instructor`; (2) `evaluate_qualification` hanya staf/konteks server, dan hanya evidence bersumber `m04.session_completion_outcomes` yang otomatis qualified (evidence manual selalu pending); (3) trigger evidence: pengguna biasa hanya boleh `upload|external_link` dan tidak boleh mengikat ke evaluasi; (4) INSERT/UPDATE `award_instances` hanya staf, dan acuan evaluasi harus qualified milik user yang sama; (5) `title_presentations` aktif hanya untuk award `active|restored`, dan presentation otomatis nonaktif saat award dicabut/kedaluwarsa.
+
+**Hasil uji (16 skenario, rollback):** semua jalur self-service di atas ditolak (42501/23514) atau 0 baris; staf tetap bisa mengevaluasi, memberi, dan mencabut award; Agent tetap bisa mengajukan evidence upload dan menampilkan title dari award aktifnya.
