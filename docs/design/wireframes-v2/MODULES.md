@@ -31,6 +31,9 @@ dilacak balik ke migration/permission/API yang sesuai tanpa tebak-tebak.
 | `01-Agent` | Role `agent` yang sudah login | Sidebar/drawer 8-item + Context Switcher (§4.2 STEP13-E) |
 | `02-Admin` | Role `admin`/`superadmin`/`manager` | Sidebar capability-driven (§4.3 STEP13-E) |
 | `03-Developer-Partner` | Role `developer_partner` | Sidebar 7 tujuan (Dashboard, Proyek Saya, Marketing Kit, Klaim Masuk, Event, Hasil Kemitraan, Profil Developer), bisa disembunyikan; tanpa Context Switcher (organisasi hanya untuk Agent). Lihat `SOURCE-Developer-Partner.md` |
+| `04-Instructor` | Role `instructor` | Shell 5 item (Dashboard, Sesi Saya, Event, Notifikasi, Profil) — Fase G ✅ |
+| `06-Bersama` | Semua role | Pusat Notifikasi (satu layar; tombol Kembali menyesuaikan persona) — Fase G ✅ |
+| `05-Buyer` | Role `buyer` | Belum ada shell, dibangun di Fase H |
 
 Satu modul bisa muncul di lebih dari satu persona kalau memang perilakunya beda — misalnya
 **M03 Listing** muncul di `00-Publik` (halaman Detail publik), `01-Agent` (kelola listing sendiri),

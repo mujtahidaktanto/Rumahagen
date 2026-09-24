@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Form Sesi — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+
+  .radio-card{display:flex;flex-direction:column;gap:4px;padding:14px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);width:100%;}
+  .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <a class="ra-iconbtn" href="M04-Sesi-Saya.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">{{pageTitle}}</span>
+  </div>
+  <div class="main ra-scroll">
+        <sc-if value="{{doneDraft}}" hint-placeholder-val="{{false}}"><div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Draf sesi tersimpan</span><p class="ra-body-md" style="margin-top:2px;">Sesi belum terlihat peserta. <a href="M04-Detail-Sesi.dc.html">Buka detail sesi</a>.</p></div></div></sc-if>
+        <sc-if value="{{doneSched}}" hint-placeholder-val="{{false}}"><div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Sesi terjadwal</span><p class="ra-body-md" style="margin-top:2px;">Tim RumahAgen akan menugaskan Host/Instruktur dan penyedia bila diperlukan. <a href="M04-Detail-Sesi.dc.html">Buka detail sesi</a>.</p></div></div></sc-if>
+        <sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Sesi gagal disimpan. Data Anda masih di form; coba lagi.</p></div></sc-if>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:14px;">
+          <span class="ra-title-md">Jenis sesi</span>
+          <div style="display:grid;grid-template-columns:1fr;gap:12px;" role="radiogroup" aria-label="Jenis sesi"><sc-for list="{{types}}" as="t" hint-placeholder-count="3"><button class="radio-card" role="radio" aria-checked="{{t.checked}}" onClick="{{t.pick}}"><span class="ra-label-lg">{{t.l}}</span><span class="ra-caption">{{t.d}}</span></button></sc-for></div>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:14px;">
+          <span class="ra-title-md">Jadwal</span>
+          <div class="field" style="gap:14px;">
+            <div class="field"><label class="ra-label-lg" for="f-start">Mulai <span class="req">*</span></label><input id="f-start" class="ra-input" type="datetime-local" value="{{start}}" onInput="{{onStart}}"><sc-if value="{{startErr}}" hint-placeholder-val="{{false}}"><span class="err">Waktu mulai wajib diisi.</span></sc-if></div>
+            <div class="field"><label class="ra-label-lg" for="f-end">Selesai <span class="ra-caption">(opsional)</span></label><input id="f-end" class="ra-input" type="datetime-local" value="{{end}}" onInput="{{onEnd}}"><sc-if value="{{endErr}}" hint-placeholder-val="{{false}}"><span class="err">Waktu selesai harus setelah waktu mulai.</span></sc-if></div>
+          </div>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:14px;">
+          <span class="ra-title-md">Terkait</span>
+          <div class="field" style="gap:14px;">
+            <div class="field"><label class="ra-label-lg" for="f-course">Kursus <span class="ra-caption">(opsional)</span></label><select id="f-course" class="ra-input"><option>Tidak terkait</option><option>Sales Skill</option><option>Konten Listing</option><option>Financial &amp; KPR</option></select></div>
+            <div class="field"><label class="ra-label-lg" for="f-event">Event <span class="ra-caption">(opsional)</span></label><select id="f-event" class="ra-input"><option>Tidak terkait</option><option>Workshop KPR</option></select></div>
+          </div>
+          <p class="ra-caption">Sesi tidak punya judul sendiri; judul tampil dari kursus atau event terkait. Event tidak memiliki sesi, hanya menautkan.</p>
+        </div>
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:12px;">
+          <span class="ra-title-md">Visibilitas</span>
+          <div class="chip-group" role="group" aria-label="Visibilitas"><sc-for list="{{vises}}" as="v" hint-placeholder-count="4"><button class="ra-chip" aria-pressed="{{v.pressed}}" onClick="{{v.pick}}">{{v.l}}</button></sc-for></div>
+          <span class="ra-caption">{{visHelp}}</span>
+        </div>
+        <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Penugasan Host/Instruktur dan pemilihan penyedia (mis. Zoom) dilakukan tim RumahAgen setelah sesi dibuat.</p></div>
+        <div style="display:flex;gap:10px;flex-direction:column;"><button class="ra-btn ra-btn-secondary" disabled="{{saving}}" onClick="{{saveDraft}}">{{saveLabel}}</button><button class="ra-btn ra-btn-primary" disabled="{{saving}}" onClick="{{saveSchedule}}">{{schedLabel}}</button></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","default":"create","options":["create","edit"],"section":"Skenario form"},"simpan":{"editor":"enum","default":"normal","options":["normal","menyimpan","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { type: '', vis: '', start: '', end: '', tried: false, done: '', failed: false });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'onStart', 'onEnd', 'saveDraft', 'saveSchedule'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  cur(k){ var s = this.state; if (s[k] !== undefined && s[k] !== '') return s[k]; if ((this.props.mode || 'create') === 'edit') return { type: 'interactive', vis: 'partner', start: '2026-10-02T19:00', end: '2026-10-02T21:00' }[k] || ''; return k === 'vis' ? 'private' : (k === 'type' ? 'interactive' : ''); }
+  onStart(e){ this.setState({ start: e.target.value }); }
+  onEnd(e){ this.setState({ end: e.target.value }); }
+  submit(status){
+    if (this.props.simpan === 'menyimpan') return;
+    var s = this.cur('start'), e = this.cur('end');
+    if (!s || (e && e < s)) { this.setState({ tried: true }); return; }
+    if (this.props.simpan === 'gagal') { this.setState({ failed: true, done: '' }); return; }
+    this.setState({ done: status, failed: false, tried: false });
+  }
+  saveDraft(){ this.submit('draft'); }
+  saveSchedule(){ this.submit('scheduled'); }
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    
+    // learning_sessions (0021): session_type* , start_at*, end_at?, visibility (default private), course_id?, event_id?. Status awal 'draft'.
+    // Host/Instruktur (learning_session_assignments) dan penyedia (session_provider_bindings) hanya diatur staf, jadi tidak ada di form ini.
+    var self = this;
+    var type = this.cur('type'), vis = this.cur('vis'), start = this.cur('start'), end = this.cur('end');
+    var types = [['broadcast','Siaran (webinar)','Satu arah, banyak penonton'],['interactive','Interaktif','Diskusi dua arah, jumlah terbatas'],['on_demand','On-demand','Rekaman dapat diakses kapan saja']].map(function(t){ return { v: t[0], l: t[1], d: t[2], checked: type === t[0] ? 'true' : 'false', pick: function(){ self.setState({ type: t[0] }); } }; });
+    var vises = [['private','Privat','Hanya peserta terdaftar'],['organization','Organisasi','Anggota organisasi'],['partner','Mitra','Peserta dari mitra'],['public','Publik','Semua pengguna login']].map(function(v){ return { v: v[0], l: v[1], pressed: vis === v[0] ? 'true' : 'false', pick: function(){ self.setState({ vis: v[0] }); } }; });
+    var visHelp = { private: 'Hanya peserta terdaftar yang bisa melihat sesi.', organization: 'Anggota organisasi bisa melihat sesi.', partner: 'Peserta dari mitra bisa melihat sesi.', public: 'Semua pengguna login bisa melihat sesi. Melihat tidak berarti boleh mengelola.' }[vis];
+    var tried = st.tried === true;
+    var out = { pageTitle: (pr.mode || 'create') === 'edit' ? 'Ubah Sesi' : 'Buat Sesi', types: types, vises: vises, visHelp: visHelp, start: start, end: end, onStart: this.onStart, onEnd: this.onEnd,
+      startErr: tried && !start, endErr: tried && !!start && !!end && end < start, saveDraft: this.saveDraft, saveSchedule: this.saveSchedule,
+      saving: pr.simpan === 'menyimpan', saveLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : 'Simpan Draf', schedLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : 'Simpan & Jadwalkan',
+      doneDraft: st.done === 'draft', doneSched: st.done === 'scheduled', failed: st.failed === true && !st.done };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>

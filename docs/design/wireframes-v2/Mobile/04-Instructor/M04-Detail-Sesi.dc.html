@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail Sesi — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+
+  .radio-card{display:flex;flex-direction:column;gap:4px;padding:14px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);width:100%;}
+  .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+  .ra-btn-sm{height:44px;}
+  .ra-chip{height:44px;}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <a class="ra-iconbtn" href="M04-Sesi-Saya.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">Detail Sesi</span>
+  </div>
+  <div class="main ra-scroll">
+      <sc-if value="{{pLoading}}" hint-placeholder-val="{{false}}"><div class="card card-pad" style="display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:28px;width:50%;"></div><div class="ra-skel" style="height:80px;"></div></div></sc-if>
+      <sc-if value="{{pError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Sesi gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
+      <sc-if value="{{pReady}}" hint-placeholder-val="{{true}}">
+      <div class="card card-pad" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div style="min-width:0;flex:1;"><div class="ra-title-md">Analisis DBR untuk Konsultasi KPR</div><div class="ra-caption" style="margin-top:4px;">Interaktif · 27 Sep 2026, 10.00 · Event: Workshop KPR · Visibilitas Publik</div></div><span class="ra-badge {{statusBadge}}"><span class="ra-dot"></span>{{statusLabel}}</span></div>
+        <sc-if value="{{hasActs}}" hint-placeholder-val="{{true}}"><div style="display:flex;gap:10px;flex-wrap:wrap;"><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M04-Form-Sesi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg>Ubah</a><sc-for list="{{acts}}" as="a" hint-placeholder-count="2"><button class="ra-btn ra-btn-sm {{a.cls}}" onClick="{{a.go}}">{{a.l}}</button></sc-for></div></sc-if>
+        <sc-if value="{{noActs}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Sesi berstatus akhir: tidak ada perubahan status lagi. Penilaian kehadiran dan penyelesaian tetap bisa dikelola.</span></sc-if>
+      </div>
+      <div class="tabs" role="tablist"><sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><button class="tab {{t.cls}}" role="tab" aria-selected="{{t.selected}}" onClick="{{t.sel}}">{{t.label}}</button></sc-for></div>
+      <sc-if value="{{tRingkasan}}" hint-placeholder-val="{{true}}"><div class="card card-pad"><dl class="kv"><dt>Tipe</dt><dd>Interaktif</dd><dt>Jadwal</dt><dd>27 Sep 2026, 10.00 – 12.00</dd><dt>Visibilitas</dt><dd>Publik (melihat bukan berarti boleh mengelola)</dd><dt>Kursus</dt><dd>Financial &amp; KPR</dd><dt>Event</dt><dd>Workshop KPR</dd><dt>Penyedia</dt><dd>Zoom (diatur tim RumahAgen)</dd><dt>Peserta</dt><dd>64 terdaftar</dd></dl></div></sc-if>
+      <sc-if value="{{tPeserta}}" hint-placeholder-val="{{false}}">
+        <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Anda menilai kehadiran berdasarkan bukti partisipasi dari penyedia. Aktivasi peserta dilakukan tim RumahAgen; Anda tidak bisa menilai peserta yang belum aktif. Peserta tidak bisa menilai dirinya sendiri.</p></div>
+        <div class="card" style="overflow:hidden;">
+          <sc-if value="{{rLoading}}" hint-placeholder-val="{{false}}"><div style="padding:16px;display:flex;flex-direction:column;gap:10px;"><div class="ra-skel" style="height:52px;"></div><div class="ra-skel" style="height:52px;"></div></div></sc-if>
+          <sc-if value="{{rError}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Peserta gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></sc-if>
+          <sc-if value="{{rEmpty}}" hint-placeholder-val="{{false}}"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada peserta terdaftar</span></div></sc-if>
+          <sc-if value="{{rReady}}" hint-placeholder-val="{{true}}"><sc-for list="{{people}}" as="p" hint-placeholder-count="4">
+            <div class="row" style="flex-wrap:wrap;"><div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-1">{{p.name}}</div><div class="ra-caption">Enrollment: {{p.enr}} · {{p.evidence}}</div></div>
+              <sc-if value="{{p.hasAtt}}" hint-placeholder-val="{{false}}"><span class="ra-badge {{p.attBadge}}">{{p.attLabel}}</span></sc-if>
+              <sc-if value="{{p.canEval}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{p.evaluate}}">Nilai Kehadiran</button></sc-if>
+              <sc-if value="{{p.needsActive}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Menunggu aktivasi</span></sc-if></div></sc-for></sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{tSelesai}}" hint-placeholder-val="{{false}}">
+        <div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Menyelesaikan sesi <strong>tidak langsung</strong> memberi poin, sertifikat, title, atau award. Hasilnya menjadi bukti bagi aktivitas belajar dan kualifikasi.</p></div>
+        <div class="card" style="overflow:hidden;"><sc-for list="{{people}}" as="p" hint-placeholder-count="4"><div class="row" style="flex-wrap:wrap;"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-1">{{p.name}}</div><div class="ra-caption">Kehadiran: {{p.attLabel}}</div></div>
+          <sc-if value="{{p.completed}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-success">Selesai</span></sc-if>
+          <sc-if value="{{p.canComplete}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{p.complete}}">Selesaikan</button></sc-if>
+          <sc-if value="{{p.noAtt}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Nilai kehadiran dulu</span></sc-if></div></sc-for></div>
+      </sc-if>
+      <sc-if value="{{tArtefak}}" hint-placeholder-val="{{false}}"><div class="card" style="overflow:hidden;"><div class="card-head"><span class="ra-title-md">Artefak sesi</span><button class="ra-btn ra-btn-secondary ra-btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah</button></div><sc-for list="{{arts}}" as="a" hint-placeholder-count="3"><div class="row"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-1">{{a.n}}</div><div class="ra-caption ra-truncate-1">{{a.u}}</div></div><span class="ra-badge {{a.b}}">{{a.st}}</span></div></sc-for></div></sc-if>
+      <sc-if value="{{tTim}}" hint-placeholder-val="{{false}}"><div class="card" style="overflow:hidden;"><div class="card-head"><span class="ra-title-md">Tim pengampu</span></div><sc-for list="{{team}}" as="m" hint-placeholder-count="3"><div class="row"><div style="min-width:0;flex:1;"><div class="ra-label-lg">{{m.n}}</div><div class="ra-caption">{{m.c}}</div></div><span class="ra-badge {{m.b}}">{{m.s}}</span></div></sc-for><div style="padding:12px 16px;border-top:1px solid var(--ra-ink-50);"><span class="ra-caption">Host dan Instruktur ditugaskan tim RumahAgen. Instruktur bukan otomatis Host.</span></div></div></sc-if>
+      </sc-if></div>
+
+  <sc-if value="{{dialogOpen}}" hint-placeholder-val="{{false}}"><div class="scrim" onClick="{{closeAll}}"><div class="sheet" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
+    <sc-if value="{{actionFailed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Gagal menyimpan. Tidak ada yang berubah; coba lagi.</p></div></sc-if>
+    <sc-if value="{{dAttend}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Nilai kehadiran {{tName}}</span><div class="chip-group" role="group" aria-label="Hasil kehadiran"><sc-for list="{{results}}" as="r" hint-placeholder-count="3"><button class="ra-chip" aria-pressed="{{r.pressed}}" onClick="{{r.pick}}">{{r.l}}</button></sc-for></div><p class="ra-caption">Versi kebijakan kehadiran: v1.0 (dicatat otomatis bersama penilaian).</p></sc-if>
+    <sc-if value="{{dComplete}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Selesaikan sesi untuk {{tName}}?</span><p class="ra-body-md">Penyelesaian dicatat sebagai hasil sesi. Tidak otomatis memberi poin, sertifikat, atau award.</p></sc-if>
+    <sc-if value="{{dStatus}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">{{sLabel}}?</span><p class="ra-body-md">Status sesi berubah dan peserta akan melihat perubahannya.</p></sc-if>
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAll}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{confirm}}">Simpan</button></div>
+  </div></div></sc-if>
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}"><div class="toast" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="ra-label-lg">{{toast}}</span></div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"halaman":{"editor":"enum","default":"normal","options":["normal","memuat","gagal_muat"],"section":"Skenario halaman"},"peserta":{"editor":"enum","default":"ada","options":["ada","kosong","memuat","gagal_muat"],"section":"Skenario peserta"},"status":{"editor":"enum","default":"ended","options":["scheduled","draft","live","ended","cancelled","failed"],"section":"Status sesi"},"aksi":{"editor":"enum","default":"normal","options":["normal","gagal"],"section":"Skenario aksi"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { tab: 'ringkasan', dialog: '', target: '', toast: '', marks: {}, dones: {}, result: 'present', statusPick: '' });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'closeAll', 'confirm'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  closeAll(){ this.setState({ dialog: '', actionFailed: false }); }
+  confirm(){
+    if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
+    var d = this.state.dialog, id = this.state.target, m = Object.assign({}, this.state.marks), c = Object.assign({}, this.state.dones);
+    var msg = '';
+    if (d === 'attend') { m[id] = this.state.result; msg = 'Kehadiran dinilai.'; }
+    if (d === 'complete') { c[id] = true; msg = 'Penyelesaian sesi dicatat. Tidak otomatis memberi poin atau award.'; }
+    if (d === 'status') { msg = 'Status sesi diperbarui.'; }
+    this.setState({ dialog: '', marks: m, dones: c, toast: msg, actionFailed: false });
+  }
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    
+    // Transisi status disediakan UI menurut alur wajar; DB tidak membatasi urutan (PATCH /status menerima enum apa pun untuk pemilik).
+    // Daftar peserta membutuhkan perbaikan backend: session_enrollments_select saat ini hanya menampilkan enrollment milik sendiri (SOURCE-Instructor.md §7).
+    var self = this;
+    var status = pr.status || 'ended';
+    var mode = pr.halaman || 'normal', rmode = pr.peserta || 'ada';
+    var STS = { draft: ['Draf','ra-badge-neutral'], scheduled: ['Terjadwal','ra-badge-info'], live: ['Sedang Live','ra-badge-success'], ended: ['Selesai','ra-badge-neutral'], cancelled: ['Dibatalkan','ra-badge-danger'], failed: ['Gagal','ra-badge-danger'] };
+    var actions = { draft: [['scheduled','Jadwalkan','primary']], scheduled: [['live','Mulai Sekarang','primary'],['cancelled','Batalkan Sesi','danger']], live: [['ended','Akhiri Sesi','primary'],['failed','Tandai Gagal','danger']], ended: [], cancelled: [], failed: [] }[status] || [];
+    var acts = actions.map(function(a){ return { l: a[1], cls: a[2] === 'primary' ? 'ra-btn-primary' : 'ra-btn-secondary', go: function(){ self.setState({ dialog: 'status', target: a[0], statusLabel: a[1] }); } }; });
+    var tabs = [['ringkasan','Ringkasan'],['peserta','Peserta & Kehadiran'],['selesai','Penyelesaian'],['artefak','Artefak'],['tim','Tim Pengampu']].map(function(t){ return { label: t[1], cls: st.tab === t[0] ? 'is-active' : '', selected: st.tab === t[0] ? 'true' : 'false', sel: function(){ self.setState({ tab: t[0] }); } }; });
+    var attMap = { present: ['Hadir','ra-badge-success'], partial: ['Sebagian','ra-badge-warning'], absent: ['Tidak hadir','ra-badge-danger'] };
+    var people = [
+      { id: 'p1', name: 'Rian Saputra', enr: 'Aktif', evidence: '3 bukti kehadiran otomatis', att: 'present' },
+      { id: 'p2', name: 'Dewi Lestari', enr: 'Aktif', evidence: '1 bukti kehadiran otomatis', att: '' },
+      { id: 'p3', name: 'Budi Santoso', enr: 'Aktif', evidence: 'Belum ada bukti', att: '' },
+      { id: 'p4', name: 'Hesti Rahma', enr: 'Menunggu aktivasi tim', evidence: '—', att: '' }
+    ].map(function(p){
+      var a = st.marks[p.id] || p.att; var am = a ? attMap[a] : null; var canEval = p.enr === 'Aktif';
+      var done = !!st.dones[p.id];
+      return { name: p.name, enr: p.enr, evidence: p.evidence, hasAtt: !!a, attLabel: am ? am[0] : '', attBadge: am ? am[1] : '', noAtt: !a, canEval: canEval && !a, needsActive: !canEval,
+        canComplete: canEval && !!a && !done, completed: done, evaluate: function(){ self.setState({ dialog: 'attend', target: p.id, targetName: p.name }); }, complete: function(){ self.setState({ dialog: 'complete', target: p.id, targetName: p.name }); } };
+    });
+    var arts = [{ n: 'Rekaman sesi (Zoom)', st: 'Tersedia', b: 'ra-badge-success', u: 'zoom.example/rec/abc' }, { n: 'Materi presentasi', st: 'Menunggu', b: 'ra-badge-warning', u: '' }, { n: 'Rekaman sesi lama', st: 'Kedaluwarsa', b: 'ra-badge-neutral', u: '' }];
+    var team = [{ n: 'Dewi Prasetya', c: 'Instruktur', s: 'Aktif', b: 'ra-badge-success' }, { n: 'Anton Wijaya', c: 'Host', s: 'Aktif', b: 'ra-badge-success' }, { n: 'Sari Dewi', c: 'Host', s: 'Dicabut', b: 'ra-badge-neutral' }];
+    var results = [['present','Hadir'],['partial','Sebagian'],['absent','Tidak hadir']].map(function(r){ return { l: r[1], pressed: st.result === r[0] ? 'true' : 'false', pick: function(){ self.setState({ result: r[0] }); } }; });
+    var sm = STS[status];
+    var out = { pLoading: mode === 'memuat', pError: mode === 'gagal_muat', pReady: mode === 'normal', statusLabel: sm[0], statusBadge: sm[1], acts: acts, hasActs: acts.length > 0, noActs: acts.length === 0,
+      tabs: tabs, tRingkasan: st.tab === 'ringkasan', tPeserta: st.tab === 'peserta', tSelesai: st.tab === 'selesai', tArtefak: st.tab === 'artefak', tTim: st.tab === 'tim',
+      rLoading: rmode === 'memuat', rError: rmode === 'gagal_muat', rEmpty: rmode === 'kosong', rReady: rmode === 'ada', people: people, arts: arts, team: team, results: results,
+      dAttend: st.dialog === 'attend', dComplete: st.dialog === 'complete', dStatus: st.dialog === 'status', dialogOpen: st.dialog !== '', tName: st.targetName || '', sLabel: st.statusLabel || '',
+      closeAll: this.closeAll, confirm: this.confirm, actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>
