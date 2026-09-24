@@ -12,7 +12,7 @@ tanpa layar/route ini staf tidak punya cara mengisi harga.
 1. **[KODE] `fulfill_commercial_order` membaca addon SAAT INI, bukan snapshot pesanan.** Mengubah kapasitas/masa berlaku addon setelah ada pesanan membuat pembeli lama menerima syarat baru; menghapus addon membuat `commercial_orders.addon_id` NULL (FK SET NULL) dan fulfillment gagal. Ditangani migration `0132`.
 2. **[KODE] `status`, `validity_type`, `capacity_type` teks bebas tanpa CHECK**; addon aktif tanpa kapasitas membuat entitlement kosong; `additional_capacities` tak divalidasi. Ditangani migration `0132`.
 3. **[KODE] Jenis kapasitas yang benar-benar dikonsumsi sistem hanya `listing_refresh` dan `learning_point`.** Tidak ada penegakan "slot listing" di mana pun (dicek seluruh kode dan migration), padahal wireframe Katalog Agent menampilkan add-on "+25 slot listing aktif". Add-on jenis itu belum bisa dijual sampai konsumennya dibangun; form hanya menawarkan dua jenis di atas.
-4. **[KODE] Definisi promosi bebas** (`benefit_configuration` jsonb). Konvensi 0131: `{"percent_off": 1..100}` atau `{"amount_off": > 0}`. Belum ada pembuatan/pengubahan promosi, hanya daftar baca.
+4. **[DITANGANI 2026-09-24, migration 0133 diterapkan] Definisi promosi bebas** (`benefit_configuration` jsonb). Konvensi 0131: `{"percent_off": 1..100}` atau `{"amount_off": > 0}`. API admin pembuatan/pengubahan promosi ditambahkan (`/admin/commercial/promotions`, `[id]`, `[id]/status`); layar admin promosi belum ada (pilihan promosi di Form Add-on masih contoh).
 5. **[KODE] `commercial_orders.organization_id` belum diverifikasi keanggotaannya** (di luar cakupan ini).
 
 ## 3. Yang ditambahkan

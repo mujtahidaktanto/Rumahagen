@@ -3457,3 +3457,17 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Perubahan:** CHECK `status` (draft|active|inactive), `validity_type` (days dengan `validity_days` wajib | unlimited tanpa hari), `capacity_type` (listing_refresh|learning_point), `capacity_value > 0`, addon aktif wajib kapasitas primer, `additional_capacities` array objek valid (fungsi `addon_capacities_valid`); trigger `trg_addon_terms_locked` mengunci `code`, `validity_*`, `capacity_*`, `additional_capacities` dan melarang DELETE bila addon sudah punya pesanan (harga, nama, status, promosi tetap bisa diubah).
 
 **Hasil uji (rollback, 14 skenario):** tiap pelanggaran CHECK ditolak; addon tanpa pesanan bebas diubah/dihapus; addon dengan pesanan menolak ubah kapasitas/masa berlaku dan hapus, tetapi harga/nama/status boleh.
+
+---
+
+## `0133` — Integritas promosi M14 (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Pengaman untuk API admin pembuatan/pengubahan promosi.
+
+**Masalah:** sejak 0131 promosi mengubah harga lewat `benefit_configuration`, tetapi tabel `promotions` (0071) bebas: `status` teks tanpa CHECK, `valid_to` boleh sebelum `valid_from`, `benefit_configuration` bisa berbentuk apa saja (promosi "aktif" salah bentuk diam-diam tidak memberi diskon, atau berisi dua jenis diskon sekaligus), dan menghapus promosi mengosongkan `addons.promotion_id` / `commercial_orders.promotion_id` secara diam-diam.
+
+**Perubahan:** CHECK `status` (draft|active|inactive|expired), `code` (huruf/angka/titik/garis bawah/strip), `valid_to > valid_from`, dan promosi `active` wajib `benefit_configuration` valid: tepat satu dari `percent_off` (0 < n ≤ 100) atau `amount_off` (> 0) lewat `promotion_benefit_valid()`; trigger `trg_promotion_not_deleted_in_use` melarang DELETE promosi yang masih dirujuk addon atau pesanan.
+
+**Kode (satu paket):** route admin `GET/POST /admin/commercial/promotions`, `GET/PUT /admin/commercial/promotions/{id}` (GET menyertakan addon yang merujuk), `PATCH /admin/commercial/promotions/{id}/status`; skema `lib/validation/commercial-promotions.ts`; status turunan `lib/commercial/promotion-state.ts` (`effective_status`: draft|scheduled|active|expired|inactive, `is_applicable`, `benefit_label`). Tidak ada DELETE. `rule_configuration`/`eligibility_configuration` belum dievaluasi sistem sehingga API menolak isian tak kosong.
+
+**Hasil uji (rollback, 15 skenario):** aktif dengan percent/amount ok, draf tanpa benefit ok; aktif tanpa benefit, dua kunci, persen 150, persen berupa teks, amount negatif, status salah, kode berspasi, dan window terbalik ditolak; mengaktifkan draf tanpa benefit ditolak, dengan benefit ok; hapus promosi tak terpakai ok, hapus yang dirujuk addon ditolak. Skema Zod (9 kasus) dan status turunan (7 kasus) diuji terpisah; `tsc --noEmit` lolos.
