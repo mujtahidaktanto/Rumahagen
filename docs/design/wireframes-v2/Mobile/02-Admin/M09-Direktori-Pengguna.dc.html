@@ -14,6 +14,13 @@
   body{margin:0;font-family:var(--ra-font);}
   .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
   .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .iconbtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:#fff;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:30;display:flex;}
+  .drawer{width:280px;height:100%;background:var(--ra-ink-900);display:flex;flex-direction:column;}
+  .drawer-top{height:60px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;}
+  .nav-item{display:flex;align-items:center;height:42px;padding:0 14px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13px;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
   .chip-row{display:flex;gap:8px;padding:2px;}
   .u-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:10px;}
   .role-pill{display:inline-flex;padding:3px 10px;border-radius:var(--ra-radius-pill);background:var(--ra-ink-50);color:var(--ra-ink-700);font-size:12px;font-weight:700;}
@@ -25,6 +32,7 @@
 <div class="app">
 
   <div class="topbar">
+    <button class="iconbtn" aria-label="Menu" onClick="{{openDrawer}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     <span class="ra-title-md" style="color:#fff;flex:1;">Direktori Pengguna</span>
     <span class="ra-caption" style="color:rgba(255,255,255,.65);">{{viewerRoleLabel}}</span>
   </div>
@@ -73,6 +81,32 @@
     </sc-if>
   </div>
 
+  <!-- Nav drawer -->
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div class="drawer-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;"></div>
+        <div class="nav-list">
+          <a class="nav-item is-active" href="M09-Direktori-Pengguna.dc.html">Direktori Pengguna</a>
+          <a class="nav-item" href="M09-Staf-Internal.dc.html">Staf Internal</a>
+          <a class="nav-item" href="M10-Matriks-Izin.dc.html">Matriks Izin</a>
+          <a class="nav-item" href="M09-Konten-Notifikasi.dc.html">Konten &amp; Notifikasi</a>
+          <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html">Konfigurasi Sistem</a>
+          <a class="nav-item" href="M09-Audit-Oversight.dc.html">Audit &amp; Oversight</a>
+          <a class="nav-item" href="M03-Moderasi-Listing.dc.html">Moderasi Listing</a>
+          <a class="nav-item" href="M07-Bank-Master.dc.html">Bank Master</a>
+          <a class="nav-item" href="M13-Provider-Catalogue.dc.html">Provider AI</a>
+          <a class="nav-item" href="M04-Learning-Economy-Config.dc.html">Ekonomi Pembelajaran</a>
+          <a class="nav-item" href="M14-Komersial-Admin.dc.html">Komersial &amp; Rekonsiliasi</a>
+          <a class="nav-item" href="M15-Award-Appeal.dc.html">Banding Penghargaan</a>
+          <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html">Jalur Penghargaan</a>
+          <a class="nav-item" href="M06-Developer-Project-Admin.dc.html">Proyek Developer</a>
+          <a class="nav-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <!-- bottom sheet (mobile pattern replaces centered dialog) -->
   <sc-if value="{{dialogOpen}}" hint-placeholder-val="{{false}}">
     <div class="scrim" onClick="{{closeDialog}}">
@@ -99,11 +133,15 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { activeFilter: 'all', dialogOpen: false, dialogUserName: '', reason: '' };
+    this.state = { activeFilter: 'all', dialogOpen: false, dialogUserName: '', reason: '', drawerOpen: false };
     this.handleReasonChange = this.handleReasonChange.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.stopClick = this.stopClick.bind(this);
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
   }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
   pickFilter(key){ this.setState({ activeFilter: key }); }
   openSuspend(user){ this.setState({ dialogOpen: true, dialogUserName: user.name, reason: '' }); }
   closeDialog(){ this.setState({ dialogOpen: false, reason: '' }); }
@@ -144,7 +182,10 @@ class Component extends DCLogic {
       confirmDisabled: reason.trim().length === 0,
       handleReasonChange: this.handleReasonChange,
       closeDialog: this.closeDialog,
-      stopClick: this.stopClick
+      stopClick: this.stopClick,
+      drawerOpen: this.state.drawerOpen ?? false,
+      openDrawer: this.openDrawer,
+      closeDrawer: this.closeDrawer
     };
   }
 }

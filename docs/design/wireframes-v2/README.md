@@ -76,7 +76,20 @@ wireframes-v2/
 │   │   ├── M14-Katalog-Komersial.dc.html
 │   │   └── M14-Pesanan-Kuota.dc.html
 │   ├── 02-Admin/
-│   │   └── M09-Direktori-Pengguna.dc.html
+│   │   ├── M09-Direktori-Pengguna.dc.html
+│   │   ├── M09-Staf-Internal.dc.html
+│   │   ├── M10-Matriks-Izin.dc.html
+│   │   ├── M09-Konten-Notifikasi.dc.html
+│   │   ├── M09-Konfigurasi-Sistem.dc.html
+│   │   ├── M09-Audit-Oversight.dc.html
+│   │   ├── M03-Moderasi-Listing.dc.html
+│   │   ├── M07-Bank-Master.dc.html
+│   │   ├── M13-Provider-Catalogue.dc.html
+│   │   ├── M04-Learning-Economy-Config.dc.html
+│   │   ├── M14-Komersial-Admin.dc.html
+│   │   ├── M15-Award-Appeal.dc.html
+│   │   ├── M15-Awarding-Path-Admin.dc.html
+│   │   └── M06-Developer-Project-Admin.dc.html
 │   └── 03-Developer-Partner/   # kosong — menyusul Fase F
 └── Mobile/                      # 390×844, breakpoint mobile — struktur cermin persis Desktop/
     └── (folder & nama file sama persis seperti Desktop/, isi disesuaikan breakpoint)
@@ -109,7 +122,7 @@ permission, migration, audit) jadi itu yang dipakai sebagai struktur folder, buk
 | **Fase A — Publik** | `00-Publik/M11-Homepage.dc.html`, `M11-Discovery.dc.html`, `M11-Detail-Listing.dc.html`, `M11-Detail-Agen-Desktop.dc.html`, `M11-Detail-Organisasi-Desktop.dc.html`, `M11-Detail-Developer-Project-Desktop.dc.html`, `M11-Detail-Event-Desktop.dc.html`, `M11-Detail-Learning-Desktop.dc.html`, `M11-Detail-Learning-Session-Desktop.dc.html`, `M11-Konten-Publik-Desktop.dc.html`, `M11-Konten-Publik-Detail-Desktop.dc.html`, `M11-Promo-Desktop.dc.html`, `M11-Promo-Detail-Desktop.dc.html`, `M01-Register-Desktop.dc.html`, `M01-OTP-Desktop.dc.html`, `M01-Login-Desktop.dc.html`, `M01-Recovery-Desktop.dc.html` (+ padanan Mobile) | ✅ Selesai — 10 dari 10 surface M11 spec §4.1 sudah punya wireframe | — |
 | **Fase B — Agent core** | `01-Agent/M08-Dashboard.dc.html`, `01-Agent/M03-Listing-Saya.dc.html`, `01-Agent/M01-Akun-Dibatasi.dc.html`, `01-Agent/M02-Profil-Saya.dc.html`, `01-Agent/M03-Create-Listing-Wizard.dc.html`, `01-Agent/M03-Listing-Detail.dc.html`, `01-Agent/M12-Organisasi-Dashboard.dc.html`, `01-Agent/M12-Buat-Organisasi.dc.html`, `01-Agent/M12-Kelola-Anggota.dc.html`, `01-Agent/M04-Pembelajaran.dc.html`, `01-Agent/M04-Belajar-Course.dc.html`, `01-Agent/M05-Event-Saya.dc.html`, `01-Agent/M05-Ajukan-Event.dc.html` | ✅ Selesai | — |
 | **Fase C — Agent fitur baru** | `01-Agent/M06-Klaim-Proyek.dc.html`, `01-Agent/M07-Kalkulator-DBR.dc.html`, `01-Agent/M07-Riwayat-DBR.dc.html`, `01-Agent/M13-Koneksi-AI.dc.html`, `01-Agent/M13-AI-Assistant.dc.html`, `01-Agent/M14-Katalog-Komersial.dc.html`, `01-Agent/M14-Pesanan-Kuota.dc.html` | ✅ Selesai | — |
-| **Fase D — Admin** | `02-Admin/M09-Direktori-Pengguna.dc.html` | 🟡 Sebagian | M03-Moderasi-Listing, M09-Permission-Matrix, M09-Internal-Staff, M07-Bank-Master, M13-Provider-Catalogue, M04-Learning-Economy-Config, M15-Award-Appeal, M11-SEO, M09-Banners, M09-Notification-Templates, M14-Komersial-Admin |
+| **Fase D — Admin** | `02-Admin/M09-Direktori-Pengguna.dc.html`, `M09-Staf-Internal.dc.html`, `M10-Matriks-Izin.dc.html` (baseline Role×Permission + Preset Agent + assign), `M09-Konten-Notifikasi.dc.html` (Banner + Notification Templates + Push manual), `M09-Konfigurasi-Sistem.dc.html` (System Config + SEO Config, Superadmin-only), `M09-Audit-Oversight.dc.html` (Audit Log + Export + antrean Review Agent), `M03-Moderasi-Listing.dc.html` (+ tab Leads), `M07-Bank-Master.dc.html` (+ tab oversight simulasi DBR), `M13-Provider-Catalogue.dc.html` (+ tab Koneksi Agent/force-action), `M04-Learning-Economy-Config.dc.html` (+ tab Katalog Aktivitas + Poin/Sertifikat), `M14-Komersial-Admin.dc.html` (Reconciliation + Manual Correction terpisah), `M15-Award-Appeal.dc.html` (decide + restore terpisah), `M15-Awarding-Path-Admin.dc.html` (Title + Path/Versi + Cakupan Otoritas), `M06-Developer-Project-Admin.dc.html` (sisi staf, bukan self-service Developer Partner) | ✅ Selesai | — |
 | **Fase E — Qualification/Award** | — | ⬜ Belum dimulai | M15-Title-Award-Presentation, M15-Evidence, M15-Evaluasi |
 | **Fase F — Developer Partner** | — | ⬜ Belum dimulai — persona ke-3, belum punya shell nav sama sekali | M06-Developer-Profile, M06-Kelola-Proyek, M06-Marketing-Kit, M06-Review-Klaim, M05-Submit-Event |
 
@@ -126,6 +139,6 @@ permission, migration, audit) jadi itu yang dipakai sebagai struktur folder, buk
   file `.dc.html` untuk rujukan pasal spesifik.
 
 ---
-*Diekspor otomatis dari canvas Claude Design pada 2026-09-23. Untuk update terbaru, selalu
+*Diekspor otomatis dari canvas Claude Design pada 2026-09-24. Untuk update terbaru, selalu
 rujuk link canvas hidup di atas — folder ini bisa jadi ketinggalan kalau canvas terus diedit
 tanpa export ulang.*

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Matriks Izin — Admin Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:1440px;height:900px;display:flex;overflow:hidden;background:var(--ra-surface);position:relative;}
+  .nav{width:240px;background:var(--ra-ink-900);display:flex;flex-direction:column;flex:none;}
+  .nav-top{height:76px;display:flex;align-items:center;padding:0 20px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:44px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13.5px;white-space:nowrap;}
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item svg{flex:none;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
+  .topbar{height:72px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tab-row{display:flex;gap:4px;padding:0 40px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tab{padding:14px 4px;margin-right:24px;font-size:14px;font-weight:700;color:var(--ra-ink-300);border-bottom:2px solid transparent;cursor:pointer;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  table{width:100%;border-collapse:collapse;}
+  thead th{text-align:left;padding:10px 14px;border-bottom:1px solid var(--ra-ink-100);white-space:nowrap;}
+  tbody td{padding:10px 14px;border-bottom:1px solid var(--ra-ink-50);vertical-align:middle;}
+  tbody tr:hover{background:var(--ra-ink-50);}
+  .scope-select{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-sm);padding:4px 8px;font-size:12px;font-weight:700;background:#fff;}
+  .scope-all{color:var(--ra-success-600);} .scope-own{color:var(--ra-warning-600);} .scope-none{color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);display:flex;align-items:center;justify-content:center;z-index:10;}
+  .dialog{width:560px;max-height:640px;overflow-y:auto;background:#fff;border-radius:var(--ra-radius-lg);box-shadow:var(--ra-shadow-3);padding:28px;display:flex;flex-direction:column;gap:14px;}
+  .preset-row{padding:14px 16px;border-bottom:1px solid var(--ra-ink-50);display:flex;align-items:center;gap:14px;}
+  .preset-row:last-child{border-bottom:none;}
+  .item-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--ra-ink-50);}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="nav">
+    <div class="nav-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:34px;width:auto;object-fit:contain;"></div>
+    <div class="nav-list">
+      <a class="nav-item" href="M09-Direktori-Pengguna.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><circle cx="17" cy="8" r="2.6"/><path d="M22 20c0-2.6-1.9-4.8-4.6-5.6"/></svg>Direktori Pengguna</a>
+      <a class="nav-item" href="M09-Staf-Internal.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="M9 12l2 2 4-4"/></svg>Staf Internal</a>
+      <a class="nav-item is-active" href="M10-Matriks-Izin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Matriks Izin</a>
+      <a class="nav-item" href="M09-Konten-Notifikasi.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M3 11l18-7-7 18-2.5-7.5L3 11Z"/></svg>Konten &amp; Notifikasi</a>
+      <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="12" cy="12" r="3"/><path d="M4 12h2m12 0h2M12 4v2m0 12v2M6.3 6.3l1.4 1.4m8.6 8.6 1.4 1.4M6.3 17.7l1.4-1.4m8.6-8.6 1.4-1.4"/></svg>Konfigurasi Sistem</a>
+      <a class="nav-item" href="M09-Audit-Oversight.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Audit &amp; Oversight</a>
+      <a class="nav-item" href="M03-Moderasi-Listing.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><rect x="4" y="3" width="10" height="18" rx="1"/><path d="M14 8h6v13h-6"/></svg>Moderasi Listing</a>
+      <a class="nav-item" href="M07-Bank-Master.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M3 10l9-6 9 6"/><path d="M5 10v9m14-9v9M9 10v9m6-9v9"/><path d="M3 21h18"/></svg>Bank Master</a>
+      <a class="nav-item" href="M13-Provider-Catalogue.dc.html"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2 12 2Z"/></svg>Provider AI</a>
+      <a class="nav-item" href="M04-Learning-Economy-Config.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></svg>Ekonomi Pembelajaran</a>
+      <a class="nav-item" href="M14-Komersial-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10.5h19"/><path d="M6 14.5h4"/></svg>Komersial &amp; Rekonsiliasi</a>
+      <a class="nav-item" href="M15-Award-Appeal.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M5 3v18"/><path d="M5 4h11l-2 4 2 4H5"/></svg>Banding Penghargaan</a>
+      <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M8 21h8M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4a3 3 0 0 0 3 5M17 6h3a3 3 0 0 1-3 5"/></svg>Jalur Penghargaan</a>
+      <a class="nav-item" href="M06-Developer-Project-Admin.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><rect x="3" y="8" width="8" height="13" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/><path d="M6 12h2m-2 3h2m8-7h2m-2 3h2m-2 3h2"/></svg>Proyek Developer</a>
+      <a class="nav-item" href="M02-Profil-Saya.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>Profil Saya</a>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+    <div class="topbar">
+      <div>
+        <h1 class="ra-title-lg">Matriks Izin</h1>
+        <p class="ra-caption">Masuk sebagai <strong>{{viewerRoleLabel}}</strong> — ganti di panel Tweaks untuk lihat perbedaan akses</p>
+      </div>
+    </div>
+
+    <div class="tab-row">
+      <span class="tab {{tabBaselineClass}}" onClick="{{selectTabBaseline}}">Matriks Baseline (Role × Permission)</span>
+      <span class="tab {{tabPresetClass}}" onClick="{{selectTabPreset}}">Preset Agent</span>
+    </div>
+
+    <!-- TAB: Baseline matrix -->
+    <sc-if value="{{isTabBaseline}}" hint-placeholder-val="{{true}}">
+      <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:20px 40px 40px;display:flex;flex-direction:column;gap:16px;">
+        <p class="ra-body-md" style="color:var(--ra-ink-500);">Baseline default per role — bukan Preset. {{editHintText}}</p>
+        <div class="ra-card" style="overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th class="ra-label-md" style="color:var(--ra-ink-300);">Permission (module.resource.action)</th>
+                <th class="ra-label-md" style="color:var(--ra-ink-300);">Superadmin</th>
+                <th class="ra-label-md" style="color:var(--ra-ink-300);">Admin</th>
+                <th class="ra-label-md" style="color:var(--ra-ink-300);">Manager</th>
+                <th class="ra-label-md" style="color:var(--ra-ink-300);">Agent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{matrixRows}}" as="r" hint-placeholder-count="10">
+                <tr>
+                  <td><span class="ra-label-lg" style="font-family:monospace;font-size:12.5px;">{{r.actionCode}}</span></td>
+                  <td><span class="scope-{{r.superadmin}}">{{r.superadminLabel}}</span></td>
+                  <td><span class="scope-{{r.admin}}">{{r.adminLabel}}</span></td>
+                  <td><span class="scope-{{r.manager}}" style="display:{{r.managerReadonlyDisplay}};">{{r.managerLabel}}</span>
+                    <sc-if value="{{r.managerEditable}}" hint-placeholder-val="{{false}}">
+                      <select class="scope-select"><option>{{r.managerLabel}}</option></select>
+                    </sc-if>
+                  </td>
+                  <td><span class="scope-{{r.agent}}" style="display:{{r.agentReadonlyDisplay}};">{{r.agentLabel}}</span>
+                    <sc-if value="{{r.agentEditable}}" hint-placeholder-val="{{false}}">
+                      <select class="scope-select"><option>{{r.agentLabel}}</option></select>
+                    </sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- TAB: Preset Agent -->
+    <sc-if value="{{isTabPreset}}" hint-placeholder-val="{{false}}">
+      <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:20px 40px 40px;display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <p class="ra-body-md" style="color:var(--ra-ink-500);max-width:600px;">Preset selalu menyasar role Agent — konfigurasi subset izin di luar baseline Agent, lalu tugaskan ke akun tertentu. Preset tidak pernah menjadi role baru.</p>
+          <sc-if value="{{canManagePreset}}" hint-placeholder-val="{{true}}">
+            <button class="ra-btn ra-btn-primary" onClick="{{openCreatePreset}}">+ Buat Preset</button>
+          </sc-if>
+        </div>
+        <div class="ra-card" style="overflow:hidden;">
+          <sc-for list="{{presets}}" as="p" hint-placeholder-count="3">
+            <div class="preset-row">
+              <div style="flex:1;min-width:0;">
+                <span class="ra-label-lg">{{p.name}}</span>
+                <p class="ra-caption">{{p.itemCount}} izin dikonfigurasi · ditugaskan ke {{p.assignedCount}} akun</p>
+              </div>
+              <sc-if value="{{canManagePreset}}" hint-placeholder-val="{{true}}">
+                <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{p.openEdit}}">Edit</button>
+              </sc-if>
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{p.openAssign}}">Tugaskan ke Akun</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- Create/Edit preset dialog -->
+  <sc-if value="{{presetFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">{{presetFormTitle}}</h2>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label class="ra-label-lg">Nama preset</label>
+          <input class="ra-input" type="text" placeholder="mis. Agent Senior — Akses Klaim" value="{{presetFormName}}" onInput="{{onPresetNameInput}}">
+        </div>
+        <div>
+          <label class="ra-label-lg" style="display:block;margin-bottom:8px;">Izin di luar baseline Agent</label>
+          <sc-for list="{{presetItemOptions}}" as="i" hint-placeholder-count="6">
+            <div class="item-row">
+              <span class="ra-body-md" style="font-family:monospace;font-size:12.5px;">{{i.actionCode}}</span>
+              <select class="scope-select"><option>{{i.scopeLabel}}</option></select>
+            </div>
+          </sc-for>
+        </div>
+        <p class="ra-caption">Item tidak boleh melebihi baseline role Agent (ditegakkan trigger DB) — dropdown di atas hanya untuk ilustrasi.</p>
+        <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:4px;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Batal</button>
+          <button class="ra-btn ra-btn-primary" disabled="{{presetSaveDisabled}}" onClick="{{closeDialogs}}">Simpan Preset</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Assign preset dialog -->
+  <sc-if value="{{assignOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">Tugaskan "{{assignPresetName}}"</h2>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label class="ra-label-lg">Cari akun Agent</label>
+          <input class="ra-input" type="text" placeholder="Nama atau email agent…">
+        </div>
+        <div class="ra-card" style="padding:0;overflow:hidden;">
+          <div class="preset-row"><span class="ra-body-md">Dewi Anggraini — dewi.anggraini@example.com</span></div>
+          <div class="preset-row"><span class="ra-body-md">Rian Saputra — rian.saputra@example.com</span></div>
+        </div>
+        <p class="ra-caption">Role akun harus Agent (ditegakkan trigger DB, kalau tidak cocok akan ditolak dengan pesan jelas). Pilih "Lepas Preset" untuk kembalikan akun ke baseline Role Default.</p>
+        <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:4px;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Lepas Preset</button>
+          <button class="ra-btn ra-btn-primary" onClick="{{closeDialogs}}">Tugaskan</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"superadmin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { tab: 'baseline', presetFormOpen: false, presetFormName: '', presetFormTitle: 'Buat Preset Baru', assignOpen: false, assignPresetName: '' };
+    this.selectTabBaseline = this.selectTabBaseline.bind(this);
+    this.selectTabPreset = this.selectTabPreset.bind(this);
+    this.openCreatePreset = this.openCreatePreset.bind(this);
+    this.closeDialogs = this.closeDialogs.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+    this.onPresetNameInput = this.onPresetNameInput.bind(this);
+  }
+  selectTabBaseline(){ this.setState({ tab: 'baseline' }); }
+  selectTabPreset(){ this.setState({ tab: 'preset' }); }
+  openCreatePreset(){ this.setState({ presetFormOpen: true, presetFormName: '', presetFormTitle: 'Buat Preset Baru' }); }
+  openEditPreset(name){ this.setState({ presetFormOpen: true, presetFormName: name, presetFormTitle: 'Edit Preset — ' + name }); }
+  openAssign(name){ this.setState({ assignOpen: true, assignPresetName: name }); }
+  closeDialogs(){ this.setState({ presetFormOpen: false, assignOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  onPresetNameInput(e){ this.setState({ presetFormName: e.target.value }); }
+  renderVals() {
+    const viewerRole = this.props.viewerRole ?? 'superadmin';
+    const roleLabels = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' };
+    const tab = this.state.tab || 'baseline';
+
+    // role_permissions.granted_scope: 'all'|'own'|'none' (query live DB,
+    // 2026-09-24) -- baris di bawah representatif, bukan seluruh ~80
+    // permission. Superadmin manage semua baris (RLS role_permissions_
+    // manage_superadmin); Manager HANYA baris role Agent (role_permissions_
+    // manager_modify_agent_rows, diperbaiki 0103); Admin view-only.
+    const scopeLabel = (s) => s === 'all' ? 'ALL' : s === 'own' ? 'OWN' : 'NONE';
+    const rowDefs = [
+      { actionCode: 'm03.listing.suspend', superadmin: 'all', admin: 'all', manager: 'all', agent: 'none' },
+      { actionCode: 'm03.listing.publish', superadmin: 'all', admin: 'all', manager: 'none', agent: 'own' },
+      { actionCode: 'm07.bank_master.configure', superadmin: 'all', admin: 'all', manager: 'none', agent: 'none' },
+      { actionCode: 'm09.system_configuration.manage', superadmin: 'all', admin: 'none', manager: 'none', agent: 'none' },
+      { actionCode: 'm10.role_permission_matrix.manage', superadmin: 'all', admin: 'none', manager: 'none', agent: 'none' },
+      { actionCode: 'm13.provider_catalogue.edit', superadmin: 'all', admin: 'none', manager: 'none', agent: 'none' },
+      { actionCode: 'm14.commercial_administration.manual_correction', superadmin: 'all', admin: 'none', manager: 'none', agent: 'none' },
+      { actionCode: 'm15.award.manage', superadmin: 'all', admin: 'all', manager: 'all', agent: 'own' },
+      { actionCode: 'm15.awarding_path_rule.configure', superadmin: 'all', admin: 'all', manager: 'all', agent: 'none' },
+      { actionCode: 'm04.certificate.manage', superadmin: 'all', admin: 'all', manager: 'all', agent: 'none' }
+    ];
+    const isSuperadmin = viewerRole === 'superadmin';
+    const isManager = viewerRole === 'manager';
+    const matrixRows = rowDefs.map(r => ({
+      actionCode: r.actionCode,
+      superadmin: r.superadmin, superadminLabel: scopeLabel(r.superadmin),
+      admin: r.admin, adminLabel: scopeLabel(r.admin),
+      manager: r.manager, managerLabel: scopeLabel(r.manager), managerEditable: isSuperadmin, managerReadonlyDisplay: isSuperadmin ? 'none' : 'inline',
+      agent: r.agent, agentLabel: scopeLabel(r.agent), agentEditable: isSuperadmin || isManager, agentReadonlyDisplay: (isSuperadmin || isManager) ? 'none' : 'inline'
+    }));
+
+    // permission_presets (0004) -- SELALU target_role_id = Agent (trigger
+    // enforce_preset_target_role_is_agent). Manage: Superadmin ALL +
+    // Manager (RLS permission_presets_manage, 0007); Admin hanya view
+    // (permission_presets_select_view, 0103).
+    const canManagePreset = isSuperadmin || isManager;
+    const presetDefs = [
+      { name: 'Agent Senior — Akses Klaim Tambahan', itemCount: 3, assignedCount: 2 },
+      { name: 'Agent Trial — Akses Terbatas', itemCount: 5, assignedCount: 1 }
+    ];
+    const presets = presetDefs.map(p => ({
+      ...p,
+      openEdit: () => this.openEditPreset(p.name),
+      openAssign: () => this.openAssign(p.name)
+    }));
+    const presetItemOptions = [
+      { actionCode: 'm06.marketing_kit.claim', scopeLabel: 'ALL' },
+      { actionCode: 'm14.commercial_purchase_access.access', scopeLabel: 'ALL' },
+      { actionCode: 'm07.bank_master.view', scopeLabel: 'ALL' }
+    ];
+
+    const presetFormName = this.state.presetFormName || '';
+
+    return {
+      viewerRoleLabel: roleLabels[viewerRole] ?? 'Superadmin',
+      isTabBaseline: tab === 'baseline', isTabPreset: tab === 'preset',
+      tabBaselineClass: tab === 'baseline' ? 'is-active' : '',
+      tabPresetClass: tab === 'preset' ? 'is-active' : '',
+      selectTabBaseline: this.selectTabBaseline, selectTabPreset: this.selectTabPreset,
+      editHintText: isSuperadmin ? 'Anda bisa ubah semua baris.' : isManager ? 'Anda hanya bisa ubah kolom Agent.' : 'Anda hanya bisa melihat (view-only).',
+      matrixRows,
+      canManagePreset, presets, presetItemOptions,
+      openCreatePreset: this.openCreatePreset,
+      presetFormOpen: this.state.presetFormOpen ?? false,
+      presetFormTitle: this.state.presetFormTitle || 'Buat Preset Baru',
+      presetFormName,
+      presetSaveDisabled: presetFormName.trim().length === 0,
+      assignOpen: this.state.assignOpen ?? false,
+      assignPresetName: this.state.assignPresetName || '',
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick,
+      onPresetNameInput: this.onPresetNameInput
+    };
+  }
+}
+</script>
+</body>
+</html>

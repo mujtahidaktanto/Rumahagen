@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Konten &amp; Notifikasi — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .iconbtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:#fff;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:30;display:flex;}
+  .drawer{width:280px;height:100%;background:var(--ra-ink-900);display:flex;flex-direction:column;}
+  .drawer-top{height:60px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;}
+  .nav-item{display:flex;align-items:center;height:42px;padding:0 14px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13px;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
+  .tab-row{display:flex;gap:6px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;}
+  .tab{padding:8px 12px;border-radius:var(--ra-radius-pill);font-size:12px;font-weight:700;color:var(--ra-ink-500);background:var(--ra-ink-50);white-space:nowrap;}
+  .tab.is-active{color:#fff;background:var(--ra-blue-600);}
+  .item-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
+  .sheet{width:100%;max-height:75%;overflow-y:auto;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--ra-shadow-3);}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="iconbtn" aria-label="Menu" onClick="{{openDrawer}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="ra-title-md" style="color:#fff;flex:1;">Konten &amp; Notifikasi</span>
+  </div>
+
+  <div class="tab-row">
+    <span class="tab {{tabBannerClass}}" onClick="{{selectTabBanner}}">Banner</span>
+    <span class="tab {{tabTemplateClass}}" onClick="{{selectTabTemplate}}">Template</span>
+    <span class="tab {{tabPushClass}}" onClick="{{selectTabPush}}">Kirim Manual</span>
+  </div>
+
+  <sc-if value="{{isTabBanner}}" hint-placeholder-val="{{true}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{banners}}" as="b" hint-placeholder-count="3">
+        <div class="item-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg ra-truncate-1" style="flex:1;">{{b.title}}</span><span class="ra-badge {{b.badgeClass}}">{{b.statusLabel}}</span></div>
+          <span class="ra-caption">Prioritas {{b.priority}} · {{b.scheduleAt}} → {{b.expiresAt}}</span>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" onClick="{{b.openEdit}}">Edit</button>
+        </div>
+      </sc-for>
+      <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreateBanner}}">+ Buat Banner</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isTabTemplate}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{templates}}" as="t" hint-placeholder-count="6">
+        <div class="item-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg" style="font-family:monospace;font-size:12px;">{{t.type}}</span><span class="ra-badge {{t.activeBadge}}">{{t.activeLabel}}</span></div>
+          <span class="ra-caption ra-truncate-1">{{t.titleTemplate}}</span>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" onClick="{{t.openEdit}}">Edit</button>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isTabPush}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-if value="{{canPush}}" hint-placeholder-val="{{true}}">
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openPush}}">+ Kirim Notifikasi</button>
+        <sc-for list="{{pushHistory}}" as="h" hint-placeholder-count="3">
+          <div class="item-card"><span class="ra-body-md">{{h.title}}</span><span class="ra-caption">→ {{h.target}} · {{h.sentAt}}</span></div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{isManagerDenied}}" hint-placeholder-val="{{false}}">
+        <p class="ra-body-md" style="color:var(--ra-ink-500);">Hanya Superadmin/Admin yang bisa kirim notifikasi manual.</p>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div class="drawer-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;"></div>
+        <div class="nav-list">
+          <a class="nav-item" href="M09-Direktori-Pengguna.dc.html">Direktori Pengguna</a>
+          <a class="nav-item" href="M09-Staf-Internal.dc.html">Staf Internal</a>
+          <a class="nav-item" href="M10-Matriks-Izin.dc.html">Matriks Izin</a>
+          <a class="nav-item is-active" href="M09-Konten-Notifikasi.dc.html">Konten &amp; Notifikasi</a>
+          <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html">Konfigurasi Sistem</a>
+          <a class="nav-item" href="M09-Audit-Oversight.dc.html">Audit &amp; Oversight</a>
+          <a class="nav-item" href="M03-Moderasi-Listing.dc.html">Moderasi Listing</a>
+          <a class="nav-item" href="M07-Bank-Master.dc.html">Bank Master</a>
+          <a class="nav-item" href="M13-Provider-Catalogue.dc.html">Provider AI</a>
+          <a class="nav-item" href="M04-Learning-Economy-Config.dc.html">Ekonomi Pembelajaran</a>
+          <a class="nav-item" href="M14-Komersial-Admin.dc.html">Komersial &amp; Rekonsiliasi</a>
+          <a class="nav-item" href="M15-Award-Appeal.dc.html">Banding Penghargaan</a>
+          <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html">Jalur Penghargaan</a>
+          <a class="nav-item" href="M06-Developer-Project-Admin.dc.html">Proyek Developer</a>
+          <a class="nav-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{bannerFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">{{bannerFormTitle}}</h2>
+        <input class="ra-input" type="text" placeholder="Judul" value="{{bannerFormTitleVal}}" onInput="{{onBannerTitleInput}}">
+        <textarea class="ra-input" style="height:70px;padding:10px 14px;resize:none;" placeholder="Isi konten"></textarea>
+        <select class="ra-input"><option>draft</option><option>scheduled</option><option>active</option><option>expired</option><option>archived</option></select>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{templateFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Edit — {{templateFormType}}</h2>
+        <input class="ra-input" type="text" placeholder="Judul" value="{{templateFormTitle}}" onInput="{{onTemplateTitleInput}}">
+        <textarea class="ra-input" style="height:80px;padding:10px 14px;resize:none;" placeholder="Pesan"></textarea>
+        <label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" checked> <span class="ra-body-md">Aktif</span></label>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{pushFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Kirim Notifikasi Manual</h2>
+        <input class="ra-input" type="text" placeholder="Cari akun tujuan…">
+        <select class="ra-input"><option>approval_status</option><option>event_reminder</option><option>listing_expiring</option><option>certificate_issued</option><option>lead_new</option><option>lainnya</option></select>
+        <input class="ra-input" type="text" placeholder="Judul (opsional)">
+        <textarea class="ra-input" style="height:70px;padding:10px 14px;resize:none;" placeholder="Pesan (opsional)"></textarea>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Kirim</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false, tab: 'banner', bannerFormOpen: false, bannerFormTitle: 'Buat Banner Baru', bannerFormTitleVal: '', templateFormOpen: false, templateFormType: '', templateFormTitle: '', pushFormOpen: false };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.selectTabBanner = this.selectTabBanner.bind(this);
+    this.selectTabTemplate = this.selectTabTemplate.bind(this);
+    this.selectTabPush = this.selectTabPush.bind(this);
+    this.openCreateBanner = this.openCreateBanner.bind(this);
+    this.openPush = this.openPush.bind(this);
+    this.closeDialogs = this.closeDialogs.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+    this.onBannerTitleInput = this.onBannerTitleInput.bind(this);
+    this.onTemplateTitleInput = this.onTemplateTitleInput.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  selectTabBanner(){ this.setState({ tab: 'banner' }); }
+  selectTabTemplate(){ this.setState({ tab: 'template' }); }
+  selectTabPush(){ this.setState({ tab: 'push' }); }
+  openCreateBanner(){ this.setState({ bannerFormOpen: true, bannerFormTitle: 'Buat Banner Baru', bannerFormTitleVal: '' }); }
+  openEditBanner(title){ this.setState({ bannerFormOpen: true, bannerFormTitle: 'Edit — ' + title, bannerFormTitleVal: title }); }
+  openEditTemplate(type, title){ this.setState({ templateFormOpen: true, templateFormType: type, templateFormTitle: title }); }
+  openPush(){ this.setState({ pushFormOpen: true }); }
+  closeDialogs(){ this.setState({ bannerFormOpen: false, templateFormOpen: false, pushFormOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  onBannerTitleInput(e){ this.setState({ bannerFormTitleVal: e.target.value }); }
+  onTemplateTitleInput(e){ this.setState({ templateFormTitle: e.target.value }); }
+  renderVals() {
+    const viewerRole = this.props.viewerRole ?? 'admin';
+    const tab = this.state.tab || 'banner';
+    const bannerStatusMap = {
+      draft: { badge: 'ra-badge-neutral', label: 'Draft' }, scheduled: { badge: 'ra-badge-info', label: 'Terjadwal' },
+      active: { badge: 'ra-badge-success', label: 'Tayang' }, expired: { badge: 'ra-badge-danger', label: 'Berakhir' }, archived: { badge: 'ra-badge-neutral', label: 'Diarsipkan' }
+    };
+    const bannerDefs = [
+      { title: 'Promo Refresh Listing Gratis September', status: 'active', priority: 1, scheduleAt: '01 Sep', expiresAt: '30 Sep' },
+      { title: 'Webinar Strategi Closing Q4', status: 'scheduled', priority: 2, scheduleAt: '01 Okt', expiresAt: '15 Okt' }
+    ];
+    const banners = bannerDefs.map(b => { const sm = bannerStatusMap[b.status]; return { title: b.title, priority: b.priority, scheduleAt: b.scheduleAt, expiresAt: b.expiresAt, statusLabel: sm.label, badgeClass: sm.badge, openEdit: () => this.openEditBanner(b.title) }; });
+    const templateDefs = [
+      { type: 'approval_status', titleTemplate: 'Status persetujuan Anda diperbarui', isActive: true },
+      { type: 'certificate_issued', titleTemplate: 'Sertifikat Anda telah terbit', isActive: true },
+      { type: 'event_reminder', titleTemplate: 'Pengingat acara: {{event_title}}', isActive: true },
+      { type: 'lainnya', titleTemplate: 'Notifikasi', isActive: true },
+      { type: 'lead_new', titleTemplate: 'Prospek baru masuk', isActive: true },
+      { type: 'listing_expiring', titleTemplate: 'Listing Anda akan kedaluwarsa', isActive: true }
+    ];
+    const templates = templateDefs.map(t => ({ type: t.type, titleTemplate: t.titleTemplate, activeBadge: t.isActive ? 'ra-badge-success' : 'ra-badge-neutral', activeLabel: t.isActive ? 'Aktif' : 'Nonaktif', openEdit: () => this.openEditTemplate(t.type, t.titleTemplate) }));
+    const canPush = viewerRole === 'superadmin' || viewerRole === 'admin';
+    const pushHistory = [
+      { title: 'Pengingat verifikasi dokumen', target: 'fajar.nugroho@example.com', sentAt: '23 Sep' },
+      { title: 'Sertifikat terbit', target: 'dewi.anggraini@example.com', sentAt: '20 Sep' }
+    ];
+    return {
+      drawerOpen: this.state.drawerOpen ?? false, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
+      isTabBanner: tab === 'banner', isTabTemplate: tab === 'template', isTabPush: tab === 'push',
+      tabBannerClass: tab === 'banner' ? 'is-active' : '', tabTemplateClass: tab === 'template' ? 'is-active' : '', tabPushClass: tab === 'push' ? 'is-active' : '',
+      selectTabBanner: this.selectTabBanner, selectTabTemplate: this.selectTabTemplate, selectTabPush: this.selectTabPush,
+      banners, templates, canPush, isManagerDenied: !canPush, pushHistory,
+      openCreateBanner: this.openCreateBanner, openPush: this.openPush,
+      bannerFormOpen: this.state.bannerFormOpen ?? false, bannerFormTitle: this.state.bannerFormTitle || '', bannerFormTitleVal: this.state.bannerFormTitleVal || '',
+      templateFormOpen: this.state.templateFormOpen ?? false, templateFormType: this.state.templateFormType || '', templateFormTitle: this.state.templateFormTitle || '',
+      pushFormOpen: this.state.pushFormOpen ?? false,
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick,
+      onBannerTitleInput: this.onBannerTitleInput, onTemplateTitleInput: this.onTemplateTitleInput
+    };
+  }
+}
+</script>
+</body>
+</html>

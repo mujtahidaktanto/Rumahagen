@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Matriks Izin — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .iconbtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:#fff;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:30;display:flex;}
+  .drawer{width:280px;height:100%;background:var(--ra-ink-900);display:flex;flex-direction:column;}
+  .drawer-top{height:60px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;}
+  .nav-item{display:flex;align-items:center;height:42px;padding:0 14px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13px;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
+  .tab-row{display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tab{padding:8px 14px;border-radius:var(--ra-radius-pill);font-size:12.5px;font-weight:700;color:var(--ra-ink-500);background:var(--ra-ink-50);}
+  .tab.is-active{color:#fff;background:var(--ra-blue-600);}
+  .perm-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+  .scope-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;}
+  .scope-all{color:var(--ra-success-600);font-weight:700;} .scope-own{color:var(--ra-warning-600);font-weight:700;} .scope-none{color:var(--ra-ink-300);font-weight:700;}
+  .preset-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
+  .sheet{width:100%;max-height:70%;overflow-y:auto;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--ra-shadow-3);}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="iconbtn" aria-label="Menu" onClick="{{openDrawer}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="ra-title-md" style="color:#fff;flex:1;">Matriks Izin</span>
+    <span class="ra-caption" style="color:rgba(255,255,255,.65);">{{viewerRoleLabel}}</span>
+  </div>
+
+  <div class="tab-row">
+    <span class="tab {{tabBaselineClass}}" onClick="{{selectTabBaseline}}">Baseline</span>
+    <span class="tab {{tabPresetClass}}" onClick="{{selectTabPreset}}">Preset Agent</span>
+  </div>
+
+  <sc-if value="{{isTabBaseline}}" hint-placeholder-val="{{true}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <p class="ra-caption">{{editHintText}}</p>
+      <sc-for list="{{matrixRows}}" as="r" hint-placeholder-count="8">
+        <div class="perm-card">
+          <span class="ra-label-lg" style="font-family:monospace;font-size:12px;">{{r.actionCode}}</span>
+          <div class="scope-row"><span>Superadmin</span><span class="scope-{{r.superadmin}}">{{r.superadminLabel}}</span></div>
+          <div class="scope-row"><span>Admin</span><span class="scope-{{r.admin}}">{{r.adminLabel}}</span></div>
+          <div class="scope-row"><span>Manager</span><span class="scope-{{r.manager}}">{{r.managerLabel}}</span></div>
+          <div class="scope-row"><span>Agent</span><span class="scope-{{r.agent}}">{{r.agentLabel}}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isTabPreset}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{presets}}" as="p" hint-placeholder-count="2">
+        <div class="preset-card">
+          <span class="ra-label-lg">{{p.name}}</span>
+          <span class="ra-caption">{{p.itemCount}} izin · ditugaskan ke {{p.assignedCount}} akun</span>
+          <div style="display:flex;gap:10px;">
+            <sc-if value="{{canManagePreset}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{p.openEdit}}">Edit</button>
+            </sc-if>
+            <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{p.openAssign}}">Tugaskan</button>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{canManagePreset}}" hint-placeholder-val="{{true}}">
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreatePreset}}">+ Buat Preset</button>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- Nav drawer -->
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div class="drawer-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;"></div>
+        <div class="nav-list">
+          <a class="nav-item" href="M09-Direktori-Pengguna.dc.html">Direktori Pengguna</a>
+          <a class="nav-item" href="M09-Staf-Internal.dc.html">Staf Internal</a>
+          <a class="nav-item is-active" href="M10-Matriks-Izin.dc.html">Matriks Izin</a>
+          <a class="nav-item" href="M09-Konten-Notifikasi.dc.html">Konten &amp; Notifikasi</a>
+          <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html">Konfigurasi Sistem</a>
+          <a class="nav-item" href="M09-Audit-Oversight.dc.html">Audit &amp; Oversight</a>
+          <a class="nav-item" href="M03-Moderasi-Listing.dc.html">Moderasi Listing</a>
+          <a class="nav-item" href="M07-Bank-Master.dc.html">Bank Master</a>
+          <a class="nav-item" href="M13-Provider-Catalogue.dc.html">Provider AI</a>
+          <a class="nav-item" href="M04-Learning-Economy-Config.dc.html">Ekonomi Pembelajaran</a>
+          <a class="nav-item" href="M14-Komersial-Admin.dc.html">Komersial &amp; Rekonsiliasi</a>
+          <a class="nav-item" href="M15-Award-Appeal.dc.html">Banding Penghargaan</a>
+          <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html">Jalur Penghargaan</a>
+          <a class="nav-item" href="M06-Developer-Project-Admin.dc.html">Proyek Developer</a>
+          <a class="nav-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Create/Edit preset sheet -->
+  <sc-if value="{{presetFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">{{presetFormTitle}}</h2>
+        <input class="ra-input" type="text" placeholder="Nama preset" value="{{presetFormName}}" onInput="{{onPresetNameInput}}">
+        <sc-for list="{{presetItemOptions}}" as="i" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--ra-ink-50);">
+            <span class="ra-body-md" style="font-family:monospace;font-size:11.5px;">{{i.actionCode}}</span>
+            <span class="ra-badge ra-badge-success">{{i.scopeLabel}}</span>
+          </div>
+        </sc-for>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{presetSaveDisabled}}" onClick="{{closeDialogs}}">Simpan Preset</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Assign preset sheet -->
+  <sc-if value="{{assignOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Tugaskan "{{assignPresetName}}"</h2>
+        <input class="ra-input" type="text" placeholder="Cari akun Agent…">
+        <div style="padding:10px 0;border-bottom:1px solid var(--ra-ink-50);"><span class="ra-body-md">Dewi Anggraini</span></div>
+        <div style="padding:10px 0;"><span class="ra-body-md">Rian Saputra</span></div>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Tugaskan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Lepas Preset</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"superadmin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false, tab: 'baseline', presetFormOpen: false, presetFormName: '', presetFormTitle: 'Buat Preset Baru', assignOpen: false, assignPresetName: '' };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.selectTabBaseline = this.selectTabBaseline.bind(this);
+    this.selectTabPreset = this.selectTabPreset.bind(this);
+    this.openCreatePreset = this.openCreatePreset.bind(this);
+    this.closeDialogs = this.closeDialogs.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+    this.onPresetNameInput = this.onPresetNameInput.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  selectTabBaseline(){ this.setState({ tab: 'baseline' }); }
+  selectTabPreset(){ this.setState({ tab: 'preset' }); }
+  openCreatePreset(){ this.setState({ presetFormOpen: true, presetFormName: '', presetFormTitle: 'Buat Preset Baru' }); }
+  openEditPreset(name){ this.setState({ presetFormOpen: true, presetFormName: name, presetFormTitle: 'Edit — ' + name }); }
+  openAssign(name){ this.setState({ assignOpen: true, assignPresetName: name }); }
+  closeDialogs(){ this.setState({ presetFormOpen: false, assignOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  onPresetNameInput(e){ this.setState({ presetFormName: e.target.value }); }
+  renderVals() {
+    const viewerRole = this.props.viewerRole ?? 'superadmin';
+    const roleLabels = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' };
+    const tab = this.state.tab || 'baseline';
+    const isSuperadmin = viewerRole === 'superadmin';
+    const isManager = viewerRole === 'manager';
+    const scopeLabel = (s) => s === 'all' ? 'ALL' : s === 'own' ? 'OWN' : 'NONE';
+    const rowDefs = [
+      { actionCode: 'm03.listing.suspend', superadmin: 'all', admin: 'all', manager: 'all', agent: 'none' },
+      { actionCode: 'm03.listing.publish', superadmin: 'all', admin: 'all', manager: 'none', agent: 'own' },
+      { actionCode: 'm07.bank_master.configure', superadmin: 'all', admin: 'all', manager: 'none', agent: 'none' },
+      { actionCode: 'm09.system_configuration.manage', superadmin: 'all', admin: 'none', manager: 'none', agent: 'none' },
+      { actionCode: 'm13.provider_catalogue.edit', superadmin: 'all', admin: 'none', manager: 'none', agent: 'none' },
+      { actionCode: 'm15.award.manage', superadmin: 'all', admin: 'all', manager: 'all', agent: 'own' }
+    ];
+    const matrixRows = rowDefs.map(r => ({
+      actionCode: r.actionCode,
+      superadmin: r.superadmin, superadminLabel: scopeLabel(r.superadmin),
+      admin: r.admin, adminLabel: scopeLabel(r.admin),
+      manager: r.manager, managerLabel: scopeLabel(r.manager),
+      agent: r.agent, agentLabel: scopeLabel(r.agent)
+    }));
+    const canManagePreset = isSuperadmin || isManager;
+    const presetDefs = [
+      { name: 'Agent Senior — Akses Klaim Tambahan', itemCount: 3, assignedCount: 2 },
+      { name: 'Agent Trial — Akses Terbatas', itemCount: 5, assignedCount: 1 }
+    ];
+    const presets = presetDefs.map(p => ({ ...p, openEdit: () => this.openEditPreset(p.name), openAssign: () => this.openAssign(p.name) }));
+    const presetItemOptions = [
+      { actionCode: 'm06.marketing_kit.claim', scopeLabel: 'ALL' },
+      { actionCode: 'm14.commercial_purchase_access.access', scopeLabel: 'ALL' },
+      { actionCode: 'm07.bank_master.view', scopeLabel: 'ALL' }
+    ];
+    const presetFormName = this.state.presetFormName || '';
+    return {
+      viewerRoleLabel: roleLabels[viewerRole] ?? 'Superadmin',
+      drawerOpen: this.state.drawerOpen ?? false, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
+      isTabBaseline: tab === 'baseline', isTabPreset: tab === 'preset',
+      tabBaselineClass: tab === 'baseline' ? 'is-active' : '', tabPresetClass: tab === 'preset' ? 'is-active' : '',
+      selectTabBaseline: this.selectTabBaseline, selectTabPreset: this.selectTabPreset,
+      editHintText: isSuperadmin ? 'Anda bisa ubah semua baris (lihat versi Desktop untuk kontrol edit).' : isManager ? 'Anda hanya bisa ubah kolom Agent.' : 'View-only.',
+      matrixRows, canManagePreset, presets, presetItemOptions,
+      openCreatePreset: this.openCreatePreset,
+      presetFormOpen: this.state.presetFormOpen ?? false,
+      presetFormTitle: this.state.presetFormTitle || 'Buat Preset Baru',
+      presetFormName, presetSaveDisabled: presetFormName.trim().length === 0,
+      assignOpen: this.state.assignOpen ?? false, assignPresetName: this.state.assignPresetName || '',
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick, onPresetNameInput: this.onPresetNameInput
+    };
+  }
+}
+</script>
+</body>
+</html>

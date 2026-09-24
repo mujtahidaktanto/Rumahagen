@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Moderasi Listing — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .iconbtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:#fff;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:30;display:flex;}
+  .drawer{width:280px;height:100%;background:var(--ra-ink-900);display:flex;flex-direction:column;}
+  .drawer-top{height:60px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;}
+  .nav-item{display:flex;align-items:center;height:42px;padding:0 14px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13px;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
+  .tab-row{display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .tab{padding:8px 12px;border-radius:var(--ra-radius-pill);font-size:12px;font-weight:700;color:var(--ra-ink-500);background:var(--ra-ink-50);white-space:nowrap;}
+  .tab.is-active{color:#fff;background:var(--ra-blue-600);}
+  .item-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 20px;color:var(--ra-ink-300);text-align:center;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
+  .sheet{width:100%;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--ra-shadow-3);}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="iconbtn" aria-label="Menu" onClick="{{openDrawer}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="ra-title-md" style="color:#fff;flex:1;">Moderasi Listing</span>
+  </div>
+
+  <div class="tab-row">
+    <span class="tab {{tabPendingClass}}" onClick="{{selectTabPending}}">Antrean Review</span>
+    <span class="tab {{tabLeadsClass}}" onClick="{{selectTabLeads}}">Leads</span>
+  </div>
+
+  <sc-if value="{{isTabPending}}" hint-placeholder-val="{{true}}">
+    <sc-if value="{{isPendingEmpty}}" hint-placeholder-val="{{false}}">
+      <div class="empty-wrap"><span class="ra-body-md">Tidak ada listing dalam antrean.</span></div>
+    </sc-if>
+    <sc-if value="{{isPendingLoaded}}" hint-placeholder-val="{{true}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{pendingListings}}" as="l" hint-placeholder-count="3">
+        <div class="item-card">
+          <span class="ra-label-lg">{{l.title}}</span>
+          <span class="ra-caption">{{l.agentName}} · ditandai {{l.flaggedAt}}</span>
+          <sc-if value="{{l.approveDisabledNote}}" hint-placeholder-val="{{false}}">
+            <span class="ra-caption" style="color:var(--ra-danger-600);">Manager tidak punya izin publish — Setujui akan gagal.</span>
+          </sc-if>
+          <div style="display:flex;gap:10px;">
+            <sc-if value="{{l.canApprove}}" hint-placeholder-val="{{true}}">
+              <button class="ra-btn ra-btn-primary ra-btn-sm" style="flex:1;" onClick="{{l.openApprove}}">Setujui</button>
+            </sc-if>
+            <button class="ra-btn ra-btn-danger ra-btn-sm" style="flex:1;" onClick="{{l.openReject}}">Tolak</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{isTabLeads}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{leads}}" as="ld" hint-placeholder-count="4">
+        <div class="item-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg ra-truncate-1" style="flex:1;">{{ld.listingTitle}}</span><span class="ra-badge {{ld.badgeClass}}">{{ld.statusLabel}}</span></div>
+          <span class="ra-caption">{{ld.agentName}} · {{ld.contact}}</span>
+          <span class="ra-caption">Masuk {{ld.createdAt}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div class="drawer-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;"></div>
+        <div class="nav-list">
+          <a class="nav-item" href="M09-Direktori-Pengguna.dc.html">Direktori Pengguna</a>
+          <a class="nav-item" href="M09-Staf-Internal.dc.html">Staf Internal</a>
+          <a class="nav-item" href="M10-Matriks-Izin.dc.html">Matriks Izin</a>
+          <a class="nav-item" href="M09-Konten-Notifikasi.dc.html">Konten &amp; Notifikasi</a>
+          <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html">Konfigurasi Sistem</a>
+          <a class="nav-item" href="M09-Audit-Oversight.dc.html">Audit &amp; Oversight</a>
+          <a class="nav-item is-active" href="M03-Moderasi-Listing.dc.html">Moderasi Listing</a>
+          <a class="nav-item" href="M07-Bank-Master.dc.html">Bank Master</a>
+          <a class="nav-item" href="M13-Provider-Catalogue.dc.html">Provider AI</a>
+          <a class="nav-item" href="M04-Learning-Economy-Config.dc.html">Ekonomi Pembelajaran</a>
+          <a class="nav-item" href="M14-Komersial-Admin.dc.html">Komersial &amp; Rekonsiliasi</a>
+          <a class="nav-item" href="M15-Award-Appeal.dc.html">Banding Penghargaan</a>
+          <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html">Jalur Penghargaan</a>
+          <a class="nav-item" href="M06-Developer-Project-Admin.dc.html">Proyek Developer</a>
+          <a class="nav-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{approveOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Setujui "{{targetTitle}}"?</h2>
+        <p class="ra-body-md">Listing kembali ke status 'published'.</p>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Setujui</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{rejectOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Tolak "{{targetTitle}}"?</h2>
+        <textarea class="ra-input" style="height:70px;padding:10px 14px;resize:none;" placeholder="Alasan penolakan…"></textarea>
+        <button class="ra-btn ra-btn-danger" style="width:100%;" onClick="{{closeDialogs}}">Tolak</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"queueState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false, tab: 'pending', approveOpen: false, rejectOpen: false, targetTitle: '' };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.selectTabPending = this.selectTabPending.bind(this);
+    this.selectTabLeads = this.selectTabLeads.bind(this);
+    this.closeDialogs = this.closeDialogs.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  selectTabPending(){ this.setState({ tab: 'pending' }); }
+  selectTabLeads(){ this.setState({ tab: 'leads' }); }
+  openApprove(title){ this.setState({ approveOpen: true, targetTitle: title }); }
+  openReject(title){ this.setState({ rejectOpen: true, targetTitle: title }); }
+  closeDialogs(){ this.setState({ approveOpen: false, rejectOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  renderVals() {
+    const viewerRole = this.props.viewerRole ?? 'admin';
+    const tab = this.state.tab || 'pending';
+    const queueState = this.props.queueState ?? 'loaded';
+    const canApprove = viewerRole !== 'manager';
+    const listingDefs = [
+      { title: 'Rumah Modern 2 Lantai — BSD City', agentName: 'Dewi Anggraini', flaggedAt: '23 Sep' },
+      { title: 'Ruko 3 Lantai — Kelapa Gading', agentName: 'Rian Saputra', flaggedAt: '22 Sep' }
+    ];
+    const pendingListings = listingDefs.map(l => ({ title: l.title, agentName: l.agentName, flaggedAt: l.flaggedAt, canApprove, approveDisabledNote: !canApprove, openApprove: () => this.openApprove(l.title), openReject: () => this.openReject(l.title) }));
+    const leadStatusMap = { new: { badge: 'ra-badge-info', label: 'Baru' }, contacted: { badge: 'ra-badge-warning', label: 'Dihubungi' }, closed: { badge: 'ra-badge-success', label: 'Closing' } };
+    const leadDefs = [
+      { listingTitle: 'Rumah Modern 2 Lantai — BSD City', agentName: 'Dewi Anggraini', contact: '0812-xxxx-1234', status: 'new', createdAt: '24 Sep' },
+      { listingTitle: 'Apartemen Studio — Kemang', agentName: 'Rian Saputra', contact: '0813-xxxx-5678', status: 'contacted', createdAt: '23 Sep' }
+    ];
+    const leads = leadDefs.map(ld => { const sm = leadStatusMap[ld.status]; return { listingTitle: ld.listingTitle, agentName: ld.agentName, contact: ld.contact, createdAt: ld.createdAt, statusLabel: sm.label, badgeClass: sm.badge }; });
+    return {
+      drawerOpen: this.state.drawerOpen ?? false, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
+      isTabPending: tab === 'pending', isTabLeads: tab === 'leads',
+      tabPendingClass: tab === 'pending' ? 'is-active' : '', tabLeadsClass: tab === 'leads' ? 'is-active' : '',
+      selectTabPending: this.selectTabPending, selectTabLeads: this.selectTabLeads,
+      isPendingEmpty: queueState === 'empty', isPendingLoaded: queueState === 'loaded',
+      pendingListings, leads,
+      approveOpen: this.state.approveOpen ?? false, rejectOpen: this.state.rejectOpen ?? false, targetTitle: this.state.targetTitle || '',
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick
+    };
+  }
+}
+</script>
+</body>
+</html>

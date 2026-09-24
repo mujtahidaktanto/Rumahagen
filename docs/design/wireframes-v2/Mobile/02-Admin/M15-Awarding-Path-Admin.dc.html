@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Jalur Penghargaan — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .iconbtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:#fff;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:30;display:flex;}
+  .drawer{width:280px;height:100%;background:var(--ra-ink-900);display:flex;flex-direction:column;}
+  .drawer-top{height:60px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;}
+  .nav-item{display:flex;align-items:center;height:42px;padding:0 14px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13px;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
+  .tab-row{display:flex;gap:6px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;}
+  .tab{padding:8px 12px;border-radius:var(--ra-radius-pill);font-size:12px;font-weight:700;color:var(--ra-ink-500);background:var(--ra-ink-50);white-space:nowrap;}
+  .tab.is-active{color:#fff;background:var(--ra-blue-600);}
+  .item-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .version-row{padding:6px 0;border-top:1px solid var(--ra-ink-50);display:flex;align-items:center;gap:8px;font-size:12px;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
+  .sheet{width:100%;max-height:78%;overflow-y:auto;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--ra-shadow-3);}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="iconbtn" aria-label="Menu" onClick="{{openDrawer}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="ra-title-md" style="color:#fff;flex:1;">Jalur Penghargaan</span>
+  </div>
+
+  <div class="tab-row">
+    <span class="tab {{tabTitlesClass}}" onClick="{{selectTabTitles}}">Titles</span>
+    <span class="tab {{tabPathsClass}}" onClick="{{selectTabPaths}}">Path &amp; Versi</span>
+    <span class="tab {{tabScopeClass}}" onClick="{{selectTabScope}}">Cakupan</span>
+  </div>
+
+  <sc-if value="{{isTabTitles}}" hint-placeholder-val="{{true}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{titles}}" as="t" hint-placeholder-count="3">
+        <div class="item-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg">{{t.name}}</span><span class="ra-badge {{t.badgeClass}}">{{t.statusLabel}}</span></div>
+          <span class="ra-caption" style="font-family:monospace;">{{t.code}}</span>
+          <div style="display:flex;gap:10px;">
+            <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{t.openEdit}}">Edit</button>
+            <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{t.openStatus}}">Status</button>
+          </div>
+        </div>
+      </sc-for>
+      <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreateTitle}}">+ Title Baru</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isTabPaths}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{paths}}" as="p" hint-placeholder-count="2">
+        <div class="item-card">
+          <span class="ra-label-lg">{{p.name}}</span>
+          <span class="ra-caption">Title: {{p.titleName}}</span>
+          <sc-for list="{{p.versions}}" as="v" hint-placeholder-count="2">
+            <div class="version-row"><span class="ra-label-lg">v{{v.versionNo}}</span><span class="ra-badge {{v.badgeClass}}">{{v.statusLabel}}</span><span class="ra-caption">{{v.ruleCode}}</span></div>
+          </sc-for>
+          <div style="display:flex;gap:10px;margin-top:6px;">
+            <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{p.openEdit}}">Edit</button>
+            <button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" onClick="{{p.openAddVersion}}">+ Versi</button>
+          </div>
+        </div>
+      </sc-for>
+      <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreatePath}}">+ Awarding Path Baru</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isTabScope}}" hint-placeholder-val="{{false}}">
+    <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+      <sc-for list="{{scopes}}" as="s" hint-placeholder-count="3">
+        <div class="item-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg">{{s.titleName}}</span><span class="ra-badge {{s.badgeClass}}">{{s.statusLabel}}</span></div>
+          <span class="ra-caption">{{s.scopeType}}: {{s.scopeReference}}</span>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" onClick="{{s.openEdit}}">Edit</button>
+        </div>
+      </sc-for>
+      <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreateScope}}">+ Scope Baru</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div class="drawer-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;"></div>
+        <div class="nav-list">
+          <a class="nav-item" href="M09-Direktori-Pengguna.dc.html">Direktori Pengguna</a>
+          <a class="nav-item" href="M09-Staf-Internal.dc.html">Staf Internal</a>
+          <a class="nav-item" href="M10-Matriks-Izin.dc.html">Matriks Izin</a>
+          <a class="nav-item" href="M09-Konten-Notifikasi.dc.html">Konten &amp; Notifikasi</a>
+          <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html">Konfigurasi Sistem</a>
+          <a class="nav-item" href="M09-Audit-Oversight.dc.html">Audit &amp; Oversight</a>
+          <a class="nav-item" href="M03-Moderasi-Listing.dc.html">Moderasi Listing</a>
+          <a class="nav-item" href="M07-Bank-Master.dc.html">Bank Master</a>
+          <a class="nav-item" href="M13-Provider-Catalogue.dc.html">Provider AI</a>
+          <a class="nav-item" href="M04-Learning-Economy-Config.dc.html">Ekonomi Pembelajaran</a>
+          <a class="nav-item" href="M14-Komersial-Admin.dc.html">Komersial &amp; Rekonsiliasi</a>
+          <a class="nav-item" href="M15-Award-Appeal.dc.html">Banding Penghargaan</a>
+          <a class="nav-item is-active" href="M15-Awarding-Path-Admin.dc.html">Jalur Penghargaan</a>
+          <a class="nav-item" href="M06-Developer-Project-Admin.dc.html">Proyek Developer</a>
+          <a class="nav-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{titleFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">{{titleFormTitle}}</h2>
+        <input class="ra-input" type="text" placeholder="Kode">
+        <input class="ra-input" type="text" placeholder="Nama" value="{{titleFormName}}" onInput="{{onTitleNameInput}}">
+        <textarea class="ra-input" style="height:70px;padding:10px 14px;resize:none;" placeholder="Deskripsi"></textarea>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{titleSaveDisabled}}" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{statusOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Ubah Status — {{titleFormName}}</h2>
+        <select class="ra-input"><option>draft</option><option>active</option><option>inactive</option><option>retired</option></select>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{pathFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">{{pathFormTitle}}</h2>
+        <select class="ra-input"><option>Top Performer Quarterly</option><option>Certified Closer</option></select>
+        <input class="ra-input" type="text" placeholder="Kode Path">
+        <input class="ra-input" type="text" placeholder="Nama Path">
+        <input class="ra-input" type="text" placeholder="Status (bebas teks, mis. active)">
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{versionFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Versi Baru — {{versionFormPathName}}</h2>
+        <input class="ra-input" type="number" placeholder="Nomor Versi" value="1">
+        <select class="ra-input"><option>draft</option><option>active</option><option>retired</option></select>
+        <input class="ra-input" type="text" placeholder="Rule Version (rule_code)">
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan Versi</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{scopeFormOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">{{scopeFormTitle}}</h2>
+        <select class="ra-input"><option>Top Performer Quarterly</option><option>Certified Closer</option></select>
+        <input class="ra-input" type="text" placeholder="Tipe Scope">
+        <input class="ra-input" type="text" placeholder="Rujukan Scope">
+        <select class="ra-input"><option>active</option><option>inactive</option></select>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false, tab: 'titles', titleFormOpen: false, titleFormTitle: 'Title Baru', titleFormName: '', statusOpen: false, pathFormOpen: false, pathFormTitle: 'Awarding Path Baru', versionFormOpen: false, versionFormPathName: '', scopeFormOpen: false, scopeFormTitle: 'Scope Baru' };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.selectTabTitles = this.selectTabTitles.bind(this);
+    this.selectTabPaths = this.selectTabPaths.bind(this);
+    this.selectTabScope = this.selectTabScope.bind(this);
+    this.openCreateTitle = this.openCreateTitle.bind(this);
+    this.openCreatePath = this.openCreatePath.bind(this);
+    this.openCreateScope = this.openCreateScope.bind(this);
+    this.closeDialogs = this.closeDialogs.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+    this.onTitleNameInput = this.onTitleNameInput.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  selectTabTitles(){ this.setState({ tab: 'titles' }); }
+  selectTabPaths(){ this.setState({ tab: 'paths' }); }
+  selectTabScope(){ this.setState({ tab: 'scope' }); }
+  openCreateTitle(){ this.setState({ titleFormOpen: true, titleFormTitle: 'Title Baru', titleFormName: '' }); }
+  openEditTitle(name){ this.setState({ titleFormOpen: true, titleFormTitle: 'Edit — ' + name, titleFormName: name }); }
+  openStatus(name){ this.setState({ statusOpen: true, titleFormName: name }); }
+  openCreatePath(){ this.setState({ pathFormOpen: true, pathFormTitle: 'Awarding Path Baru' }); }
+  openEditPath(name){ this.setState({ pathFormOpen: true, pathFormTitle: 'Edit — ' + name }); }
+  openAddVersion(pathName){ this.setState({ versionFormOpen: true, versionFormPathName: pathName }); }
+  openCreateScope(){ this.setState({ scopeFormOpen: true, scopeFormTitle: 'Scope Baru' }); }
+  openEditScope(){ this.setState({ scopeFormOpen: true, scopeFormTitle: 'Edit Scope' }); }
+  closeDialogs(){ this.setState({ titleFormOpen: false, statusOpen: false, pathFormOpen: false, versionFormOpen: false, scopeFormOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  onTitleNameInput(e){ this.setState({ titleFormName: e.target.value }); }
+  renderVals() {
+    const viewerRole = this.props.viewerRole ?? 'admin';
+    const tab = this.state.tab || 'titles';
+    const titleStatusMap = { draft: { badge: 'ra-badge-neutral', label: 'Draft' }, active: { badge: 'ra-badge-success', label: 'Aktif' }, inactive: { badge: 'ra-badge-warning', label: 'Nonaktif' }, retired: { badge: 'ra-badge-danger', label: 'Retired' } };
+    const titleDefs = [
+      { code: 'TOP-PERFORMER-Q', name: 'Top Performer Quarterly', status: 'active' },
+      { code: 'CERTIFIED-CLOSER', name: 'Certified Closer', status: 'active' }
+    ];
+    const titles = titleDefs.map(t => { const sm = titleStatusMap[t.status]; return { code: t.code, name: t.name, statusLabel: sm.label, badgeClass: sm.badge, openEdit: () => this.openEditTitle(t.name), openStatus: () => this.openStatus(t.name) }; });
+    const versionStatusMap = { draft: { badge: 'ra-badge-neutral', label: 'Draft' }, active: { badge: 'ra-badge-success', label: 'Aktif' }, retired: { badge: 'ra-badge-danger', label: 'Retired' } };
+    const pathDefs = [
+      { name: 'Jalur Standar Top Performer', titleName: 'Top Performer Quarterly', versions: [{ versionNo: 2, status: 'active', ruleCode: 'RULE-QUOTA-Q3' }, { versionNo: 1, status: 'retired', ruleCode: 'RULE-QUOTA-Q1Q2' }] }
+    ];
+    const paths = pathDefs.map(p => ({ name: p.name, titleName: p.titleName, versions: p.versions.map(v => { const vm = versionStatusMap[v.status]; return { versionNo: v.versionNo, statusLabel: vm.label, badgeClass: vm.badge, ruleCode: v.ruleCode }; }), openEdit: () => this.openEditPath(p.name), openAddVersion: () => this.openAddVersion(p.name) }));
+    const scopeStatusMap = { active: { badge: 'ra-badge-success', label: 'Aktif' }, inactive: { badge: 'ra-badge-neutral', label: 'Nonaktif' } };
+    const scopeDefs = [
+      { titleName: 'Top Performer Quarterly', scopeType: 'organization', scopeReference: 'PT Properti Jaya Sejahtera', status: 'active' }
+    ];
+    const scopes = scopeDefs.map(s => { const sm = scopeStatusMap[s.status]; return { titleName: s.titleName, scopeType: s.scopeType, scopeReference: s.scopeReference, statusLabel: sm.label, badgeClass: sm.badge, openEdit: () => this.openEditScope() }; });
+    return {
+      drawerOpen: this.state.drawerOpen ?? false, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
+      isTabTitles: tab === 'titles', isTabPaths: tab === 'paths', isTabScope: tab === 'scope',
+      tabTitlesClass: tab === 'titles' ? 'is-active' : '', tabPathsClass: tab === 'paths' ? 'is-active' : '', tabScopeClass: tab === 'scope' ? 'is-active' : '',
+      selectTabTitles: this.selectTabTitles, selectTabPaths: this.selectTabPaths, selectTabScope: this.selectTabScope,
+      titles, paths, scopes,
+      openCreateTitle: this.openCreateTitle, openCreatePath: this.openCreatePath, openCreateScope: this.openCreateScope,
+      titleFormOpen: this.state.titleFormOpen ?? false, titleFormTitle: this.state.titleFormTitle || '', titleFormName: this.state.titleFormName || '',
+      titleSaveDisabled: (this.state.titleFormName || '').trim().length === 0,
+      statusOpen: this.state.statusOpen ?? false,
+      pathFormOpen: this.state.pathFormOpen ?? false, pathFormTitle: this.state.pathFormTitle || '',
+      versionFormOpen: this.state.versionFormOpen ?? false, versionFormPathName: this.state.versionFormPathName || '',
+      scopeFormOpen: this.state.scopeFormOpen ?? false, scopeFormTitle: this.state.scopeFormTitle || '',
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick, onTitleNameInput: this.onTitleNameInput
+    };
+  }
+}
+</script>
+</body>
+</html>

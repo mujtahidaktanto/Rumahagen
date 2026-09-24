@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Staf Internal — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .iconbtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:#fff;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:30;display:flex;}
+  .drawer{width:280px;height:100%;background:var(--ra-ink-900);display:flex;flex-direction:column;}
+  .drawer-top{height:60px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;}
+  .nav-item{display:flex;align-items:center;gap:12px;height:42px;padding:0 14px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13px;white-space:nowrap;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item svg{flex:none;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
+  .role-pill{display:inline-flex;padding:3px 10px;border-radius:var(--ra-radius-pill);background:var(--ra-ink-50);color:var(--ra-ink-700);font-size:12px;font-weight:700;}
+  .s-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:10px;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
+  .sheet{width:100%;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--ra-shadow-3);}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
+  .denied-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:0 28px;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="iconbtn" aria-label="Menu" onClick="{{openDrawer}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="ra-title-md" style="color:#fff;flex:1;">Staf Internal</span>
+    <span class="ra-caption" style="color:rgba(255,255,255,.65);">{{viewerRoleLabel}}</span>
+  </div>
+
+  <sc-if value="{{isDenied}}" hint-placeholder-val="{{false}}">
+    <div class="denied-wrap">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--ra-danger-100);color:var(--ra-danger-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="26" height="26"><circle cx="12" cy="12" r="9.5"/><path d="M8 8l8 8M16 8l-8 8"/></svg></div>
+      <h2 class="ra-title-md">Akses Ditolak</h2>
+      <p class="ra-body-md" style="color:var(--ra-ink-500);">Halaman ini hanya untuk Superadmin.</p>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isAllowed}}" hint-placeholder-val="{{true}}">
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;">
+    <sc-for list="{{staff}}" as="s" hint-placeholder-count="4">
+      <div class="s-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="ra-label-lg ra-truncate-1">{{s.email}}</span>
+          <span class="ra-badge {{s.badgeClass}}"><span class="ra-dot"></span>{{s.statusLabel}}</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="role-pill">{{s.roleLabel}}</span>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <a href="#" class="ra-label-lg" onClick="{{s.openEdit}}">Ubah Role</a>
+            <sc-if value="{{s.canDeactivate}}" hint-placeholder-val="{{false}}">
+              <button class="ra-btn ra-btn-danger ra-btn-sm" onClick="{{s.openDeactivate}}">Nonaktifkan</button>
+            </sc-if>
+          </div>
+        </div>
+        <span class="ra-caption">Dibuat {{s.createdAt}} · Login terakhir {{s.lastLogin}}</span>
+      </div>
+    </sc-for>
+    <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreate}}">+ Tambah Akun Staf</button>
+  </div>
+  </sc-if>
+
+  <!-- Nav drawer -->
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div class="drawer-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;"></div>
+        <div class="nav-list">
+          <a class="nav-item" href="M09-Direktori-Pengguna.dc.html">Direktori Pengguna</a>
+          <a class="nav-item is-active" href="M09-Staf-Internal.dc.html">Staf Internal</a>
+          <a class="nav-item" href="M10-Matriks-Izin.dc.html">Matriks Izin</a>
+          <a class="nav-item" href="M09-Konten-Notifikasi.dc.html">Konten &amp; Notifikasi</a>
+          <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html">Konfigurasi Sistem</a>
+          <a class="nav-item" href="M09-Audit-Oversight.dc.html">Audit &amp; Oversight</a>
+          <a class="nav-item" href="M03-Moderasi-Listing.dc.html">Moderasi Listing</a>
+          <a class="nav-item" href="M07-Bank-Master.dc.html">Bank Master</a>
+          <a class="nav-item" href="M13-Provider-Catalogue.dc.html">Provider AI</a>
+          <a class="nav-item" href="M04-Learning-Economy-Config.dc.html">Ekonomi Pembelajaran</a>
+          <a class="nav-item" href="M14-Komersial-Admin.dc.html">Komersial &amp; Rekonsiliasi</a>
+          <a class="nav-item" href="M15-Award-Appeal.dc.html">Banding Penghargaan</a>
+          <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html">Jalur Penghargaan</a>
+          <a class="nav-item" href="M06-Developer-Project-Admin.dc.html">Proyek Developer</a>
+          <a class="nav-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Create sheet -->
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Tambah Akun Staf Baru</h2>
+        <input class="ra-input" type="email" placeholder="Email" value="{{formEmail}}" onInput="{{onEmailInput}}">
+        <input class="ra-input" type="text" placeholder="Kata sandi sementara (min. 8 karakter)" value="{{formPassword}}" onInput="{{onPasswordInput}}">
+        <select class="ra-input" onChange="{{onRoleSelect}}">
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="superadmin">Superadmin</option>
+        </select>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{createDisabled}}" onClick="{{submitCreate}}">Buat Akun</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Edit role sheet -->
+  <sc-if value="{{editOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Ubah Role — {{editTargetEmail}}</h2>
+        <select class="ra-input" onChange="{{onEditRoleSelect}}">
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="superadmin">Superadmin</option>
+        </select>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Deactivate confirm -->
+  <sc-if value="{{deactivateOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Nonaktifkan {{deactivateTargetEmail}}?</h2>
+        <p class="ra-caption">Status menjadi 'suspended' — tidak bisa login sampai diaktifkan kembali.</p>
+        <button class="ra-btn ra-btn-danger" style="width:100%;" onClick="{{closeDialogs}}">Nonaktifkan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"superadmin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false, createOpen: false, editOpen: false, deactivateOpen: false, editTargetEmail: '', deactivateTargetEmail: '', formEmail: '', formPassword: '' };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.openCreate = this.openCreate.bind(this);
+    this.closeDialogs = this.closeDialogs.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+    this.onEmailInput = this.onEmailInput.bind(this);
+    this.onPasswordInput = this.onPasswordInput.bind(this);
+    this.submitCreate = this.submitCreate.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  openCreate(){ this.setState({ createOpen: true, formEmail: '', formPassword: '' }); }
+  openEdit(email){ this.setState({ editOpen: true, editTargetEmail: email }); }
+  openDeactivate(email){ this.setState({ deactivateOpen: true, deactivateTargetEmail: email }); }
+  closeDialogs(){ this.setState({ createOpen: false, editOpen: false, deactivateOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  onEmailInput(e){ this.setState({ formEmail: e.target.value }); }
+  onPasswordInput(e){ this.setState({ formPassword: e.target.value }); }
+  submitCreate(){ this.closeDialogs(); }
+  renderVals() {
+    const viewerRole = this.props.viewerRole ?? 'superadmin';
+    const isSuperadmin = viewerRole === 'superadmin';
+    const roleLabels = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' };
+    const staffDefs = [
+      { email: 'superadmin@rumahagen.com', roleLabel: 'Superadmin', status: 'active', statusLabel: 'Aktif', badgeClass: 'ra-badge-success', createdAt: '01 Jan 2026', lastLogin: '24 Sep 2026' },
+      { email: 'bagus.w@rumahagen.com', roleLabel: 'Admin', status: 'active', statusLabel: 'Aktif', badgeClass: 'ra-badge-success', createdAt: '01 Jan 2026', lastLogin: '23 Sep 2026' },
+      { email: 'amelia.putri@rumahagen.com', roleLabel: 'Manager', status: 'active', statusLabel: 'Aktif', badgeClass: 'ra-badge-success', createdAt: '10 Jan 2026', lastLogin: '22 Sep 2026' },
+      { email: 'mantan.admin@rumahagen.com', roleLabel: 'Admin', status: 'suspended', statusLabel: 'Nonaktif', badgeClass: 'ra-badge-danger', createdAt: '05 Mar 2026', lastLogin: '18 Ags 2026' }
+    ];
+    const staff = staffDefs.map(s => ({ ...s, canDeactivate: s.status === 'active', openEdit: () => this.openEdit(s.email), openDeactivate: () => this.openDeactivate(s.email) }));
+    const formEmail = this.state.formEmail || '';
+    const formPassword = this.state.formPassword || '';
+    return {
+      viewerRoleLabel: roleLabels[viewerRole] ?? 'Superadmin',
+      isDenied: !isSuperadmin, isAllowed: isSuperadmin,
+      staff,
+      drawerOpen: this.state.drawerOpen ?? false,
+      createOpen: this.state.createOpen ?? false,
+      editOpen: this.state.editOpen ?? false,
+      deactivateOpen: this.state.deactivateOpen ?? false,
+      editTargetEmail: this.state.editTargetEmail || '',
+      deactivateTargetEmail: this.state.deactivateTargetEmail || '',
+      formEmail, formPassword,
+      createDisabled: formEmail.trim().length === 0 || formPassword.trim().length < 8,
+      openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
+      openCreate: this.openCreate, closeDialogs: this.closeDialogs, stopClick: this.stopClick,
+      onEmailInput: this.onEmailInput, onPasswordInput: this.onPasswordInput,
+      onRoleSelect: () => {}, onEditRoleSelect: () => {}, submitCreate: this.submitCreate
+    };
+  }
+}
+</script>
+</body>
+</html>

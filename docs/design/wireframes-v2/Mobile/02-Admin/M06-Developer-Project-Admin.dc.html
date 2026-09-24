@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Proyek Developer — Admin Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;position:relative;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--ra-ink-900);}
+  .iconbtn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:#fff;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:30;display:flex;}
+  .drawer{width:280px;height:100%;background:var(--ra-ink-900);display:flex;flex-direction:column;}
+  .drawer-top{height:60px;display:flex;align-items:center;padding:0 16px;flex:none;background:#fff;}
+  .nav-item{display:flex;align-items:center;height:42px;padding:0 14px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.72);text-decoration:none;font-size:13px;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-list{display:flex;flex-direction:column;gap:2px;padding:12px;flex:1;overflow-y:auto;}
+  .item-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:10;display:flex;align-items:flex-end;}
+  .sheet{width:100%;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 28px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--ra-shadow-3);}
+  .grabber{width:36px;height:4px;border-radius:4px;background:var(--ra-ink-100);margin:0 auto;}
+</style>
+</helmet>
+<div class="app">
+
+  <div class="topbar">
+    <button class="iconbtn" aria-label="Menu" onClick="{{openDrawer}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="ra-title-md" style="color:#fff;flex:1;">Proyek Developer</span>
+  </div>
+
+  <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+    <sc-for list="{{projects}}" as="p" hint-placeholder-count="4">
+      <div class="item-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg ra-truncate-1" style="flex:1;">{{p.name}}</span><span class="ra-badge {{p.badgeClass}}">{{p.statusLabel}}</span></div>
+        <span class="ra-caption">{{p.developerName}}</span>
+        <span class="ra-caption">{{p.categoryLabel}} · {{p.transactionLabel}} · {{p.location}}</span>
+        <button class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" onClick="{{p.openStatus}}">Ubah Status</button>
+      </div>
+    </sc-for>
+    <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openCreateProject}}">+ Buat Proyek</button>
+  </div>
+
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}">
+      <div class="drawer" onClick="{{stopClick}}">
+        <div class="drawer-top"><img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:28px;width:auto;object-fit:contain;"></div>
+        <div class="nav-list">
+          <a class="nav-item" href="M09-Direktori-Pengguna.dc.html">Direktori Pengguna</a>
+          <a class="nav-item" href="M09-Staf-Internal.dc.html">Staf Internal</a>
+          <a class="nav-item" href="M10-Matriks-Izin.dc.html">Matriks Izin</a>
+          <a class="nav-item" href="M09-Konten-Notifikasi.dc.html">Konten &amp; Notifikasi</a>
+          <a class="nav-item" href="M09-Konfigurasi-Sistem.dc.html">Konfigurasi Sistem</a>
+          <a class="nav-item" href="M09-Audit-Oversight.dc.html">Audit &amp; Oversight</a>
+          <a class="nav-item" href="M03-Moderasi-Listing.dc.html">Moderasi Listing</a>
+          <a class="nav-item" href="M07-Bank-Master.dc.html">Bank Master</a>
+          <a class="nav-item" href="M13-Provider-Catalogue.dc.html">Provider AI</a>
+          <a class="nav-item" href="M04-Learning-Economy-Config.dc.html">Ekonomi Pembelajaran</a>
+          <a class="nav-item" href="M14-Komersial-Admin.dc.html">Komersial &amp; Rekonsiliasi</a>
+          <a class="nav-item" href="M15-Award-Appeal.dc.html">Banding Penghargaan</a>
+          <a class="nav-item" href="M15-Awarding-Path-Admin.dc.html">Jalur Penghargaan</a>
+          <a class="nav-item is-active" href="M06-Developer-Project-Admin.dc.html">Proyek Developer</a>
+          <a class="nav-item" href="M02-Profil-Saya.dc.html">Profil Saya</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{createOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Buat Proyek Baru</h2>
+        <input class="ra-input" type="text" placeholder="Developer Partner">
+        <input class="ra-input" type="text" placeholder="Nama Proyek" value="{{createProjectName}}" onInput="{{onCreateNameInput}}">
+        <select class="ra-input"><option>primary</option><option>secondary</option></select>
+        <select class="ra-input"><option>sale</option><option>rent</option></select>
+        <input class="ra-input" type="text" placeholder="Lokasi">
+        <button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{createSaveDisabled}}" onClick="{{closeDialogs}}">Buat Proyek</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{statusOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Ubah Status — {{statusTargetName}}</h2>
+        <select class="ra-input"><option>coming_soon</option><option>active</option><option>sold_out</option><option>inactive</option></select>
+        <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{closeDialogs}}">Simpan</button>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeDialogs}}">Batal</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { drawerOpen: false, createOpen: false, createProjectName: '', statusOpen: false, statusTargetName: '' };
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
+    this.openCreateProject = this.openCreateProject.bind(this);
+    this.closeDialogs = this.closeDialogs.bind(this);
+    this.stopClick = this.stopClick.bind(this);
+    this.onCreateNameInput = this.onCreateNameInput.bind(this);
+  }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  openCreateProject(){ this.setState({ createOpen: true, createProjectName: '' }); }
+  openStatus(name){ this.setState({ statusOpen: true, statusTargetName: name }); }
+  closeDialogs(){ this.setState({ createOpen: false, statusOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  onCreateNameInput(e){ this.setState({ createProjectName: e.target.value }); }
+  renderVals() {
+    const statusMap = {
+      active: { badge: 'ra-badge-success', label: 'Active' }, coming_soon: { badge: 'ra-badge-info', label: 'Coming Soon' },
+      sold_out: { badge: 'ra-badge-warning', label: 'Sold Out' }, inactive: { badge: 'ra-badge-neutral', label: 'Inactive' }
+    };
+    const categoryLabels = { primary: 'Primary', secondary: 'Secondary' };
+    const transactionLabels = { sale: 'Jual', rent: 'Sewa' };
+    const projectDefs = [
+      { name: 'Grand Residence BSD', developerName: 'CitraLand Developer', category: 'primary', transaction: 'sale', location: 'BSD City', status: 'active' },
+      { name: 'The Vista Apartments', developerName: 'Sinar Mas Land', category: 'primary', transaction: 'rent', location: 'Kelapa Gading', status: 'coming_soon' }
+    ];
+    const projects = projectDefs.map(p => { const sm = statusMap[p.status]; return { name: p.name, developerName: p.developerName, categoryLabel: categoryLabels[p.category], transactionLabel: transactionLabels[p.transaction], location: p.location, statusLabel: sm.label, badgeClass: sm.badge, openStatus: () => this.openStatus(p.name) }; });
+    const createProjectName = this.state.createProjectName || '';
+    return {
+      drawerOpen: this.state.drawerOpen ?? false, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer,
+      projects,
+      openCreateProject: this.openCreateProject,
+      createOpen: this.state.createOpen ?? false, createProjectName, createSaveDisabled: createProjectName.trim().length === 0,
+      statusOpen: this.state.statusOpen ?? false, statusTargetName: this.state.statusTargetName || '',
+      closeDialogs: this.closeDialogs, stopClick: this.stopClick, onCreateNameInput: this.onCreateNameInput
+    };
+  }
+}
+</script>
+</body>
+</html>
