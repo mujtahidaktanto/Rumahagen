@@ -7,6 +7,10 @@ import { z } from "zod";
 
 export const createProjectMediaSchema = z.object({
   type: z.enum(["photo", "video"]),
-  url: z.string().min(1).max(500),
+  url: z
+    .string()
+    .min(1)
+    .max(500)
+    .refine((v) => /^https?:\/\//.test(v), { message: "Harus URL http(s); untuk file unggahan pakai file_url dari POST /developer-projects/{id}/uploads." }),
 });
 export type CreateProjectMediaInput = z.infer<typeof createProjectMediaSchema>;

@@ -1,13 +1,12 @@
 // app/api/agents/me/awards/presentation/route.ts
-// API-234 GET /agents/me/awards/presentation (Agent, semua milik sendiri
-// termasuk non-aktif — RLS title_presentations_select mengizinkan pemilik
-// lihat semua), API-235 PUT /agents/me/awards/presentation (Agent — replace-
-// set: upsert setiap item berdasarkan UNIQUE(user_id, title_definition_id)).
+// API-234 GET /agents/me/awards/presentation (Agent, semua milik sendiri termasuk non-aktif), API-235 PUT /agents/me/awards/presentation (Agent — mengganti
+// SELURUH pilihan title tampilan: 1 utama + maksimal 3 tambahan berurutan, lewat fungsi set_my_public_titles, migration 0148).
 
 import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { setTitlePresentationsSchema } from "@/lib/validation/title-presentations";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 export const GET = withApiHandler({}, async (ctx) => {
@@ -37,15 +36,13 @@ export const PUT = withApiHandler({}, async (ctx) => {
   const body = await validateJsonBody(ctx.request, setTitlePresentationsSchema);
   const supabase = await createClient();
 
-  const rows = body.presentations.map((p) => ({ ...p, user_id: ctx.userId }));
-
-  const { data, error } = await supabase
-    .from("title_presentations")
-    .upsert(rows, { onConflict: "user_id,title_definition_id" })
-    .select();
+  const { data, error } = await supabase.rpc("set_my_public_titles", {
+    p_primary: body.primary_title_id ?? null,
+    p_additional: body.additional_title_ids ?? [],
+  });
 
   if (error) {
-    throw error;
+    throwIntegrityError(error);
   }
 
   return { data };

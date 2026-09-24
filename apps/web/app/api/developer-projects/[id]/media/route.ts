@@ -7,6 +7,8 @@
 import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { createProjectMediaSchema } from "@/lib/validation/project-media";
+import { ApiError } from "@/lib/api/errors";
+import { mediaUrlOwnership } from "@/lib/storage/project-files";
 import { createClient } from "@/lib/supabase/server";
 
 export const GET = withApiHandler({}, async (ctx) => {
@@ -27,6 +29,10 @@ export const GET = withApiHandler({}, async (ctx) => {
 export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
   const body = await validateJsonBody(ctx.request, createProjectMediaSchema);
   const supabase = await createClient();
+
+  if (mediaUrlOwnership(body.url, ctx.params.id ?? "") === "foreign_project") {
+    throw new ApiError("VALIDATION_ERROR", "URL file milik proyek lain.");
+  }
 
   const { data, error } = await supabase
     .from("developer_project_media")

@@ -4,11 +4,13 @@
 // project dengan status active/coming_soon/sold_out DARI developer partner
 // yang statusnya active; staf/developer pemilik lihat lebih luas lewat OR
 // clause di policy yang sama (R-02, tidak diduplikasi di sini).
+// ?mine=true: hanya proyek milik perusahaan pengguna login (Developer Partner); ?status= memfilter status proyek.
 
 import { withApiHandler } from "@/lib/api/handler";
 import { parsePagination, buildPaginationMeta } from "@/lib/api/pagination";
 import { validateSearchParams } from "@/lib/api/validate";
 import { listDeveloperProjectsQuerySchema } from "@/lib/validation/developer-projects";
+import { ApiError } from "@/lib/api/errors";
 import { createClient } from "@/lib/supabase/server";
 
 export const GET = withApiHandler({}, async (ctx) => {
@@ -17,12 +19,29 @@ export const GET = withApiHandler({}, async (ctx) => {
   const filters = validateSearchParams(url.searchParams, listDeveloperProjectsQuerySchema);
 
   const supabase = await createClient();
+  let mineIds: string[] | null = null;
+  if (filters.mine === "true") {
+    if (!ctx.userId) {
+      throw new ApiError("UNAUTHENTICATED", "Login diperlukan untuk melihat proyek milik saya.");
+    }
+    const { data: partners, error: partnersError } = await supabase.from("developer_partners").select("id").eq("user_id", ctx.userId).is("deleted_at", null);
+    if (partnersError) {
+      throw partnersError;
+    }
+    mineIds = (partners ?? []).map((p) => p.id);
+    if (mineIds.length === 0) {
+      return { data: [], pagination: buildPaginationMeta(limit, offset, 0) };
+    }
+  }
+
   let query = supabase
     .from("developer_projects")
     .select("*", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
+  if (mineIds) query = query.in("developer_id", mineIds);
+  if (filters.status) query = query.eq("status", filters.status);
   if (filters.category) query = query.eq("category", filters.category);
   if (filters.transaction_type) query = query.eq("transaction_type", filters.transaction_type);
   if (filters.province_id) query = query.eq("province_id", filters.province_id);

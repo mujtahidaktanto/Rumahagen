@@ -97,5 +97,8 @@ export const listDeveloperProjectsQuerySchema = z.object({
   province_id: z.string().uuid().optional(),
   city_id: z.string().uuid().optional(),
   district_id: z.string().uuid().optional(),
+  // "milik saya" (0147 / Fase F): hanya proyek perusahaan yang akunnya dihubungkan ke pengguna login; status memfilter status proyek.
+  mine: z.enum(["true", "false"]).optional(),
+  status: z.enum(["active", "coming_soon", "sold_out", "inactive"]).optional(),
 });
 export type ListDeveloperProjectsQuery = z.infer<typeof listDeveloperProjectsQuerySchema>;

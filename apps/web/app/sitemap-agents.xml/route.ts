@@ -1,6 +1,6 @@
 // app/sitemap-agents.xml/route.ts
 // API-152 GET /sitemap-agents.xml (STEP11-B9 §5/§6). Sama dengan kondisi RLS
-// agent_profiles_select (0029) untuk baris publik: profile_visibility='public'
+// view public_agent_profiles (0148; hanya profil public, tanpa timestamp sehingga tanpa lastmod)
 // AND deleted_at IS NULL. Pakai public_slug (bukan id) sebagai identifier URL
 // -- kolom ini sudah ada sejak 0029, dirancang persis untuk kebutuhan ini.
 
@@ -15,10 +15,8 @@ export async function GET() {
     }
 
     const { data, error } = await supabase
-      .from("agent_profiles")
-      .select("public_slug, updated_at")
-      .eq("profile_visibility", "public")
-      .is("deleted_at", null)
+      .from("public_agent_profiles")
+      .select("public_slug")
       .not("public_slug", "is", null);
 
     if (error) {
@@ -27,7 +25,6 @@ export async function GET() {
 
     const entries = (data ?? []).map((row) => ({
       loc: `${SITE_URL}/agent/${row.public_slug}`,
-      lastmod: row.updated_at,
     }));
 
     return xmlResponse(buildUrlsetXml(entries));

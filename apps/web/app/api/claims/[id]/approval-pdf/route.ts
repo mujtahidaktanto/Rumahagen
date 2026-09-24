@@ -22,6 +22,7 @@
 // dibungkus withApiHandler, sama seperti export-pdf DBR (M07).
 
 import { NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { generateClaimApprovalPdf } from "@/lib/claims/pdf";
 
@@ -56,7 +57,8 @@ export async function GET(request: Request, routeContext: { params: Promise<{ id
     );
   }
 
-  const { data: agentProfile } = await supabase
+  // Tabel agent_profiles hanya terbaca pemilik/staf (0148); akses klaim sudah diperiksa lewat RLS di atas, jadi nama Agent dibaca dengan service role.
+  const { data: agentProfile } = await createAdminClient()
     .from("agent_profiles")
     .select("full_name")
     .eq("user_id", claim.agent_id)
