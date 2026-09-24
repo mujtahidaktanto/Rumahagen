@@ -3357,3 +3357,15 @@ ada TIDAK berubah: itu export baris `audit_logs`, bukan analitik.
 - `agent_statistics_benchmark(from, to)`: persentil anonim terhadap agen dengan ≥1 listing terbit; `available:false` bila sampel <30 atau pemanggil tidak ada di sampel. Identitas agen lain tidak pernah dikembalikan.
 
 **Route (kode ada, belum di-commit):** `GET /api/agents/me/statistics` dan `GET /api/agents/me/statistics/export?format=xlsx|pdf` (izin `m08.dashboard_projection.export` dicek dengan `p_owner_id`, sehingga Permission Preset ikut berlaku; audit `agent_statistics.export` dicatat SEBELUM file dikirim). Route bergantung pada migration ini (kini sudah tersedia di DB).
+
+---
+
+## `0126` — Developer Partner boleh mengedit profil perusahaan sendiri (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Keputusan produk: mitra boleh mengedit profil perusahaannya (STEP13-C §8.1, STEP13-E §17.1); sebelumnya `developer_partners` hanya bisa diubah staf (0033).
+
+**Perubahan:** izin baru `m06.developer_partner.update_own_profile` (Developer Partner=OWN, Superadmin=ALL); policy UPDATE `developer_partners_update_own` untuk pemilik baris (`user_id`, belum dihapus); trigger `trg_developer_partner_self_edit_columns` melarang non-staf mengubah `user_id`, `status`, `deleted_at`.
+
+**Hasil uji (transaksi rollback):** mitra mengedit profil sendiri = 1 baris; profil perusahaan lain = 0 baris; ubah status/`user_id`/`deleted_at` = ditolak 42501; Agent = 0 baris; Manager tetap bisa mengubah status dan nama.
+
+**Catatan:** `PUT /api/developer-partners/{id}` memakai skema yang juga memuat `user_id` dan `status`; bila mitra mengirimnya, DB menolak (403). Layar Profil Developer hanya mengirim nama, logo, deskripsi, dan PIC.

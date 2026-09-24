@@ -30,7 +30,7 @@ dilacak balik ke migration/permission/API yang sesuai tanpa tebak-tebak.
 | `00-Publik` | Pengunjung anonim + agent yang belum login | Header 10-item + footer (§4.1 STEP13-E) |
 | `01-Agent` | Role `agent` yang sudah login | Sidebar/drawer 8-item + Context Switcher (§4.2 STEP13-E) |
 | `02-Admin` | Role `admin`/`superadmin`/`manager` | Sidebar capability-driven (§4.3 STEP13-E) |
-| `03-Developer-Partner` | Role `developer_partner` | Belum ada shell — dibangun di Fase F |
+| `03-Developer-Partner` | Role `developer_partner` | Sidebar 7 tujuan (Dashboard, Proyek Saya, Marketing Kit, Klaim Masuk, Event, Hasil Kemitraan, Profil Developer), bisa disembunyikan; tanpa Context Switcher (organisasi hanya untuk Agent). Lihat `SOURCE-Developer-Partner.md` |
 
 Satu modul bisa muncul di lebih dari satu persona kalau memang perilakunya beda — misalnya
 **M03 Listing** muncul di `00-Publik` (halaman Detail publik), `01-Agent` (kelola listing sendiri),

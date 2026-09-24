@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Form Proyek — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <a class="ra-iconbtn" href="M06-Kelola-Proyek.dc.html" aria-label="Kembali" style="margin-left:-8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M15 18l-6-6 6-6"/></svg></a>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">{{pageTitle}}</span>
+    
+  </div>
+  <div style="flex:none;background:#fff;padding:10px 16px 12px;border-bottom:1px solid var(--ra-ink-100);">
+    <div style="display:flex;justify-content:space-between;align-items:center;"><span class="ra-label-lg">{{stepLabel}}</span></div>
+    <div style="height:6px;border-radius:3px;background:var(--ra-ink-100);margin-top:8px;overflow:hidden;"><div style="height:100%;width:{{progress}};background:var(--ra-blue-600);border-radius:3px;"></div></div>
+  </div>
+  <div class="main ra-scroll">
+    <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
+
+          <sc-if value="{{isStep1}}" hint-placeholder-val="{{true}}">
+            <div class="field"><label class="ra-label-lg" for="p-name">Nama proyek <span class="req">*</span></label>
+              <input id="p-name" class="ra-input" type="text" maxlength="200" placeholder="Contoh: Green Valley Residence" value="{{name}}" onInput="{{onName}}">
+              <sc-if value="{{nameError}}" hint-placeholder-val="{{false}}"><span class="err">Nama proyek wajib diisi.</span></sc-if></div>
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="p-cat">Kategori <span class="req">*</span></label><select id="p-cat" class="ra-input"><option>Primary (baru)</option><option>Secondary (bekas)</option></select></div>
+              <div class="field"><label class="ra-label-lg" for="p-tx">Jenis transaksi <span class="req">*</span></label><select id="p-tx" class="ra-input"><option>Jual</option><option>Sewa</option></select></div>
+            </div>
+            <div class="field"><label class="ra-label-lg" for="p-type">Tipe properti</label><select id="p-type" class="ra-input"><option>Rumah</option><option>Apartemen</option><option>Ruko</option><option>Tanah</option><option>Gudang</option><option>Kavling</option><option>Lainnya</option></select></div>
+            <div class="field"><label class="ra-label-lg" for="p-mt">Judul awal listing <span class="ra-caption">(meta title)</span></label>
+              <input id="p-mt" class="ra-input" type="text" maxlength="70" value="{{metaTitle}}" onInput="{{onMetaTitle}}">
+              <span class="ra-caption">{{metaTitleCount}}/70 · Menjadi judul awal listing agen yang klaimnya disetujui. Perubahan agen tidak mengubah proyek Anda.</span></div>
+            <div class="field"><label class="ra-label-lg" for="p-md">Deskripsi awal listing <span class="ra-caption">(meta description)</span></label>
+              <textarea id="p-md" class="ra-input" rows="3" maxlength="160" onInput="{{onMetaDesc}}">{{metaDesc}}</textarea>
+              <span class="ra-caption">{{metaDescCount}}/160 · Satu-satunya sumber deskripsi listing; proyek tidak punya kolom deskripsi terpisah.</span></div>
+          </sc-if>
+          <sc-if value="{{isStep2}}" hint-placeholder-val="{{false}}">
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="p-prov">Provinsi <span class="req">*</span></label>
+                <select id="p-prov" class="ra-input" onChange="{{onProvince}}"><sc-for list="{{provs}}" as="o" hint-placeholder-count="3"><option value="{{o.v}}" selected="{{o.sel}}">{{o.l}}</option></sc-for></select>
+                <sc-if value="{{provError}}" hint-placeholder-val="{{false}}"><span class="err">Pilih provinsi.</span></sc-if></div>
+              <div class="field"><label class="ra-label-lg" for="p-city">Kota / kabupaten <span class="req">*</span></label>
+                <select id="p-city" class="ra-input" disabled="{{cityDisabled}}" onChange="{{onCity}}"><sc-for list="{{cities}}" as="o" hint-placeholder-count="3"><option value="{{o.v}}" selected="{{o.sel}}">{{o.l}}</option></sc-for></select>
+                <span class="ra-caption">{{cityHint}}</span>
+                <sc-if value="{{cityError}}" hint-placeholder-val="{{false}}"><span class="err">Pilih kota / kabupaten.</span></sc-if></div>
+            </div>
+            <div class="field"><label class="ra-label-lg" for="p-dist">Kecamatan <span class="req">*</span></label><select id="p-dist" class="ra-input"><option>Pilih kecamatan</option><option>Serpong</option><option>Pagedangan</option></select></div>
+            <div class="field"><label class="ra-label-lg" for="p-loc">Alamat / lokasi proyek</label><input id="p-loc" class="ra-input" type="text" maxlength="255" placeholder="Nama kawasan, jalan"></div>
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="p-kw">Kata kunci area</label><input id="p-kw" class="ra-input" type="text" maxlength="20" placeholder="mis. BSD"><span class="ra-caption">Maksimal 20 karakter.</span></div>
+              <div class="field"><label class="ra-label-lg">Koordinat <span class="ra-caption">(opsional)</span></label><div style="display:flex;gap:8px;"><input class="ra-input" style="min-width:0;flex:1;" type="text" placeholder="Lintang" aria-label="Lintang"><input class="ra-input" style="min-width:0;flex:1;" type="text" placeholder="Bujur" aria-label="Bujur"></div></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{isStep3}}" hint-placeholder-val="{{false}}">
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="p-pmin">Harga minimum (Rp)</label><input id="p-pmin" class="ra-input" type="text" inputmode="numeric" placeholder="850000000"></div>
+              <div class="field"><label class="ra-label-lg" for="p-pmax">Harga maksimum (Rp)</label><input id="p-pmax" class="ra-input" type="text" inputmode="numeric" placeholder="1400000000"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="p-unit">Satuan harga</label><select id="p-unit" class="ra-input"><option>Total</option><option>Per bulan</option><option>Per tahun</option></select></div>
+              <div class="field"><label class="ra-label-lg" for="p-avail">Unit tersedia</label><input id="p-avail" class="ra-input" type="text" inputmode="numeric" placeholder="42"></div>
+            </div>
+            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Harga bisa dinegosiasi</span><span class="ra-caption">Ditampilkan sebagai keterangan pada listing agen.</span></div><button class="switch {{negClass}}" role="switch" aria-label="Harga bisa dinegosiasi" onClick="{{togNeg}}"><div class="switch-knob"></div></button></div>
+          </sc-if>
+          <sc-if value="{{isStep4}}" hint-placeholder-val="{{false}}">
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="s-bed">Kamar tidur</label><input id="s-bed" class="ra-input" type="text" inputmode="numeric"></div>
+              <div class="field"><label class="ra-label-lg" for="s-bath">Kamar mandi</label><input id="s-bath" class="ra-input" type="text" inputmode="numeric"></div>
+              <div class="field"><label class="ra-label-lg" for="s-floor">Jumlah lantai</label><input id="s-floor" class="ra-input" type="text" inputmode="numeric"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="s-land">Luas tanah (m²)</label><input id="s-land" class="ra-input" type="text" inputmode="decimal"></div>
+              <div class="field"><label class="ra-label-lg" for="s-bld">Luas bangunan (m²)</label><input id="s-bld" class="ra-input" type="text" inputmode="decimal"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="s-car">Kapasitas carport</label><input id="s-car" class="ra-input" type="text" inputmode="numeric"></div>
+              <div class="field"><label class="ra-label-lg" for="s-elec">Daya listrik (VA)</label><input id="s-elec" class="ra-input" type="text" inputmode="numeric"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="s-water">Sumber air</label><select id="s-water" class="ra-input"><option>PDAM</option><option>Sumur</option><option>Lainnya</option></select></div>
+              <div class="field"><label class="ra-label-lg" for="s-furn">Furnitur</label><select id="s-furn" class="ra-input"><option>Tanpa furnitur</option><option>Semi furnished</option><option>Fully furnished</option></select></div>
+              <div class="field"><label class="ra-label-lg" for="s-year">Tahun dibangun</label><input id="s-year" class="ra-input" type="text" inputmode="numeric" placeholder="2026"></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{isStep5}}" hint-placeholder-val="{{false}}">
+            <div class="field-row">
+              <div class="field"><label class="ra-label-lg" for="l-cert">Jenis sertifikat</label><select id="l-cert" class="ra-input"><option>SHM</option><option>HGB</option><option>Girik</option><option>PPJB</option><option>Strata title</option><option>Lainnya</option></select></div>
+              <div class="field"><label class="ra-label-lg" for="l-imb">Status IMB</label><select id="l-imb" class="ra-input"><option>Ada</option><option>Tidak ada</option><option>Dalam proses</option></select></div>
+            </div>
+            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Sertifikat sudah balik nama</span></div><button class="switch {{transferClass}}" role="switch" aria-label="Sertifikat sudah balik nama" onClick="{{togTransfer}}"><div class="switch-knob"></div></button></div>
+            <div class="switch-row"><div><span class="ra-label-lg" style="display:block;">Bebas sengketa</span><span class="ra-caption">Pernyataan Anda bahwa proyek bebas sengketa.</span></div><button class="switch {{disputeClass}}" role="switch" aria-label="Bebas sengketa" onClick="{{togDispute}}"><div class="switch-knob"></div></button></div>
+            <div class="field"><label class="ra-label-lg" for="l-scheme">Skema komisi</label><input id="l-scheme" class="ra-input" type="text" maxlength="255" placeholder="mis. 2,5% dari harga jual"></div>
+            <div class="field"><label class="ra-label-lg" for="l-extra">Komisi tambahan</label><textarea id="l-extra" class="ra-input" rows="2" placeholder="Bonus penjualan, insentif, dan sebagainya"></textarea></div>
+            <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Proyek RumahAgen bersifat non-eksklusif: beberapa agen yang disetujui boleh memasarkan proyek yang sama.</p></div>
+          </sc-if>
+          <sc-if value="{{isStep6}}" hint-placeholder-val="{{false}}">
+            <sc-if value="{{saved}}" hint-placeholder-val="{{false}}">
+              <div class="banner banner-ok"><span style="color:var(--ra-success-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><span class="ra-label-lg">Proyek tersimpan sebagai Coming Soon</span><p class="ra-body-md" style="margin-top:2px;">Tim RumahAgen akan meninjau dan mengaktifkan proyek Anda. Lanjutkan dengan mengunggah media dan marketing kit.</p></div></div>
+            </sc-if>
+            <sc-if value="{{notSaved}}" hint-placeholder-val="{{true}}">
+              <dl class="kv"><dt>Nama proyek</dt><dd>{{sumName}}</dd><dt>Lokasi</dt><dd>{{sumLoc}}</dd><dt>Judul listing</dt><dd>{{sumTitle}}</dd><dt>Status awal</dt><dd><span class="ra-badge ra-badge-info"><span class="ra-dot"></span>Coming Soon</span></dd></dl>
+              <div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Anda tidak bisa mengaktifkan proyek sendiri. Setelah disimpan, proyek menunggu peninjauan tim RumahAgen.</p></div>
+            </sc-if>
+          </sc-if>
+    </div>
+  </div>
+  <div style="flex:none;background:#fff;border-top:1px solid var(--ra-ink-100);padding:12px 16px;display:flex;gap:10px;">
+    <button class="ra-btn ra-btn-secondary" style="flex:1;" disabled="{{cantBack}}" onClick="{{back}}">Kembali</button>
+    <sc-if value="{{notLast}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;" onClick="{{next}}">Lanjut</button></sc-if>
+    <sc-if value="{{isLast}}" hint-placeholder-val="{{false}}"><sc-if value="{{notSaved}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="flex:2;" onClick="{{save}}">Simpan Proyek</button></sc-if><sc-if value="{{saved}}" hint-placeholder-val="{{false}}"><a class="ra-btn ra-btn-primary" style="flex:2;" href="M06-Detail-Proyek.dc.html">Buka Detail</a></sc-if></sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","default":"create","options":["create","edit"],"section":"Skenario form"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { step: 1, attempted: false, saved: false, name: '', metaTitle: '', metaDesc: '', province: '', city: '', negotiable: false, dispute: false, transferred: false, seeded: false });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'next', 'back', 'save', 'onName', 'onMetaTitle', 'onMetaDesc', 'onProvince', 'onCity', 'togNeg', 'togDispute', 'togTransfer'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  next(){
+    var s = this.state, isEdit = (this.props.mode || 'create') === 'edit';
+    var name = s.seeded || !isEdit ? s.name : 'Green Valley Residence';
+    if (s.step === 1 && name.trim().length === 0) { this.setState({ attempted: true }); return; }
+    if (s.step === 2 && (!(s.province || (isEdit && !s.seeded)) || !(s.city || (isEdit && !s.seeded)))) { this.setState({ attempted: true }); return; }
+    this.setState({ step: Math.min(6, s.step + 1), attempted: false });
+  }
+  back(){ this.setState({ step: Math.max(1, this.state.step - 1), attempted: false }); }
+  save(){ this.setState({ saved: true }); }
+  onName(e){ this.setState({ name: e.target.value, seeded: true }); }
+  onMetaTitle(e){ this.setState({ metaTitle: e.target.value.slice(0, 70) }); }
+  onMetaDesc(e){ this.setState({ metaDesc: e.target.value.slice(0, 160) }); }
+  onProvince(e){ this.setState({ province: e.target.value, city: '', seeded: true }); }
+  onCity(e){ this.setState({ city: e.target.value, seeded: true }); }
+  togNeg(){ this.setState({ negotiable: !this.state.negotiable }); }
+  togDispute(){ this.setState({ dispute: !this.state.dispute }); }
+  togTransfer(){ this.setState({ transferred: !this.state.transferred }); }
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    
+    // Field mengikuti createDeveloperProjectSchema / kolom developer_projects (0034). Field tujuan-listing memakai
+    // nama kanonik M03 (land_area, building_area, meta_title -> judul listing, meta_description -> deskripsi listing).
+    // is_exclusive_by_region SENGAJA tidak ditampilkan (non-eksklusivitas dikunci; DB default false).
+    // Status tidak bisa dipilih di form: proyek baru selalu coming_soon; aktivasi hanya staf.
+    var self = this;
+    var isEdit = (pr.mode || 'create') === 'edit';
+    var seeded = st.seeded === true;
+    var name = (isEdit && !seeded) ? 'Green Valley Residence' : st.name;
+    var province = (isEdit && !seeded) ? 'Banten' : st.province;
+    var city = (isEdit && !seeded) ? 'Tangerang Selatan' : st.city;
+    var cityMap = { 'DKI Jakarta': ['Jakarta Selatan','Jakarta Utara','Jakarta Barat'], 'Banten': ['Tangerang Selatan','Tangerang','Serang'], 'Jawa Barat': ['Bekasi','Bogor','Depok'], 'Jawa Timur': ['Surabaya','Malang','Sidoarjo'] };
+    var provs = [''].concat(Object.keys(cityMap)).map(function(p){ return { v: p, l: p || 'Pilih provinsi', sel: p === province }; });
+    var cities = [''].concat(province ? cityMap[province] : []).map(function(c){ return { v: c, l: c || 'Pilih kota / kabupaten', sel: c === city }; });
+    var stepsDef = ["Identitas","Lokasi","Harga & Unit","Spesifikasi","Legalitas & Komisi","Tinjau & Simpan"];
+    var stepsList = stepsDef.map(function(label, i){
+      var n = i + 1;
+      return { n: n, label: label, cls: st.step === n ? 'is-current' : (st.step > n ? 'is-done' : ''), done: st.step > n, current: st.step === n, notDone: !(st.step > n),
+        go: function(){ if (n <= st.step) self.setState({ step: n, attempted: false }); } };
+    });
+    var attempted = st.attempted === true;
+    var out = {
+      isEdit: isEdit, pageTitle: isEdit ? 'Edit Proyek' : 'Buat Proyek Baru',
+      step: st.step, stepLabel: 'Langkah ' + st.step + ' dari 6 · ' + stepsDef[st.step - 1], progress: Math.round(st.step / 6 * 100) + '%',
+      steps: stepsList,
+      isStep1: st.step === 1, isStep2: st.step === 2, isStep3: st.step === 3, isStep4: st.step === 4, isStep5: st.step === 5, isStep6: st.step === 6,
+      canBack: st.step > 1, cantBack: st.step === 1, notLast: st.step < 6, isLast: st.step === 6,
+      next: this.next, back: this.back, save: this.save, saved: st.saved === true, notSaved: st.saved !== true,
+      name: name, onName: this.onName, nameError: attempted && st.step === 1 && name.trim().length === 0,
+      metaTitle: st.metaTitle, onMetaTitle: this.onMetaTitle, metaTitleCount: st.metaTitle.length,
+      metaDesc: st.metaDesc, onMetaDesc: this.onMetaDesc, metaDescCount: st.metaDesc.length,
+      provs: provs, cities: cities, onProvince: this.onProvince, onCity: this.onCity,
+      cityDisabled: !province, cityHint: province ? '' : 'Pilih provinsi lebih dulu.',
+      provError: attempted && st.step === 2 && !province, cityError: attempted && st.step === 2 && !!province && !city,
+      negClass: st.negotiable ? 'is-on' : '', togNeg: this.togNeg,
+      disputeClass: st.dispute ? 'is-on' : '', togDispute: this.togDispute,
+      transferClass: st.transferred ? 'is-on' : '', togTransfer: this.togTransfer,
+      sumName: name.trim() || '(belum diisi)', sumLoc: (city && province) ? city + ', ' + province : '(belum diisi)',
+      sumTitle: st.metaTitle || '(kosong — listing memakai nama proyek)'
+    };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>

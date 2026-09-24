@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Proyek Saya — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .app{width:390px;height:844px;position:relative;overflow:hidden;background:var(--ra-surface);display:flex;flex-direction:column;}
+  .topbar{height:60px;flex:none;display:flex;align-items:center;gap:8px;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .main{flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);}
+  .card-pad{padding:16px;}
+  .card-head{padding:14px 16px;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .stat-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;}
+  .row{display:flex;align-items:center;gap:10px;padding:12px 14px;text-decoration:none;color:inherit;border-top:1px solid var(--ra-ink-50);}
+  a.row:hover{text-decoration:none;}
+  .banner{display:flex;gap:10px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:12px 14px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .empty-big{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;text-align:center;color:var(--ra-ink-500);}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--ra-ink-100);overflow-x:auto;scrollbar-width:none;flex:none;}
+  .tab{padding:12px 4px;margin-right:16px;font-family:var(--ra-font);font-size:14px;font-weight:700;color:var(--ra-ink-300);border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;height:44px;white-space:nowrap;}
+  .tab.is-active{color:var(--ra-blue-600);border-bottom-color:var(--ra-blue-600);}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;}
+  .switch{position:relative;width:44px;height:24px;border-radius:12px;background:var(--ra-ink-200);cursor:pointer;flex:none;border:none;padding:0;}
+  .switch.is-on{background:var(--ra-blue-600);}
+  .switch-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .switch.is-on .switch-knob{transform:translateX(20px);}
+  .chip-group{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .thumb{width:52px;height:44px;border-radius:8px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);}
+  .scrim{position:absolute;inset:0;background:rgba(11,20,31,.5);z-index:20;display:flex;align-items:flex-end;}
+  .sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 22px;width:100%;max-height:88%;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .toast{position:absolute;left:16px;right:16px;bottom:20px;background:var(--ra-ink-900);color:#fff;border-radius:var(--ra-radius-md);padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:30;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;}
+  .drawer-scrim{position:absolute;inset:0;background:rgba(11,20,31,.45);z-index:5;}
+  .drawer{position:absolute;top:0;left:0;bottom:0;width:290px;background:var(--ra-blue-900);z-index:6;display:flex;flex-direction:column;box-shadow:var(--ra-shadow-3);}
+  .drawer-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .nav-item{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:var(--ra-radius-sm);color:rgba(255,255,255,.78);text-decoration:none;}
+  .nav-item.is-active{background:rgba(255,255,255,.14);color:#fff;}
+  .nav-item:hover{text-decoration:none;color:#fff;}
+  .nav-badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ra-gold-500);color:var(--ra-ink-900);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;}
+  .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;}
+  .kv dd{margin:0;font-size:14px;line-height:20px;}
+  .btn-danger-ghost{color:var(--ra-danger-600);}
+</style>
+</helmet>
+<div class="app">
+  <div class="topbar">
+    <button class="ra-iconbtn" style="margin-left:-8px;" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    <span class="ra-title-md ra-truncate-1" style="flex:1;">Proyek Saya</span>
+    <div style="position:relative;">
+      <button class="ra-iconbtn" aria-label="Notifikasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></button>
+      <div style="position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--ra-danger-600);border:1.5px solid #fff;"></div>
+    </div>
+  </div>
+  <div class="main ra-scroll">
+    <sc-if value="{{isUnlinked}}" hint-placeholder-val="{{false}}">
+      <div class="card"><div class="empty-big">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--ra-warning-100);color:var(--ra-warning-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></div>
+        <span class="ra-title-md" style="color:var(--ra-ink-900);">Akun belum terhubung ke perusahaan developer</span>
+        <p class="ra-body-md">Tim RumahAgen perlu menghubungkan akun ini ke data perusahaan Anda sebelum proyek bisa dikelola.</p>
+        <a class="ra-btn ra-btn-primary" style="width:100%;" href="#">Hubungi Tim RumahAgen</a>
+      </div></div>
+    </sc-if>
+    <sc-if value="{{isLinked}}" hint-placeholder-val="{{true}}">
+    <a class="ra-btn ra-btn-primary" style="width:100%;" href="M06-Form-Proyek.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Buat Proyek</a>
+    <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Status <strong>Aktif</strong> hanya bisa diberikan tim RumahAgen.</p></div>
+    <div class="chip-row" role="group" aria-label="Filter status">
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="5"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for>
+    </div>
+    <div style="position:relative;">
+      <span style="position:absolute;left:12px;top:12px;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+      <input class="ra-input" style="width:100%;padding-left:40px;" type="search" placeholder="Cari nama proyek…" aria-label="Cari nama proyek" value="{{q}}" onInput="{{setQ}}">
+    </div>
+
+    <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:96px;"></div><div class="ra-skel" style="height:96px;"></div><div class="ra-skel" style="height:96px;"></div></div></sc-if>
+    <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Daftar gagal dimuat</span><button class="ra-btn ra-btn-primary" onClick="{{retry}}">Coba Lagi</button></div></div></sc-if>
+    <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada proyek</span><p class="ra-body-md">Buat proyek pertama Anda.</p></div></div></sc-if>
+    <sc-if value="{{showNoMatch}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span class="ra-title-md" style="color:var(--ra-ink-900);">Tidak ada yang cocok</span><p class="ra-body-md">Ubah filter atau kata kunci.</p></div></div></sc-if>
+    <sc-if value="{{showTable}}" hint-placeholder-val="{{true}}">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+        <div class="card card-pad" style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
+            <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{r.name}}</div><div class="ra-caption ra-truncate-1">{{r.place}}</div></div>
+            <span class="ra-badge {{r.badge}}">{{r.statusLabel}}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;gap:8px;"><span class="ra-body-md">{{r.kind}}</span><span class="ra-label-lg">{{r.price}}</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span class="ra-caption">{{r.units}} unit tersedia</span><sc-if value="{{r.hasPending}}" hint-placeholder-val="{{false}}"><a class="ra-badge ra-badge-warning" href="M06-Review-Klaim.dc.html">{{r.pending}} klaim menunggu</a></sc-if></div>
+          <div style="display:flex;gap:8px;"><a class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" href="M06-Detail-Proyek.dc.html">Detail</a><a class="ra-btn ra-btn-ghost ra-btn-sm" style="flex:1;" href="M06-Form-Proyek.dc.html">Edit</a></div>
+        </div>
+      </sc-for>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <button class="ra-btn ra-btn-secondary ra-btn-sm" disabled="{{prevDisabled}}" onClick="{{prevPage}}">Sebelumnya</button>
+        <span class="ra-caption">{{pageLabel}}</span>
+        <button class="ra-btn ra-btn-secondary ra-btn-sm" disabled="{{nextDisabled}}" onClick="{{nextPage}}">Berikutnya</button>
+      </div>
+    </sc-if>
+    </sc-if>
+  </div>
+  <sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+    <div class="drawer-scrim" onClick="{{closeDrawer}}"></div>
+    <div class="drawer">
+      <div class="drawer-head">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <button class="ra-iconbtn" onClick="{{closeDrawer}}" aria-label="Tutup navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;margin:8px 12px 0;border-radius:var(--ra-radius-md);background:rgba(255,255,255,.08);">
+        <div style="width:28px;height:28px;border-radius:8px;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none;">{{companyMark}}</div>
+        <div style="min-width:0;flex:1;"><div class="ra-caption" style="color:rgba(255,255,255,.55);">Perusahaan</div><div class="ra-label-lg ra-truncate-1" style="color:#fff;">{{companyLabel}}</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:12px;flex:1;overflow-y:auto;">
+        <a class="nav-item" href="M08-Dashboard-Developer.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>Dashboard</a>
+        <a class="nav-item is-active" href="M06-Kelola-Proyek.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Proyek Saya</a>
+        <a class="nav-item" href="M06-Marketing-Kit.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Marketing Kit</a>
+        <a class="nav-item" href="M06-Review-Klaim.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.8"/></svg>Klaim Masuk<span class="nav-badge">2</span></a>
+        <a class="nav-item" href="M05-Ajukan-Event-Mitra.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>Event</a>
+        <a class="nav-item" href="M04-Hasil-Kemitraan.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 14l2 2 4-4"/></svg>Hasil Kemitraan</a>
+        <a class="nav-item" href="M06-Profil-Developer.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2M10 21v-3h4v3"/></svg>Profil Developer</a>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:10px;flex:none;">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;">HW</div>
+        <div><div class="ra-label-lg" style="color:#fff;">Hendra Wijaya</div><div class="ra-caption" style="color:rgba(255,255,255,.6);">Developer Partner</div></div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"akun":{"editor":"enum","default":"terhubung","options":["terhubung","belum_terhubung"],"section":"Skenario akun"},"state":{"editor":"enum","default":"normal","options":["normal","loading","empty","error"],"section":"Skenario daftar"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { filter: 'all', q: '', page: 1, retried: false });
+    var self = this;
+    ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'setQ', 'retry', 'nextPage', 'prevPage'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
+  openDrawer(){ this.setState({ drawerOpen: true }); }
+  closeDrawer(){ this.setState({ drawerOpen: false }); }
+  stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+
+  setQ(e){ this.setState({ q: e.target.value, page: 1 }); }
+  retry(){ this.setState({ retried: true }); }
+  nextPage(){ this.setState({ page: this.state.page + 1 }); }
+  prevPage(){ this.setState({ page: Math.max(1, this.state.page - 1) }); }
+  renderVals() {
+    var st = this.state, pr = this.props;
+    var linked = (pr.akun || 'terhubung') === 'terhubung';
+    var collapsed = st.navCollapsed === true;
+    var shell = {
+      navCollapsed: collapsed, navExpanded: !collapsed, navWidth: collapsed ? 76 : 240, labelOp: collapsed ? 0 : 1,
+      toggleNav: this.toggleNav, openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, stopClick: this.stopClick,
+      drawerOpen: st.drawerOpen === true,
+      isLinked: linked, isUnlinked: !linked,
+      companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
+    };
+    
+    // GET /developer-projects belum punya filter "milik saya" (hanya category/transaction/lokasi); RLS mengembalikan
+    // semua proyek publik + milik sendiri. Layar ini mengasumsikan filter developer_id ditambahkan (lihat SOURCE-Developer-Partner.md §6).
+    var self = this;
+    var mode = pr.state || 'normal';
+    var statusMap = {
+      active: { label: 'Aktif', badge: 'ra-badge-success' },
+      coming_soon: { label: 'Coming Soon', badge: 'ra-badge-info' },
+      sold_out: { label: 'Sold Out', badge: 'ra-badge-warning' },
+      inactive: { label: 'Nonaktif', badge: 'ra-badge-neutral' }
+    };
+    var data = [
+      { id: 1, name: 'Green Valley Residence', place: 'BSD City, Tangerang Selatan', kind: 'Primary · Jual', price: 'Rp 850 jt – 1,4 M', units: 42, pending: 1, status: 'active' },
+      { id: 2, name: 'Menara Kertajaya Apartemen', place: 'Surabaya Timur', kind: 'Primary · Jual', price: 'Rp 620 jt – 1,1 M', units: 118, pending: 1, status: 'active' },
+      { id: 3, name: 'Cluster Harmoni Residence', place: 'Bekasi', kind: 'Secondary · Jual', price: 'Rp 730 jt', units: 8, pending: 0, status: 'coming_soon' },
+      { id: 4, name: 'Kavling Cempaka Asri', place: 'Bogor Selatan', kind: 'Primary · Jual', price: 'Rp 310 jt – 480 jt', units: 0, pending: 0, status: 'sold_out' },
+      { id: 5, name: 'Ruko Niaga Bintaro', place: 'Bintaro, Tangerang Selatan', kind: 'Primary · Sewa', price: 'Rp 9 jt / bulan', units: 6, pending: 0, status: 'inactive' }
+    ];
+    var counts = { all: data.length, active: 0, coming_soon: 0, sold_out: 0, inactive: 0 };
+    data.forEach(function(d){ counts[d.status]++; });
+    var chipDefs = [['all','Semua'],['coming_soon','Coming Soon'],['active','Aktif'],['sold_out','Sold Out'],['inactive','Nonaktif']];
+    var chips = chipDefs.map(function(c){
+      return { label: c[1], count: counts[c[0]], pressed: st.filter === c[0] ? 'true' : 'false', pick: function(){ self.setState({ filter: c[0], page: 1 }); } };
+    });
+    var q = (st.q || '').toLowerCase();
+    var rows = data.filter(function(d){ return (st.filter === 'all' || d.status === st.filter) && (!q || d.name.toLowerCase().indexOf(q) >= 0); }).map(function(d){
+      var sm = statusMap[d.status];
+      return { name: d.name, place: d.place, kind: d.kind, price: d.price, units: d.units, pending: d.pending, hasPending: d.pending > 0,
+        statusLabel: sm.label, badge: sm.badge, waiting: d.status === 'coming_soon' };
+    });
+    var isEmpty = mode === 'empty';
+    var noMatch = mode === 'normal' && rows.length === 0;
+    var out = {
+      chips: chips, rows: rows, q: st.q, setQ: this.setQ,
+      showLoading: mode === 'loading', showError: mode === 'error', showEmpty: isEmpty, showNoMatch: noMatch,
+      showTable: mode === 'normal' && rows.length > 0, retry: this.retry,
+      pageLabel: 'Halaman ' + st.page + ' dari 2', nextPage: this.nextPage, prevPage: this.prevPage,
+      prevDisabled: st.page <= 1, nextDisabled: st.page >= 2, totalLabel: rows.length + ' proyek ditampilkan'
+    };
+    return Object.assign(shell, out);
+  }
+}
+</script>
+</body>
+</html>

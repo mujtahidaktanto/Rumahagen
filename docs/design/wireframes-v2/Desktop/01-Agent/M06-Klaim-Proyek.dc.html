@@ -84,6 +84,15 @@
                 <sc-if value="{{c.canWithdraw}}" hint-placeholder-val="{{true}}">
                   <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{c.onWithdraw}}">Batalkan Klaim</button>
                 </sc-if>
+                <sc-if value="{{c.canCreateListing}}" hint-placeholder-val="{{true}}">
+                  <button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{c.onCreateListing}}">Buat Listing dari Proyek</button>
+                </sc-if>
+                <sc-if value="{{c.canPdf}}" hint-placeholder-val="{{true}}">
+                  <a class="ra-btn ra-btn-secondary ra-btn-sm" href="#">Approval PDF</a>
+                </sc-if>
+                <sc-if value="{{c.listingCreated}}" hint-placeholder-val="{{false}}">
+                  <a class="ra-badge ra-badge-success" href="M03-Listing-Saya.dc.html">Draft listing dibuat</a>
+                </sc-if>
                 <sc-if value="{{c.canViewKit}}" hint-placeholder-val="{{true}}">
                   <button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{c.onToggleKit}}">{{c.kitToggleLabel}}</button>
                 </sc-if>
@@ -113,6 +122,24 @@
       </div>
     </div>
 
+    <sc-if value="{{listingOpen}}" hint-placeholder-val="{{false}}">
+      <div class="modal-scrim" onClick="{{closeListing}}">
+        <div class="modal" onClick="{{stopClick}}">
+          <span class="ra-title-lg">Buat Listing dari Proyek</span>
+          <span class="ra-body-sm" style="color:var(--ra-ink-500);">Draft listing dibuat dari data resmi "{{listingTarget}}" (harga awal, spesifikasi, dan media). Listing menjadi milik Anda dan berstatus draft: terbitkan terpisah dari Listing Saya. Perubahan Anda tidak mengubah proyek developer.</span>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label class="ra-label-lg" for="wa-num">Nomor WhatsApp listing <span style="color:var(--ra-danger-600);">*</span></label>
+            <input id="wa-num" class="ra-input" type="text" inputmode="tel" placeholder="08xxxxxxxxxx" value="{{wa}}" onInput="{{onWa}}">
+            <sc-if value="{{waError}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">Nomor WhatsApp wajib diisi.</span></sc-if>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;">
+            <button class="ra-btn ra-btn-secondary" onClick="{{closeListing}}">Batal</button>
+            <button class="ra-btn ra-btn-primary" onClick="{{confirmListing}}">Buat Draft Listing</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
     <sc-if value="{{withdrawModalOpen}}" hint-placeholder-val="{{false}}">
       <div class="modal-scrim" onClick="{{closeWithdrawModal}}">
         <div class="modal" onClick="{{stopClick}}">
@@ -132,12 +159,15 @@
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { withdrawModalOpen: false, withdrawTarget: '', withdrawnIds: {}, kitOpenIds: {} };
+    this.state = { withdrawModalOpen: false, withdrawTarget: '', withdrawnIds: {}, kitOpenIds: {}, listingOpen: false, listingTarget: '', createdIds: {}, wa: '', waTried: false };
     this.openWithdrawModal = this.openWithdrawModal.bind(this);
     this.closeWithdrawModal = this.closeWithdrawModal.bind(this);
     this.confirmWithdraw = this.confirmWithdraw.bind(this);
     this.toggleKit = this.toggleKit.bind(this);
     this.stopClick = this.stopClick.bind(this);
+    this.closeListing = this.closeListing.bind(this);
+    this.confirmListing = this.confirmListing.bind(this);
+    this.onWa = this.onWa.bind(this);
   }
   openWithdrawModal(id, name){ this.setState({ withdrawModalOpen: true, withdrawTarget: name, pendingId: id }); }
   closeWithdrawModal(){ this.setState({ withdrawModalOpen: false }); }
@@ -148,6 +178,15 @@ class Component extends DCLogic {
   toggleKit(id){
     const cur = this.state.kitOpenIds || {};
     this.setState({ kitOpenIds: { ...cur, [id]: !cur[id] } });
+  }
+  // POST /listings/from-project/{project_id}: wajib klaim APPROVED milik Agent sendiri; whatsapp_number wajib dari body; listing baru selalu 'draft' dan milik Agent.
+  openListing(id, name){ this.setState({ listingOpen: true, listingTarget: name, pendingListingId: id, wa: '', waTried: false }); }
+  closeListing(){ this.setState({ listingOpen: false }); }
+  onWa(e){ this.setState({ wa: e.target.value }); }
+  confirmListing(){
+    if (!(this.state.wa || '').trim()) { this.setState({ waTried: true }); return; }
+    var id = this.pendingListingId;
+    this.setState({ listingOpen: false, createdIds: { ...this.state.createdIds, [id]: true } });
   }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
@@ -187,6 +226,10 @@ class Component extends DCLogic {
         projectName: c.projectName, location: c.location, categoryLabel: c.categoryLabel, claimedAt: c.claimedAt,
         statusBadge: sm.badge, statusLabel: sm.label,
         canWithdraw: status === 'pending',
+        canCreateListing: status === 'approved' && !(this.state.createdIds || {})[c.id],
+        listingCreated: status === 'approved' && !!(this.state.createdIds || {})[c.id],
+        canPdf: status === 'approved',
+        onCreateListing: () => this.openListing(c.id, c.projectName),
         onWithdraw: () => this.openWithdrawModal(c.id, c.projectName),
         canViewKit,
         kitToggleLabel: kitOpen ? 'Sembunyikan Kit' : 'Lihat Marketing Kit',
@@ -198,6 +241,8 @@ class Component extends DCLogic {
 
     return {
       hasClaims, noClaims: !hasClaims, claims,
+      listingOpen: this.state.listingOpen ?? false, listingTarget: this.state.listingTarget ?? '', wa: this.state.wa ?? '', onWa: this.onWa,
+      waError: (this.state.waTried ?? false) && !(this.state.wa || '').trim(), closeListing: this.closeListing, confirmListing: this.confirmListing,
       withdrawModalOpen: this.state.withdrawModalOpen ?? false,
       withdrawTarget: this.state.withdrawTarget ?? '',
       closeWithdrawModal: this.closeWithdrawModal,
