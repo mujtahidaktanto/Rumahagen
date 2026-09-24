@@ -17,7 +17,7 @@ Migration `0071` (subscriptions, addons, promotions), `0072`–`0079`, `0081` (o
 `subscriptions`: `user_id?`, `organization_id?`, `product_code*`, `status*` (TEXT bebas, **tanpa CHECK**), `starts_at`, `ends_at`, `renews_at`, `historical_purchase_snapshot` (jsonb, bentuk tidak ditentukan).
 Baca: `m14.commercial_purchase_access.own_purchase` (Agent/Buyer/Developer Partner/Admin/Manager = own; Superadmin = all) berdasarkan `user_id`, atau staf `configure`.
 Tulis: hanya staf `m14.commercial_administration.configure` (Superadmin/Admin). **[DIUJI]** pemilik melihat 1 baris miliknya, agent lain 0 baris; UPDATE oleh pemilik 0 baris; INSERT oleh pemilik ditolak (42501).
-Catatan: langganan milik organisasi (`organization_id` tanpa `user_id`) tidak terbaca oleh anggota lewat policy ini (baca berdasarkan `user_id`); yang tampil di layar hanya baris dengan `user_id` = pengguna.
+Catatan: langganan milik organisasi (`organization_id` tanpa `user_id`) tidak terbaca anggota lewat policy ini. **Diperbaiki migration `0139` (diterapkan 2026-09-24)**: policy `subscriptions_select_org_member` + route `GET /agents/me/subscriptions` menyertakan langganan organisasi (`scope`), rincian pembelian disembunyikan bagi non-pemilik.
 
 ## 4. Temuan
 1. **[DIUJI] Harga pesanan ditentukan klien.** `POST /commercial/orders` mengambil `amount` dari body dan DB menerima INSERT `commercial_orders` dengan `amount=1` untuk addon yang harganya 500.000 (tanpa tabel harga otoritatif; webhook hanya mencocokkan gross_amount dengan `amount` order itu sendiri). Wireframe Katalog menulis "Harga ditentukan platform, bukan diisi manual", yang **tidak ditegakkan backend**. Ini celah pembayaran, di luar layar Langganan tetapi ditemukan di sini.

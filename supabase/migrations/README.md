@@ -3545,3 +3545,14 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Hasil uji (rollback):** listing published berganti slug menjadi 301 `slug_changed`; rantai diratakan (`rumah-lama` dan `rumah-baru` menuju `rumah-terbaru`); kembali ke slug lama tidak berputar; listing draf tidak dialihkan; profil agen dialihkan; ubah non-slug tidak menambah baris. Logika middleware diuji 10 kasus (rantai, query, 302 menang, URL luar dan `//host` ditolak, putaran tidak dialihkan). Trigger proyek developer tidak diuji langsung (baris uji terlalu banyak kolom wajib) tetapi sama dengan trigger listing. `tsc --noEmit` lolos; middleware belum dijalankan di server Next (belum ada halaman publik selain `/`).
 
 **Belum tercakup:** pengalihan saat listing dihapus atau digabung (`listing_deleted`/`listing_merged`, tujuan tidak diketahui), slug organisasi dan konten statis, dan pratinjau/penguji di layar Admin memakai data nyata.
+
+## `0138` — Keanggotaan organisasi pada order komersial M14 (✅ DITERAPKAN 2026-09-24)
+- Celah: `commercial_orders.organization_id` diterima dari klien tanpa memeriksa keanggotaan (policy INSERT hanya memeriksa izin atas `user_id`; trigger harga 0131 tidak menyentuh organisasi), sehingga pengguna bisa membuat order atas nama organisasi lain.
+- Perbaikan: trigger `trg_check_commercial_order_org` (BEFORE INSERT / UPDATE OF organization_id): non-staf hanya boleh `organization_id` NULL atau organisasi tempat ia anggota aktif (`is_org_member`), selain itu 42501. Staf, service role, dan pekerjaan sistem tanpa `auth.uid()` tidak dibatasi. Pemenuhan order tidak berubah (kapasitas tetap ke `user_id`).
+- Diuji rollback di DB live (6 skenario: anggota, bukan anggota, tanpa organisasi, pindah organisasi lewat UPDATE, UPDATE kolom lain, sistem). Tabel kosong saat ditulis.
+
+## `0139` — Langganan organisasi terbaca anggota aktif (M14) (✅ DITERAPKAN 2026-09-24)
+- Celah: baris `subscriptions` dengan `organization_id` (tanpa `user_id`) tidak terbaca anggota organisasi karena policy `subscriptions_select` berbasis `user_id`.
+- Perbaikan: policy `subscriptions_select_org_member` (SELECT, `organization_id IS NOT NULL AND is_org_member(organization_id)`). Tidak ada hak tulis baru.
+- Route `GET /agents/me/subscriptions` kini menyertakan langganan organisasi tempat pengguna anggota aktif (`scope: personal|organization`) dan menyembunyikan `historical_purchase_snapshot` untuk baris bukan milik pemanggil.
+- Diuji rollback live: anggota aktif melihat 1 baris, bukan anggota 0, anggota yang sudah keluar 0, UPDATE oleh anggota 0 baris. Tabel kosong saat ditulis.

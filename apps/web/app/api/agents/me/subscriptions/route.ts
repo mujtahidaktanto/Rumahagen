@@ -2,7 +2,8 @@
 // GET /agents/me/subscriptions — Agent, langganan milik sendiri (M14, tabel subscriptions 0071), paginated. Dipakai layar "Langganan Saya".
 // RLS subscriptions_select (0071): pemilik lewat m14.commercial_purchase_access.own_purchase berdasarkan user_id; filter user_id tetap dipasang
 // eksplisit supaya staf (yang melihat semua baris) hanya mendapat langganan dirinya di endpoint "me".
-// Batasan: langganan milik organisasi tanpa user_id belum terbaca anggota (policy berbasis user_id). Belum ada pembelian/perpanjangan/pembatalan
+// Langganan organisasi tempat pengguna menjadi anggota aktif ikut tampil (policy subscriptions_select_org_member, 0139), dengan scope 'organization';
+// rincian pembelian (historical_purchase_snapshot) disembunyikan untuk baris yang bukan milik pemanggil. Belum ada pembelian/perpanjangan/pembatalan
 // langganan (tidak ada endpoint tulis; baris hanya dibuat staf).
 // Respons menambah status turunan: effective_status (active|expiring|expired|pending|cancelled|unknown), days_left, is_current.
 
@@ -24,10 +25,21 @@ export const GET = withApiHandler({}, async (ctx) => {
   const filters = validateSearchParams(url.searchParams, listMySubscriptionsQuerySchema);
 
   const supabase = await createClient();
+  const { data: memberships, error: memberError } = await supabase
+    .from("organization_members")
+    .select("organization_id")
+    .eq("agent_id", ctx.userId)
+    .eq("status", "active");
+  if (memberError) {
+    throw memberError;
+  }
+  const orgIds = (memberships ?? []).map((m) => m.organization_id as string);
+  const orFilter = [`user_id.eq.${ctx.userId}`, ...(orgIds.length > 0 ? [`organization_id.in.(${orgIds.join(",")})`] : [])].join(",");
+
   let query = supabase
     .from("subscriptions")
     .select("*", { count: "exact" })
-    .eq("user_id", ctx.userId)
+    .or(orFilter)
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -45,7 +57,11 @@ export const GET = withApiHandler({}, async (ctx) => {
   }
 
   const now = new Date();
-  const rows = (data ?? []).map((row) => ({ ...row, ...deriveSubscriptionState(row, now) }));
+  const rows = (data ?? []).map((row) => {
+    const mine = row.user_id === ctx.userId;
+    const base = mine ? row : { ...row, historical_purchase_snapshot: null };
+    return { ...base, scope: mine ? "personal" : "organization", ...deriveSubscriptionState(row, now) };
+  });
 
   return { data: rows, pagination: buildPaginationMeta(limit, offset, count ?? 0) };
 });
