@@ -3267,3 +3267,48 @@ trigger, pesan jelas); Manager menyentuh baris yang SUDAH
 Admin/Manager/Superadmin → harus 0 baris terpengaruh (`USING` tidak
 lolos); Superadmin tidak terpengaruh. Data uji 0121 (4 throwaway user)
 sudah dihapus total sebelum bug lapisan kedua ini ditemukan.
+
+## `0123` — Tabel `metrics_daily_snapshot` + `capture_daily_metrics()` (⏳ DITULIS, BELUM DITERAPKAN)
+
+**STATUS:** file ditulis dan SQL-nya diuji di transaksi yang di-rollback (fungsi
+jalan tanpa error, DB kembali bersih), tapi BELUM diterapkan ke database live.
+Menunggu izin eksplisit pengguna untuk `apply_migration`.
+
+Mendukung Dashboard Analytics Admin (`docs/analytics/METRIC_DEFINITIONS_v1.md`
+v1.1). Menyimpan potret harian metrik STOK yang tidak bisa direkonstruksi:
+sistem hanya menyimpan `users.last_login_at` (login terakhir), tanpa riwayat
+role, tanggal penutupan organisasi, atau tanggal refund. Metrik ARUS (agen
+baru, listing baru, lead, order, dst.) tidak disimpan — dihitung langsung dari
+`created_at`/`paid_at`.
+
+- Tabel format panjang: `(snapshot_date, metric_key, dimension)` → `value`,
+  plus `definition_version` dan `captured_at`.
+- Metrik: `users_by_role`, `agents_active_1d/7d/30d` (DAU/WAU/MAU),
+  `agents_dormant_90d`, `agents_newly_dormant` (dasar churn agen),
+  `agents_suspended`, `cohort_size`/`cohort_active_30d` (dasar retensi
+  kohort), `organizations_active`, `listings_published`/`listings_expired`,
+  `subscribers_paid_active` dan `mrr_idr` per `product_code`,
+  `reconciliation_cases_open`, `award_appeals_pending`.
+- Aktivitas agen = login, listing dibuat/diubah/di-refresh, atau lead diterima
+  (definisi v1 butir 2).
+- RLS: SELECT untuk Superadmin/Admin/Manager; tidak ada policy tulis. Tidak
+  ada permission baru (D13-15).
+- `capture_daily_metrics(p_date)` hanya untuk `service_role`, idempoten
+  (baris pertama menang), dan menolak `p_date` di luar {kemarin, hari ini} WIB.
+  Alasannya: metrik berbasis login benar hanya bila dipanggil segera setelah
+  tengah malam, jadi backfill dilarang.
+
+**Asumsi yang perlu Anda tahu:**
+- **MRR** tidak bisa dihitung dari kolom harga karena `subscriptions` tidak
+  punya field harga baku (`product_code` dan `historical_purchase_snapshot`
+  bebas). MRR dihitung dari order terkonfirmasi terakhir yang terkait
+  langganan (`commercial_orders.confirmed_at` terisi, `amount > 0`) dibagi
+  jumlah bulan periode langganan (`ends_at - starts_at`, pembulatan ke bulan,
+  minimal 1). Free membership otomatis tidak terhitung karena `amount = 0`.
+- `subscriptions.status = 'active'` dianggap penanda langganan berjalan
+  (kolom status tanpa CHECK di sumber).
+- Tidak ada tanda akun uji di skema, jadi akun uji tidak bisa dikeluarkan otomatis.
+
+**Belum dibuat:** pemanggil terjadwal harian (sengaja tanpa `pg_cron`, sesuai
+0019; rencananya Vercel Cron → route admin dengan service_role) dan route
+export `/api/admin/reports/export`.
