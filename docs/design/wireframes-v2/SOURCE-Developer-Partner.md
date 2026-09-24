@@ -121,7 +121,7 @@ Hanya Superadmin dan pemilik yang melihat (Admin/Manager tidak). "Partner Learni
 - Nama + profil publik Agent saja; tidak ada kontak/dokumen privat.
 - Non-eksklusivitas: tidak ada UI "eksklusif wilayah".
 
-## 8. Temuan celah backend (dibuktikan)
+## 8. Temuan celah backend (dibuktikan) — perbaikan: migration `0127` (ditulis + diuji rollback; status penerapan di README migration)
 
 1. **[DIUJI] Agent bisa menyetujui klaimnya sendiri.** Policy `agent_project_claims_review` memakai `has_permission('m06.claim.approve', agent_id)` dan role `agent` punya scope `own` untuk approve/reject/revoke/review → Agent lolos untuk klaim miliknya (UPDATE mengembalikan 1 baris). Akibatnya hard-gate `POST /listings/from-project` bisa dilewati tanpa persetujuan Developer Partner. Tugas perbaikan sudah diantrekan (chip "Tutup 3 celah RLS di M06 & M05").
 2. **[DIUJI] Developer Partner bisa INSERT proyek langsung berstatus `active`** (trigger publish-gate hanya `BEFORE UPDATE`). Lewat API tidak bisa (skema tidak menerima `status`), tetapi lewat REST langsung bisa. Termasuk di tugas perbaikan yang sama.

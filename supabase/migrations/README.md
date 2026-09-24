@@ -3369,3 +3369,17 @@ ada TIDAK berubah: itu export baris `audit_logs`, bukan analitik.
 **Hasil uji (transaksi rollback):** mitra mengedit profil sendiri = 1 baris; profil perusahaan lain = 0 baris; ubah status/`user_id`/`deleted_at` = ditolak 42501; Agent = 0 baris; Manager tetap bisa mengubah status dan nama.
 
 **Catatan:** `PUT /api/developer-partners/{id}` memakai skema yang juga memuat `user_id` dan `status`; bila mitra mengirimnya, DB menolak (403). Layar Profil Developer hanya mengirim nama, logo, deskripsi, dan PIC.
+
+---
+
+## `0127` — Tutup 3 celah RLS: klaim self-approve, proyek langsung active, event langsung published (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Ketiga celah dibuktikan lebih dulu pada DB live (lihat `docs/design/wireframes-v2/SOURCE-Developer-Partner.md` §8).
+
+**Perbaikan (hanya trigger; policy RLS tidak diubah):**
+1. `trg_project_claim_transition_rules` (BEFORE UPDATE OF status pada `agent_project_claims`): transisi sah hanya `pending -> approved|rejected|withdrawn` dan `approved -> revoked` (rejected/revoked/withdrawn final, 23514 bila melanggar); `withdrawn` hanya oleh Agent pemilik klaim; `approved/rejected/revoked` hanya oleh Developer Partner pemilik proyek atau staf, dan pemilik klaim tidak boleh memutuskan klaimnya sendiri (kecuali Superadmin), 42501.
+2. `trg_developer_project_insert_status` (BEFORE INSERT `developer_projects`): status `active` saat INSERT butuh `m06.developer_project.publish`.
+3. `trg_event_insert_status` (BEFORE INSERT `events`): status selain `pending_approval` saat INSERT butuh `m05.event.publish` untuk `submitted_by`.
+Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
+
+**Hasil uji (16 skenario, transaksi rollback):** Agent self-approve ditolak; Agent withdraw klaim pending sendiri ok; Developer Partner approve/revoke pada proyek sendiri ok, pada proyek orang lain 0 baris; transisi tidak sah (revoked->approved, approved->pending, rejected->approved) ditolak; Developer Partner insert proyek active dan event published ditolak, coming_soon dan pending_approval ok; Manager tetap bisa approve, membuat proyek active, dan event published; Agent tetap bisa menerbitkan event miliknya.
