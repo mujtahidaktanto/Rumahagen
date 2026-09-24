@@ -3427,3 +3427,21 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 **Hasil uji (23 skenario, rollback):** insert enrollment completed 42501; enroll ke kursus draft dan tanpa prasyarat 23514; enroll ke kursus terbit ok; self status completed dan progres 100 ditolak 42501, progres 50 ok; insert percobaan kuis oleh Agent 42501; percobaan lulus dari server menyelesaikan enrollment; Instructor insert/UPDATE ke published 42501, draf dan edit kursus terbit ok; Manager menerbitkan ok; pengalihan: loop, URL luar, `//host`, diri sendiri, tanpa awalan `/` ditolak 23514, jalur dengan query dan rantai `/a->/b->/c` ok.
 
 **Belum tercakup:** tidak ada mekanisme "minta terbit" dari Instructor; hapus kursus oleh pemilik (policy FOR ALL) masih menghapus berantai; API ubah/hapus kuis-soal-opsi, PUT pengalihan, dan pemakaian `url_redirects` oleh aplikasi publik masih belum ada.
+
+---
+
+## `0131` — Harga pesanan M14 dihitung server dari addon (✅ DITERAPKAN)
+
+**STATUS:** DITERAPKAN ke database live (2026-09-24) atas izin eksplisit pengguna, setelah diuji rollback. Celah dibuktikan di DB live: `POST /commercial/orders` memakai `amount` dari klien dan INSERT order dengan amount=1 untuk addon berharga 500.000 diterima; klien juga bisa INSERT `payment_transactions` dengan nominal sesukanya lewat PostgREST, dan webhook Midtrans mencocokkan gross_amount dengan `payment_transactions.amount`, jadi membayar Rp 1 memicu fulfillment penuh.
+
+**Perubahan:**
+1. `addons.price` (NUMERIC(18,2)) dan `addons.currency` (default IDR); addon `active` wajib `price > 0` (CHECK). Sumber harga satu-satunya.
+2. `compute_addon_order_price(addon, promosi)`: harga = `addons.price`; promosi hanya sah bila sama dengan `addons.promotion_id`, `active`, dan dalam `valid_from/valid_to`; konvensi `benefit_configuration`: `{"percent_off":1..100}` atau `{"amount_off":>0}`; hasil harus > 0. Mengembalikan amount, currency, promotion_id, dan snapshot (addon, promosi, harga list, waktu).
+3. Trigger `trg_price_commercial_order` (BEFORE INSERT `commercial_orders`): untuk pembeli, menimpa amount/currency/promotion_id/commercial_snapshot dengan hasil server; menolak addon tak aktif/tanpa harga, order tanpa addon, dan order `subscription_id`. Staf (`manage_commercial_resources`) dan konteks server (auth.uid() NULL / service_role) tidak dibatasi.
+4. Trigger `trg_payment_transaction_amount` (BEFORE INSERT `payment_transactions`): untuk pembeli, menyamakan amount/currency dengan order induk dan menolak bila order tidak pending.
+
+**Perubahan kode (satu paket):** `POST /commercial/orders` tidak lagi menerima/mengirim harga (`amount`/`currency` dihapus dari skema Zod; nilai placeholder ditimpa trigger) dan menolak addon tak aktif/tanpa harga dengan 409. Tanpa migration, route baru akan selalu 409 karena kolom `price` belum ada; terapkan migration dan kode bersamaan.
+
+**Hasil uji (rollback, 11 skenario):** amount klien=1 menjadi 75.000 (harga addon), currency klien USD ditimpa IDR, snapshot palsu klien diganti; promosi 10% pada 500.000 menjadi 450.000; addon draft, promosi tak terkait, promosi kedaluwarsa, order langganan, dan order tanpa addon ditolak 23514; payment amount klien=1 menjadi 450.000 (nominal order); staf dan server bisa mengisi amount manual.
+
+**Belum tercakup:** belum ada UI/route admin untuk mengisi `price` (staf harus lewat SQL/konsol), `organization_id` pada order belum diverifikasi keanggotaannya, dan definisi promosi di luar `percent_off`/`amount_off` belum ada.

@@ -1,9 +1,9 @@
 // app/api/commercial/orders/route.ts
 // API-178 POST /commercial/orders — Authenticated buyer/agent. `status`/
-// `confirmed_at` selalu dipaksa 'pending'/NULL oleh trigger DB (0079) apa
-// pun yang dikirim — order_number + commercial_snapshot dibangun server-
-// side dari addon yang direferensikan (immutable purchase terms, STEP11-B7
-// §9), TIDAK dari body klien.
+// `confirmed_at` selalu dipaksa 'pending'/NULL oleh trigger DB (0079). HARGA
+// (amount, currency, promotion_id) dan commercial_snapshot dihitung server oleh
+// trigger trg_price_commercial_order (0131) dari addons.price; nilai placeholder
+// di bawah hanya memenuhi NOT NULL dan SELALU ditimpa. Klien tidak mengirim harga.
 
 import crypto from "node:crypto";
 import { withApiHandler } from "@/lib/api/handler";
@@ -32,6 +32,9 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
   if (!addon) {
     throw new ApiError("NOT_FOUND", "Addon tidak ditemukan atau tidak aktif.");
   }
+  if (addon.status !== "active" || !(Number(addon.price) > 0)) {
+    throw new ApiError("CONFLICT", "Addon ini belum bisa dibeli (tidak aktif atau belum punya harga).");
+  }
 
   const orderNumber = `ORD-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
 
@@ -43,10 +46,10 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
       organization_id: body.organization_id ?? null,
       addon_id: body.addon_id,
       promotion_id: body.promotion_id ?? null,
-      amount: body.amount,
-      currency: body.currency ?? "IDR",
+      amount: 0, // placeholder, ditimpa trigger dengan harga server
+      currency: "IDR", // placeholder, ditimpa trigger
       status: "pending",
-      commercial_snapshot: { addon },
+      commercial_snapshot: {}, // placeholder, ditimpa trigger dengan snapshot server
     })
     .select()
     .single();
