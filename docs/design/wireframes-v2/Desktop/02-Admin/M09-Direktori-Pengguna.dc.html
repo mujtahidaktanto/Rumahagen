@@ -172,7 +172,7 @@
     <div class="scrim" onClick="{{closeRoleDialog}}">
       <div class="dialog" onClick="{{stopClick}}">
         <h2 class="ra-title-md">Ubah Role — {{roleDialogUserName}}</h2>
-        <p class="ra-caption">{{roleDialogHint}}</p>
+        <p class="ra-caption">{{roleDialogHint}} Ini BERBEDA dari "Ubah Role" di layar Staf Internal — di sana khusus mengganti role ANTAR staf (Admin/Manager/Superadmin), di sini untuk mengonversi akun Agent menjadi mitra (Instructor/Buyer/Developer Partner) atau lebih.</p>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <label class="ra-label-lg">Role baru</label>
           <select class="ra-input">
@@ -191,7 +191,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"superadmin","options":["superadmin","admin","manager"],"section":"Skenario aktor — default Superadmin supaya aksi Ubah Role langsung terlihat"},"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
