@@ -39,6 +39,10 @@
 
   <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;">
 
+    <sc-if value="{{isManagerScopedView}}" hint-placeholder-val="{{false}}">
+      <p class="ra-caption" style="color:var(--ra-ink-300);">Manager hanya melihat akun Agent &amp; mitra (Instructor/Buyer/Developer Partner) — baris staf lain (Admin/Manager/Superadmin) tersembunyi di level database (RLS), bukan cuma UI.</p>
+    </sc-if>
+
     <div class="ra-scroll-x chip-row">
       <sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
         <span class="ra-chip" aria-pressed="{{c.isActive}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">·{{c.count}}</span></span>
@@ -182,16 +186,25 @@ class Component extends DCLogic {
       { name: 'Siti Rahma', email: 'siti.rahma@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'suspended', status: 'suspended', badgeClass: 'ra-badge-danger', initials: 'SR' },
       { name: 'Yusuf Hidayat', email: 'yusuf.hidayat@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'rejected', status: 'rejected', badgeClass: 'ra-badge-danger', initials: 'YH' },
       { name: 'Rian Saputra', email: 'rian.saputra@example.com', role: 'agent', roleLabel: 'Agent', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'RS' },
-      { name: 'Amelia Putri', email: 'amelia.putri@example.com', role: 'manager', roleLabel: 'Manager', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'AP' }
+      { name: 'Amelia Putri', email: 'amelia.putri@example.com', role: 'manager', roleLabel: 'Manager', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'AP' },
+      { name: 'Bagus Wicaksono', email: 'bagus.w@example.com', role: 'admin', roleLabel: 'Admin', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'BW' },
+      { name: 'CitraLand Developer', email: 'partner@citraland.example.com', role: 'developer_partner', roleLabel: 'Developer Partner', statusKey: 'active', status: 'active', badgeClass: 'ra-badge-success', initials: 'CD' }
     ];
+    // RLS users_select_manager_agent_rows (0121, diperluas 0122): Manager
+    // HANYA bisa SELECT baris ber-role agent/instructor/buyer/developer_
+    // partner -- baris Admin/Manager/Superadmin lain benar-benar tidak
+    // "terlihat" di database, bukan cuma disembunyikan UI. Dikonfirmasi
+    // lewat live-testing migration ini (throwaway test users, 2026-09-25).
+    const managerVisibleRoles = ['agent', 'instructor', 'buyer', 'developer_partner'];
+    const visibleUsers = isManager ? users.filter(u => managerVisibleRoles.includes(u.role)) : users;
     const chipDefs = [
       { key: 'all', label: 'Semua' }, { key: 'active', label: 'Aktif' },
       { key: 'pending_review', label: 'Ditinjau' }, { key: 'suspended', label: 'Suspended' }, { key: 'rejected', label: 'Ditolak' }
     ];
     const activeFilter = this.state.activeFilter ?? 'all';
-    const countFor = (key) => key === 'all' ? users.length : users.filter(u => u.statusKey === key).length;
+    const countFor = (key) => key === 'all' ? visibleUsers.length : visibleUsers.filter(u => u.statusKey === key).length;
     const chips = chipDefs.map(c => ({ key: c.key, label: c.label, count: countFor(c.key), isActive: c.key === activeFilter, pick: () => this.pickFilter(c.key) }));
-    const filteredBase = activeFilter === 'all' ? users : users.filter(u => u.statusKey === activeFilter);
+    const filteredBase = activeFilter === 'all' ? visibleUsers : visibleUsers.filter(u => u.statusKey === activeFilter);
     const filtered = filteredBase.map(u => ({
       ...u,
       canSuspend: canManage && u.role === 'agent' && u.statusKey === 'active',
@@ -220,6 +233,7 @@ class Component extends DCLogic {
     return {
       chips, filtered, activeFilterLabel,
       viewerRoleLabel: roleLabels[viewerRole] ?? 'Admin',
+      isManagerScopedView: isManager,
       isEmpty: listState === 'empty',
       isLoaded: listState === 'loaded',
       dialogOpen: this.state.dialogOpen ?? false,
