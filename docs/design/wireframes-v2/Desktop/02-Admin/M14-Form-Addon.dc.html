@@ -129,9 +129,15 @@
         <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
           <span class="ra-title-md">Harga</span>
           <div class="field"><label class="ra-label-lg" for="a-price">Harga (Rp) <span class="req">*</span></label><input id="a-price" class="ra-input" type="number" min="1" inputmode="numeric" style="max-width:240px;" value="{{price}}" onInput="{{onPrice}}"><sc-if value="{{priceErr}}" hint-placeholder-val="{{false}}"><span class="err">Harga wajib lebih dari 0.</span></sc-if><span class="ra-caption">Mata uang IDR. Ini satu-satunya sumber harga pesanan.</span></div>
-          <div class="field"><label class="ra-label-lg" for="a-promo">Promosi terkait <span class="ra-caption">(opsional)</span></label><select id="a-promo" class="ra-input" value="{{promo}}" onChange="{{onPromo}}"><option value="none">Tanpa promosi</option><option value="p10">Diskon 10% (aktif)</option><option value="p20k">Potongan Rp 20.000 (aktif)</option><option value="plama">Promo Lebaran (kedaluwarsa)</option></select>
-            <span class="ra-caption">Daftar promosi hanya bisa dibaca; membuat atau mengubah promosi belum tersedia. Promosi berlaku bila aktif dan dalam masa berlaku.</span></div>
-          <sc-if value="{{hasPromoNote}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">{{promoNote}}</p></div></sc-if>
+          <div class="field"><span class="ra-label-lg">Promosi terkait <span class="ra-caption">(opsional)</span></span>
+            <sc-if value="{{plLoading}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;gap:8px;"><div class="ra-skel" style="height:56px;"></div><div class="ra-skel" style="height:56px;"></div></div></sc-if>
+            <sc-if value="{{plError}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;"><p class="ra-body-md">Daftar promosi gagal dimuat. Promosi yang terhubung tidak berubah; Anda tetap bisa menyimpan add-on.</p><button class="ra-btn ra-btn-secondary ra-btn-sm" type="button">Coba Lagi</button></div></div></sc-if>
+            <sc-if value="{{plEmpty}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Belum ada promosi aktif. <a href="M14-Form-Promosi.dc.html">Buat promosi baru</a> lalu aktifkan dari daftar Promosi.</p></div></sc-if>
+            <sc-if value="{{plReady}}" hint-placeholder-val="{{true}}"><div style="display:flex;flex-direction:column;gap:8px;" role="radiogroup" aria-label="Promosi terkait"><sc-for list="{{promoOptions}}" as="o" hint-placeholder-count="4">
+              <button class="radio-card" role="radio" aria-checked="{{o.checked}}" disabled="{{o.dis}}" onClick="{{o.pick}}"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="ra-label-lg">{{o.name}}</span><sc-if value="{{o.hasBadge}}" hint-placeholder-val="{{false}}"><span class="ra-badge {{o.badgeClass}}">{{o.badge}}</span></sc-if></span><span class="ra-caption">{{o.meta}}</span><sc-if value="{{o.hasReason}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">{{o.reason}}</span></sc-if></button></sc-for></div></sc-if>
+            <span class="ra-caption">Menampilkan promosi berstatus Aktif dari <a href="M14-Promosi-Admin.dc.html">daftar Promosi</a>. Promosi berlaku bila aktif dan dalam masa berlakunya. <a href="M14-Form-Promosi.dc.html">Buat promosi baru</a></span></div>
+          <sc-if value="{{noteWarn}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">{{promoNote}}</p></div></sc-if>
+          <sc-if value="{{noteInfo}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">{{promoNote}}</p></div></sc-if>
         </div>
         <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
           <span class="ra-title-md">Masa berlaku</span>
@@ -157,7 +163,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"mode":{"editor":"enum","default":"create","options":["create","edit","edit_terkunci"],"section":"Skenario form"},"simpan":{"editor":"enum","default":"normal","options":["normal","menyimpan","gagal"],"section":"Skenario simpan"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"aktor":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"mode":{"editor":"enum","default":"create","options":["create","edit","edit_terkunci","edit_promo_tak_berlaku"],"section":"Skenario form"},"promoList":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario daftar promosi"},"simpan":{"editor":"enum","default":"normal","options":["normal","menyimpan","gagal"],"section":"Skenario simpan"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -172,7 +178,7 @@ class Component extends DCLogic {
 
   mode(){ return this.props.mode || 'create'; }
   locked(){ return this.mode() === 'edit_terkunci'; }
-  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', price: '', vtype: 'days', days: '30', ctype: 'listing_refresh', cval: '', promo: 'none' }; return { code: 'REFRESH_50', name: 'Paket 50 Refresh', price: '75000', vtype: 'days', days: '30', ctype: 'listing_refresh', cval: '50', promo: 'none' }; }
+  form(){ if (this.state.f) return this.state.f; if (this.mode() === 'create') return { code: '', name: '', price: '', vtype: 'days', days: '30', ctype: 'listing_refresh', cval: '', promo: 'none' }; return { code: 'REFRESH_50', name: 'Paket 50 Refresh', price: '75000', vtype: 'days', days: '30', ctype: 'listing_refresh', cval: '50', promo: this.mode() === 'edit_promo_tak_berlaku' ? 'p3' : 'p1' }; }
   capsList(){ if (this.state.caps) return this.state.caps; return this.mode() === 'create' ? [] : [{ t: 'learning_point', v: '100' }]; }
   up(k, v){ var f = Object.assign({}, this.form()); f[k] = v; this.setState({ f: f }); }
   onCode(e){ this.up('code', e.target.value); }
@@ -204,11 +210,31 @@ class Component extends DCLogic {
     var self = this, f = this.form(), tried = st.tried === true, locked = this.locked();
     var p = Number(f.price), days = Number(f.days), cv = Number(f.cval);
     var codeBad = !String(f.code).trim() ? 'Kode wajib diisi.' : (!/^[A-Za-z0-9_.-]+$/.test(String(f.code).trim()) ? 'Kode hanya huruf, angka, titik, garis bawah, dan strip.' : '');
-    var promos = { none: null, p10: { name: 'Diskon 10%', pct: 10 }, p20k: { name: 'Potongan Rp 20.000', off: 20000 }, plama: { name: 'Promo Lebaran (kedaluwarsa)', expired: true } };
-    var pm = promos[f.promo] || null, base = p > 0 ? p : 0, finalPrice = base, promoNote = '';
-    if (pm && pm.pct) finalPrice = Math.round(base * (1 - pm.pct / 100)); else if (pm && pm.off) finalPrice = Math.max(0, base - pm.off);
-    if (pm && pm.expired) promoNote = 'Promosi ini sudah berakhir dan tidak akan diterapkan pada pesanan.'; else if (pm) promoNote = 'Diskon dihitung server saat pesanan dibuat dari aturan promosi.';
     var fmt = function(n){ return n > 0 ? 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : 'Rp 0'; };
+    // Pilihan promosi = hasil GET /admin/commercial/promotions?status=active (status database 'active'); status efektif dihitung seperti derivePromotionState.
+    // Promosi kedaluwarsa tidak bisa dipilih baru, tetapi tetap tampil bila sedang terhubung ke add-on ini (dengan peringatan).
+    var NOW = new Date('2026-09-24T00:00:00Z').getTime();
+    var PL = [
+      { id: 'p1', code: 'DISKON10', name: 'Diskon 10% untuk Agen Baru', pct: 10, off: 0, from: '2026-09-01T00:00:00Z', to: '2026-10-31T00:00:00Z', win: '1 Sep – 31 Okt 2026' },
+      { id: 'p2', code: 'HEMAT20K', name: 'Potongan Rp 20.000 Awal Bulan', pct: 0, off: 20000, from: '2026-10-15T00:00:00Z', to: '2026-10-31T00:00:00Z', win: '15 – 31 Okt 2026' },
+      { id: 'p3', code: 'LEBARAN25', name: 'Promo Lebaran 25% untuk Semua Paket Refresh dan Poin Belajar', pct: 25, off: 0, from: '2026-03-01T00:00:00Z', to: '2026-04-15T00:00:00Z', win: '1 Mar – 15 Apr 2026' }
+    ];
+    var plMode = pr.promoList || 'loaded';
+    var eff = function(x){ if (new Date(x.to).getTime() < NOW) return 'expired'; if (new Date(x.from).getTime() > NOW) return 'scheduled'; return 'active'; };
+    var EFFL = { active: ['Aktif','ra-badge-success'], scheduled: ['Terjadwal','ra-badge-info'], expired: ['Kedaluwarsa','ra-badge-danger'] };
+    var pm = null; PL.forEach(function(x){ if (x.id === f.promo) pm = x; });
+    var pmEff = pm ? eff(pm) : '';
+    var base = p > 0 ? p : 0, finalPrice = base;
+    if (pm && pmEff !== 'expired') { if (pm.pct) finalPrice = Math.round(base * (1 - pm.pct / 100)); else if (pm.off) finalPrice = Math.max(0, base - pm.off); }
+    var promoNote = '', promoWarn = false;
+    if (pm && pmEff === 'expired') { promoNote = 'Promosi yang terhubung sudah kedaluwarsa. Add-on dijual dengan harga normal sampai Anda memilih promosi lain atau memperbarui masa berlaku promosi itu.'; promoWarn = true; }
+    else if (pm && pmEff === 'scheduled') { promoNote = 'Potongan mulai berlaku ' + pm.win.split(' – ')[0] + '; sebelum itu add-on dijual dengan harga normal.'; }
+    else if (pm) { promoNote = 'Diskon dihitung server saat pesanan dibuat dari aturan promosi.'; }
+    var promoOptions = [{ id: 'none', name: 'Tanpa promosi', meta: 'Add-on dijual dengan harga normal', badge: '', badgeClass: '', hasBadge: false, checked: f.promo === 'none' ? 'true' : 'false', dis: false, reason: '', hasReason: false, pick: function(){ self.up('promo', 'none'); } }];
+    if (plMode !== 'empty') { PL.forEach(function(x){
+      var e = eff(x), b = EFFL[e]; var dis = e === 'expired' && f.promo !== x.id;
+      promoOptions.push({ id: x.id, name: x.name, meta: x.code + ' · ' + (x.pct ? x.pct + '%' : fmt(x.off)) + ' · ' + x.win, badge: b[0], badgeClass: b[1], hasBadge: true, checked: f.promo === x.id ? 'true' : 'false', dis: dis, reason: dis ? 'Sudah kedaluwarsa; perbarui masa berlakunya di Promosi.' : '', hasReason: dis, pick: function(){ if (dis) return; self.up('promo', x.id); } });
+    }); }
     var vts = [['days','Berlaku beberapa hari'],['unlimited','Tanpa batas waktu']].map(function(t){ return { l: t[1], checked: f.vtype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('vtype', t[0]); }, dis: locked }; });
     var ctypes = [['listing_refresh','Refresh Listing'],['learning_point','Poin Belajar']].map(function(t){ return { l: t[1], pressed: f.ctype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('ctype', t[0]); }, dis: locked }; });
     var caps = this.capsList().map(function(c, i){ return { n: i + 1, t: c.t === 'learning_point' ? 'Poin Belajar' : 'Refresh Listing', v: c.v, dis: locked,
@@ -218,7 +244,8 @@ class Component extends DCLogic {
     var out = { aktorLabel: aktorLabel, pageTitle: this.mode() === 'create' ? 'Buat Add-on' : 'Ubah Add-on', code: f.code, name: f.name, price: f.price, days: f.days, cval: f.cval, promo: f.promo, onCode: this.onCode, onName: this.onName, onPrice: this.onPrice, onDays: this.onDays, onCapVal: this.onCapVal, onPromo: this.onPromo,
       locked: locked, isCreate: this.mode() === 'create', codeErr: tried && !!codeBad, codeMsg: codeBad, nameErr: tried && !String(f.name).trim(), priceErr: tried && !(p > 0), daysErr: tried && f.vtype === 'days' && !(days > 0), capErr: tried && !(cv > 0),
       isDays: f.vtype === 'days', vts: vts, ctypes: ctypes, caps: caps, hasCaps: caps.length > 0, addCap: this.addCap, capAddOff: !(caps.length < 10 && !locked),
-      finalPrice: fmt(finalPrice), listPrice: fmt(base), hasPromoNote: !!promoNote, promoNote: promoNote, showFinal: !!pm && !pm.expired && finalPrice !== base,
+      finalPrice: fmt(finalPrice), listPrice: fmt(base), hasPromoNote: !!promoNote, promoNote: promoNote, noteWarn: promoWarn, noteInfo: !!promoNote && !promoWarn, showFinal: !!pm && pmEff !== 'expired' && finalPrice !== base,
+      promoOptions: promoOptions, plLoading: plMode === 'loading', plError: plMode === 'error', plEmpty: plMode === 'empty', plReady: plMode === 'loaded',
       saving: pr.simpan === 'menyimpan', saveLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : 'Simpan Draf', save: this.save, done: st.done === true, failed: st.failed === true && st.done !== true,
       sumCap: (f.ctype === 'learning_point' ? 'Poin Belajar' : 'Refresh Listing') + ' ' + (cv > 0 ? cv : '—'), sumVal: f.vtype === 'days' ? (days > 0 ? days + ' hari' : '—') : 'Tanpa batas waktu' };
     return Object.assign(shell, out);
