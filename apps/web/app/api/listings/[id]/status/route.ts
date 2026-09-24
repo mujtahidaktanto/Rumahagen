@@ -9,12 +9,13 @@
 // TERPISAH dari m03.listing.update, ditegakkan trigger
 // trg_listing_lifecycle_rules (0018) — bukan logika baru di route ini (R-02).
 // Route ini hanya melakukan UPDATE status biasa dan membiarkan RLS+trigger
-// yang memutuskan boleh/tidaknya.
+// yang memutuskan boleh/tidaknya. Publish juga mengonsumsi jatah kuota (0140): kuota habis -> 409 (details.reason = listing_quota_exhausted).
 
 import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { listingStatusSchema } from "@/lib/validation/listings";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 export const PATCH = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -49,7 +50,8 @@ export const PATCH = withApiHandler({ requireIdempotencyKey: true }, async (ctx)
     ) {
       throw new ApiError("FORBIDDEN", error.message);
     }
-    throw error;
+    // Kuota listing habis / aturan organisasi (0140): 23514 -> 409 dengan pesan bahasa pengguna.
+    throwIntegrityError(error);
   }
   if (!data) {
     throw new ApiError("NOT_FOUND", "Listing tidak ditemukan atau Anda tidak punya akses untuk mengubah statusnya.");

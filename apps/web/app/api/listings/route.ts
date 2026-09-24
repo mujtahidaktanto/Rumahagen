@@ -12,6 +12,7 @@ import { parsePagination, buildPaginationMeta } from "@/lib/api/pagination";
 import { validateJsonBody, validateSearchParams } from "@/lib/api/validate";
 import { createListingSchema, listListingsQuerySchema } from "@/lib/validation/listings";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 function slugify(title: string): string {
@@ -42,7 +43,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     .single();
 
   if (error) {
-    throw error;
+    throwIntegrityError(error);
   }
 
   return { data, status: 201 };

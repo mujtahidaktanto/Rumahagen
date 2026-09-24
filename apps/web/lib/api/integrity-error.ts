@@ -7,7 +7,12 @@ import { ApiError } from "@/lib/api/errors";
 
 export function throwIntegrityError(error: { code?: string; message?: string }): never {
   if (error.code === "23514" && error.message) {
-    throw new ApiError("CONFLICT", error.message.replace(/^[a-z_]+: /, ""));
+    const message = error.message.replace(/^[a-z_]+: /, "");
+    // Kuota penerbitan listing habis (0140): sertakan penanda supaya klien bisa menampilkan ajakan beli slot/Pro.
+    if (/^kuota listing (pribadi|organisasi) habis/.test(message)) {
+      throw new ApiError("CONFLICT", message, { reason: "listing_quota_exhausted" });
+    }
+    throw new ApiError("CONFLICT", message);
   }
   if (error.code === "42501" && error.message && /^[a-z_]+: /.test(error.message)) {
     throw new ApiError("FORBIDDEN", error.message.replace(/^[a-z_]+: /, ""));

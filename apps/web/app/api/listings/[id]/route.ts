@@ -15,6 +15,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { updateListingSchema } from "@/lib/validation/listings";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 export const GET = withApiHandler({}, async (ctx) => {
@@ -47,7 +48,7 @@ export const PUT = withApiHandler({}, async (ctx) => {
     .maybeSingle();
 
   if (error) {
-    throw error;
+    throwIntegrityError(error);
   }
   if (!data) {
     throw new ApiError("NOT_FOUND", "Listing tidak ditemukan atau Anda tidak punya akses untuk mengubahnya.");
