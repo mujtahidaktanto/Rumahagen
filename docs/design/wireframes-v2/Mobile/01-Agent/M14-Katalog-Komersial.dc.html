@@ -38,13 +38,17 @@
 
   <div class="main">
     <a class="ra-btn ra-btn-secondary" style="width:100%;margin-bottom:12px;" href="M14-Langganan-Saya.dc.html">Langganan Saya</a>
-    <div class="addon-grid">
+    <div style="display:flex;align-items:flex-start;gap:10px;background:var(--ra-info-100);border-radius:var(--ra-radius-md);padding:12px 14px;margin-bottom:12px;">
+        <span class="ra-body-sm"><strong>Slot listing</strong> menambah kuota penerbitan di atas kuota Gratis dan Pro. Slot dipakai terakhir (setelah Gratis dan Pro), tidak reset, dan tidak kedaluwarsa sebelum dipakai. Tiap slot yang dipakai berlaku 90 hari + 7 hari masa tenggang. <a class="ra-label-lg" style="color:var(--ra-blue-600);" href="M03-Listing-Saya.dc.html">Lihat kuota saya</a></span>
+      </div>
+      <div class="addon-grid">
       <sc-for list="{{addons}}" as="a" hint-placeholder-count="6">
         <div class="addon-card">
           <sc-if value="{{a.hasPromo}}" hint-placeholder-val="{{false}}">
             <span class="ra-badge ra-badge-warning promo-ribbon">Promo</span>
           </sc-if>
           <span class="ra-title-md">{{a.name}}</span>
+            <sc-if value="{{a.isSlot}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-info" style="align-self:flex-start;">Kuota Listing</span></sc-if>
           <div style="display:flex;flex-direction:column;gap:4px;">
             <sc-for list="{{a.capacities}}" as="cap">
               <span class="ra-body-sm">✓ {{cap}}</span>
@@ -69,7 +73,19 @@
               <span class="ra-body-sm">✓ {{cap}}</span>
             </sc-for>
           </div>
-          <div class="field" style="margin-top:6px;">
+          <sc-if value="{{isSlotSelected}}" hint-placeholder-val="{{false}}">
+              <div class="field" style="margin-top:6px;">
+                <span class="ra-label-md">Slot untuk siapa?</span>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="ra-chip" aria-pressed="{{ownerPersonalPressed}}" onClick="{{pickPersonal}}">Pribadi</button>
+                  <sc-if value="{{hasOrgOption}}" hint-placeholder-val="{{true}}"><button class="ra-chip" aria-pressed="{{ownerOrgPressed}}" onClick="{{pickOrg}}">Organisasi — Properti Sejahtera Agency</button></sc-if>
+                </div>
+                <sc-if value="{{noOrgOption}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Opsi organisasi muncul bila Anda anggota aktif sebuah organisasi.</span></sc-if>
+                <span class="ra-caption">{{ownerNote}}</span>
+                <span class="ra-caption">Slot tidak reset dan tidak kedaluwarsa sebelum dipakai; dipakai setelah kuota Gratis dan Pro.</span>
+              </div>
+            </sc-if>
+            <div class="field" style="margin-top:6px;">
             <label class="ra-label-md">Total Pembayaran</label>
             <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-900);font-weight:700;background:var(--ra-ink-50);">{{selectedAddon.price}}</div>
             <span class="ra-caption">Harga ditentukan platform, nominal final dikonfirmasi di halaman pembayaran.</span>
@@ -101,44 +117,58 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"organisasi":{"editor":"enum","default":"ada","options":["ada","belum_bergabung"],"section":"Skenario pembelian slot"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { buyModalOpen: false, step: 'confirm', selectedIdx: 0 };
+    this.state = { buyModalOpen: false, step: 'confirm', selectedIdx: 0, owner: 'personal' };
     this.openBuyModal = this.openBuyModal.bind(this);
     this.closeBuyModal = this.closeBuyModal.bind(this);
     this.createOrder = this.createOrder.bind(this);
     this.checkout = this.checkout.bind(this);
     this.stopClick = this.stopClick.bind(this);
+    this.pickPersonal = this.pickPersonal.bind(this);
+    this.pickOrg = this.pickOrg.bind(this);
   }
-  openBuyModal(i){ this.setState({ buyModalOpen: true, step: 'confirm', selectedIdx: i }); }
+  openBuyModal(i){ this.setState({ buyModalOpen: true, step: 'confirm', selectedIdx: i, owner: 'personal' }); }
   closeBuyModal(){ this.setState({ buyModalOpen: false }); }
   createOrder(){ this.setState({ step: 'checkout' }); }
   checkout(){ this.setState({ step: 'success' }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
+  pickPersonal(){ this.setState({ owner: 'personal' }); }
+  pickOrg(){ this.setState({ owner: 'org' }); }
 
   get addonDefs(){
     return [
       { name: 'Paket 50 Refresh', capacities: ['50 kali Refresh Listing', 'Berlaku 30 hari'], validityLabel: 'Masa berlaku 30 hari', price: 'Rp 75.000', hasPromo: false },
-      { name: 'Paket Listing Tambahan', capacities: ['+25 slot listing aktif'], validityLabel: 'Berlaku selama akun aktif', price: 'Rp 150.000', hasPromo: true },
-      { name: 'Paket Kombo Refresh + Listing', capacities: ['50 kali Refresh Listing', '+25 slot listing aktif'], validityLabel: 'Masa berlaku 30 hari', price: 'Rp 200.000', hasPromo: false },
+      { name: 'Paket Slot Listing 25', capacities: ['25 slot listing'], validityLabel: 'Slot tidak kedaluwarsa sebelum dipakai', price: 'Rp 150.000', hasPromo: true, isSlot: true },
+      { name: 'Paket Kombo Refresh + Slot', capacities: ['50 kali Refresh Listing (30 hari)', '25 slot listing'], validityLabel: 'Refresh berlaku 30 hari; slot tidak kedaluwarsa', price: 'Rp 200.000', hasPromo: false, isSlot: true },
       { name: 'Paket 100 Refresh', capacities: ['100 kali Refresh Listing', 'Berlaku 30 hari'], validityLabel: 'Masa berlaku 30 hari', price: 'Rp 130.000', hasPromo: false },
-      { name: 'Paket Listing Tambahan XL', capacities: ['+50 slot listing aktif'], validityLabel: 'Berlaku selama akun aktif', price: 'Rp 280.000', hasPromo: false },
-      { name: 'Paket Starter Bulanan', capacities: ['30 kali Refresh Listing', '+10 slot listing aktif'], validityLabel: 'Masa berlaku 30 hari', price: 'Rp 120.000', hasPromo: true }
+      { name: 'Paket Slot Listing 50', capacities: ['50 slot listing'], validityLabel: 'Slot tidak kedaluwarsa sebelum dipakai', price: 'Rp 280.000', hasPromo: false, isSlot: true },
+      { name: 'Paket Starter Bulanan', capacities: ['30 kali Refresh Listing (30 hari)', '10 slot listing'], validityLabel: 'Refresh berlaku 30 hari; slot tidak kedaluwarsa', price: 'Rp 120.000', hasPromo: true, isSlot: true }
     ];
   }
 
   renderVals() {
     const defs = this.addonDefs;
     const addons = defs.map((a, i) => ({
-      name: a.name, capacities: a.capacities, validityLabel: a.validityLabel, hasPromo: a.hasPromo,
+      name: a.name, capacities: a.capacities, validityLabel: a.validityLabel, hasPromo: a.hasPromo, isSlot: !!a.isSlot,
       onBuy: () => this.openBuyModal(i)
     }));
     const idx = this.state.selectedIdx ?? 0;
     const step = this.state.step ?? 'confirm';
+    const owner = this.state.owner ?? 'personal';
+    const hasOrgOption = (this.props.organisasi ?? 'ada') !== 'belum_bergabung';
+    const ownerVals = {
+      isSlotSelected: !!defs[idx].isSlot,
+      ownerPersonalPressed: owner === 'personal' || !hasOrgOption ? 'true' : 'false', ownerOrgPressed: owner === 'org' && hasOrgOption ? 'true' : 'false',
+      hasOrgOption, noOrgOption: !hasOrgOption,
+      pickPersonal: this.pickPersonal, pickOrg: this.pickOrg,
+      ownerNote: owner === 'org' && hasOrgOption ? 'Slot masuk ke kuota organisasi dan dipakai bersama seluruh anggota aktif.' : 'Slot masuk ke kuota pribadi Anda.',
+    };
 
     return {
+      ...ownerVals,
       addons,
       buyModalOpen: this.state.buyModalOpen ?? false,
       closeBuyModal: this.closeBuyModal,

@@ -103,6 +103,7 @@
         </div>
         <div class="card card-pad" style="display:flex;flex-direction:column;gap:16px;">
           <span class="ra-title-md">Masa berlaku</span>
+          <sc-if value="{{isSlot}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span class="ra-body-md">Untuk <strong>slot listing</strong>, masa berlaku add-on tidak dipakai: slot tidak kedaluwarsa sebelum digunakan. Masa berlaku hanya berlaku untuk kapasitas tambahan jenis lain.</span></div></sc-if>
           <div style="display:grid;grid-template-columns:1fr;gap:10px;" role="radiogroup" aria-label="Masa berlaku"><sc-for list="{{vts}}" as="t" hint-placeholder-count="2"><button class="radio-card" role="radio" aria-checked="{{t.checked}}" disabled="{{t.dis}}" onClick="{{t.pick}}"><span class="ra-label-lg">{{t.l}}</span></button></sc-for></div>
           <sc-if value="{{isDays}}" hint-placeholder-val="{{true}}"><div class="field"><label class="ra-label-lg" for="a-days">Jumlah hari <span class="req">*</span></label><input id="a-days" class="ra-input" type="number" min="1" style="max-width:160px;" disabled="{{locked}}" value="{{days}}" onInput="{{onDays}}"><sc-if value="{{daysErr}}" hint-placeholder-val="{{false}}"><span class="err">Isi jumlah hari lebih dari 0.</span></sc-if></div></sc-if>
         </div>
@@ -110,10 +111,12 @@
           <span class="ra-title-md">Isi paket</span>
           <div class="field"><span class="ra-label-lg">Kapasitas utama <span class="req">*</span></span><div class="chip-group" role="group" aria-label="Jenis kapasitas utama"><sc-for list="{{ctypes}}" as="t" hint-placeholder-count="2"><button class="ra-chip" aria-pressed="{{t.pressed}}" disabled="{{t.dis}}" onClick="{{t.pick}}">{{t.l}}</button></sc-for></div></div>
           <div class="field"><label class="ra-label-lg" for="a-cval">Jumlah <span class="req">*</span></label><input id="a-cval" class="ra-input" type="number" min="1" style="max-width:200px;" disabled="{{locked}}" value="{{cval}}" onInput="{{onCapVal}}"><sc-if value="{{capErr}}" hint-placeholder-val="{{false}}"><span class="err">Jumlah wajib lebih dari 0.</span></sc-if></div>
+          <sc-if value="{{capIntErr}}" hint-placeholder-val="{{false}}"><span class="err">Slot listing harus bilangan bulat.</span></sc-if>
+          <sc-if value="{{isSlot}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span class="ra-body-md"><strong>Slot listing</strong> dipakai untuk menerbitkan listing di atas kuota Gratis dan Pro (urutan Gratis → Pro → Slot beli). Tidak reset dan tidak kedaluwarsa sebelum dipakai; tiap slot yang dipakai berlaku 90 hari + 7 hari masa tenggang. Pembelian atas nama organisasi menambah slot organisasi.</span></div></sc-if>
           <div class="field"><span class="ra-label-lg">Kapasitas tambahan <span class="ra-caption">(maksimal 10)</span></span>
             <sc-if value="{{hasCaps}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;gap:8px;"><sc-for list="{{caps}}" as="c" hint-placeholder-count="2"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><button class="ra-chip" disabled="{{c.dis}}" onClick="{{c.toggle}}">{{c.t}}</button><input class="ra-input" type="number" min="1" style="width:120px;" aria-label="Jumlah kapasitas tambahan {{c.n}}" disabled="{{c.dis}}" value="{{c.v}}" onInput="{{c.onV}}"><button class="ra-iconbtn" aria-label="Hapus kapasitas tambahan {{c.n}}" disabled="{{c.dis}}" onClick="{{c.del}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div></sc-for></div></sc-if>
             <div><button class="ra-btn ra-btn-secondary ra-btn-sm" disabled="{{capAddOff}}" onClick="{{addCap}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>Tambah kapasitas</button></div>
-            <span class="ra-caption">Hanya jenis yang dikonsumsi sistem: Refresh Listing dan Poin Belajar. Add-on "slot listing tambahan" belum punya konsumen di sistem sehingga belum bisa dijual.</span></div>
+            <span class="ra-caption">Jenis yang dikonsumsi sistem: Refresh Listing, Poin Belajar, dan Slot Listing (kuota penerbitan listing, migration 0140–0141).</span></div>
         </div>
         <div class="card card-pad" style="display:flex;flex-direction:column;gap:8px;background:var(--ra-blue-50);">
           <span class="ra-title-md">Ringkasan untuk pembeli</span>
@@ -151,7 +154,7 @@ class Component extends DCLogic {
   addCap(){ var l = this.capsList().slice(); if (l.length >= 10) return; l.push({ t: 'learning_point', v: '' }); this.setState({ caps: l }); }
   save(){
     if (this.props.simpan === 'menyimpan') return;
-    var f = this.form(), p = Number(f.price), ok = String(f.code).trim() && String(f.name).trim() && /^[A-Za-z0-9_.-]+$/.test(String(f.code).trim()) && p > 0 && (f.vtype !== 'days' || Number(f.days) > 0) && Number(f.cval) > 0;
+    var f = this.form(), p = Number(f.price), ok = String(f.code).trim() && String(f.name).trim() && /^[A-Za-z0-9_.-]+$/.test(String(f.code).trim()) && p > 0 && (f.vtype !== 'days' || Number(f.days) > 0) && Number(f.cval) > 0 && (f.ctype !== 'listing_slot' || Number(f.cval) % 1 === 0);
     if (!ok) { this.setState({ tried: true }); return; }
     if (this.props.simpan === 'gagal') { this.setState({ failed: true, done: false }); return; }
     this.setState({ done: true, failed: false, tried: false });
@@ -167,7 +170,7 @@ class Component extends DCLogic {
       isLinked: linked, isUnlinked: !linked,
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
-    var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var IS_INS = false; var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
     var self = this, f = this.form(), tried = st.tried === true, locked = this.locked();
     var p = Number(f.price), days = Number(f.days), cv = Number(f.cval);
     var codeBad = !String(f.code).trim() ? 'Kode wajib diisi.' : (!/^[A-Za-z0-9_.-]+$/.test(String(f.code).trim()) ? 'Kode hanya huruf, angka, titik, garis bawah, dan strip.' : '');
@@ -197,18 +200,19 @@ class Component extends DCLogic {
       promoOptions.push({ id: x.id, name: x.name, meta: x.code + ' · ' + (x.pct ? x.pct + '%' : fmt(x.off)) + ' · ' + x.win + ' · ' + x.elig, badge: b[0], badgeClass: b[1], hasBadge: true, checked: f.promo === x.id ? 'true' : 'false', dis: dis, reason: dis ? 'Sudah kedaluwarsa; perbarui masa berlakunya di Promosi.' : '', hasReason: dis, pick: function(){ if (dis) return; self.up('promo', x.id); } });
     }); }
     var vts = [['days','Berlaku beberapa hari'],['unlimited','Tanpa batas waktu']].map(function(t){ return { l: t[1], checked: f.vtype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('vtype', t[0]); }, dis: locked }; });
-    var ctypes = [['listing_refresh','Refresh Listing'],['learning_point','Poin Belajar']].map(function(t){ return { l: t[1], pressed: f.ctype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('ctype', t[0]); }, dis: locked }; });
-    var caps = this.capsList().map(function(c, i){ return { n: i + 1, t: c.t === 'learning_point' ? 'Poin Belajar' : 'Refresh Listing', v: c.v, dis: locked,
-      toggle: function(){ if (locked) return; var l = self.capsList().slice(); l[i] = { t: l[i].t === 'learning_point' ? 'listing_refresh' : 'learning_point', v: l[i].v }; self.setState({ caps: l }); },
+    var CAPL = { listing_refresh: 'Refresh Listing', learning_point: 'Poin Belajar', listing_slot: 'Slot Listing' }, CAPN = { listing_refresh: 'learning_point', learning_point: 'listing_slot', listing_slot: 'listing_refresh' };
+    var ctypes = [['listing_refresh','Refresh Listing'],['learning_point','Poin Belajar'],['listing_slot','Slot Listing']].map(function(t){ return { l: t[1], pressed: f.ctype === t[0] ? 'true' : 'false', pick: function(){ if (locked) return; self.up('ctype', t[0]); }, dis: locked }; });
+    var caps = this.capsList().map(function(c, i){ return { n: i + 1, t: CAPL[c.t], v: c.v, dis: locked,
+      toggle: function(){ if (locked) return; var l = self.capsList().slice(); l[i] = { t: CAPN[l[i].t], v: l[i].v }; self.setState({ caps: l }); },
       onV: function(e){ var l = self.capsList().slice(); l[i] = { t: l[i].t, v: e.target.value }; self.setState({ caps: l }); },
       del: function(){ if (locked) return; var l = self.capsList().slice(); l.splice(i, 1); self.setState({ caps: l }); } }; });
     var out = { aktorLabel: aktorLabel, pageTitle: this.mode() === 'create' ? 'Buat Add-on' : 'Ubah Add-on', code: f.code, name: f.name, price: f.price, days: f.days, cval: f.cval, promo: f.promo, onCode: this.onCode, onName: this.onName, onPrice: this.onPrice, onDays: this.onDays, onCapVal: this.onCapVal, onPromo: this.onPromo,
-      locked: locked, isCreate: this.mode() === 'create', codeErr: tried && !!codeBad, codeMsg: codeBad, nameErr: tried && !String(f.name).trim(), priceErr: tried && !(p > 0), daysErr: tried && f.vtype === 'days' && !(days > 0), capErr: tried && !(cv > 0),
+      locked: locked, isCreate: this.mode() === 'create', codeErr: tried && !!codeBad, codeMsg: codeBad, nameErr: tried && !String(f.name).trim(), priceErr: tried && !(p > 0), daysErr: tried && f.vtype === 'days' && !(days > 0), capErr: tried && !(cv > 0), capIntErr: tried && f.ctype === 'listing_slot' && cv > 0 && cv % 1 !== 0, isSlot: f.ctype === 'listing_slot',
       isDays: f.vtype === 'days', vts: vts, ctypes: ctypes, caps: caps, hasCaps: caps.length > 0, addCap: this.addCap, capAddOff: !(caps.length < 10 && !locked),
       finalPrice: fmt(finalPrice), listPrice: fmt(base), hasPromoNote: !!promoNote, promoNote: promoNote, noteWarn: promoWarn, noteInfo: !!promoNote && !promoWarn, showFinal: !!pm && pmEff !== 'expired' && finalPrice !== base,
       promoOptions: promoOptions, plLoading: plMode === 'loading', plError: plMode === 'error', plEmpty: plMode === 'empty', plReady: plMode === 'loaded',
       saving: pr.simpan === 'menyimpan', saveLabel: pr.simpan === 'menyimpan' ? 'Menyimpan…' : 'Simpan Draf', save: this.save, done: st.done === true, failed: st.failed === true && st.done !== true,
-      sumCap: (f.ctype === 'learning_point' ? 'Poin Belajar' : 'Refresh Listing') + ' ' + (cv > 0 ? cv : '—'), sumVal: f.vtype === 'days' ? (days > 0 ? days + ' hari' : '—') : 'Tanpa batas waktu' };
+      sumCap: CAPL[f.ctype] + ' ' + (cv > 0 ? cv : '—'), sumVal: f.vtype === 'days' ? (days > 0 ? days + ' hari' : '—') : 'Tanpa batas waktu' };
     return Object.assign(shell, out);
   }
 }

@@ -67,6 +67,8 @@
   .ra-btn-sm{height:44px;}
   .ra-chip{height:44px;}
   .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;}
+  .meter{height:8px;border-radius:4px;background:var(--ra-ink-100);overflow:hidden;}
+  .meter > div{height:100%;background:var(--ra-blue-600);}
 </style>
 </helmet>
 <div class="app">
@@ -164,14 +166,15 @@ class Component extends DCLogic {
       isLinked: linked, isUnlinked: !linked,
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
-    var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
-    var CAP = { listing_refresh: 'Refresh Listing', learning_point: 'Poin Belajar' };
+    var IS_INS = false; var aktor = pr.aktor || 'admin'; var aktorLabel = { superadmin: 'Superadmin', admin: 'Admin', manager: 'Manager' }[aktor];
+    var CAP = { listing_refresh: 'Refresh Listing', learning_point: 'Poin Belajar', listing_slot: 'Slot Listing' };
     var STS = { draft: ['Draf','ra-badge-neutral'], active: ['Aktif','ra-badge-success'], inactive: ['Nonaktif','ra-badge-warning'] };
     var ADDONS = [
       { id: 'a1', code: 'REFRESH_50', name: 'Paket 50 Refresh', price: 75000, val: '30 hari', caps: ['50 Refresh Listing'], promo: '', st: 'active', orders: 42 },
       { id: 'a2', code: 'KOMBO_REFRESH_LP', name: 'Paket Kombo Refresh + Poin Belajar untuk Agen Aktif Bulanan', price: 200000, val: '30 hari', caps: ['50 Refresh Listing', '100 Poin Belajar'], promo: 'Diskon 10%', st: 'active', orders: 9 },
       { id: 'a3', code: 'LP_500', name: 'Paket 500 Poin Belajar', price: 0, val: 'Tanpa batas', caps: ['500 Poin Belajar'], promo: '', st: 'draft', orders: 0 },
       { id: 'a4', code: 'REFRESH_100_OLD', name: 'Paket 100 Refresh (lama)', price: 130000, val: '30 hari', caps: ['100 Refresh Listing'], promo: '', st: 'inactive', orders: 17 },
+      { id: 'a6', code: 'SLOT_10', name: 'Paket 10 Slot Listing', price: 250000, val: 'Tanpa batas', caps: ['10 Slot Listing'], promo: '', st: 'active', orders: 5 },
       { id: 'a5', code: 'DRAFT_BARU', name: 'Paket Baru', price: 0, val: '', caps: [], promo: '', st: 'draft', orders: 0 }
     ];
     var rp = function(n){ return n > 0 ? 'Rp ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; };

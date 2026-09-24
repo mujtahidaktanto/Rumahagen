@@ -24,4 +24,4 @@ Layar yang disentuh (desktop + mobile): Agent `M03-Create-Listing-Wizard`, `M03-
 
 ## Catatan
 - Angka pada layar adalah contoh (mis. 18 dari 25 tersisa); nilai sebenarnya dari `GET /agents/me/listing-quota`.
-- Layar Katalog Add-on (Admin) belum ditambah opsi jenis kapasitas `listing_slot` dan layar Katalog Komersial (Agent) belum memasarkan slot listing; kedua layar itu belum disentuh.
+- **Addon slot listing (diselesaikan setelahnya):** Admin `M14-Form-Addon` menawarkan jenis kapasitas Slot Listing (bilangan bulat, masa berlaku add-on tidak dipakai untuk slot, catatan aturan slot) dan `M14-Katalog-Addon` memuat contoh `SLOT_10`; Agent `M14-Katalog-Komersial` memasarkan paket slot (lencana Kuota Listing, banner penjelasan, pilihan pemilik slot Pribadi / Organisasi saat membeli, keadaan belum bergabung organisasi).
