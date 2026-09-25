@@ -17,6 +17,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { submitQuizAttemptSchema } from "@/lib/validation/quizzes";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -137,7 +138,8 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     .single();
 
   if (attemptError) {
-    throw attemptError;
+    // 23514 dari migration 0150: kursus pihak ketiga punya jeda antar percobaan dan batas percobaan opsional (pesan menyebut sisa menit atau batasnya).
+    throwIntegrityError(attemptError);
   }
 
   return { data: attempt, status: 201 };
