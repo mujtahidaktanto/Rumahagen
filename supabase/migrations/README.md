@@ -3662,3 +3662,8 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 - **Hasil setelah diterapkan:** hak view = hanya SELECT untuk anon dan authenticated; 
 ext_certificate_number dan 
 ew_certificate_verification_code tertutup untuk anon dan authenticated (REST anon = 401); course_enroll_problem dan session_enrollment_agent tertutup untuk anon, tetap untuk authenticated; fungsi SECURITY DEFINER yang bisa dipanggil anon 16 -> 12, authenticated 60 -> 58 (bukan trigger). erify_certificate tetap 200; current_role_code() untuk anon kini \\` (kosong), bukan NULL. Sisa Fase 0: leaked password protection (dashboard Supabase, tindakan pemilik).
+
+## `0154` — Indeks Discovery listing publik (✅ DITERAPKAN 2026-09-26)
+- Empat indeks parsial `WHERE status = 'published' AND deleted_at IS NULL` pada `listings`: `(freshness_rank_at DESC, id)`, `(price, id)`, `(price DESC, id)`, `(property_type, freshness_rank_at DESC, id)`. Tidak mengubah data/kolom/RLS/API; indeks lama tidak dihapus.
+- Diuji di 30.000 listing sintetis (rollback, sebagai `anon`): urutan harga termurah 17 ms -> 0,05 ms, termahal 32 ms -> 0,05 ms; default/tipe sudah cepat (0,1 ms) dan beralih ke indeks parsial; tipe+rentang harga 10,8 -> 9,1 ms. Idempoten (dijalankan dua kali). DB dipastikan bersih setelah uji (1 listing, 0 indeks baru, tanpa pg_trgm).
+- **Pencarian kata kunci TIDAK dipercepat**: indeks trigram (pg_trgm) dipakai tanpa RLS (1,3 ms) tetapi tidak untuk `anon`/`authenticated` (100 ms di 30.000 baris) karena `ILIKE` tidak leakproof sehingga tidak boleh menjadi kondisi indeks di bawah policy RLS. Butuh fungsi `SECURITY DEFINER` pencarian (keputusan terpisah). 100 ms di 30.000 listing dianggap wajar untuk staging.

@@ -12,6 +12,16 @@ import { LoadingRegion, Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/Table";
 import { CloseIcon, MenuIcon } from "@/components/ui/icons";
+import { PropertyCard } from "@/components/public/PropertyCard";
+import type { FeaturedListing } from "@/lib/public/home-data";
+
+// Contoh data (bukan dari database): jual dengan kamar, sewa dengan judul sangat panjang (terpotong), tanah tanpa kamar dan tanpa lokasi.
+const base = { price_unit: null, bedrooms: null, bathrooms: null, land_area: null, building_area: null, cityName: null, provinceName: null, coverUrl: null, coverAlt: null };
+const SAMPLE_LISTINGS: FeaturedListing[] = [
+  { ...base, id: "1", slug: "rumah-minimalis", title: "Rumah Minimalis Modern 2 Lantai", transaction_type: "sale", price: 850000000, bedrooms: 3, bathrooms: 2, building_area: 120, cityName: "Kabupaten Bogor", provinceName: "Jawa Barat" },
+  { ...base, id: "2", slug: "apartemen", title: "Apartemen Strategis Full Furnished Dekat Stasiun MRT dan Pusat Perbelanjaan Kelas Atas", transaction_type: "rent", price: 5000000, price_unit: "per_bulan", bedrooms: 2, bathrooms: 1, building_area: 60, cityName: "Kota Administrasi Jakarta Selatan", provinceName: "DKI Jakarta" },
+  { ...base, id: "3", slug: "tanah", title: "Tanah Kavling Siap Bangun", transaction_type: "sale", price: 1200000000, land_area: 300 },
+];
 
 const tones: BadgeTone[] = ["neutral", "warning", "success", "danger", "info"];
 const swatches: [string, string][] = [
@@ -160,6 +170,18 @@ export function ComponentGallery() {
             <TR><TD>Apartemen Studio</TD><TD>Kota Administrasi Jakarta Selatan</TD><TD><Badge tone="neutral">Draf</Badge></TD><TD>Rp 640.000.000</TD></TR>
           </TBody>
         </Table>
+      </Section>
+
+      <Section title="Kartu properti (publik)">
+        <ul className="grid grid-cols-1 gap-5 min-[520px]:grid-cols-2 xl:grid-cols-4">
+          {SAMPLE_LISTINGS.map((p) => (
+            <li key={p.id} className="flex">
+              <div className="flex w-full flex-col [&>a]:h-full">
+                <PropertyCard listing={p} />
+              </div>
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section title="Dialog">

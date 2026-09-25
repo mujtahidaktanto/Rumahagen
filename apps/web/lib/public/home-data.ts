@@ -23,33 +23,34 @@ export type Announcement = { id: string; title: string; content: string | null; 
 export type FeaturedCourse = { id: string; title: string; category: string; lessonCount: number };
 export type Loaded<T> = { ok: true; items: T[] } | { ok: false; items: [] };
 
-type ListingRow = Omit<FeaturedListing, "cityName" | "provinceName" | "coverUrl" | "coverAlt"> & {
+/** Kolom kartu listing (dipakai Homepage dan Discovery): kota/provinsi lewat FK, foto untuk memilih sampul. */
+export const LISTING_CARD_SELECT =
+  "id, slug, title, transaction_type, price, price_unit, bedrooms, bathrooms, land_area, building_area, city:ref_cities(name), province:ref_provinces(name), photos:listing_photos(url, alt_text, is_cover, sort_order)";
+
+export type ListingCardRow = Omit<FeaturedListing, "cityName" | "provinceName" | "coverUrl" | "coverAlt"> & {
   city: { name: string } | null;
   province: { name: string } | null;
   photos: { url: string; alt_text: string | null; is_cover: boolean; sort_order: number }[] | null;
 };
 
+export function toFeaturedListing({ city, province, photos, ...rest }: ListingCardRow): FeaturedListing {
+  const sorted = [...(photos ?? [])].sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order);
+  return { ...rest, cityName: city?.name ?? null, provinceName: province?.name ?? null, coverUrl: sorted[0]?.url ?? null, coverAlt: sorted[0]?.alt_text ?? null };
+}
+
 export async function getFeaturedListings(limit = 4): Promise<Loaded<FeaturedListing>> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("listings")
-    .select(
-      "id, slug, title, transaction_type, price, price_unit, bedrooms, bathrooms, land_area, building_area, city:ref_cities(name), province:ref_provinces(name), photos:listing_photos(url, alt_text, is_cover, sort_order)",
-    )
+    .select(LISTING_CARD_SELECT)
     .eq("status", "published")
     .is("deleted_at", null)
     .order("freshness_rank_at", { ascending: false })
     .order("id", { ascending: true })
     .limit(limit)
-    .returns<ListingRow[]>();
+    .returns<ListingCardRow[]>();
   if (error) return { ok: false, items: [] };
-  return {
-    ok: true,
-    items: (data ?? []).map(({ city, province, photos, ...rest }) => {
-      const sorted = [...(photos ?? [])].sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order);
-      return { ...rest, cityName: city?.name ?? null, provinceName: province?.name ?? null, coverUrl: sorted[0]?.url ?? null, coverAlt: sorted[0]?.alt_text ?? null };
-    }),
-  };
+  return { ok: true, items: (data ?? []).map(toFeaturedListing) };
 }
 
 export async function getAnnouncements(limit = 3): Promise<Loaded<Announcement>> {
