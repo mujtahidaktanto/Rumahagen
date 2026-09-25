@@ -88,6 +88,11 @@ export const LogoutIcon = mk(<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16
 export const ChevronUpIcon = mk(<path d="M6 15l6-6 6 6" />);
 export const EyeIcon = mk(<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="2.6" /></>);
 export const EyeOffIcon = mk(<><path d="M3 3l18 18" /><path d="M10.6 6.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.9C3.7 8.8 2 12 2 12s3.5 7 10 7a9.6 9.6 0 0 0 4.4-1.1" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" /></>);
+export const SearchIcon = mk(<><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></>);
+export const PinIcon = mk(<><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z" /><circle cx="12" cy="9" r="2.4" /></>);
+export const BedIcon = mk(<><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6" /><path d="M3 18v2M21 18v2" /><path d="M3 12V8a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v2" /></>);
+export const BathIcon = mk(<><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z" /><path d="M4 12V6a2 2 0 0 1 3-1.7" /></>);
+export const AreaIcon = mk(<><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 9h3M4 15h3M21 9h-3M21 15h-3" /></>);
 export const MailIcon = mk(<><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></>);
 export const ShieldCheckIcon = mk(<><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z" /><path d="M9 12l2 2 4-4" /></>);
 export const KeyIcon = mk(<><circle cx="8" cy="15" r="4" /><path d="M10.8 12.2 20 3M16 7l3 3M13 10l2.5 2.5" /></>);

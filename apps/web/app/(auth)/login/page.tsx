@@ -18,6 +18,7 @@ export default async function LoginPage({ searchParams }: Props) {
 
   const user = await getSessionUser();
   if (user && user.status === "active") redirect(next as Route); // `next` sudah disaring safeNext (hanya jalur di situs ini)
+  if (user) redirect("/akun-dibatasi" as Route); // sudah login tetapi tidak aktif: gerbang khusus (ada tombol keluar)
 
   return (
     <div className="flex flex-col gap-5">
@@ -25,7 +26,7 @@ export default async function LoginPage({ searchParams }: Props) {
         <h1 className="text-headline">Masuk</h1>
         <p className="mt-1 text-body-md text-ink-500">Masuk ke akun RumahAgen Anda.</p>
       </div>
-      {alasan === "dibatasi" || (user && user.status !== "active") ? (
+      {alasan === "dibatasi" ? (
         <div role="alert" className="rounded-md border border-warning-600/30 bg-warning-100 p-3 text-body-md text-warning-600">
           Akun Anda sedang dibatasi, sehingga belum bisa masuk. Hubungi tim RumahAgen bila Anda merasa ini keliru.
         </div>

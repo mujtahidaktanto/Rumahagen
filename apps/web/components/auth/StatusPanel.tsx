@@ -2,8 +2,13 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-type Tone = "blue" | "success" | "warning";
-const ring: Record<Tone, string> = { blue: "bg-blue-100 text-blue-600", success: "bg-success-100 text-success-600", warning: "bg-warning-100 text-warning-600" };
+type Tone = "blue" | "success" | "warning" | "danger";
+const ring: Record<Tone, string> = {
+  blue: "bg-blue-100 text-blue-600",
+  success: "bg-success-100 text-success-600",
+  warning: "bg-warning-100 text-warning-600",
+  danger: "bg-danger-100 text-danger-600",
+};
 
 export function StatusPanel({ tone = "blue", icon, title, children }: { tone?: Tone; icon: ReactNode; title: string; children?: ReactNode }) {
   return (

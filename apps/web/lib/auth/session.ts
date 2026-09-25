@@ -48,7 +48,7 @@ export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
 });
 
 /**
- * Penjaga layout area. Belum login -> /login?next=<jalur sekarang>; akun tidak aktif -> /login?alasan=dibatasi; peran salah area -> beranda area perannya
+ * Penjaga layout area. Belum login -> /login?next=<jalur sekarang>; akun tidak aktif -> /akun-dibatasi; peran salah area -> beranda area perannya
  * (bukan 403, agar keberadaan halaman staf tidak dibocorkan ke peran lain).
  */
 export async function requireArea(area: Area): Promise<SessionUser> {
@@ -56,7 +56,7 @@ export async function requireArea(area: Area): Promise<SessionUser> {
   const h = await headers();
   const path = h.get("x-pathname") ?? AREA_PATH[area];
   if (!user) redirect(`/login?next=${encodeURIComponent(path)}` as Route);
-  if (user.status !== "active") redirect("/login?alasan=dibatasi" as Route);
+  if (user.status !== "active") redirect("/akun-dibatasi" as Route);
   if (!AREA_ROLES[area].includes(user.role)) redirect(homePathOf(user.role) as Route);
   return user;
 }
