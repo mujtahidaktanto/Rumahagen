@@ -5,6 +5,7 @@
 // notification_templates (0013), public_announcement_promotion (0014/0028).
 
 import { z } from "zod";
+import { passwordSchema } from "./auth";
 
 // GET/PUT /admin/config/system/{key} — API-238/239
 export const systemConfigUpsertSchema = z.object({
@@ -137,7 +138,7 @@ export type UpdateUserRoleInput = z.infer<typeof updateUserRoleSchema>;
 // 'agent' dari trigger sinkron 0096).
 export const createInternalUserSchema = z.object({
   email: z.string().email().max(255),
-  password: z.string().min(8).max(72),
+  password: passwordSchema,
   role_id: z.string().uuid(),
 });
 export type CreateInternalUserInput = z.infer<typeof createInternalUserSchema>;

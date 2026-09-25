@@ -4,14 +4,19 @@
 // logout-all/forgot-password/reset-password). Sebelumnya gap penuh (0/10
 // dibangun) -- lihat audit/CORE_DOCX_ZIP_VS_MIGRATED_BACKEND_AUDIT.md.
 //
-// Password minimal 8 karakter -- Core tidak mengunci kebijakan password
-// spesifik (tidak ada aturan kompleksitas di STEP11-B1/STEP13-B), 8 dipakai
-// sebagai minimum wajar sekaligus batas bawah default Supabase Auth sendiri.
+// Kebijakan kata sandi (keputusan pemilik produk 2026-09-25; Core tidak mengunci kebijakan spesifik): minimal 8 karakter, minimal 1 huruf besar, minimal
+// 1 angka. Aturan yang sama harus diatur di Supabase Auth (Password requirements: huruf besar+kecil+angka, panjang minimum 8) dan dicantumkan di teks bantuan UI
+// (layar Register, Reset Password, Tambah Akun Staf). Login TIDAK memakai skema ini agar akun lama tidak terkunci. Maks 72 karakter (batas bcrypt).
 
 import { z } from "zod";
 
 const emailSchema = z.string().email().max(255);
-const passwordSchema = z.string().min(8).max(72);
+export const passwordSchema = z
+  .string()
+  .min(8, "Kata sandi minimal 8 karakter.")
+  .max(72, "Kata sandi maksimal 72 karakter.")
+  .regex(/[A-Z]/, "Kata sandi harus memuat minimal 1 huruf besar.")
+  .regex(/[0-9]/, "Kata sandi harus memuat minimal 1 angka.");
 
 export const registerSchema = z.object({
   email: emailSchema,
