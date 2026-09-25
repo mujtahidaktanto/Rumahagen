@@ -49,6 +49,7 @@ export function RegisterFlow({ next }: { next: string }) {
   const [stage, setStage] = useState<Stage>("form");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [agree, setAgree] = useState(false);
   const [touched, setTouched] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -71,7 +72,7 @@ export function RegisterFlow({ next }: { next: string }) {
   async function onRegister(e: FormEvent) {
     e.preventDefault();
     setTouched(true);
-    if (!emailValid || !passwordCheck.success || !agree) return;
+    if (!emailValid || !passwordCheck.success || confirm !== password || !agree) return;
     setBusy(true);
     setError(null);
     try {
@@ -187,6 +188,9 @@ export function RegisterFlow({ next }: { next: string }) {
       </Field>
       <Field label="Kata sandi" required hint="Minimal 8 karakter, memuat 1 huruf besar dan 1 angka." error={passwordError}>
         {(a) => <PasswordInput autoComplete="new-password" placeholder="Minimal 8 karakter" value={password} onChange={(e) => setPassword(e.target.value)} {...a} />}
+      </Field>
+      <Field label="Ulangi kata sandi" required error={touched && confirm !== password ? "Konfirmasi kata sandi tidak sama." : undefined}>
+        {(a) => <PasswordInput autoComplete="new-password" placeholder="Ketik ulang kata sandi" value={confirm} onChange={(e) => setConfirm(e.target.value)} {...a} />}
       </Field>
       <label className="flex cursor-pointer items-start gap-2.5">
         <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-5 w-5 flex-none accent-blue-600" />
