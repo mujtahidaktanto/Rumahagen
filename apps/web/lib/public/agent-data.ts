@@ -28,7 +28,7 @@ export type PublicAgent = {
   additional_titles: AgentTitle[] | null;
 };
 
-const AGENT_SELECT =
+export const AGENT_SELECT =
   "user_id, public_slug, full_name, avatar_url, bio, specialization, coverage_area, office_name, license_number, whatsapp_number, public_cta_enabled, is_verified, province_name, city_name, organization_name, active_listings_count, total_listings_sold, total_listings_rented, primary_title, additional_titles";
 
 export type AgentResult = { state: "ok"; agent: PublicAgent; listings: FeaturedListing[]; listingsOk: boolean } | { state: "not_found" } | { state: "error" };

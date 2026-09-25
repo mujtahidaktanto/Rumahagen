@@ -69,6 +69,13 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 6. **Belum diuji dengan pengguna login:** tombol Mulai Belajar, Daftar Sesi Ini, dan daftar/detail sesi hanya diuji sisi pengunjung (kata sandi akun uji tidak dimiliki Claude). Perlu uji manual oleh pemilik produk memakai akun Agent.
 7. **Pengujian data contoh:** 3 course (2 terbit, 1 draft), lengkap dengan kuis 1 soal agar lolos aturan penerbitan, dan 3 sesi (publik terjadwal, publik selesai on-demand, privat terjadwal).
 
+## 2026-09-26 — Fase 2, M11 Organisasi
+
+1. **Anggota tim diambil dari view profil agen publik, dicocokkan lewat `organization_id`** (migration 0156, keputusan 2026-09-26; sebelumnya lewat nama yang tidak unik). `organization_members` hanya terbaca anggota/admin (RLS), jadi pengunjung tidak bisa membacanya. Peran (leader/member) tidak ada di view sehingga lencana peran di wireframe tidak ditampilkan; menambahkannya butuh perluasan view lagi.
+2. **Organisasi ditutup bertahap/ditutup/dibekukan tidak terlihat publik** (RLS `organizations_select_active_public` hanya `active`): spanduk status di wireframe hanya terlihat anggota/admin; bagi pengunjung "Organisasi tidak ditemukan".
+3. **Kontak organisasi (telepon, alamat, situs, media sosial) publik** sesuai keputusan 2026-09-25. Situs dan media sosial hanya diterima bila https; kunci `social_media` yang dikenal: instagram, facebook, tiktok, youtube, linkedin, x/twitter (format jsonb bebas, belum ada kontrak).
+4. **Data contoh:** organisasi "Kantor Uji RumahAgen" (tipe kantor, aktif; anggota Andi Pratama = leader dan Sari Wulandari; listing uji1 dijadikan listing organisasi) dan satu organisasi `suspended` yang sengaja tidak tampil.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
