@@ -127,7 +127,7 @@
     <sc-if value="{{isTabSeo}}" hint-placeholder-val="{{false}}">
       <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:20px 40px 40px;max-width:640px;">
         <div class="field"><label class="ra-label-lg">Akhiran judul situs (site_title_suffix)</label><input class="ra-input" type="text" placeholder="mis. — RumahAgen" value="{{seoTitleSuffix}}" onInput="{{onSeoTitleSuffixInput}}"></div>
-        <div class="field"><label class="ra-label-lg">Meta description default</label><textarea class="ra-input" style="height:70px;padding:10px 14px;resize:none;" placeholder="Deskripsi default untuk halaman tanpa meta khusus">{{seoMetaDescription}}</textarea></div>
+        <div class="field"><label class="ra-label-lg">Meta description default</label><textarea class="ra-input" style="height:70px;padding:10px 14px;resize:none;" placeholder="Deskripsi default untuk halaman tanpa meta khusus" value="{{seoMetaDescription}}"></textarea></div>
         <div class="field"><label class="ra-label-lg">URL gambar OG default</label><input class="ra-input" type="text" placeholder="https://…"></div>
         <label style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><input type="checkbox"> <span class="ra-body-md">robots_global_noindex — nonaktifkan indexing SELURUH situs (darurat)</span></label>
         <label style="display:flex;align-items:center;gap:8px;margin-bottom:20px;"><input type="checkbox" checked> <span class="ra-body-md">sitemap_enabled</span></label>

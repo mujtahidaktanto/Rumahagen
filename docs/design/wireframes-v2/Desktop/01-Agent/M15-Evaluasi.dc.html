@@ -173,7 +173,7 @@
     <div class="scrim" onClick="{{closeAppeal}}"><div class="dialog" onClick="{{stopClick}}">
       <span class="ra-title-lg">Ajukan banding</span>
       <p class="ra-body-md">Jelaskan mengapa pencabutan award perlu ditinjau ulang. Keputusan tim RumahAgen bersifat final dan hanya satu banding yang bisa menunggu pada satu waktu.</p>
-      <div class="field"><label class="ra-label-lg" for="ap-reason">Alasan banding <span class="req">*</span></label><textarea id="ap-reason" class="ra-input" rows="4" placeholder="Jelaskan alasan dan bukti pendukung" onInput="{{onReason}}">{{reason}}</textarea><sc-if value="{{reasonError}}" hint-placeholder-val="{{false}}"><span class="err">Alasan banding wajib diisi.</span></sc-if></div>
+      <div class="field"><label class="ra-label-lg" for="ap-reason">Alasan banding <span class="req">*</span></label><textarea id="ap-reason" class="ra-input" rows="4" placeholder="Jelaskan alasan dan bukti pendukung" onInput="{{onReason}}" value="{{reason}}"></textarea><sc-if value="{{reasonError}}" hint-placeholder-val="{{false}}"><span class="err">Alasan banding wajib diisi.</span></sc-if></div>
       <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;"><button class="ra-btn ra-btn-secondary" onClick="{{closeAppeal}}">Batal</button><button class="ra-btn ra-btn-primary" onClick="{{sendAppeal}}">Kirim Banding</button></div>
     </div></div>
   </sc-if>

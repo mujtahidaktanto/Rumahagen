@@ -202,7 +202,7 @@
                 <div style="display:flex;flex-direction:column;gap:6px;"><button class="ra-btn ra-btn-secondary ra-btn-sm" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></svg>Unggah logo</button><span class="ra-caption">PNG atau JPG. Tampil di halaman publik Developer/Project.</span></div>
               </div></div>
             <div class="field"><label class="ra-label-lg" for="f-about">Tentang Developer</label>
-              <textarea id="f-about" class="ra-input" rows="4" onInput="{{onAbout}}">{{about}}</textarea>
+              <textarea id="f-about" class="ra-input" rows="4" onInput="{{onAbout}}" value="{{about}}"></textarea>
               <span class="ra-caption">Deskripsi perusahaan yang tampil di publik. Ini BUKAN deskripsi proyek maupun listing. {{aboutCount}} karakter.</span></div>
             <div class="field-row" style="">
               <div class="field"><label class="ra-label-lg" for="f-pic">Nama PIC</label><input id="f-pic" class="ra-input" type="text" maxlength="150" value="{{picName}}" onInput="{{onPicName}}"></div>

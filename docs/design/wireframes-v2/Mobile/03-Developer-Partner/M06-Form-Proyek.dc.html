@@ -90,7 +90,7 @@
               <input id="p-mt" class="ra-input" type="text" maxlength="70" value="{{metaTitle}}" onInput="{{onMetaTitle}}">
               <span class="ra-caption">{{metaTitleCount}}/70 · Menjadi judul awal listing agen yang klaimnya disetujui. Perubahan agen tidak mengubah proyek Anda.</span></div>
             <div class="field"><label class="ra-label-lg" for="p-md">Deskripsi awal listing <span class="ra-caption">(meta description)</span></label>
-              <textarea id="p-md" class="ra-input" rows="3" maxlength="160" onInput="{{onMetaDesc}}">{{metaDesc}}</textarea>
+              <textarea id="p-md" class="ra-input" rows="3" maxlength="160" onInput="{{onMetaDesc}}" value="{{metaDesc}}"></textarea>
               <span class="ra-caption">{{metaDescCount}}/160 · Satu-satunya sumber deskripsi listing; proyek tidak punya kolom deskripsi terpisah.</span></div>
           </sc-if>
           <sc-if value="{{isStep2}}" hint-placeholder-val="{{false}}">

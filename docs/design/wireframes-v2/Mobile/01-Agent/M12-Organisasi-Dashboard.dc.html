@@ -51,7 +51,25 @@
     <span class="ra-title-md" style="flex:1;">Organisasi</span>
   <button class="ra-iconbtn" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button></div>
 
-  <sc-if value="{{isNoOrg}}" hint-placeholder-val="{{false}}">
+<sc-if value="{{invWrap}}" hint-placeholder-val="{{false}}"><sc-if value="{{showInvCard}}" hint-placeholder-val="{{false}}">
+      <div style="background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);margin:16px 16px 0;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px;border-bottom:1px solid var(--ra-ink-100);"><span class="ra-title-md">Undangan untuk Anda</span><span class="ra-badge ra-badge-info">{{invCount}} undangan</span></div>
+        <sc-if value="{{invErr}}" hint-placeholder-val="{{false}}"><div style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin:12px 16px 0;border-radius:var(--ra-radius-md);background:var(--ra-danger-100);border:1px solid #F3B9B9;color:var(--ra-danger-600);" role="alert"><span class="ra-body-md" style="flex:1;">Gagal menanggapi undangan. Tidak ada yang berubah; coba lagi.</span><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{dismissInvMsg}}">Tutup</button></div></sc-if><sc-if value="{{hasInvMsg}}" hint-placeholder-val="{{false}}"><div style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin:12px 16px 0;border-radius:var(--ra-radius-md);background:var(--ra-ink-50);border:1px solid var(--ra-ink-100);" role="status"><span class="ra-body-md" style="flex:1;">{{invMsg}}</span><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{dismissInvMsg}}">Tutup</button></div></sc-if>
+        <sc-for list="{{invRows}}" as="v" hint-placeholder-count="2">
+          <div style="display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:14px 16px;border-top:1px solid var(--ra-ink-100);">
+            <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;flex:none;">{{v.initial}}</div>
+              <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-1">{{v.org}}</div><div class="ra-caption">Diundang {{v.from}} · {{v.sent}}</div><sc-if value="{{v.active}}" hint-placeholder-val="{{true}}"><div class="ra-caption">Berlaku sampai {{v.exp}}</div></sc-if><sc-if value="{{v.expired}}" hint-placeholder-val="{{false}}"><div class="ra-caption" style="color:var(--ra-danger-600);">Kedaluwarsa {{v.exp}}. Minta leader mengirim undangan baru.</div></sc-if></div>
+            </div>
+            <sc-if value="{{v.active}}" hint-placeholder-val="{{true}}"><div style="display:flex;gap:8px;"><button class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:1;" disabled="{{v.busy}}" onClick="{{v.reject}}">Tolak</button><button class="ra-btn ra-btn-primary ra-btn-sm" style="flex:2;" disabled="{{v.busy}}" onClick="{{v.accept}}"><sc-if value="{{v.idle}}" hint-placeholder-val="{{true}}">Terima &amp; Bergabung</sc-if><sc-if value="{{v.busy}}" hint-placeholder-val="{{false}}">Memproses…</sc-if></button></div></sc-if>
+            <sc-if value="{{v.expired}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-neutral" style="align-self:flex-start;">Kedaluwarsa</span></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{hasJoinedMsg}}" hint-placeholder-val="{{false}}"><div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--ra-radius-md);background:var(--ra-success-100);border:1px solid #B7E3CC;color:var(--ra-success-600);margin:16px 16px 0;" role="status"><span class="ra-body-md" style="flex:1;">{{joinedMsg}} Dashboard organisasi Anda tampil di bawah.</span></div></sc-if>
+    </sc-if>
+      <sc-if value="{{isNoOrg}}" hint-placeholder-val="{{false}}">
     <div class="empty-wrap">
       <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="28" height="28"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/></svg></div>
       <h2 class="ra-title-md">Anda Belum Tergabung ke Organisasi</h2>
@@ -232,7 +250,7 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"orgState":{"editor":"enum","default":"has_org","options":["no_org","has_org"],"section":"Skenario"},"viewerRole":{"editor":"enum","default":"leader","options":["leader","member"],"section":"Skenario"},"orgStatus":{"editor":"enum","default":"active","options":["active","closing","closed","suspended"],"section":"Skenario status organisasi"},"kuota":{"editor":"enum","default":"tersedia","options":["tersedia","hampir_habis","penuh","memuat","gagal_muat"],"section":"Skenario kuota"},"paket":{"editor":"enum","default":"gratis","options":["gratis","pro"],"section":"Skenario kuota"},"slotBeli":{"editor":"enum","default":"tidak","options":["tidak","ada"],"section":"Skenario kuota"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"orgState":{"editor":"enum","default":"has_org","options":["no_org","has_org"],"section":"Skenario"},"viewerRole":{"editor":"enum","default":"leader","options":["leader","member"],"section":"Skenario"},"orgStatus":{"editor":"enum","default":"active","options":["active","closing","closed","suspended"],"section":"Skenario status organisasi"},"kuota":{"editor":"enum","default":"tersedia","options":["tersedia","hampir_habis","penuh","memuat","gagal_muat"],"section":"Skenario kuota"},"paket":{"editor":"enum","default":"gratis","options":["gratis","pro"],"section":"Skenario kuota"},"slotBeli":{"editor":"enum","default":"tidak","options":["tidak","ada"],"section":"Skenario kuota"},"undangan":{"editor":"enum","default":"ada","options":["ada","satu","kosong"],"section":"Skenario undangan masuk (tampil bila belum tergabung)"},"aksiUndangan":{"editor":"enum","default":"normal","options":["normal","lambat","gagal"],"section":"Skenario menanggapi undangan"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -258,10 +276,34 @@ class Component extends DCLogic {
   onOtpInput(e){ this.setState({ otpValue: (e.target.value || '').replace(/\D/g, '').slice(0, 8) }); }
   resendOtp(){ this.setState({ otpValue: '', otpResent: true }); }
   confirmWithOtp(){ this.closeConfirmModal(); }
-  renderVals() { var self = this, st = this.state || {}; var open = st.drawerOpen === true; var shell = { drawerOpen: open, openDrawer: function(){ self.setState({ drawerOpen: true }); }, closeDrawer: function(){ self.setState({ drawerOpen: false }); }, stopClick: function(e){ if (e && e.stopPropagation) e.stopPropagation(); } }; return Object.assign(shell, this.renderVals_page()); }
+  invItems(){
+    return [
+      { id: 'i1', org: 'Kantor Properti Nusantara', from: 'Dewi Anggraini (Leader)', sent: '23 Sep 2026', exp: '30 Sep 2026', expired: false },
+      { id: 'i2', org: 'Tim Broker BSD', from: 'Rian Saputra (Leader)', sent: '10 Sep 2026', exp: '17 Sep 2026', expired: true }
+    ];
+  }
+  respondInv(id, act){
+    var mode = this.props.aksiUndangan || 'normal', inv = Object.assign({}, this.state.inv || {});
+    if (mode === 'lambat') { inv[id] = 'busy'; this.setState({ inv: inv, invErr: false }); return; }
+    if (mode === 'gagal') { this.setState({ invErr: true }); return; }
+    var it = this.invItems().filter(function(x){ return x.id === id; })[0];
+    inv[id] = act;
+    this.setState({ inv: inv, invErr: false, invMsg: act === 'accept' ? 'Anda kini anggota "' + it.org + '".' : 'Undangan dari "' + it.org + '" ditolak.', joined: act === 'accept' ? true : this.state.joined });
+  }
+  invVals(){
+    var self = this, sc = this.props.undangan || 'ada', inv = this.state.inv || {};
+    var all = sc === 'kosong' ? [] : sc === 'satu' ? this.invItems().slice(0, 1) : this.invItems();
+    var rows = all.filter(function(x){ return inv[x.id] !== 'accept' && inv[x.id] !== 'reject'; }).map(function(x){
+      var busy = inv[x.id] === 'busy';
+      return { org: x.org, from: x.from, sent: x.sent, exp: x.exp, expired: x.expired, active: !x.expired, initial: x.org.charAt(0), busy: busy, idle: !busy,
+        accept: function(){ self.respondInv(x.id, 'accept'); }, reject: function(){ self.respondInv(x.id, 'reject'); } };
+    });
+    return { invWrap: this.state.joined === true || this.props.orgState === "no_org", invRows: rows, showInvCard: rows.length > 0, invCount: rows.length, invErr: this.state.invErr === true, invMsg: this.state.invMsg || '', hasInvMsg: !!this.state.invMsg && !this.state.joined, joinedMsg: this.state.joined ? this.state.invMsg : '', hasJoinedMsg: this.state.joined === true, dismissInvMsg: function(){ self.setState({ invMsg: '', invErr: false }); } };
+  }
+  renderVals() { var self = this, st = this.state || {}; var open = st.drawerOpen === true; var shell = { drawerOpen: open, openDrawer: function(){ self.setState({ drawerOpen: true }); }, closeDrawer: function(){ self.setState({ drawerOpen: false }); }, stopClick: function(e){ if (e && e.stopPropagation) e.stopPropagation(); } }; return Object.assign(shell, this.renderVals_page(), this.invVals()); }
   renderVals_page() {
-    const orgState = this.props.orgState ?? 'has_org';
-    const role = this.props.viewerRole ?? 'leader';
+    const orgState = this.state.joined ? 'has_org' : (this.props.orgState ?? 'has_org');
+    const role = this.state.joined ? 'member' : (this.props.viewerRole ?? 'leader');
     const status = this.props.orgStatus ?? 'active';
     const isLeader = role === 'leader';
 

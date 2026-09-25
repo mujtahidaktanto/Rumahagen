@@ -142,18 +142,20 @@ class Component extends DCLogic {
     };
     
     // notifications (0036): type approval_status|event_reminder|listing_expiring|certificate_issued|lead_new|lainnya; is_read; dismissed_at; delivery_status.
-    // Pengguna tidak bisa membuat notifikasi. CATATAN: saat ini hanya push manual Admin yang membuat notifikasi (belum ada pemicu bisnis; SOURCE-Instructor.md §6).
+    // Pengguna tidak bisa membuat notifikasi. Dibuat oleh pemicu database (fungsi notify_user; tidak pernah untuk aksi diri sendiri): persetujuan (award, banding, kursus, proyek, event, klaim proyek, sesi belajar), lead baru, sertifikat diterbitkan, listing dikembalikan ke draf, langganan aktif, penugasan/pembaruan sesi, undangan dan permohonan organisasi (0151), sertifikat dicabut (0151). Belum ada pemicu: pengingat event dan peringatan sebelum listing berakhir; belum ada pengaturan preferensi notifikasi.
     // related_entity_type/id opak: tautan tujuan dipetakan klien; tipe tak dikenal tanpa tautan.
     var self = this, mode = pr.state || 'normal';
     var persona = pr.persona || 'agent';
     var back = { agent: '../01-Agent/M08-Dashboard.dc.html', instruktur: '../04-Instructor/M08-Dashboard-Instruktur.dc.html', developer: '../03-Developer-Partner/M08-Dashboard-Developer.dc.html', admin: '../02-Admin/M09-Dashboard-Analytics.dc.html' }[persona];
     var TYPE = { approval_status: ['Persetujuan','ra-badge-info'], event_reminder: ['Pengingat event','ra-badge-warning'], listing_expiring: ['Listing segera berakhir','ra-badge-warning'], certificate_issued: ['Sertifikat','ra-badge-success'], lead_new: ['Lead baru','ra-badge-info'], lainnya: ['Info','ra-badge-neutral'] };
     var raw = [
+      { id: 'n7', type: 'lainnya', title: 'Undangan bergabung organisasi', msg: 'Anda diundang bergabung ke "Kantor Properti Nusantara". Buka Organisasi untuk menerima atau menolak.', when: '20 menit lalu', read: false, dis: false, del: 'delivered', link: true },
       { id: 'n1', type: 'approval_status', title: 'Pengajuan Anda disetujui', msg: 'Tim RumahAgen menyetujui pengajuan Anda.', when: '12 menit lalu', read: false, dis: false, del: 'delivered', link: true },
       { id: 'n2', type: 'event_reminder', title: 'Event dimulai besok', msg: 'Workshop KPR untuk Agen dimulai besok pukul 13.00.', when: '2 jam lalu', read: false, dis: false, del: 'delivered', link: true },
       { id: 'n3', type: 'certificate_issued', title: 'Sertifikat diterbitkan', msg: 'Sertifikat kursus Sales Skill sudah tersedia.', when: 'Kemarin', read: true, dis: false, del: 'delivered', link: true },
       { id: 'n4', type: 'lainnya', title: 'Pemeliharaan terjadwal', msg: 'Sistem dijadwalkan pemeliharaan Minggu 02.00–03.00 WIB.', when: '3 hari lalu', read: true, dis: false, del: 'delivered', link: false },
-      { id: 'n5', type: 'lead_new', title: 'Lead baru pada listing Anda', msg: 'Ada satu lead baru.', when: '4 hari lalu', read: true, dis: true, del: 'failed', link: true }
+      { id: 'n5', type: 'lead_new', title: 'Lead baru pada listing Anda', msg: 'Ada satu lead baru.', when: '4 hari lalu', read: true, dis: true, del: 'failed', link: true },
+      { id: 'n8', type: 'lainnya', title: 'Sertifikat dicabut', msg: 'Sertifikat RA-2026-000077 untuk kursus "Legal & Regulasi: Memahami PPJB" dicabut. Hubungi admin bila ada kekeliruan.', when: '5 hari lalu', read: true, dis: false, del: 'delivered', link: true }
     ];
     if (st.more) raw = raw.concat([{ id: 'n6', type: 'lainnya', title: 'Pengumuman fitur baru', msg: 'Cek Statistik Saya di dashboard.', when: '1 minggu lalu', read: true, dis: false, del: 'delivered', link: false }]);
     var items = raw.filter(function(n){ var dis = n.dis || !!st.dismissed[n.id]; return st.showDismissed || !dis; }).filter(function(n){ var rd = n.read || st.allRead || !!st.read[n.id]; return st.filter === 'all' || !rd; }).map(function(n){
