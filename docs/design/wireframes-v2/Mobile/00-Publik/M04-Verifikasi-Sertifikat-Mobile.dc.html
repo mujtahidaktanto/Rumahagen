@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Verifikasi Sertifikat — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:var(--ra-surface);position:relative;min-height:844px;}
+  .topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;gap:10px;padding:12px 14px;}
+  .tb-btn{width:38px;height:38px;border-radius:50%;background:var(--ra-ink-50);display:flex;align-items:center;justify-content:center;border:none;flex:none;}
+  .vcard{padding:18px;}
+  .kv{grid-template-columns:110px 1fr;}
+
+  .vcard{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:24px;box-shadow:var(--ra-shadow-1, 0 1px 2px rgba(11,20,31,.05));}
+  .res-head{display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--ra-radius-md);}
+  .res-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;background:#fff;}
+  .res-ok{background:var(--ra-success-100);border:1px solid #B7E3CC;} .res-ok .res-icon{color:var(--ra-success-600);}
+  .res-bad{background:var(--ra-danger-100);border:1px solid #F3B9B9;} .res-bad .res-icon{color:var(--ra-danger-600);}
+  .res-none{background:var(--ra-ink-50);border:1px solid var(--ra-ink-100);} .res-none .res-icon{color:var(--ra-ink-500);}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:12px 16px;} .kv dt{color:var(--ra-ink-500);font-size:13px;line-height:20px;margin:0;} .kv dd{margin:0;font-size:14px;line-height:20px;overflow-wrap:anywhere;}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;} .input-err{border-color:var(--ra-danger-600);}
+  .step{display:flex;gap:12px;align-items:flex-start;} .step-n{width:26px;height:26px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .empty-box{padding:32px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+
+  .kv{grid-template-columns:110px 1fr;gap:10px 12px;}
+</style>
+</helmet>
+<div class="page">
+  <div class="topbar">
+    <button class="tb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+    <span class="ra-label-lg ra-truncate-1" style="flex:1;text-align:right;color:var(--ra-ink-500);">Verifikasi Sertifikat</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;padding:16px 16px 32px;">
+    <div style="display:flex;flex-direction:column;gap:4px;"><h1 class="ra-title-lg">Verifikasi Sertifikat</h1><p class="ra-body-md" style="color:var(--ra-ink-500);">Periksa keaslian sertifikat RumahAgen tanpa login.</p></div>
+    
+    <div class="vcard">
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label class="ra-label-lg" for="kode">Kode verifikasi</label>
+        <div style="display:flex;gap:10px;flex-direction:column;">
+          <input id="kode" class="ra-input mono {{inputClass}}" style="width:100%;font-size:16px;letter-spacing:1px;" type="text" inputmode="text" autocomplete="off" maxlength="14" placeholder="XXXX-XXXX-XXXX" value="{{kodeVal}}" onInput="{{onKode}}">
+          <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{check}}">Periksa</button>
+        </div>
+        <sc-if value="{{formatErr}}" hint-placeholder-val="{{false}}"><span class="err" role="alert">Kode terdiri dari 12 karakter angka dan huruf A–F, contoh 3A62-89F8-8F1C.</span></sc-if>
+        <sc-if value="{{notFormatErr}}" hint-placeholder-val="{{true}}"><span class="ra-caption">Kode tercetak di bawah QR pada sertifikat. Memindai QR membuka halaman ini dengan kode terisi.</span></sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div class="vcard" style="display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:64px;"></div><div class="ra-skel" style="height:22px;"></div><div class="ra-skel" style="height:22px;"></div><div class="ra-skel" style="height:22px;"></div></div></sc-if>
+    <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="vcard"><div class="empty-box"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Verifikasi belum bisa dilakukan</span><p class="ra-body-md">Terjadi gangguan saat memeriksa sertifikat. Coba lagi sebentar lagi.</p><button class="ra-btn ra-btn-primary" onClick="{{check}}">Coba Lagi</button></div></div></sc-if>
+    <sc-if value="{{showLimit}}" hint-placeholder-val="{{false}}"><div class="vcard"><div class="empty-box"><span style="color:var(--ra-warning-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Terlalu banyak percobaan</span><p class="ra-body-md">Demi keamanan, pemeriksaan dibatasi. Coba lagi dalam 1 menit.</p></div></div></sc-if>
+
+    <sc-if value="{{resValid}}" hint-placeholder-val="{{true}}"><div class="vcard" style="display:flex;flex-direction:column;gap:14px;">
+      <div class="res-head res-ok"><span class="res-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div style="flex:1;min-width:0;"><div class="ra-title-md">Sertifikat valid</div><div class="ra-body-md" style="margin-top:2px;">Sertifikat ini diterbitkan oleh RumahAgen dan masih berlaku.</div></div><span class="ra-badge ra-badge-success">Berlaku</span></div>
+      <dl class="kv" style="margin:0;"><dt>Nama pemegang</dt><dd><strong>{{holder}}</strong></dd><dt>Kursus</dt><dd>{{course}}</dd><dt>Nomor sertifikat</dt><dd><span class="mono">{{number}}</span></dd><dt>Diterbitkan</dt><dd>{{issued}}</dd><dt>Penyelenggara</dt><dd>{{organizer}}</dd><dt>Kode verifikasi</dt><dd><span class="mono">{{code}}</span></dd></dl>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;flex-direction:column;"><button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{copyLink}}"><sc-if value="{{copied}}" hint-placeholder-val="{{false}}">Tautan disalin</sc-if><sc-if value="{{notCopied}}" hint-placeholder-val="{{true}}">Salin tautan halaman ini</sc-if></button><button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{reset}}">Periksa kode lain</button></div>
+    </div></sc-if>
+    <sc-if value="{{resRevoked}}" hint-placeholder-val="{{false}}"><div class="vcard" style="display:flex;flex-direction:column;gap:14px;">
+      <div class="res-head res-bad"><span class="res-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M6 6l12 12M18 6L6 18"/></svg></span><div style="flex:1;min-width:0;"><div class="ra-title-md">Sertifikat dicabut</div><div class="ra-body-md" style="margin-top:2px;">Sertifikat ini pernah diterbitkan, tetapi sudah dicabut dan tidak berlaku lagi.</div></div><span class="ra-badge ra-badge-danger">Dicabut</span></div>
+      <dl class="kv" style="margin:0;"><dt>Nama pemegang</dt><dd><strong>{{holder}}</strong></dd><dt>Kursus</dt><dd>{{course}}</dd><dt>Nomor sertifikat</dt><dd><span class="mono">{{number}}</span></dd><dt>Diterbitkan</dt><dd>{{issued}}</dd><dt>Dicabut pada</dt><dd><span style="color:var(--ra-danger-600);font-weight:700;">{{revokedAt}}</span></dd><dt>Penyelenggara</dt><dd>{{organizer}}</dd><dt>Kode verifikasi</dt><dd><span class="mono">{{code}}</span></dd></dl>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;flex-direction:column;"><button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{copyLink}}"><sc-if value="{{copied}}" hint-placeholder-val="{{false}}">Tautan disalin</sc-if><sc-if value="{{notCopied}}" hint-placeholder-val="{{true}}">Salin tautan halaman ini</sc-if></button><button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{reset}}">Periksa kode lain</button></div>
+    </div></sc-if>
+    <sc-if value="{{resNone}}" hint-placeholder-val="{{false}}"><div class="vcard" style="display:flex;flex-direction:column;gap:14px;">
+      <div class="res-head res-none"><span class="res-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><div style="flex:1;min-width:0;"><div class="ra-title-md">Sertifikat tidak ditemukan</div><div class="ra-body-md" style="margin-top:2px;">Tidak ada sertifikat RumahAgen dengan kode <span class="mono">{{checkedCode}}</span>.</div></div></div>
+      <ul class="ra-body-md" style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--ra-ink-700);"><li>Periksa lagi kode di bawah QR pada sertifikat (huruf A–F dan angka 0–9).</li><li>Sertifikat palsu atau kode yang salah tidak akan ditemukan.</li><li>Ragu dengan keaslian sertifikat? Hubungi RumahAgen dan sertakan kode ini.</li></ul>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;flex-direction:column;"><button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{reset}}">Periksa kode lain</button><a class="ra-btn ra-btn-secondary" style="width:100%;" href="M11-Konten-Publik-Desktop.dc.html">Hubungi bantuan</a></div>
+    </div></sc-if>
+
+    <div class="vcard" style="display:flex;flex-direction:column;gap:12px;">
+      <span class="ra-title-md">Cara kerja verifikasi</span>
+      <div class="step"><span class="step-n">1</span><span class="ra-body-md">Pindai QR pada sertifikat, atau ketik kode 12 karakter di kolom atas.</span></div>
+      <div class="step"><span class="step-n">2</span><span class="ra-body-md">Kami mencocokkan kode dengan data resmi RumahAgen dan menampilkan status terkini.</span></div>
+      <div class="step"><span class="step-n">3</span><span class="ra-body-md">Yang tampil hanya nama, kursus, nomor, tanggal, dan status. Tidak ada data pribadi lain seperti email atau nomor telepon.</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hasil":{"editor":"enum","default":"valid","options":["valid","dicabut","tidak_ditemukan","kosong"],"section":"Skenario hasil (dibuka dari QR)"},"state":{"editor":"enum","default":"normal","options":["normal","memuat","gagal","dibatasi"],"section":"Skenario sistem"},"$preview":{"width":390,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    var pre = { valid: '3A62-89F8-8F1C', dicabut: 'FC00-E198-B97B', tidak_ditemukan: '0000-0000-0000', kosong: '' }[props.hasil || 'valid'];
+    this.state = { kode: pre === undefined ? '' : pre, checked: pre || '', formatErr: false, copied: false };
+    var self = this;
+    ['onKode', 'check', 'reset', 'copyLink'].forEach(function(m){ self[m] = self[m].bind(self); });
+  }
+  onKode(e){
+    var raw = String((e && e.target ? e.target.value : '') || '').replace(/[^0-9a-fA-F]/g, '').toUpperCase().slice(0, 12);
+    this.setState({ kode: raw.replace(/(.{4})(?=.)/g, '$1-'), formatErr: false });
+  }
+  check(){
+    var k = this.state.kode;
+    if (!/^[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/.test(k)) { this.setState({ formatErr: true, checked: '' }); return; }
+    this.setState({ checked: k, formatErr: false, copied: false });
+  }
+  reset(){ this.setState({ kode: '', checked: '', formatErr: false, copied: false }); }
+  copyLink(){ this.setState({ copied: true }); }
+  renderVals(){ 
+    var st = this.state, pr = this.props, mode = pr.state || 'normal';
+    var DB = {
+      '3A62-89F8-8F1C': { status: 'issued', holder: 'Dewi Anggraini', course: 'Dasar-Dasar Pemasaran Properti untuk Agen Pemula', number: 'RA-2026-000123', issued: '25 September 2026', organizer: 'RumahAgen (internal)' },
+      'FC00-E198-B97B': { status: 'revoked', holder: 'Rizky Ananda Pratama', course: 'Legal & Regulasi: Memahami PPJB', number: 'RA-2026-000077', issued: '2 September 2026', revoked: '20 September 2026', organizer: 'Mitra' }
+    };
+    var has = !!st.checked, row = has && mode === 'normal' ? DB[st.checked] : null;
+    var r = row || {};
+    return {
+      kodeVal: st.kode, onKode: this.onKode, check: this.check, reset: this.reset, copyLink: this.copyLink, copied: st.copied, notCopied: !st.copied,
+      formatErr: st.formatErr, notFormatErr: !st.formatErr, inputClass: st.formatErr ? 'input-err' : '',
+      resIdle: !has && mode === 'normal' || (!has && mode !== 'normal'),
+      showLoading: has && mode === 'memuat', showError: has && mode === 'gagal', showLimit: has && mode === 'dibatasi',
+      resValid: !!row && row.status === 'issued', resRevoked: !!row && row.status === 'revoked', resNone: has && mode === 'normal' && !row,
+      holder: r.holder || '', course: r.course || '', number: r.number || '', issued: r.issued || '', revokedAt: r.revoked || '', organizer: r.organizer || '', code: st.checked, checkedCode: st.checked
+    };
+  }
+}
+</script>
+</body>
+</html>
