@@ -25,6 +25,20 @@ export function listingCode(id: string): string {
 /** Tanda * dan _ membuat teks tercetak miring/tebal di WhatsApp; dihapus dari judul agar format pesan tidak rusak. */
 const plain = (s: string) => s.replace(/[*_~`]/g, "").replace(/\s+/g, " ").trim();
 
+/** Pesan awal dari profil agen (tanpa listing tertentu): memuat tautan profil agar agen tahu dari mana calon klien datang. */
+export function buildAgentWhatsAppMessage(i: { agentName: string; slug: string; siteUrl: string }): string {
+  return [
+    `Halo Kak ${plain(i.agentName)},`,
+    "",
+    "Saya menemukan profil Anda di RumahAgen.com dan ingin bertanya seputar properti.",
+    `• Profil: ${i.siteUrl.replace(/\/+$/, "")}/agen/${i.slug}`,
+    "",
+    "Boleh saya berkonsultasi mengenai properti yang sedang saya cari?",
+    "",
+    "Terima kasih.",
+  ].join("\n");
+}
+
 export function buildListingWhatsAppMessage(i: WhatsAppMessageInput): string {
   const location = [i.cityName, i.provinceName].filter(Boolean).join(", ");
   const name = i.agentName ? plain(i.agentName) : "";

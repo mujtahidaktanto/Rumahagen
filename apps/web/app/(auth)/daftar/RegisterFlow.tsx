@@ -2,7 +2,7 @@
 
 // app/(auth)/daftar/RegisterFlow.tsx — Daftar (M01-Register) lalu verifikasi kode (M01-OTP) dalam satu halaman: POST /auth/register mengirim OTP email,
 // POST /auth/verify-otp memasang sesi (akun langsung aktif), POST /auth/resend-otp kirim ulang (jeda 60 detik, ditegakkan juga oleh Supabase).
-// Nama lengkap dan nomor WhatsApp di wireframe belum didukung API register (hanya email+kata sandi): dicatat di audit/FRONTEND_GAPS.md.
+// Nama lengkap wajib (dikirim ke API register -> user_metadata.full_name); nomor WhatsApp TIDAK diminta saat daftar (keputusan 2026-09-26), diisi nanti di Profil Saya.
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import Link from "next/link";
@@ -14,7 +14,7 @@ import { OtpInput } from "@/components/auth/OtpInput";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { FormAlert, StatusPanel } from "@/components/auth/StatusPanel";
 import { api, ApiClientError } from "@/lib/api-client";
-import { passwordSchema } from "@/lib/validation/auth";
+import { fullNameSchema, passwordSchema } from "@/lib/validation/auth";
 
 const RESEND_SECONDS = 60;
 
@@ -47,6 +47,7 @@ type Stage = "form" | "otp" | "success";
 
 export function RegisterFlow({ next }: { next: string }) {
   const [stage, setStage] = useState<Stage>("form");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -65,6 +66,7 @@ export function RegisterFlow({ next }: { next: string }) {
     return () => clearTimeout(t);
   }, [countdown]);
 
+  const nameCheck = fullNameSchema.safeParse(fullName);
   const passwordCheck = passwordSchema.safeParse(password);
   const passwordError = touched && !passwordCheck.success ? passwordCheck.error.issues[0]?.message : undefined;
   const emailValid = /^\S+@\S+\.\S+$/.test(email.trim());
@@ -72,11 +74,11 @@ export function RegisterFlow({ next }: { next: string }) {
   async function onRegister(e: FormEvent) {
     e.preventDefault();
     setTouched(true);
-    if (!emailValid || !passwordCheck.success || confirm !== password || !agree) return;
+    if (!nameCheck.success || !emailValid || !passwordCheck.success || confirm !== password || !agree) return;
     setBusy(true);
     setError(null);
     try {
-      await api.post("/auth/register", { email: email.trim(), password }, { idempotency: true, redirectOnUnauthenticated: false });
+      await api.post("/auth/register", { full_name: fullName.trim(), email: email.trim(), password }, { idempotency: true, redirectOnUnauthenticated: false });
       setCode("");
       setCountdown(RESEND_SECONDS);
       setStage("otp");
@@ -183,6 +185,9 @@ export function RegisterFlow({ next }: { next: string }) {
         </p>
       </div>
       {error ? <FormAlert>{error}</FormAlert> : null}
+      <Field label="Nama lengkap" required hint="Tulis sesuai KTP." error={touched && !nameCheck.success ? nameCheck.error.issues[0]?.message : undefined}>
+        {(a) => <Input type="text" autoComplete="name" placeholder="Nama lengkap Anda" maxLength={100} value={fullName} onChange={(e) => setFullName(e.target.value)} {...a} />}
+      </Field>
       <Field label="Email" required error={touched && !emailValid ? "Masukkan alamat email yang valid." : undefined}>
         {(a) => <Input type="email" autoComplete="email" inputMode="email" placeholder="nama@email.com" value={email} onChange={(e) => setEmail(e.target.value)} {...a} />}
       </Field>

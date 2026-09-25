@@ -39,7 +39,7 @@ const inputCls =
   "h-10 w-full min-w-0 rounded-sm border-[1.5px] border-ink-100 bg-white px-2.5 text-[13px] text-ink-900 placeholder:text-ink-300 focus-visible:border-blue-500 focus-visible:shadow-[0_0_0_3px_var(--color-blue-100)] focus-visible:outline-none";
 
 export function ListingFilters({ search, amenities }: { search: ListingSearch; amenities: Amenity[] }) {
-  const resetHref = `/listing${listingQuery(search, { jenis: [], transaksi: null, min: null, max: null, kt: null, km: null, fasilitas: [], tampil: 12 })}`;
+  const resetHref = `/listing${listingQuery(search, { jenis: [], min: null, max: null, kt: null, km: null, fasilitas: [], tampil: 12 })}`;
   return (
     <div className="flex flex-col gap-5 rounded-md border border-ink-100 bg-white p-5">
       <div className="flex items-center justify-between">
@@ -48,17 +48,6 @@ export function ListingFilters({ search, amenities }: { search: ListingSearch; a
           Reset
         </Link>
       </div>
-
-      <Group title="Jenis Transaksi">
-        <div className="flex gap-2">
-          {([["", "Semua"], ["sale", "Dijual"], ["rent", "Disewa"]] as const).map(([v, l]) => (
-            <label key={v}>
-              <input type="radio" name="transaksi" value={v} defaultChecked={(search.transaksi ?? "") === v} className="peer sr-only" />
-              <span className={pill}>{l}</span>
-            </label>
-          ))}
-        </div>
-      </Group>
 
       <Group title="Tipe Properti">
         {PROPERTY_TYPES.map((t) => (

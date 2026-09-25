@@ -23,7 +23,8 @@ export const MAX_SHOWN = 96;
 export type ListingSearch = {
   q: string;
   jenis: PropertyType[];
-  transaksi: "sale" | "rent" | null;
+  /** Jenis transaksi yang ditampilkan; bawaan "sale" (Dijual). Dijual dan Disewa tidak pernah dicampur (harga sewa per bulan/tahun tidak sebanding dengan harga jual). */
+  transaksi: "sale" | "rent";
   min: number | null;
   max: number | null;
   kt: number | null; // kamar tidur minimal
@@ -52,7 +53,7 @@ export function parseListingSearch(raw: Raw): ListingSearch {
   return {
     q: (one(raw.q) ?? "").trim().slice(0, 100),
     jenis,
-    transaksi: transaksi === "sale" || transaksi === "rent" ? transaksi : null,
+    transaksi: transaksi === "rent" ? "rent" : "sale",
     min: num(one(raw.min)),
     max: num(one(raw.max)),
     kt: num(one(raw.kt), { min: 1, max: 10 }),
@@ -63,9 +64,9 @@ export function parseListingSearch(raw: Raw): ListingSearch {
   };
 }
 
-/** Jumlah filter aktif (tanpa q, urut, tampil) — untuk lencana tombol Filter di layar sempit. */
+/** Jumlah filter aktif (tanpa q, urut, tampil, dan jenis transaksi yang selalu terpilih) — untuk lencana tombol Filter di layar sempit. */
 export function activeFilterCount(s: ListingSearch): number {
-  return s.jenis.length + (s.transaksi ? 1 : 0) + (s.min !== null ? 1 : 0) + (s.max !== null ? 1 : 0) + (s.kt ? 1 : 0) + (s.km ? 1 : 0) + s.fasilitas.length;
+  return s.jenis.length + (s.min !== null ? 1 : 0) + (s.max !== null ? 1 : 0) + (s.kt ? 1 : 0) + (s.km ? 1 : 0) + s.fasilitas.length;
 }
 
 /** Bangun query string dari pencarian (nilai bawaan dihilangkan) dengan perubahan `patch`. Memakai untuk tautan "Muat Lebih Banyak", urutan, dan reset. */
@@ -74,7 +75,7 @@ export function listingQuery(s: ListingSearch, patch: Partial<ListingSearch> = {
   const p = new URLSearchParams();
   if (v.q) p.set("q", v.q);
   v.jenis.forEach((j) => p.append("jenis", j));
-  if (v.transaksi) p.set("transaksi", v.transaksi);
+  if (v.transaksi !== "sale") p.set("transaksi", v.transaksi);
   if (v.min !== null) p.set("min", String(v.min));
   if (v.max !== null) p.set("max", String(v.max));
   if (v.kt) p.set("kt", String(v.kt));

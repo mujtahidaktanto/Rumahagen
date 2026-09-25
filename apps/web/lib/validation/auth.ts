@@ -18,7 +18,12 @@ export const passwordSchema = z
   .regex(/[A-Z]/, "Kata sandi harus memuat minimal 1 huruf besar.")
   .regex(/[0-9]/, "Kata sandi harus memuat minimal 1 angka.");
 
+// Nama lengkap wajib saat daftar (keputusan pemilik produk 2026-09-26); nomor WhatsApp TIDAK wajib dan diisi nanti di Profil Saya (agent_profiles.whatsapp_number NOT NULL).
+// Nama disimpan di user_metadata.full_name (tanpa migration) dan dipakai sebagai nama tampilan sampai profil agen dibuat.
+export const fullNameSchema = z.string().trim().min(2, "Nama lengkap minimal 2 karakter.").max(100, "Nama lengkap maksimal 100 karakter.");
+
 export const registerSchema = z.object({
+  full_name: fullNameSchema,
   email: emailSchema,
   password: passwordSchema,
 });

@@ -23,7 +23,7 @@ export async function searchListings(s: ListingSearch): Promise<ListingSearchRes
   let query = supabase.from("listings").select(LISTING_CARD_SELECT, { count: "exact" }).eq("status", "published").is("deleted_at", null);
   if (idFilter) query = query.in("id", idFilter);
   if (s.jenis.length > 0) query = query.in("property_type", s.jenis);
-  if (s.transaksi) query = query.eq("transaction_type", s.transaksi);
+  query = query.eq("transaction_type", s.transaksi);
   if (s.min !== null) query = query.gte("price", s.min);
   if (s.max !== null) query = query.lte("price", s.max);
   if (s.kt) query = query.gte("bedrooms", s.kt);

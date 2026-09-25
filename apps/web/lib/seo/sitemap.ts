@@ -8,7 +8,7 @@
 // Resend (rumahagen.com) supaya sitemap tetap valid tanpa konfigurasi
 // tambahan, bisa di-override lewat NEXT_PUBLIC_SITE_URL kalau perlu.
 //
-// Pola URL kanonik (/listing/{slug}, /agent/{slug}, /project/{slug}) adalah
+// Pola URL kanonik (/listing/{slug}, /agen/{slug} [diubah dari /agent/{slug} 2026-09-26], /project/{slug}) adalah
 // ASUMSI wajar -- Core tidak mengunci struktur URL frontend, dan belum ada
 // frontend dibangun di repo ini. Kalau UI (Bolt.new) nanti pakai pola
 // berbeda, cukup ubah 3 baris ini, bukan schema/permission apa pun.

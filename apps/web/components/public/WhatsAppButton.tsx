@@ -5,13 +5,15 @@
 import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 
-export function WhatsAppButton({ listingId, href, className }: { listingId: string; href: string; className?: string }) {
+/** `listingId` diisi di Detail Listing (klik dicatat sebagai lead); dikosongkan di profil agen (tidak ada listing yang dicatat). */
+export function WhatsAppButton({ listingId, href, className }: { listingId?: string; href: string; className?: string }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => {
+        if (!listingId) return;
         void fetch(`/api/listings/${listingId}/cta-click`, { method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true }).catch(() => undefined);
       }}
       className={cn(buttonClass("primary", "md"), "hover:text-white hover:no-underline", className)}

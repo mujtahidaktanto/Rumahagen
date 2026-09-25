@@ -2,6 +2,7 @@
 // (?tampil= bertambah 12). Empat keadaan: memuat (loading.tsx), kosong (belum ada listing / filter terlalu ketat), gagal, sukses. Halaman berfilter tidak diindeks mesin pencari.
 import type { Metadata, Route } from "next";
 import Link from "next/link";
+import { DiscoveryTabs } from "@/components/public/DiscoveryTabs";
 import { FilterToggle } from "@/components/public/FilterToggle";
 import { ListingFilters } from "@/components/public/ListingFilters";
 import { PropertyCard } from "@/components/public/PropertyCard";
@@ -26,42 +27,27 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   };
 }
 
-const TYPE_TABS = [
-  { href: "/listing", label: "Properti" },
-  { href: "/agen", label: "Agen" },
-  { href: "/organisasi", label: "Organisasi" },
-  { href: "/developer", label: "Developer" },
-  { href: "/event", label: "Event" },
-];
+const TRANSACTIONS = [
+  { value: "sale", label: "Dijual" },
+  { value: "rent", label: "Disewa" },
+] as const;
 
 export default async function ListingDiscoveryPage({ searchParams }: Props) {
   const search = parseListingSearch(await searchParams);
   const [result, amenities] = await Promise.all([searchListings(search), getAmenities()]);
   const filterCount = activeFilterCount(search);
   const hasCriteria = filterCount > 0 || search.q !== "";
-  const clearHref = "/listing" as Route;
+  // Reset menghapus kata kunci dan semua filter tetapi tetap di jenis transaksi (Dijual/Disewa) yang sedang dilihat.
+  const clearHref = `/listing${listingQuery(search, { q: "", jenis: [], min: null, max: null, kt: null, km: null, fasilitas: [], urut: "terbaru", tampil: PAGE_SIZE })}` as Route;
 
   return (
     <form action="/listing" method="get">
       <input type="hidden" name="urut" value={search.urut === "terbaru" ? "" : search.urut} />
+      <input type="hidden" name="transaksi" value={search.transaksi === "sale" ? "" : search.transaksi} />
 
       <div className="border-b border-ink-100 bg-white py-5">
         <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 xl:px-10">
-          <div className="mb-3.5 flex flex-wrap gap-2">
-            {TYPE_TABS.map((t, i) => (
-              <Link
-                key={t.href}
-                href={t.href as Route}
-                aria-current={i === 0 ? "page" : undefined}
-                className={cn(
-                  "inline-flex h-10 items-center rounded-pill border-[1.5px] px-4 text-[13px] font-bold no-underline hover:no-underline",
-                  i === 0 ? "border-blue-600 bg-blue-600 text-white hover:text-white" : "border-ink-100 bg-white text-ink-700 hover:border-blue-500",
-                )}
-              >
-                {t.label}
-              </Link>
-            ))}
-          </div>
+          <DiscoveryTabs active="listing" />
           <div role="search" className="flex flex-col gap-2.5 sm:flex-row">
             <label className="relative flex-1">
               <span className="sr-only">Kata kunci pencarian</span>
@@ -89,11 +75,26 @@ export default async function ListingDiscoveryPage({ searchParams }: Props) {
           </aside>
 
           <section aria-label="Hasil pencarian" className="min-w-0">
+            <div role="group" aria-label="Jenis transaksi" className="mb-4 inline-flex rounded-pill border-[1.5px] border-ink-100 bg-white p-1">
+              {TRANSACTIONS.map((t) => (
+                <Link
+                  key={t.value}
+                  href={`/listing${listingQuery(search, { transaksi: t.value, tampil: PAGE_SIZE })}` as Route}
+                  aria-current={search.transaksi === t.value ? "page" : undefined}
+                  className={cn(
+                    "inline-flex h-10 min-w-28 items-center justify-center rounded-pill px-5 text-[14px] font-bold no-underline hover:no-underline",
+                    search.transaksi === t.value ? "bg-blue-600 text-white hover:text-white" : "text-ink-700 hover:bg-ink-50",
+                  )}
+                >
+                  {t.label}
+                </Link>
+              ))}
+            </div>
             <div className="mb-4 flex items-center justify-between gap-3">
               <p className="text-body-md text-ink-500" aria-live="polite">
                 {result.ok ? (
                   <>
-                    <strong className="text-ink-900">{new Intl.NumberFormat("id-ID").format(result.total)}</strong> properti ditemukan
+                    <strong className="text-ink-900">{new Intl.NumberFormat("id-ID").format(result.total)}</strong> properti {search.transaksi === "sale" ? "dijual" : "disewakan"} ditemukan
                   </>
                 ) : null}
               </p>
@@ -117,7 +118,10 @@ export default async function ListingDiscoveryPage({ searchParams }: Props) {
                     message="Coba longgarkan filter, misalnya perluas rentang harga atau kurangi jumlah kamar."
                   />
                 ) : (
-                  <EmptyState title="Belum ada listing yang terbit" message="Listing yang sudah terbit akan tampil di sini." />
+                  <EmptyState
+                    title={search.transaksi === "sale" ? "Belum ada properti yang dijual" : "Belum ada properti yang disewakan"}
+                    message="Listing yang sudah terbit akan tampil di sini."
+                  />
                 )}
                 {hasCriteria ? (
                   <div className="flex justify-center pb-10">

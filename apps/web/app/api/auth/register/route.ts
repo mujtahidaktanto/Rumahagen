@@ -18,6 +18,8 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
   const { data, error } = await supabase.auth.signUp({
     email: body.email,
     password: body.password,
+    // Nama lengkap -> user_metadata.full_name (dibaca lib/auth/session.ts sebagai nama tampilan sebelum profil agen ada).
+    options: { data: { full_name: body.full_name } },
   });
 
   if (error) mapAuthError(error);

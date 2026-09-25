@@ -4,7 +4,7 @@ import { activeFilterCount, listingQuery, parseListingSearch, safeKeyword } from
 describe("parseListingSearch", () => {
   it("bawaan", () => {
     const s = parseListingSearch({});
-    expect(s).toMatchObject({ q: "", jenis: [], transaksi: null, min: null, max: null, kt: null, km: null, fasilitas: [], urut: "terbaru", tampil: 12 });
+    expect(s).toMatchObject({ q: "", jenis: [], transaksi: "sale", min: null, max: null, kt: null, km: null, fasilitas: [], urut: "terbaru", tampil: 12 });
   });
   it("menerima nilai valid dan membuang yang tidak valid", () => {
     const s = parseListingSearch({ jenis: ["rumah", "kapal", "rumah"], transaksi: "rent", min: "100", max: "abc", kt: "0", km: "2", urut: "termahal", tampil: "30", fasilitas: ["bukan-uuid"] });
@@ -35,8 +35,15 @@ describe("listingQuery / activeFilterCount / safeKeyword", () => {
     expect(listingQuery(s, { tampil: 24 })).toContain("tampil=24");
     expect(listingQuery(parseListingSearch({}))).toBe("");
   });
-  it("hitung filter aktif", () => {
-    expect(activeFilterCount(parseListingSearch({ jenis: ["rumah"], kt: "2", transaksi: "sale" }))).toBe(3);
+  it("hitung filter aktif (jenis transaksi tidak dihitung)", () => {
+    expect(activeFilterCount(parseListingSearch({ jenis: ["rumah"], kt: "2", transaksi: "rent" }))).toBe(2);
+  });
+  it("transaksi bawaan Dijual; hanya 'rent' yang mengubahnya; nilai lain kembali ke Dijual", () => {
+    expect(parseListingSearch({}).transaksi).toBe("sale");
+    expect(parseListingSearch({ transaksi: "rent" }).transaksi).toBe("rent");
+    expect(parseListingSearch({ transaksi: "semua" }).transaksi).toBe("sale");
+    expect(listingQuery(parseListingSearch({ transaksi: "rent" }))).toBe("?transaksi=rent");
+    expect(listingQuery(parseListingSearch({ transaksi: "rent" }), { transaksi: "sale" })).toBe("");
   });
   it("keyword tidak memuat karakter khusus filter", () => {
     expect(safeKeyword("a,b(c)%d*e")).toBe("a b c d e");

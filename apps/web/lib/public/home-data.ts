@@ -44,6 +44,7 @@ export async function getFeaturedListings(limit = 4): Promise<Loaded<FeaturedLis
     .from("listings")
     .select(LISTING_CARD_SELECT)
     .eq("status", "published")
+    .eq("transaction_type", "sale") // sama dengan Discovery: tampilan awal = Dijual (jual dan sewa tidak dicampur)
     .is("deleted_at", null)
     .order("freshness_rank_at", { ascending: false })
     .order("id", { ascending: true })

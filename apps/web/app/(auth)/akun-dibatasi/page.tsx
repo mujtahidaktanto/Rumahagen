@@ -1,5 +1,5 @@
 // app/(auth)/akun-dibatasi/page.tsx — gerbang akun tidak aktif (M01 Akun Dibatasi). Status = users.status: pending_review | suspended | rejected (CHECK constraint).
-// Tanpa sesi -> /login; akun aktif -> /portal. Kontak dukungan dari env NEXT_PUBLIC_SUPPORT_EMAIL (opsional; tombol disembunyikan bila kosong).
+// Tanpa sesi -> /login; akun aktif -> /portal. Kontak dukungan: SUPPORT_EMAIL di lib/config.ts (sementara email Google pemilik produk).
 import type { Metadata, Route } from "next";
 import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
@@ -8,6 +8,7 @@ import { LockIcon } from "@/components/ui/icons";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { StatusPanel } from "@/components/auth/StatusPanel";
 import { getSessionUser } from "@/lib/auth/session";
+import { SUPPORT_EMAIL } from "@/lib/config";
 
 export const metadata: Metadata = { title: "Akun Dibatasi | RumahAgen", robots: { index: false, follow: false } };
 
@@ -35,7 +36,7 @@ export default async function RestrictedAccountPage() {
   if (user.status === "active") redirect("/portal" as Route);
 
   const copy = COPY[user.status] ?? COPY.suspended!;
-  const support = process.env.NEXT_PUBLIC_SUPPORT_EMAIL;
+  const subject = encodeURIComponent(`Bantuan akun RumahAgen (${user.status})`);
 
   return (
     <div className="flex flex-col items-center gap-5 text-center">
@@ -48,11 +49,9 @@ export default async function RestrictedAccountPage() {
       </p>
       <div className="flex w-full flex-col gap-3 sm:flex-row">
         <SignOutButton className="flex-1" />
-        {support ? (
-          <LinkButton href={`mailto:${support}` as Route} className="flex-1">
-            Hubungi Dukungan
-          </LinkButton>
-        ) : null}
+        <LinkButton href={`mailto:${SUPPORT_EMAIL}?subject=${subject}` as Route} className="flex-1">
+          Hubungi Dukungan
+        </LinkButton>
       </div>
     </div>
   );

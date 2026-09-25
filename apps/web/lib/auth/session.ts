@@ -35,7 +35,10 @@ export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
   if (!row || !role) return null;
 
   const { data: profile } = await supabase.from("agent_profiles").select("full_name, avatar_url").eq("user_id", authUser.id).maybeSingle();
-  const fallbackName = authUser.email ? authUser.email.split("@")[0]! : "Pengguna";
+  // Urutan nama: profil agen -> nama saat daftar/Google (user_metadata.full_name atau name) -> bagian depan email.
+  const meta = (authUser.user_metadata ?? {}) as { full_name?: unknown; name?: unknown };
+  const metaName = [meta.full_name, meta.name].find((v): v is string => typeof v === "string" && v.trim() !== "")?.trim();
+  const fallbackName = metaName ?? (authUser.email ? authUser.email.split("@")[0]! : "Pengguna");
 
   return {
     id: authUser.id,

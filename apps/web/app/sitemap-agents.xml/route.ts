@@ -24,7 +24,7 @@ export async function GET() {
     }
 
     const entries = (data ?? []).map((row) => ({
-      loc: `${SITE_URL}/agent/${row.public_slug}`,
+      loc: `${SITE_URL}/agen/${row.public_slug}`, // /agen/{slug} (keputusan 2026-09-26): /agent adalah area aplikasi Agent yang dijaga login
     }));
 
     return xmlResponse(buildUrlsetXml(entries));

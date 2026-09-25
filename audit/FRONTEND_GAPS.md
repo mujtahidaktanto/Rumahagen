@@ -1,5 +1,12 @@
 # Celah backend yang ditemukan saat membangun frontend
 
+## Keputusan pemilik produk 2026-09-26 (menutup sebagian celah di bawah)
+- **Alamat profil publik Agen = `/agen/{slug}`** (sitemap-agents diubah; `/agent` tetap area aplikasi Agent). Daftar Agen di `/agen`. Menutup butir "bentrok `/agent/{slug}`" (Homepage #1).
+- **Register: nama lengkap WAJIB, WhatsApp TIDAK wajib** (diisi di Profil Saya). Diimplementasikan tanpa migration: `registerSchema.full_name` -> `signUp options.data.full_name` (user_metadata) -> `lib/auth/session.ts` memakainya (atau `name` dari Google) sebagai nama tampilan bila profil agen belum ada. `agent_profiles.whatsapp_number` NOT NULL, jadi profil agen belum dibuat saat daftar. Menutup sebagian butir M01 #1.
+- **Kontak dukungan sementara = mujtahidaktanto@gmail.com** (`lib/config.ts`, ganti dengan env `NEXT_PUBLIC_SUPPORT_EMAIL` atau ubah kode saat email resmi rumahagen.com ada). Menutup butir M01 #7.
+- **Jual dan sewa tidak dicampur:** Discovery memakai tab Dijual/Disewa (bawaan Dijual, `?transaksi=rent`); Homepage "Properti Pilihan" hanya Dijual. Urutan harga kini dalam satu jenis transaksi. Catatan: dalam Disewa, satuan `per_bulan` dan `per_tahun` masih bisa bercampur di urutan harga.
+- **Listing sold/rented tidak terlihat publik; expired = tetap `published` selama masa tenggang 7 hari lalu kembali ke draft** (sudah berlaku di DB: `expire_listing_slots`), jadi spanduk status di Detail Listing hanya terlihat pemilik/staf; tidak perlu perubahan RLS. Menutup butir Detail Listing #1.
+
 Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini lalu diputuskan pemilik produk. Format: tanggal, layar, celah, dampak, usulan.
 
 ## 2026-09-25 — Fase 2, M01 Auth
