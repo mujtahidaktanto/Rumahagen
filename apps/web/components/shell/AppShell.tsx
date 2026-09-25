@@ -10,8 +10,9 @@ import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, MenuIcon } from "@/components/ui/icons";
 import { IconButton } from "@/components/ui/Button";
-import { Avatar } from "@/components/ui/Avatar";
 import { Logo } from "@/components/ui/Logo";
+import { activeHref } from "./nav-active";
+import { UserMenu } from "./UserMenu";
 import { cn } from "@/lib/cn";
 
 export type NavItem = { href: string; label: string; icon?: ReactNode; badge?: number };
@@ -23,8 +24,10 @@ type AppShellProps = {
   title: string;
   /** blue = Agent/Partner/Instructor, ink = Admin (sama dengan wireframe). */
   tone?: Tone;
-  /** Pengguna yang login: tampil di bawah rel dan laci sebagai lingkaran foto/inisial + nama + peran (saat rel diringkas hanya lingkaran). */
+  /** Pengguna yang login: blok di bawah rel dan laci (lingkaran foto/inisial + nama + peran) yang bila diklik membuka menu akun (Profil Saya, Keluar). */
   user?: { name: string; roleLabel: string; avatarUrl?: string | null };
+  /** Tujuan item "Profil Saya" pada menu akun. */
+  profileHref?: string;
   /** Slot tambahan di bawah blok pengguna (opsional). */
   footer?: ReactNode;
   children: ReactNode;
@@ -32,28 +35,13 @@ type AppShellProps = {
 
 const toneBg: Record<Tone, string> = { blue: "bg-blue-900", ink: "bg-ink-900" };
 
-function isActive(pathname: string, href: string) {
-  return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
-}
-
-function UserBlock({ user, collapsed }: { user: NonNullable<AppShellProps["user"]>; collapsed?: boolean }) {
-  return (
-    <div className={cn("flex items-center gap-3", collapsed && "justify-center")} title={collapsed ? `${user.name} (${user.roleLabel})` : undefined}>
-      <Avatar name={user.name} imageUrl={user.avatarUrl} size={36} />
-      <div className={cn("min-w-0", collapsed && "sr-only")}>
-        <p className="truncate text-label-lg text-white">{user.name}</p>
-        <p className="truncate text-caption text-white/60">{user.roleLabel}</p>
-      </div>
-    </div>
-  );
-}
-
 function NavList({ items, collapsed, onNavigate }: { items: NavItem[]; collapsed?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
+  const current = activeHref(pathname, items.map((i) => i.href));
   return (
     <ul className="flex flex-col gap-1 p-3">
       {items.map((item) => {
-        const active = isActive(pathname, item.href);
+        const active = item.href === current;
         return (
           <li key={item.href}>
             <Link
@@ -79,7 +67,7 @@ function NavList({ items, collapsed, onNavigate }: { items: NavItem[]; collapsed
   );
 }
 
-export function AppShell({ items, title, tone = "blue", user, footer, children }: AppShellProps) {
+export function AppShell({ items, title, tone = "blue", user, profileHref, footer, children }: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef<HTMLDialogElement>(null);
@@ -115,7 +103,7 @@ export function AppShell({ items, title, tone = "blue", user, footer, children }
         </nav>
         {user || footer ? (
           <div className="flex flex-none flex-col gap-3 border-t border-white/12 p-3 text-white">
-            {user ? <UserBlock user={user} collapsed={collapsed} /> : null}
+            {user ? <UserMenu user={user} profileHref={profileHref} collapsed={collapsed} /> : null}
             {footer}
           </div>
         ) : null}
@@ -155,7 +143,7 @@ export function AppShell({ items, title, tone = "blue", user, footer, children }
           </nav>
           {user || footer ? (
             <div className="flex flex-none flex-col gap-3 border-t border-white/12 p-3">
-              {user ? <UserBlock user={user} /> : null}
+              {user ? <UserMenu user={user} profileHref={profileHref} onNavigate={() => setDrawerOpen(false)} /> : null}
               {footer}
             </div>
           ) : null}
