@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatArea, formatDate, formatListingPrice, formatRupiah } from "./format";
+import { formatArea, formatDate, formatListingPrice, formatRupiah, whatsappUrl } from "./format";
 
 describe("format", () => {
   it("rupiah memakai titik ribuan", () => {
@@ -13,6 +13,15 @@ describe("format", () => {
   it("luas", () => {
     expect(formatArea(120)).toBe("120 m²");
     expect(formatArea(null)).toBeNull();
+  });
+  it("URL WhatsApp dari berbagai format nomor", () => {
+    expect(whatsappUrl("0812-3456-7890")).toBe("https://wa.me/6281234567890");
+    expect(whatsappUrl("+62 812 3456 7890")).toBe("https://wa.me/6281234567890");
+    expect(whatsappUrl("6281234567890", "Halo")).toBe("https://wa.me/6281234567890?text=Halo");
+    expect(whatsappUrl("81234567890")).toBe("https://wa.me/6281234567890");
+    expect(whatsappUrl("123")).toBeNull();
+    expect(whatsappUrl("abc")).toBeNull();
+    expect(whatsappUrl(null)).toBeNull();
   });
   it("tanggal zona Jakarta; kosong/tidak valid -> ''", () => {
     expect(formatDate("2026-12-01T03:00:00Z")).toMatch(/^1 \w+ 2026$/);

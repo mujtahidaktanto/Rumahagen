@@ -20,7 +20,20 @@ export function formatArea(value: number | null | undefined): string | null {
   return `${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 1 }).format(value)} m²`;
 }
 
-const DATE = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
+/**
+ * Nomor telepon Indonesia -> URL WhatsApp (wa.me memakai kode negara tanpa +): "0812-3456-7890" / "+62 812 3456 7890" / "62812..." -> https://wa.me/628123456789.
+ * Nomor yang bukan angka atau terlalu pendek (< 9 digit) -> null (tombol tidak ditampilkan).
+ */
+export function whatsappUrl(phone: string | null | undefined, text?: string): string | null {
+  if (!phone) return null;
+  let d = phone.replace(/[^\d+]/g, "").replace(/^\+/, "").replace(/\+/g, "");
+  if (d.startsWith("0")) d = `62${d.slice(1)}`;
+  else if (d.startsWith("8")) d = `62${d}`;
+  if (!/^\d{9,15}$/.test(d)) return null;
+  return `https://wa.me/${d}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
+}
+
+const DATE =new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 
 /** ISO -> "1 Des 2026". Nilai kosong/tidak valid -> "". */
 export function formatDate(iso: string | null | undefined): string {
