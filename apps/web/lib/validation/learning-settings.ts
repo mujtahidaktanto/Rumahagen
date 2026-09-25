@@ -45,5 +45,7 @@ export const courseCertificateConfigSchema = z.object({
   partner_logo_paths: z.array(z.string().max(300)).max(2, "Maksimal 2 logo mitra."),
   quiz_max_attempts: z.number().int().min(1).max(1000).nullable(),
   quiz_cooldown_minutes: z.number().int().min(0).max(10_080).nullable(),
+  // Title (M15) yang diberikan otomatis saat course selesai (migration 0155). Dihilangkan = tidak diubah; null = melepas title; harus title active dengan scope aktif.
+  awards_title_definition_id: z.string().uuid().nullable().optional(),
 });
 export type CourseCertificateConfigInput = z.infer<typeof courseCertificateConfigSchema>;

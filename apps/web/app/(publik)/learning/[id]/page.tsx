@@ -10,7 +10,7 @@ import { RichText } from "@/components/public/RichText";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
-import { BookIcon, ChevronRightIcon, ClockIcon, DocIcon, LayersIcon, VideoIcon } from "@/components/ui/icons";
+import { BookIcon, ChevronRightIcon, ClockIcon, DocIcon, LayersIcon, TrophyIcon, VideoIcon } from "@/components/ui/icons";
 import { getSessionUser } from "@/lib/auth/session";
 import { formatDateTime } from "@/lib/format";
 import {
@@ -99,6 +99,19 @@ export default async function CourseDetailPage({ params }: Props) {
             <h1 className="text-headline break-words">{c.title}</h1>
             <RichText text={c.description} empty="Deskripsi course belum ditambahkan." />
           </header>
+
+          {c.awardsTitle ? (
+            <div className="flex items-center gap-3 rounded-md border border-gold-200 bg-gold-100 p-4">
+              <span className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-white text-gold-700">
+                <TrophyIcon size={22} />
+              </span>
+              <div className="min-w-0">
+                <span className="text-caption text-gold-700">Title yang Anda dapat setelah lulus</span>
+                <div className="text-title-md break-words text-ink-900">{c.awardsTitle.name}</div>
+                {c.awardsTitle.description ? <p className="text-caption">{c.awardsTitle.description}</p> : null}
+              </div>
+            </div>
+          ) : null}
 
           {c.prerequisite ? (
             <Link

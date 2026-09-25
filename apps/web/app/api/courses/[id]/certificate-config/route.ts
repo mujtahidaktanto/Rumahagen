@@ -1,7 +1,8 @@
 // app/api/courses/[id]/certificate-config/route.ts
 // GET/PUT /courses/{id}/certificate-config — konfigurasi sertifikat dan aturan kuis per kursus (migration 0150): penyelenggara (`organizer_type`: rumahagen |
 // partner | instructor, menentukan aturan jeda kuis), template, penandatangan (nama, jabatan, tanda tangan PNG), maksimal 2 logo mitra, dan penimpaan batas
-// percobaan/jeda kuis. Kolom null = memakai nilai bawaan dari /admin/learning/settings. PUT menggantikan seluruh konfigurasi dan HANYA untuk staf (trigger database
+// percobaan/jeda kuis, serta `awards_title_definition_id` (migration 0155: title yang diberikan otomatis saat course selesai; dihilangkan = tidak diubah, null = lepas; title
+// harus active dan punya scope aktif, kalau tidak 409). Kolom null = memakai nilai bawaan dari /admin/learning/settings. PUT menggantikan seluruh konfigurasi dan HANYA untuk staf (trigger database
 // enforce_course_certificate_config_staff_only menolak non-staf dengan 403; file harus berada di folder courses/{id}/ dan sudah terunggah). File lama TIDAK
 // dihapus: sertifikat yang sudah terbit menyimpan path-nya di snapshot dan PDF-nya harus tetap bisa dibuat ulang (sertifikat lama tidak berubah).
 
@@ -14,7 +15,7 @@ import { courseCertificateConfigSchema } from "@/lib/validation/learning-setting
 import { certAssetExists, certAssetSignedUrl } from "@/lib/storage/certificate-assets";
 import { createClient } from "@/lib/supabase/server";
 
-const COLUMNS = "id, organizer_type, certificate_template, signer_name, signer_title, signer_signature_path, partner_logo_paths, quiz_max_attempts, quiz_cooldown_minutes";
+const COLUMNS = "id, organizer_type, certificate_template, signer_name, signer_title, signer_signature_path, partner_logo_paths, quiz_max_attempts, quiz_cooldown_minutes, awards_title_definition_id";
 
 async function withSignedUrls<T extends { signer_signature_path: string | null; partner_logo_paths: string[] }>(row: T) {
   return {

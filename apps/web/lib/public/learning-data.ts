@@ -86,6 +86,8 @@ export type CourseDetail = {
   status: string;
   passing_grade: number;
   prerequisite: { id: string; title: string } | null;
+  /** Title (M15) yang diberikan otomatis saat course selesai (courses.awards_title_definition_id, migration 0155); null bila tidak ada atau tidak aktif. */
+  awardsTitle: { name: string; description: string | null } | null;
   lessons: Lesson[];
   sessions: SessionSummary[];
 };
@@ -96,15 +98,24 @@ export async function getCourseDetail(id: string): Promise<CourseDetailResult> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("courses")
-    .select("id, title, category, description, status, passing_grade, prerequisite_course_id")
+    .select("id, title, category, description, status, passing_grade, prerequisite_course_id, awards_title_definition_id")
     .eq("id", id)
     .is("deleted_at", null)
-    .maybeSingle<{ id: string; title: string; category: string; description: string | null; status: string; passing_grade: number; prerequisite_course_id: string | null }>();
+    .maybeSingle<{
+      id: string;
+      title: string;
+      category: string;
+      description: string | null;
+      status: string;
+      passing_grade: number;
+      prerequisite_course_id: string | null;
+      awards_title_definition_id: string | null;
+    }>();
   if (error) return { state: "error" };
   if (!data) return { state: "not_found" };
 
   // Bagian pelengkap: gagal memuat tidak menjatuhkan halaman (daftar kosong).
-  const [lessonsRes, preqRes, sessionsRes] = await Promise.all([
+  const [lessonsRes, preqRes, sessionsRes, titleRes] = await Promise.all([
     supabase.from("course_lessons").select("id, title, content_type").eq("course_id", id).order("sort_order", { ascending: true }),
     data.prerequisite_course_id ? supabase.from("courses").select("id, title").eq("id", data.prerequisite_course_id).eq("status", "published").maybeSingle<{ id: string; title: string }>() : Promise.resolve({ data: null, error: null }),
     supabase
@@ -116,6 +127,9 @@ export async function getCourseDetail(id: string): Promise<CourseDetailResult> {
       .is("deleted_at", null)
       .order("start_at", { ascending: false })
       .limit(6),
+    data.awards_title_definition_id
+      ? supabase.from("title_definitions").select("name, description").eq("id", data.awards_title_definition_id).eq("status", "active").maybeSingle<{ name: string; description: string | null }>()
+      : Promise.resolve({ data: null, error: null }),
   ]);
 
   return {
@@ -128,6 +142,7 @@ export async function getCourseDetail(id: string): Promise<CourseDetailResult> {
       status: data.status,
       passing_grade: data.passing_grade,
       prerequisite: preqRes.error ? null : preqRes.data,
+      awardsTitle: titleRes.error ? null : titleRes.data,
       lessons: lessonsRes.error ? [] : (lessonsRes.data ?? []),
       sessions: sessionsRes.error ? [] : (sessionsRes.data ?? []).map((s) => ({ ...s, courseTitle: data.title })),
     },
