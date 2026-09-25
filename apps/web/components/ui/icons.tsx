@@ -86,6 +86,11 @@ export const FolderIcon = mk(<path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9
 export const VideoIcon = mk(<><rect x="3" y="6" width="13" height="12" rx="2" /><path d="M16 10l5-3v10l-5-3" /></>);
 export const LogoutIcon = mk(<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16 8l4 4-4 4M20 12H9" />);
 export const ChevronUpIcon = mk(<path d="M6 15l6-6 6 6" />);
+export const EyeIcon = mk(<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="2.6" /></>);
+export const EyeOffIcon = mk(<><path d="M3 3l18 18" /><path d="M10.6 6.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.9C3.7 8.8 2 12 2 12s3.5 7 10 7a9.6 9.6 0 0 0 4.4-1.1" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" /></>);
+export const MailIcon = mk(<><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></>);
+export const ShieldCheckIcon = mk(<><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z" /><path d="M9 12l2 2 4-4" /></>);
+export const KeyIcon = mk(<><circle cx="8" cy="15" r="4" /><path d="M10.8 12.2 20 3M16 7l3 3M13 10l2.5 2.5" /></>);
 
 /** Ikon netral untuk menu yang belum punya ikon khusus (diganti per modul saat layarnya dibangun). */
 export const DotIcon = (p: IconProps) => (

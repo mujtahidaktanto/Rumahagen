@@ -4,8 +4,12 @@
 // membaca sesi baru. 401 di sini berarti "email/kata sandi salah" (bukan sesi habis), jadi pengalihan otomatis ke /login dimatikan.
 import { useState } from "react";
 import type { FormEvent } from "react";
+import Link from "next/link";
+import type { Route } from "next";
 import { Button } from "@/components/ui/Button";
 import { Field, Input } from "@/components/ui/Field";
+import { KeyIcon } from "@/components/ui/icons";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 import { api, ApiClientError } from "@/lib/api-client";
 
 function messageFor(err: unknown): string {
@@ -39,6 +43,18 @@ export function LoginForm({ next }: { next: string }) {
     }
   }
 
+  async function onGoogle() {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await api.post<{ url: string }>("/auth/oauth/google", { redirect_to: next }, { redirectOnUnauthenticated: false });
+      window.location.assign(res.data.url);
+    } catch (err) {
+      setError(messageFor(err));
+      setBusy(false);
+    }
+  }
+
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
       {error ? (
@@ -50,11 +66,20 @@ export function LoginForm({ next }: { next: string }) {
         {(a) => <Input type="email" autoComplete="username" inputMode="email" placeholder="nama@email.com" value={email} onChange={(e) => setEmail(e.target.value)} {...a} />}
       </Field>
       <Field label="Kata sandi" required>
-        {(a) => <Input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} {...a} />}
+        {(a) => <PasswordInput autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} {...a} />}
       </Field>
-      <Button type="submit" loading={busy} disabled={!email.trim() || !password} className="w-full">
+      <Link href="/lupa-password" className="-mt-2 min-h-11 self-end text-caption leading-[44px]">Lupa kata sandi?</Link>
+      <Button type="submit" loading={busy} disabled={!email.trim() || !password} className="h-12 w-full">
         {busy ? "Memproses…" : "Masuk"}
       </Button>
+      <div className="flex items-center gap-3 text-caption text-ink-300 before:h-px before:flex-1 before:bg-ink-100 after:h-px after:flex-1 after:bg-ink-100">atau</div>
+      <Button type="button" variant="secondary" onClick={onGoogle} disabled={busy} className="h-12 w-full text-ink-700">
+        <KeyIcon size={17} />
+        Lanjutkan dengan Google
+      </Button>
+      <p className="text-center text-body-md text-ink-500">
+        Belum punya akun? <Link href={`/daftar${next === "/portal" ? "" : `?next=${encodeURIComponent(next)}`}` as Route}>Daftar di sini</Link>
+      </p>
     </form>
   );
 }
