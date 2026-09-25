@@ -182,6 +182,13 @@ Supabase; hanya perbaiki tata letak dan kejelasan visual.
 
 ---
 
+## 6d. Keputusan struktur dan kemajuan Fase 1 (diperbarui 2026-09-25)
+
+- **Komponen di `apps/web/components` (bukan `packages/ui`)**, tanpa npm workspaces. Rincian struktur ada di `CLAUDE.md`. Bagian 3 dan 5 di atas yang menyebut `packages/ui` dibaca sebagai `apps/web/components/ui`.
+- **Selesai:** Tailwind v4 dengan token `@theme` (`app/globals.css`), font Plus Jakarta Sans (`next/font`), komponen dasar (Button/LinkButton/IconButton, Badge, Card, Field/Input/Textarea, Dialog, Table, Skeleton/LoadingRegion, EmptyState/ErrorState), `AppShell` (rel dapat disembunyikan + laci mobile), `lib/api-client` bertipe (envelope, Idempotency-Key, 401, 429 + Retry-After, galat jaringan) dengan 12 uji Vitest, galeri `/komponen` dan `/komponen/shell`.
+- **Belum:** layout grup route per persona dengan penjaga sesi dan peran di server (`(publik)`, `(auth)`, `(agent)`, `(admin)`, `(partner)`, `(instructor)`), badge status per entitas (dibuat per modul dari CHECK constraint), ikon selain 8 dasar.
+- Catatan: `npm audit` melaporkan postcss (bawaan `next`, 1 tinggi/1 sedang) yang hanya bisa diperbaiki dengan naik ke Next 16 (perubahan besar); risiko praktis rendah (postcss hanya memproses CSS milik kita saat build). Tinjau saat rencana upgrade Next.
+
 ## 7. Yang perlu diputuskan pemilik produk
 
 1. ~~Tailwind v4 atau CSS Modules~~ **DIPUTUSKAN 2026-09-25: Tailwind v4** dengan `@theme` yang memetakan `--ra-*` dari `tokens.css`. Batas browser: Chrome 111+, Safari/iOS 16.4+, Firefox 128+. Uji di satu HP Android lama lewat Vercel Preview sebelum halaman publik diperluas; bila >±5% pengguna di bawah batas itu, pertimbangkan Tailwind v3.4 atau CSS Modules sebelum banyak layar dibangun.

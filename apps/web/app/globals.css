@@ -1,0 +1,127 @@
+/* app/globals.css
+ * Tailwind v4 + token desain RumahAgen. SUMBER token: docs/design/wireframes-v2/tokens.css (prefix --ra-*). Nilai di bawah HARUS sama dengan file itu.
+ * Palet default Tailwind dinonaktifkan (--color-*: initial) supaya tidak ada warna di luar katalog desain: hanya kelas seperti bg-blue-600, text-ink-500,
+ * bg-success-100 yang tersedia. Desktop = 1440px, Mobile = 390px; peralihan tata letak memakai breakpoint lg (1024px) ke atas. */
+@import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-blue-900: #0b2e6b;
+  --color-blue-700: #0f3f9e;
+  --color-blue-600: #1652c4;
+  --color-blue-500: #1f6feb;
+  --color-blue-200: #c7d9fa;
+  --color-blue-100: #e8effc;
+  --color-blue-50: #f3f7fe;
+
+  --color-gold-700: #b4720a;
+  --color-gold-600: #e08e1d;
+  --color-gold-500: #f2a93b;
+  --color-gold-200: #fadfa8;
+  --color-gold-100: #fdedd3;
+
+  --color-ink-900: #14181f;
+  --color-ink-700: #3c434f;
+  --color-ink-500: #5b6472;
+  --color-ink-300: #8d96a3;
+  --color-ink-200: #c7cdd6;
+  --color-ink-100: #e2e6ec;
+  --color-ink-50: #f5f6f8;
+  --color-surface: #f7f8fa;
+
+  --color-success-600: #1e8e5a;
+  --color-success-100: #e3f5ec;
+  --color-warning-600: #b4720a;
+  --color-warning-100: #fdf1dc;
+  --color-danger-600: #d23b3b;
+  --color-danger-700: #b32e2e;
+  --color-danger-100: #fce7e7;
+  --color-neutral-600: #5b6472;
+  --color-neutral-100: #eef1f5;
+  --color-info-600: #1652c4;
+  --color-info-100: #e8effc;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+  --shadow-2: 0 4px 10px rgba(16, 24, 40, 0.08), 0 2px 4px rgba(16, 24, 40, 0.06);
+  --shadow-3: 0 16px 32px rgba(16, 24, 40, 0.16), 0 4px 10px rgba(16, 24, 40, 0.08);
+
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, sans-serif;
+
+  /* Skala tipografi (type scale) wireframe: text-display, text-headline, text-title-lg, text-title-md, text-body-lg, text-body-md, text-label-lg, text-label-md, text-caption */
+  --text-display: 32px;
+  --text-display--line-height: 40px;
+  --text-display--font-weight: 800;
+  --text-display--letter-spacing: -0.01em;
+  --text-headline: 24px;
+  --text-headline--line-height: 32px;
+  --text-headline--font-weight: 700;
+  --text-headline--letter-spacing: -0.005em;
+  --text-title-lg: 20px;
+  --text-title-lg--line-height: 28px;
+  --text-title-lg--font-weight: 700;
+  --text-title-md: 16px;
+  --text-title-md--line-height: 24px;
+  --text-title-md--font-weight: 600;
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-label-lg: 14px;
+  --text-label-lg--line-height: 20px;
+  --text-label-lg--font-weight: 600;
+  --text-label-md: 12px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--font-weight: 700;
+  --text-label-md--letter-spacing: 0.04em;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-surface font-sans text-ink-900 antialiased;
+  }
+  a {
+    @apply text-blue-600;
+  }
+  /* Fokus terlihat untuk keyboard (aksesibilitas) */
+  :focus-visible {
+    outline: 2.5px solid var(--color-blue-500);
+    outline-offset: 2px;
+  }
+}
+
+/* Skeleton pemuatan (setara .ra-skel) */
+@keyframes ra-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+@utility skeleton {
+  background: var(--color-ink-100);
+  border-radius: var(--radius-sm);
+  animation: ra-pulse 1.4s ease-in-out infinite;
+}
+
+/* Gulir tipis tidak mengganggu (setara .ra-scroll) */
+@utility scroll-thin {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-ink-200) transparent;
+}
