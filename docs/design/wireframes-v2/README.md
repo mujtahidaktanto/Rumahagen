@@ -166,3 +166,11 @@ permission, migration, audit) jadi itu yang dipakai sebagai struktur folder, buk
 *Diekspor otomatis dari canvas Claude Design pada 2026-09-24. Untuk update terbaru, selalu
 rujuk link canvas hidup di atas — folder ini bisa jadi ketinggalan kalau canvas terus diedit
 tanpa export ulang.*
+
+**Update 2026-09-25 (keputusan privasi profil, KTP, dan moderasi):**
+- `01-Agent/M02-Profil-Saya`: kartu **Verifikasi KTP** (unggah foto KTP + isi nomor KTP/NIK, privat, verified otomatis, lencana), kontak WhatsApp selalu publik (toggle "Tampilkan Kontak" dihapus), aturan title 1 utama + 3 tambahan.
+- `00-Publik/M11-Detail-Agen`: lencana Terverifikasi dari KTP, WhatsApp selalu tampil, jumlah listing aktif, nomor lisensi, nama organisasi, dan title 1+3.
+- `01-Agent/M15-Title-Award-Presentation`: pilih 1 utama + 3 tambahan (0 award kosong, 1 otomatis utama, 2–4 semua tampil, lebih dari 4 pilih sendiri).
+- `03-Developer-Partner/M06-Review-Klaim`: nama + kontak (WhatsApp, email) Agent yang mengklaim.
+- `02-Admin/M09-Direktori-Pengguna`: tautan **KTP** per Agent (lihat nomor + foto, cabut verifikasi dengan alasan wajib; akses tercatat audit).
+- `02-Admin/M03-Moderasi-Listing`: tab **Listing Terbit & Suspend** dan dialog Suspend seluruh listing (tanpa alasan pada MVP, bukan per foto) serta Aktifkan Kembali.

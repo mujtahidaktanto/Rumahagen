@@ -177,13 +177,61 @@
             </div>
             <div class="field-row">
               <div class="field"><span class="field-label">Area Cakupan</span><div class="ra-input" style="display:flex;align-items:center;">BSD City & Sekitarnya</div></div>
-              <div class="field"><span class="field-label">Nomor Lisensi (opsional)</span><div class="ra-input" style="display:flex;align-items:center;">AREBI-2024-08123</div></div>
+              <div class="field"><span class="field-label">Nomor Lisensi (opsional)</span><div class="ra-input" style="display:flex;align-items:center;">AREBI-2024-08123</div><span class="ra-caption">Tampil di profil publik sebagai branding Anda.</span></div>
             </div>
             <div class="field-row">
               <div class="field"><span class="field-label">Provinsi</span><div class="ra-input" style="display:flex;align-items:center;justify-content:space-between;">Banten <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
               <div class="field"><span class="field-label">Kota/Kabupaten</span><div class="ra-input" style="display:flex;align-items:center;justify-content:space-between;">Tangerang Selatan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg></div></div>
             </div>
           </div>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <span class="ra-title-md">Verifikasi KTP</span>
+        <sc-if value="{{ktpVerified}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-success">Terverifikasi</span></sc-if>
+        <sc-if value="{{ktpNotVerified}}" hint-placeholder-val="{{true}}"><span class="ra-badge ra-badge-neutral">Belum diverifikasi</span></sc-if>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;background:var(--ra-info-100);border:1px solid var(--ra-blue-200);border-radius:var(--ra-radius-md);padding:12px 14px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-info-600)" stroke-width="1.8" width="18" height="18" style="flex:none;margin-top:1px;"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <span class="ra-body-sm">Foto dan nomor KTP <strong>bersifat privat</strong>: hanya Anda dan tim RumahAgen yang dapat melihatnya, dan tidak pernah tampil di profil publik. Setelah keduanya terkirim, akun langsung <strong>terverifikasi</strong> dan lencana “Terverifikasi” muncul di profil publik Anda.</span>
+      </div>
+      <sc-if value="{{ktpNotVerified}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="field">
+            <span class="field-label">Foto KTP <span style="color:var(--ra-danger-600);">*</span></span>
+            <sc-if value="{{noPhoto}}" hint-placeholder-val="{{true}}">
+              <div style="border:1.5px dashed var(--ra-ink-200);border-radius:var(--ra-radius-md);padding:24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;background:var(--ra-ink-50);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-ink-300)" stroke-width="1.6" width="30" height="30"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg>
+                <span class="ra-body-md">Unggah foto atau gambar KTP Anda</span>
+                <button class="ra-btn ra-btn-secondary ra-btn-sm">Pilih File</button>
+                <span class="ra-caption">JPG, PNG, atau WebP · maks 5 MB · seluruh bagian KTP harus terlihat jelas</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{hasPhoto}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;align-items:center;gap:12px;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:10px 12px;">
+                <div style="width:56px;height:40px;border-radius:6px;background:var(--ra-ink-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M21 16l-5-5-8 8"/></svg></div>
+                <div style="flex:1;min-width:0;"><div class="ra-label-lg ra-truncate-1">ktp-rian-saputra.jpg</div><span class="ra-caption">1,2 MB · siap dikirim</span></div>
+                <button class="ra-btn ra-btn-secondary ra-btn-sm">Ganti</button>
+              </div>
+            </sc-if>
+          </div>
+          <div class="field">
+            <span class="field-label">Nomor KTP (NIK) <span style="color:var(--ra-danger-600);">*</span></span>
+            <div class="ra-input" style="display:flex;align-items:center;font-family:ui-monospace,Consolas,monospace;{{nikStyle}}">{{nikText}}</div>
+            <sc-if value="{{hasKtpError}}" hint-placeholder-val="{{false}}"><span class="ra-caption" style="color:var(--ra-danger-600);">{{ktpError}}</span></sc-if>
+            <span class="ra-caption">Isi manual sesuai KTP (16 digit angka). Satu nomor KTP hanya bisa dipakai oleh satu akun.</span>
+          </div>
+          <button class="ra-btn ra-btn-primary" style="align-self:flex-start;" disabled="{{ktpSubmitDisabled}}">Verifikasi Sekarang</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ktpVerified}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div style="width:56px;height:40px;border-radius:6px;background:var(--ra-success-100);flex:none;display:flex;align-items:center;justify-content:center;color:var(--ra-success-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+          <div style="flex:1;min-width:0;"><div class="ra-label-lg" style="font-family:ui-monospace,Consolas,monospace;">************0001</div><span class="ra-caption">Terverifikasi 25 Sep 2026 · foto KTP tersimpan aman</span></div>
+          <button class="ra-btn ra-btn-secondary ra-btn-sm">Ganti Data KTP</button>
+        </div>
+      </sc-if>
+    </div>
 
           <div class="card">
             <span class="ra-title-md">Organisasi</span>
@@ -216,7 +264,7 @@
                 </sc-for>
               </div>
               <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-                <span class="ra-caption">Title yang ditampilkan di profil publik Anda, sesuai urutan yang Anda atur.</span>
+                <span class="ra-caption">Maksimal 1 title utama + 3 tambahan yang tampil di profil publik Anda. Anda memilih dan mengurutkannya di Kelola Presentasi.</span>
                 <a class="ra-btn ra-btn-secondary ra-btn-sm" style="flex:none;" href="M15-Title-Award-Presentation.dc.html">Kelola Presentasi</a>
               </div>
             </sc-if>
@@ -235,8 +283,8 @@
               <div class="switch" aria-checked="{{profilePublic}}"><div class="switch-knob"></div></div>
             </div>
             <div class="toggle-row">
-              <div><div class="ra-label-lg">Tampilkan Kontak</div><span class="ra-caption">Saat nonaktif, tombol WhatsApp disembunyikan dari profil publik — pengunjung diarahkan ke organisasi Anda.</span></div>
-              <div class="switch" aria-checked="{{contactPublic}}"><div class="switch-knob"></div></div>
+              <div><div class="ra-label-lg">Kontak WhatsApp</div><span class="ra-caption">Selalu tampil di profil publik agar calon klien yang mencari agen di wilayah Anda dapat menghubungi. Ubah nomornya di Informasi Pribadi.</span></div>
+              <span class="ra-badge ra-badge-info" style="flex:none;">Selalu tampil</span>
             </div>
             <div class="toggle-row">
               <div><div class="ra-label-lg">Tombol CTA di Hasil Pencarian</div><span class="ra-caption">Opt-in eksplisit untuk menampilkan tombol hubungi langsung di kartu hasil pencarian Agen.</span></div>
@@ -250,6 +298,7 @@
         <div class="preview-card">
           <div class="avatar-xl">RS</div>
           <span class="ra-title-md">Rian Saputra</span>
+          <sc-if value="{{ktpVerified}}" hint-placeholder-val="{{false}}"><span class="ra-badge ra-badge-success">Terverifikasi</span></sc-if>
           <span class="ra-caption">BSD City & Sekitarnya</span>
           <a class="ra-btn ra-btn-secondary ra-btn-sm" style="width:100%;" href="../00-Publik/M11-Detail-Agen-Desktop.dc.html">Lihat sebagai Publik</a>
           <div class="stat-row-mini">
@@ -273,7 +322,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"profileState":{"editor":"enum","default":"filled","options":["filled","first_time"],"section":"Skenario"},"formState":{"editor":"enum","default":"idle","options":["idle","saving","success","error"],"section":"Skenario"},"hasOrgProp":{"editor":"boolean","default":true,"section":"Skenario"},"profilePublicProp":{"editor":"boolean","default":true,"section":"Skenario"},"contactPublicProp":{"editor":"boolean","default":true,"section":"Skenario"},"ctaEnabledProp":{"editor":"boolean","default":false,"section":"Skenario"},"$preview":{"width":1440,"height":1500}}'>
+<script type="text/x-dc" data-dc-script data-props='{"profileState":{"editor":"enum","default":"filled","options":["filled","first_time"],"section":"Skenario"},"formState":{"editor":"enum","default":"idle","options":["idle","saving","success","error"],"section":"Skenario"},"hasOrgProp":{"editor":"boolean","default":true,"section":"Skenario"},"profilePublicProp":{"editor":"boolean","default":true,"section":"Skenario"},"contactPublicProp":{"editor":"boolean","default":true,"section":"Skenario"},"ctaEnabledProp":{"editor":"boolean","default":false,"section":"Skenario"},"ktp":{"editor":"enum","default":"belum","options":["belum","foto_terpilih","nik_tidak_valid","nik_ganda","terverifikasi"],"section":"Skenario KTP"},"$preview":{"width":1440,"height":1500}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -282,6 +331,7 @@ class Component extends DCLogic {
   }
   toggleNav(){ this.setState({ navCollapsed: !this.state.navCollapsed }); }
   renderVals() {
+    const ktp = this.props.ktp ?? 'belum';
     const navCollapsed = this.state.navCollapsed ?? false;
     const profileState = this.props.profileState ?? 'filled';
     const formState = this.props.formState ?? 'idle';
@@ -316,7 +366,16 @@ class Component extends DCLogic {
       ctaEnabled,
       specializations,
       soldCount: 34,
-      rentedCount: 12
+      rentedCount: 12,
+      ktpVerified: ktp === 'terverifikasi',
+      ktpNotVerified: ktp !== 'terverifikasi',
+      noPhoto: ktp === 'belum',
+      hasPhoto: ktp !== 'belum' && ktp !== 'terverifikasi',
+      nikText: ktp === 'foto_terpilih' ? 'Isi 16 digit nomor KTP' : (ktp === 'nik_tidak_valid' ? '3174019913900001' : (ktp === 'nik_ganda' ? '3174011505900001' : '')),
+      nikStyle: ktp === 'nik_tidak_valid' || ktp === 'nik_ganda' ? 'border-color:var(--ra-danger-600);' : (ktp === 'foto_terpilih' ? 'color:var(--ra-ink-300);' : 'color:var(--ra-ink-300);'),
+      hasKtpError: ktp === 'nik_tidak_valid' || ktp === 'nik_ganda',
+      ktpError: ktp === 'nik_tidak_valid' ? 'Nomor KTP tidak valid: periksa 16 digit, kode wilayah, dan tanggal lahir.' : (ktp === 'nik_ganda' ? 'Nomor KTP ini sudah terdaftar pada akun lain.' : ''),
+      ktpSubmitDisabled: ktp === 'belum' || ktp === 'foto_terpilih'
     };
   }
 }

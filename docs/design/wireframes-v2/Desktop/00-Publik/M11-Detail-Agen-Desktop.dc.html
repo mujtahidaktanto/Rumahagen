@@ -114,6 +114,7 @@
           </sc-for>
         </div>
         <div class="stat-row">
+          <div class="stat-item"><span class="ra-title-lg">{{activeCount}}</span><span class="ra-caption">Listing Aktif</span></div>
           <div class="stat-item"><span class="ra-title-lg">{{soldCount}}</span><span class="ra-caption">Listing Terjual</span></div>
           <div class="stat-item"><span class="ra-title-lg">{{rentedCount}}</span><span class="ra-caption">Listing Tersewa</span></div>
           <div class="stat-item">
@@ -130,6 +131,25 @@
     <!-- BODY -->
     <div class="detail-grid">
       <div style="display:flex;flex-direction:column;gap:32px;min-width:0;">
+
+        <sc-if value="{{hasTitles}}" hint-placeholder-val="{{true}}">
+        <div>
+      <h2 class="ra-title-lg" style="margin-bottom:12px;">Title &amp; Penghargaan</h2>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--ra-gold-100),#fff);border:1px solid var(--ra-gold-200);border-radius:var(--ra-radius-md);padding:18px 20px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.3l7.1-.7L12 2Z"/></svg></div>
+          <div style="min-width:0;"><span class="ra-caption" style="color:var(--ra-gold-700);">Title Utama</span><div class="ra-title-lg">{{primaryTitle.name}}</div><span class="ra-caption">Diterima {{primaryTitle.issued}}</span></div>
+        </div>
+        <sc-if value="{{hasAdditionalTitles}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <sc-for list="{{additionalTitles}}" as="t" hint-placeholder-count="3">
+              <span class="ra-badge" style="background:var(--ra-gold-100);color:var(--ra-gold-700);"><span class="ra-dot"></span>{{t.name}} · {{t.issued}}</span>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+        </div>
+        </sc-if>
 
         <div>
           <h2 class="ra-title-lg" style="margin-bottom:12px;">Tentang</h2>
@@ -182,16 +202,11 @@
       <!-- CONTACT CARD -->
       <div class="contact-card">
         <span class="ra-label-md" style="color:var(--ra-ink-500);">Hubungi Agen</span>
-        <sc-if value="{{contactPublic}}" hint-placeholder-val="{{true}}">
-          <button class="ra-btn ra-btn-primary" style="width:100%;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.5-.7L3 21l1.8-5.4A8.4 8.4 0 1 1 21 11.5Z"/></svg>
-            Chat via WhatsApp
-          </button>
-        </sc-if>
-        <sc-if value="{{contactHidden}}" hint-placeholder-val="{{false}}">
-          <p class="ra-body-md" style="color:var(--ra-ink-500);">Kontak langsung tidak tersedia. Hubungi lewat organisasi agen ini.</p>
-          <a class="ra-btn ra-btn-secondary" style="width:100%;" href="M11-Detail-Organisasi-Desktop.dc.html">Lihat Organisasi</a>
-        </sc-if>
+        <button class="ra-btn ra-btn-primary" style="width:100%;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 11.5a8.4 8.4 0 0 1-8.9 8.4 8.6 8.6 0 0 1-3.5-.7L3 21l1.8-5.4A8.4 8.4 0 1 1 21 11.5Z"/></svg>
+          Chat via WhatsApp
+        </button>
+        <span class="ra-caption">Nomor WhatsApp agen selalu tampil agar Anda bisa menghubungi langsung.</span>
         <div style="border-top:1px solid var(--ra-ink-100);padding-top:14px;display:flex;flex-direction:column;gap:8px;">
           <div style="display:flex;justify-content:space-between;"><span class="ra-caption">No. Lisensi</span><span class="ra-body-md" style="font-weight:700;">{{licenseNumber}}</span></div>
           <div style="display:flex;justify-content:space-between;"><span class="ra-caption">Kantor</span><span class="ra-body-md" style="font-weight:700;">{{officeName}}</span></div>
@@ -218,11 +233,20 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"profileVisibility":{"editor":"enum","default":"public","options":["public","private"],"section":"Skenario"},"contactVisibility":{"editor":"enum","default":"public","options":["public","hidden"],"section":"Skenario"},"hasPortfolio":{"editor":"boolean","default":true,"section":"Skenario"},"hasReviewData":{"editor":"boolean","default":true,"section":"Skenario"},"$preview":{"width":1440,"height":1900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"profileVisibility":{"editor":"enum","default":"public","options":["public","private"],"section":"Skenario"},"hasPortfolio":{"editor":"boolean","default":true,"section":"Skenario"},"hasReviewData":{"editor":"boolean","default":true,"section":"Skenario"},"verifiedProp":{"editor":"boolean","default":true,"section":"Skenario"},"titleScenario":{"editor":"enum","default":"empat","options":["kosong","satu","empat"],"section":"Skenario title"},"$preview":{"width":1440,"height":1900}}'>
 class Component extends DCLogic {
   renderVals() {
     const visibility = this.props.profileVisibility ?? 'public';
-    const contact = this.props.contactVisibility ?? 'public';
+    const tScn = this.props.titleScenario ?? 'empat';
+    const ALL_TITLES = [
+      { name: 'Top Performer Regional 2026', issued: 'Mar 2026' },
+      { name: 'Best Customer Service', issued: 'Jan 2026' },
+      { name: 'Mentor Komunitas', issued: 'Nov 2025' },
+      { name: 'Master Negosiator', issued: 'Aug 2025' }
+    ];
+    const shownTitles = tScn === 'kosong' ? [] : (tScn === 'satu' ? ALL_TITLES.slice(0, 1) : ALL_TITLES);
+    const primaryTitle = shownTitles[0] ?? { name: '', issued: '' };
+    const additionalTitles = shownTitles.slice(1);
     const hasPortfolio = this.props.hasPortfolio ?? true;
     const hasReviewData = this.props.hasReviewData ?? true;
 
@@ -245,7 +269,12 @@ class Component extends DCLogic {
       isPublic: visibility === 'public',
       fullName: 'Rian Saputra',
       initials: 'RS',
-      isVerified: true,
+      isVerified: this.props.verifiedProp ?? true,
+      activeCount: 8,
+      hasTitles: shownTitles.length > 0,
+      primaryTitle,
+      additionalTitles,
+      hasAdditionalTitles: additionalTitles.length > 0,
       coverageArea: 'BSD City & Sekitarnya',
       officeName: 'PT Properti Jaya Sejahtera',
       soldCount: 34,
@@ -255,8 +284,6 @@ class Component extends DCLogic {
       bio: 'Agen properti berpengalaman 6 tahun dengan fokus di kawasan BSD City dan sekitarnya. Membantu ratusan keluarga menemukan rumah idaman serta pendampingan proses KPR dari awal hingga akad.',
       licenseNumber: 'AREBI-2024-08123',
       specializations,
-      contactPublic: contact === 'public',
-      contactHidden: contact === 'hidden',
       hasListings: hasPortfolio,
       noListings: !hasPortfolio,
       portfolioListings,

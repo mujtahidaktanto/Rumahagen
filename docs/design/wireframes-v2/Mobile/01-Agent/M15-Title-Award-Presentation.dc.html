@@ -74,21 +74,35 @@
     <button class="ra-iconbtn" onClick="{{openDrawer}}" aria-label="Buka navigasi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   </div>
   <div class="main ra-scroll">
-    <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Pilih title yang tampil di profil publik. Title yang disembunyikan tetap sah Anda miliki.</p></div>
+    <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Profil publik Anda menampilkan <strong>maksimal 1 title utama + 3 tambahan</strong>. Punya 1 title: otomatis menjadi utama. Punya 2–4 title: semuanya tampil, Anda memilih satu sebagai utama. Punya lebih dari 4: Anda menentukan sendiri mana yang tampil dan urutannya. Title yang tidak tampil <strong>tetap sah</strong> Anda miliki.</p></div>
 
         <sc-if value="{{showLoading}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;gap:10px;"><div class="ra-skel" style="height:72px;"></div><div class="ra-skel" style="height:72px;"></div></div></sc-if>
         <sc-if value="{{showError}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Daftar title gagal dimuat</span><button class="ra-btn ra-btn-primary ra-btn-sm">Coba Lagi</button></div></div></sc-if>
         <sc-if value="{{showEmpty}}" hint-placeholder-val="{{false}}"><div class="card"><div class="empty-big"><span style="color:var(--ra-ink-200);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="42" height="42"><path d="M12 2 9 8l-6.5 1 4.7 4.5L6 20l6-3.4 6 3.4-1.2-6.5L21 9l-6.5-1-2.5-6Z"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada title yang bisa ditampilkan</span><p class="ra-body-md">Title muncul di sini setelah award Anda aktif.</p><a class="ra-btn ra-btn-primary ra-btn-sm" href="M15-Evidence.dc.html">Ajukan Bukti Kualifikasi</a></div></div></sc-if>
         <sc-if value="{{showList}}" hint-placeholder-val="{{true}}">
           <div class="card" style="overflow:hidden;">
-            <sc-for list="{{titles}}" as="t" hint-placeholder-count="2">
-              <div style="display:flex;align-items:center;gap:8px;padding:12px 12px;border-top:1px solid var(--ra-ink-50);">
-                <div style="display:flex;flex-direction:column;gap:6px;flex:none;"><button class="order-btn" aria-label="{{t.upLabel}}" disabled="{{t.upDisabled}}" onClick="{{t.up}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 15l6-6 6 6"/></svg></button><button class="order-btn" aria-label="{{t.downLabel}}" disabled="{{t.downDisabled}}" onClick="{{t.down}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 9l6 6 6-6"/></svg></button></div>
-                <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{t.name}}</div><span class="ra-caption">{{t.issued}}</span></div>
-                <button class="switch" role="switch" aria-checked="{{t.active}}" aria-label="{{t.toggleLabel}}" style="width:52px;height:32px;border-radius:16px;background:var(--ra-ink-200);" onClick="{{t.toggle}}"><div class="switch-knob" style="width:24px;height:24px;top:4px;left:4px;"></div></button>
+            <div style="padding:14px 20px;border-bottom:1px solid var(--ra-ink-100);display:flex;flex-direction:column;gap:2px;"><span class="ra-title-md">Title yang tampil ({{shownCount}} dari maks 4)</span><span class="ra-caption">{{ruleText}}</span></div>
+            <sc-for list="{{shown}}" as="t" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-top:1px solid var(--ra-ink-50);flex-wrap:wrap;">
+                <sc-if value="{{t.isPrimary}}" hint-placeholder-val="{{false}}"><span style="width:34px;height:34px;border-radius:50%;background:var(--ra-gold-500);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.3l7.1-.7L12 2Z"/></svg></span></sc-if>
+                <sc-if value="{{t.showMove}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:row;gap:6px;flex:none;"><button class="order-btn" aria-label="{{t.upLabel}}" disabled="{{t.upDisabled}}" onClick="{{t.up}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M6 15l6-6 6 6"/></svg></button><button class="order-btn" aria-label="{{t.downLabel}}" disabled="{{t.downDisabled}}" onClick="{{t.down}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M6 9l6 6 6-6"/></svg></button></div></sc-if>
+                <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{t.name}}</div><span class="ra-caption">{{t.tagLabel}} · {{t.issued}}</span></div>
+                <sc-if value="{{t.canMakePrimary}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{t.makePrimary}}">Jadikan Utama</button></sc-if>
+                <sc-if value="{{t.canHide}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{t.hide}}">Sembunyikan</button></sc-if>
               </div>
             </sc-for>
           </div>
+          <sc-if value="{{hasHidden}}" hint-placeholder-val="{{false}}">
+            <div class="card" style="overflow:hidden;">
+              <div style="padding:14px 20px;border-bottom:1px solid var(--ra-ink-100);display:flex;flex-direction:column;gap:2px;"><span class="ra-title-md">Title lain yang Anda miliki</span><span class="ra-caption">Belum tampil di profil publik. Tampilkan bila ada slot kosong.</span></div>
+              <sc-for list="{{hiddenList}}" as="h" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-top:1px solid var(--ra-ink-50);flex-wrap:wrap;">
+                  <div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{h.name}}</div><span class="ra-caption">{{h.issued}}</span><span class="ra-caption" style="display:block;color:var(--ra-warning-600);">{{h.hint}}</span></div>
+                  <button class="ra-btn ra-btn-secondary ra-btn-sm" disabled="{{h.showDisabled}}" onClick="{{h.show}}">Tampilkan</button>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
           <div class="card card-pad" style="display:flex;flex-direction:column;gap:10px;">
             <span class="ra-title-md">Tidak bisa ditampilkan</span>
             <sc-for list="{{locked}}" as="l" hint-placeholder-count="2"><div style="display:flex;align-items:flex-start;gap:10px;"><div style="min-width:0;flex:1;"><div class="ra-label-lg ra-truncate-2">{{l.name}}</div><span class="ra-caption">{{l.why}}</span></div><span class="ra-badge {{l.badge}}">{{l.label}}</span></div></sc-for>
@@ -97,7 +111,7 @@
     <div class="preview-card">
       <span class="ra-caption" style="align-self:flex-start;color:var(--ra-ink-500);">{{previewLabel}}</span>
       <div class="avatar-xl">RS</div><span class="ra-title-md">Rian Saputra</span>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;"><sc-if value="{{previewEmpty}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Tidak ada title ditampilkan</span></sc-if><sc-for list="{{preview}}" as="p" hint-placeholder-count="1"><span class="ra-badge" style="background:var(--ra-gold-100);color:var(--ra-gold-700);">{{p.name}}</span></sc-for></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;"><sc-if value="{{previewEmpty}}" hint-placeholder-val="{{false}}"><span class="ra-caption">Tidak ada title ditampilkan</span></sc-if><sc-for list="{{preview}}" as="p" hint-placeholder-count="3"><span class="ra-badge" style="{{p.style}}"><span class="ra-dot"></span>{{p.tag}}{{p.name}}</span></sc-for></div>
     </div>
   </div>
   <div style="flex:none;background:#fff;border-top:1px solid var(--ra-ink-100);padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
@@ -126,11 +140,11 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"saveState":{"editor":"enum","default":"idle","options":["idle","gagal"],"section":"Skenario simpan"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"listState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"saveState":{"editor":"enum","default":"idle","options":["idle","gagal"],"section":"Skenario simpan"},"jumlahAward":{"editor":"enum","default":"6","options":["0","1","3","6"],"section":"Jumlah award dimiliki"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { items: [{ id: 't1', name: 'Top Performer Regional 2026', issued: 'Diberikan 20 Sep 2026', active: true }, { id: 't2', name: 'Kontributor Komunitas', issued: 'Dipulihkan 15 Sep 2026', active: false }], saved: [{ id: 't1', active: true }, { id: 't2', active: false }], savedFlag: false });
+    this.state = Object.assign({ navCollapsed: false, drawerOpen: false }, { savedFlag: false });
     var self = this;
     ['toggleNav', 'openDrawer', 'closeDrawer', 'stopClick', 'save', 'discard'].forEach(function(m){ self[m] = self[m].bind(self); });
   }
@@ -139,8 +153,8 @@ class Component extends DCLogic {
   closeDrawer(){ this.setState({ drawerOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
-  save(){ if (this.props.saveState === 'gagal') { this.setState({ savedFlag: false, failed: true }); return; } this.setState({ saved: this.state.items.map(function(t){ return { id: t.id, active: t.active }; }), savedFlag: true, failed: false }); }
-  discard(){ var sv = this.state.saved; this.setState({ items: this.state.items.map(function(t){ var s = sv.filter(function(x){ return x.id === t.id; })[0]; return Object.assign({}, t, { active: s.active }); }), failed: false }); }
+  save(){ if (this.props.saveState === 'gagal') { this.setState({ savedFlag: false, failed: true }); return; } this.setState({ savedSel: this.state.sel, savedFlag: true, failed: false }); }
+  discard(){ this.setState({ sel: this.state.savedSel, failed: false }); }
   renderVals() {
     var st = this.state, pr = this.props;
     var linked = (pr.akun || 'terhubung') === 'terhubung';
@@ -153,27 +167,49 @@ class Component extends DCLogic {
       companyLabel: linked ? 'PT Kanaya Group Developer' : 'Belum terhubung', companyMark: linked ? 'K' : '?'
     };
     
-    // title_presentations (0068): active + display_order, UNIQUE(user_id,title_definition_id). PUT /agents/me/awards/presentation = replace-set (upsert).
+    // title_presentations (0068): active + display_order, UNIQUE(user_id,title_definition_id). PUT /agents/me/awards/presentation { primary_title_id, additional_title_ids[] } = ganti seluruh pilihan (set_my_public_titles, 0148): maks 1 utama + 3 tambahan.
     // Setelah 0128: hanya title dengan award active/restored yang bisa ditampilkan; saat award dicabut/kedaluwarsa presentation otomatis nonaktif.
     var self = this;
     var mode = pr.listState || 'loaded';
-    var items = st.items.slice();
-    var sv = st.saved;
-    var dirty = items.some(function(t, i){ var s = sv.filter(function(x){ return x.id === t.id; })[0]; return !s || s.active !== t.active; }) || st.orderChanged === true;
-    function move(id, dir){ var a = self.state.items.slice(); var i = a.findIndex(function(t){ return t.id === id; }); var j = i + dir; if (j < 0 || j >= a.length) return; var x = a[i]; a[i] = a[j]; a[j] = x; self.setState({ items: a, orderChanged: true, savedFlag: false }); }
-    var titles = items.map(function(t, i){
-      return { name: t.name, issued: t.issued, active: t.active ? 'true' : 'false', toggleLabel: (t.active ? 'Sembunyikan ' : 'Tampilkan ') + t.name + ' di profil',
-        toggle: function(){ self.setState({ items: self.state.items.map(function(x){ return x.id === t.id ? Object.assign({}, x, { active: !x.active }) : x; }), savedFlag: false }); },
-        up: function(){ move(t.id, -1); }, down: function(){ move(t.id, 1); }, upDisabled: i === 0, downDisabled: i === items.length - 1, upLabel: 'Naikkan ' + t.name, downLabel: 'Turunkan ' + t.name };
+    var n = Number(pr.jumlahAward === undefined ? 6 : pr.jumlahAward);
+    var ALL = [
+      { id: 'a1', name: 'Top Performer Regional 2026', issued: 'Diberikan 20 Sep 2026' },
+      { id: 'a2', name: 'Best Customer Service', issued: 'Diberikan 12 Jun 2026' },
+      { id: 'a3', name: 'Kontributor Komunitas', issued: 'Dipulihkan 15 Sep 2026' },
+      { id: 'a4', name: 'Master Negosiator', issued: 'Diberikan 3 Mar 2026' },
+      { id: 'a5', name: 'Mentor Komunitas', issued: 'Diberikan 9 Jan 2026' },
+      { id: 'a6', name: 'Agen Kalkulator DBR Terbaik', issued: 'Diberikan 18 Nov 2025' }
+    ];
+    var held = ALL.slice(0, n);
+    var defSel = held.slice(0, 4).map(function(a){ return a.id; });
+    var cur = st.selFor === n && st.sel ? st.sel : defSel;
+    var savedSel = st.selFor === n && st.savedSel ? st.savedSel : defSel;
+    var dirty = cur.join(',') !== savedSel.join(',');
+    var canPick = held.length > 4;
+    function commit(next){ self.setState({ selFor: n, sel: next, savedSel: savedSel, savedFlag: false, failed: false }); }
+    var byId = {}; held.forEach(function(a){ byId[a.id] = a; });
+    var shown = cur.map(function(id, i){
+      var a = byId[id];
+      return { name: a.name, issued: a.issued, isPrimary: i === 0, tagLabel: i === 0 ? 'Utama' : 'Tambahan ' + i,
+        canMakePrimary: i > 0, makePrimary: function(){ var nx = cur.slice(); nx.splice(i, 1); nx.unshift(id); commit(nx); },
+        showMove: i > 0, upDisabled: i <= 1, downDisabled: i === cur.length - 1,
+        up: function(){ var nx = cur.slice(); var t = nx[i - 1]; nx[i - 1] = nx[i]; nx[i] = t; commit(nx); },
+        down: function(){ var nx = cur.slice(); var t = nx[i + 1]; nx[i + 1] = nx[i]; nx[i] = t; commit(nx); },
+        upLabel: 'Naikkan ' + a.name, downLabel: 'Turunkan ' + a.name,
+        canHide: canPick && cur.length > 1, hide: function(){ var nx = cur.slice(); nx.splice(i, 1); commit(nx); } };
     });
-    var preview = items.filter(function(t){ return t.active; }).map(function(t){ return { name: t.name }; });
+    var hiddenList = canPick ? held.filter(function(a){ return cur.indexOf(a.id) < 0; }).map(function(a){
+      return { name: a.name, issued: a.issued, showDisabled: cur.length >= 4, hint: cur.length >= 4 ? 'Sudah 4 title tampil: sembunyikan salah satu dulu.' : '', show: function(){ commit(cur.concat([a.id])); } };
+    }) : [];
+    var preview = shown.map(function(t, i){ return { name: t.name, tag: i === 0 ? '★ ' : '', style: i === 0 ? 'background:var(--ra-gold-500);color:#fff;' : 'background:var(--ra-gold-100);color:var(--ra-gold-700);' }; });
     var locked = [
       { name: 'Instruktur Bersertifikat', why: 'Award dicabut. Tidak bisa ditampilkan; ajukan banding di Status Evaluasi.', badge: 'ra-badge-danger', label: 'Dicabut' },
       { name: 'Agen Bersertifikat Kalkulator DBR', why: 'Award kedaluwarsa. Tidak tampil di profil publik.', badge: 'ra-badge-neutral', label: 'Kedaluwarsa' }
     ];
+    var ruleText = held.length === 1 ? 'Title pertama Anda otomatis tampil sebagai Utama.' : (held.length <= 4 ? 'Anda punya ' + held.length + ' title: semuanya tampil. Pilih satu sebagai Utama, sisanya menjadi tambahan.' : 'Anda punya ' + held.length + ' title: pilih maksimal 1 utama + 3 tambahan yang tampil.');
     var out = {
-      titles: titles, preview: preview, previewEmpty: preview.length === 0, locked: locked,
-      showLoading: mode === 'loading', showError: mode === 'error', showEmpty: mode === 'empty', showList: mode === 'loaded',
+      shown: shown, shownCount: shown.length, ruleText: ruleText, hiddenList: hiddenList, hasHidden: hiddenList.length > 0, preview: preview, previewEmpty: preview.length === 0, locked: locked,
+      showLoading: mode === 'loading', showError: mode === 'error', showEmpty: mode === 'empty' || n === 0, showList: mode === 'loaded' && n > 0,
       dirty: dirty, clean: !dirty, save: this.save, discard: this.discard, savedFlag: st.savedFlag === true && !dirty, failed: st.failed === true,
       previewLabel: dirty ? 'Pratinjau (belum disimpan)' : 'Pratinjau Profil Publik'
     };

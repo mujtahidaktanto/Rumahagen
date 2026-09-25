@@ -80,6 +80,7 @@
     <div class="tab-row">
       <span class="tab {{tabPendingClass}}" onClick="{{selectTabPending}}">Antrean Review Pasca-Publish</span>
       <span class="tab {{tabLeadsClass}}" onClick="{{selectTabLeads}}">Leads Lintas Agent</span>
+      <span class="tab {{tabPublishedClass}}" onClick="{{selectTabPublished}}">Listing Terbit &amp; Suspend</span>
     </div>
 
     <!-- TAB: Pending review -->
@@ -126,6 +127,36 @@
           </table>
         </div>
         </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- TAB: Listing Terbit & Suspend -->
+    <sc-if value="{{isTabPublished}}" hint-placeholder-val="{{false}}">
+      <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:20px 40px 40px;">
+        <p class="ra-body-md" style="color:var(--ra-ink-500);margin-bottom:14px;">Temuan pelanggaran pada foto atau isi listing ditangani dengan <strong>suspend seluruh listing</strong> (tidak ada moderasi per foto). Pemeriksaan foto masih manual oleh admin pada MVP; deteksi otomatis masuk roadmap berikutnya.</p>
+        <div class="ra-card" style="overflow:hidden;">
+          <table>
+            <thead><tr>
+              <th class="ra-label-md" style="color:var(--ra-ink-300);">Listing</th>
+              <th class="ra-label-md" style="color:var(--ra-ink-300);">Agent</th>
+              <th class="ra-label-md" style="color:var(--ra-ink-300);">Status</th>
+              <th class="ra-label-md" style="color:var(--ra-ink-300);">Aksi</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{publishedListings}}" as="p" hint-placeholder-count="4">
+                <tr>
+                  <td><span class="ra-label-lg ra-truncate-1" style="max-width:280px;display:block;">{{p.title}}</span></td>
+                  <td><span class="ra-body-md">{{p.agentName}}</span></td>
+                  <td><span class="ra-badge {{p.badgeClass}}">{{p.statusLabel}}</span></td>
+                  <td>
+                    <sc-if value="{{p.isPublished}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-danger ra-btn-sm" onClick="{{p.openSuspend}}">Suspend</button></sc-if>
+                    <sc-if value="{{p.isSuspended}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{p.openReactivate}}">Aktifkan Kembali</button></sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
       </div>
     </sc-if>
 
@@ -187,6 +218,32 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{suspendOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">Suspend "{{targetTitle}}"?</h2>
+        <p class="ra-body-md" style="color:var(--ra-ink-700);">Seluruh listing ditangguhkan (<strong>bukan per foto</strong>): langsung hilang dari publik dan pemilik tidak bisa mengaktifkannya kembali. Pakai bila foto atau isi listing melanggar ketentuan platform (mis. kekerasan atau pornografi). Hanya staf yang dapat mengaktifkannya kembali.</p>
+        <div style="display:flex;gap:12px;justify-content:flex-end;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Batal</button>
+          <button class="ra-btn ra-btn-danger" onClick="{{confirmSuspend}}">Suspend Listing</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{reactivateOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeDialogs}}">
+      <div class="dialog" onClick="{{stopClick}}">
+        <h2 class="ra-title-md">Aktifkan kembali "{{targetTitle}}"?</h2>
+        <p class="ra-body-md" style="color:var(--ra-ink-700);">Listing kembali tampil di publik. Pastikan pelanggaran sudah diperbaiki pemiliknya.</p>
+        <div style="display:flex;gap:12px;justify-content:flex-end;">
+          <button class="ra-btn ra-btn-secondary" onClick="{{closeDialogs}}">Batal</button>
+          <button class="ra-btn ra-btn-primary" onClick="{{confirmReactivate}}">Aktifkan Kembali</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"queueState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
@@ -197,13 +254,21 @@ class Component extends DCLogic {
     this.selectTabPending = this.selectTabPending.bind(this);
     this.selectTabLeads = this.selectTabLeads.bind(this);
     this.closeDialogs = this.closeDialogs.bind(this);
+    this.selectTabPublished = this.selectTabPublished.bind(this);
+    this.confirmSuspend = this.confirmSuspend.bind(this);
+    this.confirmReactivate = this.confirmReactivate.bind(this);
     this.stopClick = this.stopClick.bind(this);
   }
   selectTabPending(){ this.setState({ tab: 'pending' }); }
   selectTabLeads(){ this.setState({ tab: 'leads' }); }
+  selectTabPublished(){ this.setState({ tab: 'published' }); }
+  openSuspend(id, title){ this.setState({ suspendOpen: true, targetId: id, targetTitle: title }); }
+  openReactivate(id, title){ this.setState({ reactivateOpen: true, targetId: id, targetTitle: title }); }
+  confirmSuspend(){ var s = Object.assign({}, this.state.susp || {}); s[this.state.targetId] = true; this.setState({ susp: s, suspendOpen: false }); }
+  confirmReactivate(){ var s = Object.assign({}, this.state.susp || {}); s[this.state.targetId] = false; this.setState({ susp: s, reactivateOpen: false }); }
   openApprove(title){ this.setState({ approveOpen: true, targetTitle: title }); }
   openReject(title){ this.setState({ rejectOpen: true, targetTitle: title }); }
-  closeDialogs(){ this.setState({ approveOpen: false, rejectOpen: false }); }
+  closeDialogs(){ this.setState({ approveOpen: false, rejectOpen: false, suspendOpen: false, reactivateOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   renderVals() { var self = this, st = this.state || {}; var col = st.navCollapsed === true; var shell = { navCollapsed: col, navExpanded: !col, navWidth: col ? 76 : 240, labelOp: col ? 0 : 1, toggleNav: function(){ self.setState({ navCollapsed: !(self.state && self.state.navCollapsed === true) }); } }; return Object.assign(shell, this.renderVals_page()); }
   renderVals_page() {
@@ -230,6 +295,20 @@ class Component extends DCLogic {
       openReject: () => this.openReject(l.title)
     }));
 
+    const susp = this.state.susp || {};
+    const pubDefs = [
+      { id: 'p1', title: 'Rumah Modern 2 Lantai — BSD City', agentName: 'Dewi Anggraini' },
+      { id: 'p2', title: 'Apartemen Studio — Kemang', agentName: 'Rian Saputra' },
+      { id: 'p3', title: 'Ruko 3 Lantai — Kelapa Gading', agentName: 'Siti Rahma' },
+      { id: 'p4', title: 'Tanah Kavling 200 m² — Cibubur', agentName: 'Budi Santoso', suspendedInit: true }
+    ];
+    const publishedListings = pubDefs.map(p => {
+      const isSusp = (p.id in susp) ? susp[p.id] : !!p.suspendedInit;
+      return { title: p.title, agentName: p.agentName, isSuspended: isSusp, isPublished: !isSusp,
+        statusLabel: isSusp ? 'Ditangguhkan' : 'Terbit', badgeClass: isSusp ? 'ra-badge-danger' : 'ra-badge-success',
+        openSuspend: () => this.openSuspend(p.id, p.title), openReactivate: () => this.openReactivate(p.id, p.title) };
+    });
+
     const leadStatusMap = {
       new: { badge: 'ra-badge-info', label: 'Baru' },
       contacted: { badge: 'ra-badge-warning', label: 'Dihubungi' },
@@ -254,6 +333,10 @@ class Component extends DCLogic {
       pendingListings, leads,
       approveOpen: this.state.approveOpen ?? false, rejectOpen: this.state.rejectOpen ?? false,
       targetTitle: this.state.targetTitle || '',
+      isTabPublished: tab === 'published', tabPublishedClass: tab === 'published' ? 'is-active' : '', selectTabPublished: this.selectTabPublished,
+      publishedListings, suspendOpen: this.state.suspendOpen ?? false, reactivateOpen: this.state.reactivateOpen ?? false,
+      confirmSuspend: this.confirmSuspend, confirmReactivate: this.confirmReactivate,
+
       closeDialogs: this.closeDialogs, stopClick: this.stopClick
     };
   }

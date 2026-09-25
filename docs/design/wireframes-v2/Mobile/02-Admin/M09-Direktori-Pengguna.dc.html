@@ -62,7 +62,7 @@
           <div style="display:flex;align-items:center;gap:10px;">
             <div style="width:36px;height:36px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none;">{{u.initials}}</div>
             <div style="flex:1;min-width:0;">
-              <div class="ra-label-lg ra-truncate-1">{{u.name}}</div>
+              <div class="ra-label-lg ra-truncate-1">{{u.name}}<sc-if value="{{u.ktpVerified}}" hint-placeholder-val="{{false}}"> <span class="ra-badge ra-badge-success">KTP ✓</span></sc-if></div>
               <div class="ra-caption ra-truncate-1">{{u.email}}</div>
             </div>
             <span class="ra-badge {{u.badgeClass}}"><span class="ra-dot"></span>{{u.status}}</span>
@@ -71,6 +71,7 @@
             <span class="role-pill">{{u.roleLabel}}</span>
             <div style="display:flex;align-items:center;gap:14px;">
               <a href="#" class="ra-label-lg">Detail</a>
+              <sc-if value="{{u.canKtp}}" hint-placeholder-val="{{false}}"><a href="#" class="ra-label-lg" onClick="{{u.openKtp}}">KTP</a></sc-if>
               <sc-if value="{{u.canChangeRole}}" hint-placeholder-val="{{false}}">
                 <a href="#" class="ra-label-lg" onClick="{{u.openChangeRole}}">Ubah Role</a>
               </sc-if>
@@ -158,6 +159,41 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{ktpOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeKtp}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><h2 class="ra-title-md">Data KTP — {{ktpUserName}}</h2><span class="ra-badge {{ktpBadgeClass}}">{{ktpBadgeLabel}}</span></div>
+        <sc-if value="{{ktpHasData}}" hint-placeholder-val="{{true}}">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;flex-direction:column;gap:4px;"><span class="ra-caption">Nomor KTP (NIK)</span><span class="ra-title-md" style="font-family:ui-monospace,Consolas,monospace;letter-spacing:.5px;">{{ktpNik}}</span></div>
+            <div style="border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:var(--ra-ink-50);height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="34" height="34"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg><span class="ra-caption">Foto KTP (tautan berlaku 10 menit)</span></div>
+            <span class="ra-caption">Bersifat privat. Setiap kali data ini dibuka, aksinya tercatat di audit log. Verifikasi berjalan otomatis tanpa tinjauan; cabut bila ada dugaan KTP palsu atau nomor asal-asalan.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ktpNoData}}" hint-placeholder-val="{{false}}">
+          <p class="ra-body-md" style="color:var(--ra-ink-500);">Agent ini belum mengirim KTP (atau verifikasinya sudah dicabut). Status: belum diverifikasi.</p>
+        </sc-if>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeKtp}}">Tutup</button>
+<sc-if value="{{ktpHasData}}" hint-placeholder-val="{{true}}">        <button class="ra-btn ra-btn-danger" style="width:100%;" onClick="{{openKtpReset}}">Cabut Verifikasi</button></sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ktpResetOpen}}" hint-placeholder-val="{{false}}">
+    <div class="scrim" onClick="{{closeKtpReset}}">
+      <div class="sheet" onClick="{{stopClick}}">
+        <div class="grabber"></div>
+        <h2 class="ra-title-md">Cabut verifikasi KTP {{ktpUserName}}?</h2>
+        <p class="ra-body-md" style="color:var(--ra-ink-700);">Status kembali menjadi <strong>belum diverifikasi</strong>, lencana “Terverifikasi” hilang dari profil publik, dan data serta foto KTP dihapus. Agent bisa mengirim KTP lagi.</p>
+        <label class="ra-label-lg" for="ktp-reason">Alasan pencabutan (wajib)</label>
+        <textarea id="ktp-reason" class="ra-input" style="height:70px;padding:10px 14px;resize:none;" value="{{ktpReason}}" onChange="{{onKtpReason}}" placeholder="Contoh: foto KTP tidak sesuai dengan nomor yang diisi"></textarea>
+        <button class="ra-btn ra-btn-secondary" style="width:100%;" onClick="{{closeKtpReset}}">Batal</button>
+        <button class="ra-btn ra-btn-danger" style="width:100%;" disabled="{{ktpResetDisabled}}" onClick="{{confirmKtpReset}}">Cabut Verifikasi</button>
+      </div>
+    </div>
+  </sc-if>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"superadmin","options":["superadmin","admin","manager"],"section":"Skenario aktor — default Superadmin supaya aksi Ubah Role langsung terlihat"},"listState":{"editor":"enum","default":"loaded","options":["loaded","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
@@ -171,6 +207,11 @@ class Component extends DCLogic {
     this.openDrawer = this.openDrawer.bind(this);
     this.closeDrawer = this.closeDrawer.bind(this);
     this.closeRoleDialog = this.closeRoleDialog.bind(this);
+    this.closeKtp = this.closeKtp.bind(this);
+    this.openKtpReset = this.openKtpReset.bind(this);
+    this.closeKtpReset = this.closeKtpReset.bind(this);
+    this.onKtpReason = this.onKtpReason.bind(this);
+    this.confirmKtpReset = this.confirmKtpReset.bind(this);
   }
   openDrawer(){ this.setState({ drawerOpen: true }); }
   closeDrawer(){ this.setState({ drawerOpen: false }); }
@@ -181,6 +222,12 @@ class Component extends DCLogic {
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   openChangeRole(user){ this.setState({ roleDialogOpen: true, roleDialogUserName: user.name }); }
   closeRoleDialog(){ this.setState({ roleDialogOpen: false }); }
+  openKtp(user){ this.setState({ ktpOpen: true, ktpUserName: user.name }); }
+  closeKtp(){ this.setState({ ktpOpen: false }); }
+  openKtpReset(){ this.setState({ ktpOpen: false, ktpResetOpen: true, ktpReason: '' }); }
+  closeKtpReset(){ this.setState({ ktpResetOpen: false, ktpReason: '' }); }
+  onKtpReason(e){ this.setState({ ktpReason: e && e.target ? e.target.value : '' }); }
+  confirmKtpReset(){ var r = Object.assign({}, this.state.ktpRevoked || {}); r[this.state.ktpUserName] = true; this.setState({ ktpRevoked: r, ktpResetOpen: false, ktpReason: '' }); }
   renderVals() {
     const viewerRole = this.props.viewerRole ?? 'admin';
     const canManage = viewerRole === 'superadmin' || viewerRole === 'admin';
@@ -211,8 +258,17 @@ class Component extends DCLogic {
     const countFor = (key) => key === 'all' ? visibleUsers.length : visibleUsers.filter(u => u.statusKey === key).length;
     const chips = chipDefs.map(c => ({ key: c.key, label: c.label, count: countFor(c.key), isActive: c.key === activeFilter, pick: () => this.pickFilter(c.key) }));
     const filteredBase = activeFilter === 'all' ? visibleUsers : visibleUsers.filter(u => u.statusKey === activeFilter);
+    const KTP = { 'Dewi Anggraini': '3174011505900001', 'Rian Saputra': '3273011201850003', 'Siti Rahma': '3578025505920004' };
+    const ktpRevoked = this.state.ktpRevoked || {};
+    const ktpVerifiedOf = (u) => !!KTP[u.name] && !ktpRevoked[u.name];
+    const ktpUser = this.state.ktpUserName || '';
+    const ktpHas = !!KTP[ktpUser] && !ktpRevoked[ktpUser];
+    const ktpReasonVal = this.state.ktpReason ?? '';
     const filtered = filteredBase.map(u => ({
       ...u,
+      canKtp: canManage && u.role === 'agent',
+      ktpVerified: ktpVerifiedOf(u),
+      openKtp: () => this.openKtp(u),
       canSuspend: canManage && u.role === 'agent' && u.statusKey === 'active',
       openSuspend: () => this.openSuspend(u),
       canChangeRole: isSuperadmin || (isManager && u.role === 'agent'),
@@ -255,7 +311,12 @@ class Component extends DCLogic {
       roleDialogOpen: this.state.roleDialogOpen ?? false,
       roleDialogUserName: this.state.roleDialogUserName || '',
       roleDialogOptions, roleDialogHint,
-      closeRoleDialog: this.closeRoleDialog
+      closeRoleDialog: this.closeRoleDialog,
+      ktpOpen: this.state.ktpOpen ?? false, ktpResetOpen: this.state.ktpResetOpen ?? false, ktpUserName: ktpUser,
+      ktpHasData: ktpHas, ktpNoData: !ktpHas, ktpNik: ktpHas ? KTP[ktpUser] : '',
+      ktpBadgeClass: ktpHas ? 'ra-badge-success' : 'ra-badge-neutral', ktpBadgeLabel: ktpHas ? 'Terverifikasi' : 'Belum diverifikasi',
+      closeKtp: this.closeKtp, openKtpReset: this.openKtpReset, closeKtpReset: this.closeKtpReset, onKtpReason: this.onKtpReason,
+      ktpReason: ktpReasonVal, ktpResetDisabled: ktpReasonVal.trim().length === 0, confirmKtpReset: this.confirmKtpReset
     };
   }
 }

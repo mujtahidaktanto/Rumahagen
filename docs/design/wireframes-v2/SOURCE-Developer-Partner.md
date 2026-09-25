@@ -119,7 +119,7 @@ Hanya Superadmin dan pemilik yang melihat (Admin/Manager tidak). "Partner Learni
 - Approved Claim ≠ hak listing (PRE-00-H §19): layar klaim menampilkan jelas bahwa listing dibuat dan dimiliki Agent.
 - Event submission selalu "Menunggu persetujuan staf" (tidak ada tombol Terbitkan).
 - Hasil kemitraan: status validasi hanya bisa dilihat, tidak bisa diubah.
-- Nama + profil publik Agent saja; tidak ada kontak/dokumen privat.
+- Nama, kontak (WhatsApp + email) dan tautan profil publik Agent yang mengklaim (keputusan produk 2026-09-25: mitra harus bisa menghubungi Agent, termasuk Agent berprofil privat; migration 0147); dokumen dan data pribadi lain tidak.
 - Non-eksklusivitas: tidak ada UI "eksklusif wilayah".
 
 ## 8. Temuan celah backend (dibuktikan) — perbaikan: migration `0127` (ditulis + diuji rollback; status penerapan di README migration)

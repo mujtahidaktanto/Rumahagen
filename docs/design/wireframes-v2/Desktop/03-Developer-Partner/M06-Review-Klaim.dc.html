@@ -165,7 +165,7 @@
           <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
             <div class="row" style="">
               <div class="avatar">{{r.ini}}</div>
-              <div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="ra-label-lg">{{r.agent}}</span><a class="ra-caption" href="#">Profil publik</a></div><div class="ra-caption ra-truncate-1">{{r.project}} · {{r.when}}</div></div>
+              <div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="ra-label-lg">{{r.agent}}</span><sc-if value="{{r.hasProfile}}" hint-placeholder-val="{{true}}"><a class="ra-caption" href="#">Profil publik</a></sc-if></div><div class="ra-caption" style="display:flex;gap:10px;flex-wrap:wrap;"><a href="#" aria-label="Hubungi lewat WhatsApp">WhatsApp {{r.wa}}</a><span>{{r.email}}</span></div><div class="ra-caption ra-truncate-1">{{r.project}} · {{r.when}}</div></div>
               <span class="ra-badge {{r.badge}}">{{r.statusLabel}}</span>
               <div style="display:flex;gap:8px;">
                 <sc-if value="{{r.canDecide}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary ra-btn-sm" style="" onClick="{{r.approve}}">Setujui</button><button class="ra-btn ra-btn-secondary ra-btn-sm" style="" onClick="{{r.reject}}">Tolak</button></sc-if>
@@ -239,7 +239,7 @@ class Component extends DCLogic {
     };
     
     // Aksi memakai PUT /claims/{id} { status }. Developer Partner punya review/approve/reject/revoke (own = klaim pada PROYEK
-    // MILIKNYA, policy agent_project_claims_review 0041). Tidak ada withdraw (itu Agent). Yang terlihat hanya NAMA + profil publik Agent.
+    // MILIKNYA, policy agent_project_claims_review 0041). Tidak ada withdraw (itu Agent). Yang terlihat: NAMA, kontak (WhatsApp + email; Agent yang mengajukan klaim bersedia dihubungi developer, termasuk Agent berprofil privat) dan tautan profil publik bila ada. Dokumen dan data pribadi lain tidak.
     // Approval Claim = PDF on-demand (GET /claims/{id}/approval-pdf), bukan tabel/izin baru.
     var self = this;
     var mode = pr.daftar || 'normal';
@@ -249,13 +249,13 @@ class Component extends DCLogic {
       withdrawn: { label: 'Dibatalkan Agen', badge: 'ra-badge-neutral' }
     };
     var data = [
-      { id: 'c1', agent: 'Dewi Lestari', ini: 'DL', project: 'Green Valley Residence', when: '22 Sep 2026', status: 'pending' },
-      { id: 'c2', agent: 'Rian Saputra', ini: 'RS', project: 'Menara Kertajaya Apartemen', when: '20 Sep 2026', status: 'pending' },
-      { id: 'c3', agent: 'Rian Saputra', ini: 'RS', project: 'Green Valley Residence', when: '18 Sep 2026', status: 'approved' },
-      { id: 'c4', agent: 'Budi Santoso', ini: 'BS', project: 'Menara Kertajaya Apartemen', when: '15 Sep 2026', status: 'approved' },
-      { id: 'c5', agent: 'Rian Saputra', ini: 'RS', project: 'Cluster Harmoni Residence', when: '10 Sep 2026', status: 'rejected' },
-      { id: 'c6', agent: 'Hesti Rahma', ini: 'HR', project: 'Green Valley Residence', when: '02 Sep 2026', status: 'revoked' },
-      { id: 'c7', agent: 'Andi Pratama', ini: 'AP', project: 'Cluster Harmoni Residence', when: '30 Agu 2026', status: 'withdrawn' }
+      { id: 'c1', agent: 'Dewi Lestari', ini: 'DL', wa: '0812-1111-2233', email: 'dewi.lestari@example.com', hasProfile: true, project: 'Green Valley Residence', when: '22 Sep 2026', status: 'pending' },
+      { id: 'c2', agent: 'Rian Saputra', ini: 'RS', wa: '0812-3456-7890', email: 'rian.saputra@example.com', hasProfile: true, project: 'Menara Kertajaya Apartemen', when: '20 Sep 2026', status: 'pending' },
+      { id: 'c3', agent: 'Rian Saputra', ini: 'RS', wa: '0812-3456-7890', email: 'rian.saputra@example.com', hasProfile: true, project: 'Green Valley Residence', when: '18 Sep 2026', status: 'approved' },
+      { id: 'c4', agent: 'Budi Santoso', ini: 'BS', wa: '0857-2200-4411', email: 'budi.santoso@example.com', hasProfile: false, project: 'Menara Kertajaya Apartemen', when: '15 Sep 2026', status: 'approved' },
+      { id: 'c5', agent: 'Rian Saputra', ini: 'RS', wa: '0812-3456-7890', email: 'rian.saputra@example.com', hasProfile: true, project: 'Cluster Harmoni Residence', when: '10 Sep 2026', status: 'rejected' },
+      { id: 'c6', agent: 'Hesti Rahma', ini: 'HR', wa: '0821-9090-1212', email: 'hesti.rahma@example.com', hasProfile: true, project: 'Green Valley Residence', when: '02 Sep 2026', status: 'revoked' },
+      { id: 'c7', agent: 'Andi Pratama', ini: 'AP', wa: '0813-7788-5566', email: 'andi.pratama@example.com', hasProfile: false, project: 'Cluster Harmoni Residence', when: '30 Agu 2026', status: 'withdrawn' }
     ].map(function(c){ return Object.assign({}, c, { status: st.decided[c.id] || c.status }); });
     var counts = { pending: 0, approved: 0, rejected: 0, revoked: 0, withdrawn: 0 };
     data.forEach(function(c){ counts[c.status]++; });
@@ -264,7 +264,7 @@ class Component extends DCLogic {
     var projects = [{ v: 'all', l: 'Semua proyek' }, { v: 'Green Valley Residence', l: 'Green Valley Residence' }, { v: 'Menara Kertajaya Apartemen', l: 'Menara Kertajaya Apartemen' }, { v: 'Cluster Harmoni Residence', l: 'Cluster Harmoni Residence' }].map(function(p){ return { v: p.v, l: p.l, sel: p.v === st.project }; });
     var rows = data.filter(function(c){ return c.status === st.filter && (st.project === 'all' || c.project === st.project); }).map(function(c){
       var sm = statusMap[c.status];
-      return { agent: c.agent, ini: c.ini, project: c.project, when: c.when, statusLabel: sm.label, badge: sm.badge,
+      return { agent: c.agent, ini: c.ini, wa: c.wa, email: c.email, hasProfile: c.hasProfile, project: c.project, when: c.when, statusLabel: sm.label, badge: sm.badge,
         canDecide: c.status === 'pending', canRevoke: c.status === 'approved', canPdf: c.status === 'approved',
         approve: function(){ self.setState({ dialog: 'approve', targetId: c.id, targetAgent: c.agent, targetProject: c.project }); },
         reject: function(){ self.setState({ dialog: 'reject', targetId: c.id, targetAgent: c.agent, targetProject: c.project }); },
