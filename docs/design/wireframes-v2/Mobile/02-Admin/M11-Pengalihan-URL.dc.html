@@ -79,7 +79,7 @@
   </div>
   <div class="main ra-scroll">
       <div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md"><strong>Berlaku untuk pengunjung.</strong> Aplikasi publik membaca tabel ini dan menyegarkannya sekitar tiap 1 menit, jadi perubahan tampil dalam waktu singkat. Ubah slug listing terbit, proyek developer tampil, atau profil agen membuat pengalihan 301 otomatis (alasan "slug_changed"); rantai diratakan dan pengalihan yang berputar tidak dijalankan. Hanya jalur internal yang dialihkan.</p></div>
-      <sc-if value="{{readOnly}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md">Peran Manager hanya bisa melihat pengalihan. Menambah dan menghapus hanya untuk Admin dan Superadmin.</p></div></sc-if>
+      <sc-if value="{{readOnly}}" hint-placeholder-val="{{false}}"><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><p class="ra-body-md">Peran Manager hanya bisa melihat pengalihan. Menambah, mengubah, dan menghapus hanya untuk Admin dan Superadmin.</p></div></sc-if>
     <sc-if value="{{canManage}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openAdd}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>Tambah Pengalihan</button></sc-if>
     <div class="chip-row" role="group" aria-label="Filter alasan"><sc-for list="{{chips}}" as="c" hint-placeholder-count="5"><button class="ra-chip" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}">{{c.label}} <span class="ra-chip-count">{{c.count}}</span></button></sc-for></div>
     <div style="position:relative;"><span style="position:absolute;left:12px;top:12px;color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><input class="ra-input" style="width:100%;padding-left:40px;" type="search" placeholder="Cari jalur…" aria-label="Cari jalur" value="{{q}}" onInput="{{setQ}}"></div>
@@ -92,7 +92,7 @@
       <div style="display:flex;align-items:center;gap:8px;"><span class="mono ra-truncate-1" style="flex:1;">{{r.old}}</span><span class="ra-badge ra-badge-neutral">{{r.type}}</span></div>
       <div style="display:flex;align-items:center;gap:8px;color:var(--ra-ink-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 8h12M12 4l4 4-4 4"/><path d="M20 16H8m4 4-4-4 4-4"/></svg><span class="mono ra-truncate-1">{{r.neu}}</span></div>
       <div class="ra-caption">{{r.reason}} · {{r.at}}</div>
-      <sc-if value="{{r.canManage}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.del}}">Hapus</button></sc-if></div></sc-for><button class="ra-btn ra-btn-secondary" style="width:100%;">Muat Lebih Banyak</button></sc-if>
+      <sc-if value="{{r.canManage}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-secondary ra-btn-sm" style="margin-right:8px;" onClick="{{r.edit}}">Ubah</button><button class="ra-btn ra-btn-secondary ra-btn-sm" onClick="{{r.del}}">Hapus</button></sc-if></div></sc-for><button class="ra-btn ra-btn-secondary" style="width:100%;">Muat Lebih Banyak</button></sc-if>
     
       <div class="card card-pad" style="display:flex;flex-direction:column;gap:10px;">
         <span class="ra-title-md">Uji jalur</span>
@@ -134,7 +134,8 @@
 
   <sc-if value="{{dialogOpen}}" hint-placeholder-val="{{false}}"><div class="scrim" onClick="{{closeAll}}"><div class="sheet" role="dialog" aria-modal="true" aria-label="Jendela dialog" onClick="{{stopClick}}">
     <sc-if value="{{actionFailed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Gagal menyimpan. Tidak ada yang berubah; coba lagi.</p></div></sc-if>
-    <sc-if value="{{dAdd}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">Tambah pengalihan</span>
+    <sc-if value="{{dAdd}}" hint-placeholder-val="{{false}}"><span class="ra-title-lg">{{dTitle}}</span>
+      <sc-if value="{{isEdit}}" hint-placeholder-val="{{false}}"><p class="ra-caption">Perubahan menggantikan seluruh isi pengalihan ini (jalur, tujuan, kode, alasan, entitas). Jalur lama tidak boleh sama dengan pengalihan lain dan tujuan tidak boleh membentuk putaran.</p></sc-if>
       <div class="field"><label class="ra-label-lg" for="r-old">Jalur lama <span class="req">*</span></label><input id="r-old" class="ra-input mono" type="text" maxlength="300" placeholder="/listing/nama-lama" value="{{fOld}}" onInput="{{onOld}}"><sc-if value="{{hasErrOld}}" hint-placeholder-val="{{false}}"><span class="err">{{errOld}}</span></sc-if></div>
       <div class="field"><label class="ra-label-lg" for="r-new">Jalur tujuan <span class="req">*</span></label><input id="r-new" class="ra-input mono" type="text" maxlength="300" placeholder="/listing/nama-baru" value="{{fNew}}" onInput="{{onNew}}"><sc-if value="{{hasErrNew}}" hint-placeholder-val="{{false}}"><span class="err">{{errNew}}</span></sc-if></div>
       <div class="field"><span class="ra-label-lg">Jenis pengalihan</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" role="radiogroup" aria-label="Jenis pengalihan"><sc-for list="{{types}}" as="t" hint-placeholder-count="2"><button class="radio-card" role="radio" aria-checked="{{t.checked}}" onClick="{{t.pick}}"><span class="ra-label-lg">{{t.l}}</span></button></sc-for></div></div>
@@ -174,7 +175,7 @@ class Component extends DCLogic {
   onEid(e){ this.setState({ f: Object.assign({}, this.state.f, { eid: e.target.value }) }); }
   closeAll(){ this.setState({ dialog: '', actionFailed: false, tried: false }); }
   problems(f){
-    var o = String(f.old || '').trim(), n = String(f.neu || '').trim(), list = this.list(), p = {};
+    var self = this, o = String(f.old || '').trim(), n = String(f.neu || '').trim(), list = this.list().filter(function(r){ return self.state.dialog !== 'edit' || r.id !== self.state.target; }), p = {};
     if (!o) p.old = 'Jalur lama wajib diisi.'; else if (o.charAt(0) !== '/') p.old = 'Jalur harus diawali "/".'; else if (o.length > 300) p.old = 'Maksimal 300 karakter.'; else if (list.some(function(r){ return r.old === o; })) p.old = 'Jalur lama ini sudah punya pengalihan.';
     if (!n) p.neu = 'Jalur tujuan wajib diisi.'; else if (/^(https?:)?\/\//i.test(n)) p.neu = 'Hanya jalur internal (diawali "/"); alamat luar tidak diizinkan.'; else if (n.charAt(0) !== '/') p.neu = 'Jalur harus diawali "/".'; else if (n === o) p.neu = 'Tujuan tidak boleh sama dengan jalur lama.'; else if (list.some(function(r){ return r.old === n && r.neu === o; })) p.neu = 'Membentuk putaran: tujuan ini sudah dialihkan kembali ke jalur lama.';
     return p;
@@ -183,7 +184,12 @@ class Component extends DCLogic {
     var f = this.state.f, p = this.problems(f);
     if (p.old || p.neu) { this.setState({ tried: true }); return; }
     if (this.props.aksi === 'gagal') { this.setState({ actionFailed: true }); return; }
-    var l = this.list().slice(); l.unshift({ id: 'n' + Date.now(), old: f.old.trim(), neu: f.neu.trim(), type: f.type, reason: f.reason, et: f.et, at: 'Baru saja' });
+    if (this.state.dialog === 'edit') {
+      var tid = this.state.target;
+      this.setState({ items: this.list().map(function(r){ return r.id === tid ? Object.assign({}, r, { old: f.old.trim(), neu: f.neu.trim(), type: f.type, reason: f.reason, et: f.et, eid: f.eid }) : r; }), dialog: '', tried: false, toast: 'Pengalihan diperbarui.' });
+      return;
+    }
+    var l = this.list().slice(); l.unshift({ id: 'n' + Date.now(), old: f.old.trim(), neu: f.neu.trim(), type: f.type, reason: f.reason, et: f.et, eid: f.eid, at: 'Baru saja' });
     this.setState({ items: l, dialog: '', tried: false, toast: 'Pengalihan ditambahkan.' });
   }
   confirmDel(){
@@ -208,7 +214,7 @@ class Component extends DCLogic {
     var all = this.list();
     var q = (st.q || '').toLowerCase();
     var rows = all.filter(function(r){ return (st.filter === 'all' || r.reason === st.filter) && (!q || r.old.toLowerCase().indexOf(q) >= 0 || r.neu.toLowerCase().indexOf(q) >= 0); }).map(function(r){
-      return { old: r.old, neu: r.neu, type: r.type, reason: RS[r.reason], et: r.et || '—', at: r.at, canManage: canManage, del: function(){ self.setState({ dialog: 'del', target: r.id, targetName: r.old }); } }; });
+      return { old: r.old, neu: r.neu, type: r.type, reason: RS[r.reason], et: r.et || '—', at: r.at, canManage: canManage, edit: function(){ self.setState({ dialog: 'edit', target: r.id, f: { old: r.old, neu: r.neu, type: r.type, reason: r.reason, et: r.et || '', eid: r.eid || '' }, tried: false, actionFailed: false }); }, del: function(){ self.setState({ dialog: 'del', target: r.id, targetName: r.old }); } }; });
     var counts = { all: all.length }; all.forEach(function(r){ counts[r.reason] = (counts[r.reason] || 0) + 1; });
     var chips = [['all','Semua'],['slug_changed','Slug berubah'],['listing_deleted','Listing dihapus'],['listing_merged','Digabung'],['lainnya','Lainnya']].map(function(c){ return { label: c[1], count: counts[c[0]] || 0, pressed: st.filter === c[0] ? 'true' : 'false', pick: function(){ self.setState({ filter: c[0] }); } }; });
     var f = st.f, tried = st.tried === true, pb = tried ? this.problems(f) : {};
@@ -218,7 +224,7 @@ class Component extends DCLogic {
     var out = { aktorLabel: aktorLabel, canManage: canManage, readOnly: !canManage, chips: chips, rows: rows, q: st.q, setQ: this.setQ, showLoading: mode === 'memuat', showError: mode === 'gagal_muat', showEmpty: mode === 'kosong', showNoMatch: mode === 'normal' && rows.length === 0, showRows: mode === 'normal' && rows.length > 0,
       probe: st.probe, onProbe: this.onProbe, probeIdle: !probe, probeHit: !!hit, probeMiss: !!probe && !hit, hitNew: hit ? hit.neu : '', hitType: hit ? hit.type : '',
       openAdd: function(){ self.setState({ dialog: 'add', f: { old: '', neu: '', type: 301, reason: 'slug_changed', et: '', eid: '' }, tried: false }); },
-      dAdd: st.dialog === 'add', dDel: st.dialog === 'del', dialogOpen: st.dialog !== '', fOld: f.old, fNew: f.neu, fEt: f.et, fEid: f.eid, onOld: this.onOld, onNew: this.onNew, onEt: this.onEt, onEid: this.onEid,
+      dAdd: st.dialog === 'add' || st.dialog === 'edit', isEdit: st.dialog === 'edit', dTitle: st.dialog === 'edit' ? 'Ubah pengalihan' : 'Tambah pengalihan', dDel: st.dialog === 'del', dialogOpen: st.dialog !== '', fOld: f.old, fNew: f.neu, fEt: f.et, fEid: f.eid, onOld: this.onOld, onNew: this.onNew, onEt: this.onEt, onEid: this.onEid,
       errOld: pb.old || '', errNew: pb.neu || '', hasErrOld: !!pb.old, hasErrNew: !!pb.neu, types: types, reasons: reasons, save: this.save, confirmDel: this.confirmDel, closeAll: this.closeAll, tName: st.targetName || '', actionFailed: st.actionFailed === true, toast: st.toast, hasToast: !!st.toast };
     return Object.assign(shell, out);
   }
