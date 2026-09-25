@@ -8,7 +8,7 @@ hanyalah backend: rute `/api/*`, halaman publik `/verifikasi` dan `/verifikasi/{
 | Hal | Nilai |
 |---|---|
 | Proyek | `rumahagen-staging` (`prj_F0GZBL629Ztz7mRIMh46W2nALqnJ`), akun pribadi `aktanto`, paket Hobby |
-| Sumber | GitHub `mujtahidaktanto/Rumahagen`, cabang `main` (push otomatis di-deploy), Root Directory `apps/web`, Node 20.x |
+| Sumber | GitHub `mujtahidaktanto/Rumahagen`, cabang `main` (push otomatis di-deploy; terbukti 2026-09-25), Root Directory `apps/web`, **Node 24.x** (Node 20 EOL: Vercel menonaktifkan build baru Node 20 mulai 1 Okt 2026; `engines.node` di `apps/web/package.json` = `24.x`, build Node 24 terbukti READY) |
 | Alamat | `https://rumahagen-staging-aktanto.vercel.app` (produksi proyek); domain kustom `staging.rumahagen.com` belum ditambahkan |
 | Proteksi | Vercel Authentication untuk **semua** deployment (alamat produksi `*.vercel.app` pun dialihkan ke login Vercel) |
 | Environment variables | 10 variabel terisi (Production dan Preview); rahasia bertipe Sensitive, dibuat sendiri oleh pemilik |

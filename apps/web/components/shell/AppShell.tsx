@@ -10,6 +10,7 @@ import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, MenuIcon } from "@/components/ui/icons";
 import { IconButton } from "@/components/ui/Button";
+import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/cn";
 
 export type NavItem = { href: string; label: string; icon?: ReactNode; badge?: number };
@@ -82,13 +83,14 @@ export function AppShell({ items, title, tone = "blue", footer, children }: AppS
         aria-label={`Navigasi ${title}`}
         className={cn("sticky top-0 hidden h-dvh flex-none flex-col transition-[width] duration-200 lg:flex", toneBg[tone], collapsed ? "w-19" : "w-60")}
       >
-        <div className="flex h-19 flex-none items-center justify-between border-b border-white/10 px-4 text-white">
-          <span className={cn("text-title-md", collapsed && "sr-only")}>RumahAgen · {title}</span>
+        {/* Kepala putih berisi logo (logo berwarna, seperti wireframe); di keadaan ringkas hanya tombol tampil/sembunyikan */}
+        <div className={cn("flex h-19 flex-none items-center border-b border-ink-100 bg-white px-4", collapsed ? "justify-center" : "justify-between")}>
+          {collapsed ? null : <Logo height={34} />}
           <IconButton
             label={collapsed ? "Tampilkan navigasi" : "Sembunyikan navigasi"}
             aria-expanded={!collapsed}
             onClick={() => setCollapsed((c) => !c)}
-            className="text-white hover:bg-white/10"
+            className={collapsed ? "-mx-2" : undefined}
           >
             {collapsed ? <ChevronRightIcon size={18} /> : <ChevronLeftIcon size={18} />}
           </IconButton>
@@ -101,11 +103,12 @@ export function AppShell({ items, title, tone = "blue", footer, children }: AppS
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Topbar (layar sempit) */}
-        <header className={cn("sticky top-0 z-20 flex h-16 flex-none items-center gap-2 px-2 text-white lg:hidden", toneBg[tone])}>
-          <IconButton label="Buka navigasi" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(true)} className="text-white hover:bg-white/10">
+        <header className="sticky top-0 z-20 flex h-16 flex-none items-center gap-2 border-b border-ink-100 bg-white px-2 lg:hidden">
+          <IconButton label="Buka navigasi" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(true)}>
             <MenuIcon />
           </IconButton>
-          <span className="text-title-md">{title}</span>
+          <Logo height={28} />
+          <span className="ml-auto pr-2 text-label-lg text-ink-500">{title}</span>
         </header>
         <main className="min-w-0 flex-1">{children}</main>
       </div>
@@ -121,9 +124,9 @@ export function AppShell({ items, title, tone = "blue", footer, children }: AppS
         className={cn("m-0 h-dvh max-h-dvh w-72 max-w-[85vw] p-0 text-white shadow-3 backdrop:bg-ink-900/50 lg:hidden", toneBg[tone])}
       >
         <div className="flex h-full flex-col">
-          <div className="flex h-16 flex-none items-center justify-between border-b border-white/10 px-4">
-            <span className="text-title-md">RumahAgen · {title}</span>
-            <IconButton label="Tutup navigasi" onClick={() => setDrawerOpen(false)} className="text-white hover:bg-white/10">
+          <div className="flex h-16 flex-none items-center justify-between border-b border-ink-100 bg-white px-4">
+            <Logo height={28} />
+            <IconButton label="Tutup navigasi" onClick={() => setDrawerOpen(false)} className="-mr-2">
               <CloseIcon />
             </IconButton>
           </div>

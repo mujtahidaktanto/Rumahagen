@@ -7,6 +7,7 @@ import { Button, IconButton, LinkButton } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Dialog } from "@/components/ui/Dialog";
 import { Field, Input, Textarea } from "@/components/ui/Field";
+import { Logo } from "@/components/ui/Logo";
 import { LoadingRegion, Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/Table";
@@ -36,7 +37,8 @@ export function ComponentGallery() {
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-8 lg:px-10">
-      <header className="flex flex-col gap-1">
+      <header className="flex flex-col gap-3">
+        <Logo height={40} />
         <h1 className="text-display">Komponen dasar RumahAgen</h1>
         <p className="text-body-lg text-ink-500">Halaman contoh Fase 1. Token dari <code>tokens.css</code>, Tailwind v4 (<code>@theme</code>), font Plus Jakarta Sans.</p>
       </header>
