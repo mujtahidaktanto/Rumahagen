@@ -113,7 +113,13 @@
         <span class="ra-display" style="font-size:22px;">Course Selesai!</span>
         <span class="ra-body-sm" style="color:var(--ra-ink-500);">Anda lulus kuis akhir dengan skor {{quizScore}}.</span>
         <div class="ra-badge ra-badge-warning" style="padding:9px 16px;font-size:14px;">+{{lpEarned}} Learning Points</div>
-        <a class="ra-btn ra-btn-secondary" style="width:100%;margin-top:6px;" href="M04-Pembelajaran.dc.html">Kembali ke Pembelajaran</a>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;margin-top:6px;">
+              <button class="ra-btn ra-btn-primary" style="width:100%;" disabled="{{dlBusy}}" onClick="{{downloadCert}}"><sc-if value="{{dlIdle}}" hint-placeholder-val="{{true}}">Unduh Sertifikat (PDF)</sc-if><sc-if value="{{dlBusy}}" hint-placeholder-val="{{false}}">Menyiapkan sertifikat…</sc-if></button>
+              <sc-if value="{{dlOk}}" hint-placeholder-val="{{false}}"><span class="ra-body-sm" style="color:var(--ra-success-600);" role="status">Sertifikat RA-2026-000123 diunduh.</span></sc-if>
+              <sc-if value="{{dlErr}}" hint-placeholder-val="{{false}}"><span class="ra-body-sm" style="color:var(--ra-danger-600);" role="alert">Sertifikat belum bisa diunduh. Periksa koneksi Anda lalu coba lagi.</span></sc-if>
+              <span class="ra-caption" style="text-align:center;">Sertifikat terbit otomatis. Anda bisa mengunduhnya lagi kapan saja dari Pembelajaran &gt; Sertifikat Saya.</span>
+            </div>
+            <a class="ra-btn ra-btn-secondary" style="width:100%;margin-top:6px;" href="M04-Pembelajaran.dc.html">Kembali ke Pembelajaran</a>
       </div>
     </sc-if>
 
@@ -168,11 +174,11 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"unduh":{"editor":"enum","default":"normal","options":["normal","lambat","gagal"],"section":"Skenario unduhan"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = {
+    this.state = { dl: '',
       viewMode: 'lesson',
       currentLessonIndex: 0,
       doneLessons: {},
@@ -240,6 +246,10 @@ class Component extends DCLogic {
   toggleSheet(){ this.setState({ sheetOpen: !this.state.sheetOpen }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
 
+  downloadCert(){
+    var mode = this.props.unduh || 'normal';
+    this.setState({ dl: mode === 'lambat' ? 'busy' : mode === 'gagal' ? 'err' : 'ok' });
+  }
   renderVals() { var self = this, st = this.state || {}; var open = st.drawerOpen === true; var shell = { drawerOpen: open, openDrawer: function(){ self.setState({ drawerOpen: true }); }, closeDrawer: function(){ self.setState({ drawerOpen: false }); }, stopClick: function(e){ if (e && e.stopPropagation) e.stopPropagation(); } }; return Object.assign(shell, this.renderVals_page()); }
 
   renderVals_page() {
@@ -304,7 +314,7 @@ class Component extends DCLogic {
       lessons: lessonRows,
       isLessonView: this.state.viewMode === 'lesson',
       isQuizView: this.state.viewMode === 'quiz',
-      isCompletedView: this.state.viewMode === 'completed',
+      isCompletedView: this.state.viewMode === 'completed', dlBusy: this.state.dl === 'busy', dlIdle: this.state.dl !== 'busy', dlOk: this.state.dl === 'ok', dlErr: this.state.dl === 'err', downloadCert: this.downloadCert.bind(this),
       currentLesson,
       markCurrentDone: this.markCurrentDone,
       goNext: this.goNext,
