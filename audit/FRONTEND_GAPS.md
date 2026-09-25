@@ -57,6 +57,16 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 4. **Format isi:** kolom `content` diperlakukan teks biasa: baris kosong = paragraf, `## Judul` = subjudul, `- butir` = daftar (tanpa HTML mentah, aman dari XSS). Bila Admin kelak ingin teks kaya (tebal, tautan, gambar), format ini perlu diperluas.
 5. **Sitemap `static_public_content`** (`sitemap_participation`, `indexability`) belum punya rute sitemap; `indexability = noindex` sudah dihormati lewat meta robots.
 
+## 2026-09-26 — Fase 2, M11 Learning dan Learning Session
+
+1. **KEAMANAN: materi kursus terbaca anonim.** Policy `course_lessons_select` mengizinkan siapa pun (termasuk `anon`) membaca SEMUA kolom `course_lessons` untuk course `published`, termasuk `content_url` (video/PDF/slide). Dibuktikan lewat `SET LOCAL ROLE anon` di DB live (5 URL uji terbaca). Halaman publik hanya menampilkan judul dan jenis materi, tetapi siapa pun dapat memanggil REST Supabase dengan kunci anon dan mengambil tautan materi tanpa enroll. Bila materi dianggap eksklusif untuk peserta, batasi baca `content_url` (mis. view publik tanpa `content_url` + policy baca penuh hanya untuk peserta terdaftar/pemilik/staf, atau simpan materi di storage dengan URL bertanda tangan). Butuh keputusan pemilik produk; migration belum ditulis.
+2. **Learning Session tidak terlihat pengunjung sama sekali:** `learning_sessions_select` mensyaratkan `auth.uid() IS NOT NULL` walau visibilitas `public`. Pengunjung melihat panel "Sesi Ini Bersifat Terbatas / Masuk untuk Cek Akses" (sesuai wireframe). Bila sesi publik seharusnya bisa dilihat/ditemukan mesin pencari tanpa login, policy perlu diubah.
+3. **`learning_sessions` tidak punya kolom judul/deskripsi.** Judul memakai judul course terkait (atau "Sesi {tipe}" bila tanpa course); "Tentang Sesi Ini" memakai deskripsi course. Bila sesi butuh judul/deskripsi sendiri, perlu kolom baru. Tautan "Bagian dari event" tidak ditampilkan (tidak ada halaman Event; event_id belum dirujuk).
+4. **Tautan gabung sesi live dan rekaman on-demand** tidak ditampilkan di halaman publik (butuh API terpisah untuk peserta: provider binding/artifacts). Sesi live menampilkan catatan; sesi selesai menampilkan tombol nonaktif.
+5. **"Mulai Belajar" hanya mendaftarkan** (POST /api/courses/{id}/enroll); layar belajar (`/agent/belajar`) baru dibangun di Fase 3, jadi pesan setelah daftar mengarahkan ke menu Pembelajaran tanpa tautan.
+6. **Belum diuji dengan pengguna login:** tombol Mulai Belajar, Daftar Sesi Ini, dan daftar/detail sesi hanya diuji sisi pengunjung (kata sandi akun uji tidak dimiliki Claude). Perlu uji manual oleh pemilik produk memakai akun Agent.
+7. **Pengujian data contoh:** 3 course (2 terbit, 1 draft), lengkap dengan kuis 1 soal agar lolos aturan penerbitan, dan 3 sesi (publik terjadwal, publik selesai on-demand, privat terjadwal).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

@@ -35,6 +35,17 @@ export function whatsappUrl(phone: string | null | undefined, text?: string): st
 
 const DATE =new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 
+const DATETIME_DATE = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
+const DATETIME_TIME = new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Jakarta" });
+
+/** ISO -> "18 Okt 2026 · 19.00 WIB" (zona Asia/Jakarta). Kosong/tidak valid -> "". */
+export function formatDateTime(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${DATETIME_DATE.format(d)} · ${DATETIME_TIME.format(d).replace(":", ".")} WIB`;
+}
+
 /** ISO -> "1 Des 2026". Nilai kosong/tidak valid -> "". */
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "";
