@@ -38,7 +38,7 @@ export function ComponentGallery() {
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-8 lg:px-10">
       <header className="flex flex-col gap-3">
-        <Logo height={40} />
+        <Logo height={40} className="self-start" />
         <h1 className="text-display">Komponen dasar RumahAgen</h1>
         <p className="text-body-lg text-ink-500">Halaman contoh Fase 1. Token dari <code>tokens.css</code>, Tailwind v4 (<code>@theme</code>), font Plus Jakarta Sans.</p>
       </header>

@@ -22,7 +22,7 @@ const items: NavItem[] = [
 export default function ShellDemoPage() {
   if (process.env.HIDE_DEV_PAGES === "1") notFound();
   return (
-    <AppShell items={items} title="Agent" footer={<span className="text-label-lg">Rian Saputra</span>}>
+    <AppShell items={items} title="Agent" user={{ name: "Rian Saputra", roleLabel: "Agent" }}>
       <div className="flex flex-col gap-4 p-4 lg:p-10">
         <h1 className="text-headline">Dashboard</h1>
         <Card className="p-5">

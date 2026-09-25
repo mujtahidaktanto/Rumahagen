@@ -10,6 +10,7 @@ import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, MenuIcon } from "@/components/ui/icons";
 import { IconButton } from "@/components/ui/Button";
+import { Avatar } from "@/components/ui/Avatar";
 import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/cn";
 
@@ -22,7 +23,9 @@ type AppShellProps = {
   title: string;
   /** blue = Agent/Partner/Instructor, ink = Admin (sama dengan wireframe). */
   tone?: Tone;
-  /** Slot bawah rel/laci (profil pengguna). */
+  /** Pengguna yang login: tampil di bawah rel dan laci sebagai lingkaran foto/inisial + nama + peran (saat rel diringkas hanya lingkaran). */
+  user?: { name: string; roleLabel: string; avatarUrl?: string | null };
+  /** Slot tambahan di bawah blok pengguna (opsional). */
   footer?: ReactNode;
   children: ReactNode;
 };
@@ -31,6 +34,18 @@ const toneBg: Record<Tone, string> = { blue: "bg-blue-900", ink: "bg-ink-900" };
 
 function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function UserBlock({ user, collapsed }: { user: NonNullable<AppShellProps["user"]>; collapsed?: boolean }) {
+  return (
+    <div className={cn("flex items-center gap-3", collapsed && "justify-center")} title={collapsed ? `${user.name} (${user.roleLabel})` : undefined}>
+      <Avatar name={user.name} imageUrl={user.avatarUrl} size={36} />
+      <div className={cn("min-w-0", collapsed && "sr-only")}>
+        <p className="truncate text-label-lg text-white">{user.name}</p>
+        <p className="truncate text-caption text-white/60">{user.roleLabel}</p>
+      </div>
+    </div>
+  );
 }
 
 function NavList({ items, collapsed, onNavigate }: { items: NavItem[]; collapsed?: boolean; onNavigate?: () => void }) {
@@ -64,7 +79,7 @@ function NavList({ items, collapsed, onNavigate }: { items: NavItem[]; collapsed
   );
 }
 
-export function AppShell({ items, title, tone = "blue", footer, children }: AppShellProps) {
+export function AppShell({ items, title, tone = "blue", user, footer, children }: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef<HTMLDialogElement>(null);
@@ -98,7 +113,12 @@ export function AppShell({ items, title, tone = "blue", footer, children }: AppS
         <nav className="scroll-thin flex-1">
           <NavList items={items} collapsed={collapsed} />
         </nav>
-        {footer ? <div className="flex-none border-t border-white/12 p-3 text-white">{footer}</div> : null}
+        {user || footer ? (
+          <div className="flex flex-none flex-col gap-3 border-t border-white/12 p-3 text-white">
+            {user ? <UserBlock user={user} collapsed={collapsed} /> : null}
+            {footer}
+          </div>
+        ) : null}
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -133,7 +153,12 @@ export function AppShell({ items, title, tone = "blue", footer, children }: AppS
           <nav className="scroll-thin flex-1">
             <NavList items={items} onNavigate={() => setDrawerOpen(false)} />
           </nav>
-          {footer ? <div className="flex-none border-t border-white/12 p-3">{footer}</div> : null}
+          {user || footer ? (
+            <div className="flex flex-none flex-col gap-3 border-t border-white/12 p-3">
+              {user ? <UserBlock user={user} /> : null}
+              {footer}
+            </div>
+          ) : null}
         </div>
       </dialog>
     </div>

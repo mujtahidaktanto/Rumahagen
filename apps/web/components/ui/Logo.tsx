@@ -14,7 +14,7 @@ export function Logo({ height = 34, className }: { height?: number; className?: 
       height={height}
       priority
       unoptimized
-      className={cn("h-auto w-auto flex-none self-start object-contain", className)}
+      className={cn("h-auto w-auto flex-none object-contain", className)}
       style={{ height, width: "auto" }}
     />
   );
