@@ -1,8 +1,33 @@
 # Persiapan hosting staging RumahAgen di Vercel
 
-Status 2026-09-25: **hanya persiapan, belum ada proyek Vercel yang dibuat.** Frontend belum ada (baru wireframe di `docs/design/wireframes-v2`), jadi
-yang akan berjalan di staging hanyalah backend: rute `/api/*`, halaman publik `/verifikasi` dan `/verifikasi/{kode}`, `robots.txt`, dan sitemap. Halaman `/`
-masih scaffold. Build produksi lokal (`npm run build` di `apps/web`) sudah lulus.
+## Status (diperbarui 2026-09-25)
+
+**Proyek Vercel `rumahagen-staging` sudah dibuat dan sehat.** Frontend belum ada (baru wireframe di `docs/design/wireframes-v2`), jadi yang berjalan di staging
+hanyalah backend: rute `/api/*`, halaman publik `/verifikasi` dan `/verifikasi/{kode}`, `robots.txt`, dan sitemap. Halaman `/` masih scaffold.
+
+| Hal | Nilai |
+|---|---|
+| Proyek | `rumahagen-staging` (`prj_F0GZBL629Ztz7mRIMh46W2nALqnJ`), akun pribadi `aktanto`, paket Hobby |
+| Sumber | GitHub `mujtahidaktanto/Rumahagen`, cabang `main` (push otomatis di-deploy), Root Directory `apps/web`, Node 20.x |
+| Alamat | `https://rumahagen-staging-aktanto.vercel.app` (produksi proyek); domain kustom `staging.rumahagen.com` belum ditambahkan |
+| Proteksi | Vercel Authentication untuk **semua** deployment (alamat produksi `*.vercel.app` pun dialihkan ke login Vercel) |
+| Environment variables | 10 variabel terisi (Production dan Preview); rahasia bertipe Sensitive, dibuat sendiri oleh pemilik |
+| Uji sehat | `/verifikasi` menampilkan formulir; `/api/certificates/verify/AAAA-0000-0000` = 404 JSON `NOT_FOUND`; `/api/ref-provinces` = 38 provinsi; `robots.txt` benar |
+
+Pelajaran saat setup:
+- `NEXT_PUBLIC_*` tertanam saat build: setelah mengubah nilainya **wajib Redeploy**. Nilai `NEXT_PUBLIC_SUPABASE_URL` / `..._ANON_KEY` yang salah membuat semua rute yang membaca
+  Supabase menjawab 500 `INTERNAL_ERROR`, sementara halaman yang tidak memakainya (`/verifikasi`, `robots.txt`) tetap normal. Pembanding: URL persis `https://<ref>.supabase.co`
+  (tanpa `/` di akhir); kunci anon legacy 208 karakter.
+- Koneksi Vercel dari sesi Claude Code hanya berlaku untuk cakupan pribadi: pembuatan proyek, deployment, dan pembacaan daftar env berhasil, tetapi log build/runtime
+  ditolak (403 untuk cakupan tim `aktanto`). Log dibaca lewat dashboard Vercel.
+- Pembuatan proyek lewat API tidak menampilkan status tautan Git; deployment awal dipicu dari `gitSource` GitHub. Verifikasi bahwa push ke `main` memicu deployment otomatis.
+  Bila tidak, hubungkan repo di Settings > Git.
+
+Sisa: tambah domain staging (bagian 4 dan catatan DNS di percakapan: CNAME `staging` di NEO DNS Biznet), Fase 0 keamanan (`audit/FASE0_SECURITY_PLAN.md`), cron snapshot analytics.
+
+---
+
+*Catatan awal (sebelum proyek dibuat):* build produksi lokal (`npm run build` di `apps/web`) sudah lulus.
 
 ## 1. Fakta proyek
 

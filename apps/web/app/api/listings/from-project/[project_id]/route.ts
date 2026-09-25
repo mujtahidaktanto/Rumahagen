@@ -38,6 +38,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { createListingFromProjectSchema } from "@/lib/validation/listings";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 
 function slugify(title: string): string {
@@ -160,7 +161,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     if (error) throw error;
   }
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m03.listing.create_from_project",
     p_entity_type: "listings",
     p_entity_id: listing.id,

@@ -24,6 +24,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 import { assertCanCloseOrganization } from "@/lib/organizations/authorize-close";
 
@@ -107,7 +108,7 @@ export const DELETE = withApiHandler({ requireIdempotencyKey: true }, async (ctx
     throw new ApiError("CONFLICT", "Status organisasi berubah sebelum diproses -- coba lagi.");
   }
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m12.organization.close",
     p_entity_type: "organizations",
     p_entity_id: data.id,

@@ -26,6 +26,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 
 export const PUT = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -69,7 +70,7 @@ export const PUT = withApiHandler({ requireIdempotencyKey: true }, async (ctx) =
     throw new ApiError("CONFLICT", "Status Agent berubah sebelum suspend diproses -- coba lagi.");
   }
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m02.agent.suspend",
     p_entity_type: "users",
     p_entity_id: data.id,

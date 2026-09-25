@@ -21,6 +21,7 @@
 import { withApiHandler } from "@/lib/api/handler";
 import { requirePermission } from "@/lib/api/require-permission";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 
 export const PUT = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -65,7 +66,7 @@ export const PUT = withApiHandler({ requireIdempotencyKey: true }, async (ctx) =
     throw new ApiError("CONFLICT", "Status listing berubah sebelum approve diproses -- coba lagi.");
   }
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m03.listing.approve",
     p_entity_type: "listings",
     p_entity_id: data.id,

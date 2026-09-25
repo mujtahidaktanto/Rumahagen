@@ -1,4 +1,4 @@
-﻿# Migration M10 (Authorization) + M09 (Admin Console) + M13 (Provider/BYOK) + M03/M14 (Listing/Refresh Allowance) + M04/M15 (Learning/Qualification) + M02/M05/M06/M08/M11 (Profile/Event/Project/Dashboard/Discovery)
+# Migration M10 (Authorization) + M09 (Admin Console) + M13 (Provider/BYOK) + M03/M14 (Listing/Refresh Allowance) + M04/M15 (Learning/Qualification) + M02/M05/M06/M08/M11 (Profile/Event/Project/Dashboard/Discovery)
 
 Urutan file wajib dijalankan sesuai nomor (Supabase CLI/`supabase db push` otomatis
 mengurutkan by filename, tapi didokumentasikan eksplisit di sini untuk kejelasan):
@@ -3596,6 +3596,13 @@ Pemanggil tanpa `auth.uid()` (service_role/migration) tidak dibatasi.
 - Fungsi baru `promotion_rules_problem`, `promotion_discounted_price` (potongan + batas); `compute_addon_order_price` menerima `p_organization_id` (cakupan pribadi/organisasi) dan `compute_plan_order_price` ikut mengevaluasi aturan; trigger order add-on meneruskan `organization_id`; `my_addon_promotion_offers(addon_ids, organization_id?)`. Order yang melanggar aturan ditolak 23514 dengan alasan.
 - API: admin promosi (POST/PUT) menerima `rule_configuration` (PUT = form penuh), daftar promosi memuatnya; `GET /commercial/catalog` dan `/commercial/offers` menerima `?organization_id=` untuk cakupan penawaran.
 - Diuji rollback live: potongan 50% dibatasi 20 rb -> 80.000, nominal 30 rb dibatasi 10 rb -> 90.000; cakupan pribadi/organisasi (add-on dan paket); kode produk; hari dan jam WIB; pengguna baru; gabungan; penawaran menampilkan `eligible=false` + alasan; 14 bentuk salah ditolak CHECK. Tidak diuji: insert order lewat trigger (hanya fungsi harga).
+
+## `0146` — Tutup celah RPC anon dan pemalsuan audit (⏳ BELUM DITERAPKAN)
+- Dibuktikan di DB live (2026-09-25, rollback, role anon/authenticated): `create_notification` bisa dipanggil anon (guard `auth.uid() IS NOT NULL AND ...` terlewati saat uid NULL), `log_audit_event` bisa menulis audit palsu oleh anon dan agen biasa, `check_and_increment_rate_limit` bisa mengotori key orang lain.
+- Perbaikan: rate limit hanya `service_role`; `log_audit_event` dicabut dari anon/authenticated (fungsi SECURITY DEFINER lain tetap memakainya) dan diganti `log_audit_event_for(p_user_id, ...)` khusus `service_role` untuk route API; `create_notification` hanya Superadmin/Admin login atau service role; EXECUTE anon dicabut dari 15 RPC bergaring (adjust/grant LP, fulfill, cancel order, refresh listing, dll.); EXECUTE anon+authenticated dicabut dari semua fungsi trigger; `search_path` dikunci pada 12 fungsi.
+- Kode: `lib/api/audit.ts` (`logAuditEvent`) dipakai 14 route (13 dari stash + `admin/agents/[id]/ktp` yang ditambah setelahnya) menggantikan `supabase.rpc("log_audit_event")`; `checkRateLimit` memakai client service role.
+- **Urutan rilis:** kode dan migration harus naik berdekatan. Migration tanpa kode baru membuat SEMUA request API gagal (rate limit dipanggil dengan sesi pengguna); kode baru tanpa migration hanya membuat penulisan audit gagal (tanpa `log_audit_event_for`).
+- Diuji rollback live: semua panggilan terlarang ditolak 42501 (anon dan agen), pemanggilan sah tetap jalan (Superadmin `create_notification`, service role audit/rate limit/notifikasi, agen membatalkan order sendiri dengan audit tercatat atas user yang benar, insert/update listing dan order memicu trigger normal). `get_shared_dbr_simulation` tetap publik.
 
 ## `0147` — Gap backend Developer Partner: klaim masuk, ringkasan dashboard, bucket unggahan (M06) (✅ DITERAPKAN 2026-09-25)
 - Nomor 0146 dicadangkan untuk perbaikan keamanan RPC anon yang ditunda (disimpan di `git stash`, belum diterapkan); 0147 tidak bergantung padanya.

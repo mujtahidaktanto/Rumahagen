@@ -11,6 +11,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { createOrganizationSchema } from "@/lib/validation/organizations";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 
 function slugify(name: string): string {
@@ -42,7 +43,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
 
   if (error) throw error;
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m12.organization.create",
     p_entity_type: "organizations",
     p_entity_id: data.id,

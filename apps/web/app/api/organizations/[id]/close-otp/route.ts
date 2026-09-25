@@ -14,6 +14,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 import { mapAuthError } from "@/lib/api/auth-error";
 import { assertCanCloseOrganization } from "@/lib/organizations/authorize-close";
@@ -53,7 +54,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
   });
   if (error) mapAuthError(error);
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m12.organization.close_otp_requested",
     p_entity_type: "organizations",
     p_entity_id: org.id,

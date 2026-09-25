@@ -12,6 +12,7 @@
 // instance, tanpa vendor baru.
 
 import { SupabaseClient } from "@supabase/supabase-js";
+import { createAdminClient } from "../supabase/admin";
 import { ApiError } from "./errors";
 
 const WINDOW_MS = 60_000; // 1 menit
@@ -23,8 +24,10 @@ export interface RateLimitResult {
   resetAt: number; // epoch ms
 }
 
-export async function checkRateLimit(supabase: SupabaseClient, key: string): Promise<RateLimitResult> {
-  const { data, error } = await supabase.rpc("check_and_increment_rate_limit", {
+// Sejak migration 0146 RPC hanya untuk service_role (sebelumnya bisa dipanggil anon untuk mengotori key orang lain); parameter client dipertahankan agar pemanggil
+// tidak berubah tetapi tidak dipakai.
+export async function checkRateLimit(_supabase: SupabaseClient, key: string): Promise<RateLimitResult> {
+  const { data, error } = await createAdminClient().rpc("check_and_increment_rate_limit", {
     p_key: key,
     p_window_ms: WINDOW_MS,
     p_max_requests: MAX_REQUESTS_PER_WINDOW,

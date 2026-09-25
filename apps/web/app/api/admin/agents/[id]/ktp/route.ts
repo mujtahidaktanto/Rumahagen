@@ -4,6 +4,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { ktpSignedUrl } from "@/lib/storage/agent-ktp";
 import { createClient } from "@/lib/supabase/server";
 
@@ -21,7 +22,7 @@ export const GET = withApiHandler({}, async (ctx) => {
     throw new ApiError("NOT_FOUND", "Data KTP tidak ditemukan atau Anda tidak punya akses.");
   }
 
-  await supabase.rpc("log_audit_event", { p_action: "m02.agent.ktp_view", p_entity_type: "agent_profiles", p_entity_id: kyc.user_id });
+  await logAuditEvent(ctx.userId, { p_action: "m02.agent.ktp_view", p_entity_type: "agent_profiles", p_entity_id: kyc.user_id });
 
   return {
     data: {

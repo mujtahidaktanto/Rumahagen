@@ -17,6 +17,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 
 export const DELETE = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -51,7 +52,7 @@ export const DELETE = withApiHandler({ requireIdempotencyKey: true }, async (ctx
     throw new ApiError("FORBIDDEN", "Anda tidak punya akses untuk mengubah keanggotaan ini.");
   }
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: isSelf ? "m12.organization_member.leave" : "m12.organization_member.remove",
     p_entity_type: "organization_members",
     p_entity_id: data.id,

@@ -8,6 +8,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { updateOrganizationBrandingSchema } from "@/lib/validation/organizations";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 
 export const PUT = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -26,7 +27,7 @@ export const PUT = withApiHandler({ requireIdempotencyKey: true }, async (ctx) =
     throw new ApiError("FORBIDDEN", "Organisasi tidak ditemukan atau Anda tidak punya akses untuk mengubah branding-nya.");
   }
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m12.organization.branding_update",
     p_entity_type: "organizations",
     p_entity_id: data.id,

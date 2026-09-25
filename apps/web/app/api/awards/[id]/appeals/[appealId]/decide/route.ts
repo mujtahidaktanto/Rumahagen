@@ -17,6 +17,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { decideAwardAppealSchema } from "@/lib/validation/awards";
 import { ApiError } from "@/lib/api/errors";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 
 export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {
@@ -47,7 +48,7 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     throw new ApiError("NOT_FOUND", "Appeal tidak ditemukan, salah award, atau Anda tidak punya akses.");
   }
 
-  await supabase.rpc("log_audit_event", {
+  await logAuditEvent(ctx.userId, {
     p_action: "m15.award_appeal.decide",
     p_entity_type: "award_appeals",
     p_entity_id: data.id,

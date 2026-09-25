@@ -22,6 +22,7 @@
 // withApiHandler -- sama seperti reports/export dan sitemap.
 
 import { NextResponse } from "next/server";
+import { logAuditEvent } from "@/lib/api/audit";
 import { createClient } from "@/lib/supabase/server";
 import { ApiError, errorBody } from "@/lib/api/errors";
 import { checkRateLimit } from "@/lib/api/rate-limit";
@@ -58,7 +59,7 @@ export async function GET(request: Request) {
 
     const dashboard = await loadDashboard(supabase, { from, to, compare });
 
-    const { error: auditErr } = await supabase.rpc("log_audit_event", {
+    const { error: auditErr } = await logAuditEvent(user.id, {
       p_action: "analytics.export",
       p_entity_type: "analytics_report",
       p_new_value: { format, from, to, compare, definition_version: dashboard.definition_version },
