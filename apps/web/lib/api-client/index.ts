@@ -47,6 +47,8 @@ export interface ApiRequestOptions {
   idempotency?: boolean | string;
   signal?: AbortSignal;
   headers?: Record<string, string>;
+  /** false = jangan panggil onUnauthenticated pada 401 (mis. formulir login: 401 berarti "email/kata sandi salah", bukan sesi habis). Bawaan true. */
+  redirectOnUnauthenticated?: boolean;
 }
 
 interface ClientConfig {
@@ -87,7 +89,8 @@ function buildUrl(path: string, query?: ApiRequestOptions["query"]): string {
 export async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<ApiResult<T>> {
   const method = options.method ?? "GET";
   const headers: Record<string, string> = { Accept: "application/json", ...(options.headers ?? {}) };
-  if (options.body !== undefined) headers["Content-Type"] = "application/json";
+  // Server menolak (422) POST/PUT/PATCH/DELETE tanpa Content-Type: application/json, termasuk yang tanpa badan (mis. POST /auth/logout); GET tanpa header ini.
+  if (options.body !== undefined || method !== "GET") headers["Content-Type"] = "application/json";
   if (options.idempotency) headers["Idempotency-Key"] = typeof options.idempotency === "string" ? options.idempotency : newIdempotencyKey();
 
   const doFetch = config.fetchImpl ?? fetch;
@@ -131,7 +134,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     traceId: errBody?.meta?.traceId,
     retryAfterSeconds: code === "RATE_LIMITED" && Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : undefined,
   });
-  if (code === "UNAUTHENTICATED") config.onUnauthenticated();
+  if (code === "UNAUTHENTICATED" && options.redirectOnUnauthenticated !== false) config.onUnauthenticated();
   throw error;
 }
 

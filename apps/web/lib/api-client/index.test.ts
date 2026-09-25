@@ -36,6 +36,15 @@ describe("apiRequest", () => {
     expect(init.headers["Idempotency-Key"]).toMatch(/^[0-9a-f-]{36}$/);
   });
 
+  it("mengirim Content-Type JSON pada mutasi tanpa badan (logout), tidak pada GET", async () => {
+    fetchMock.mockImplementation(() => Promise.resolve(reply(200, { data: { logged_out: true } })));
+    await api.post("/auth/logout");
+    await api.get("/users/me");
+    expect(fetchMock.mock.calls[0]![1].headers["Content-Type"]).toBe("application/json");
+    expect(fetchMock.mock.calls[0]![1].body).toBeUndefined();
+    expect(fetchMock.mock.calls[1]![1].headers["Content-Type"]).toBeUndefined();
+  });
+
   it("memakai kunci yang diberikan agar percobaan ulang aksi yang sama membawa kunci sama", async () => {
     fetchMock.mockImplementation(() => Promise.resolve(reply(200, { data: null }))); // Response baru tiap panggilan (badan hanya bisa dibaca sekali)
     const key = newIdempotencyKey();
@@ -57,6 +66,12 @@ describe("apiRequest", () => {
     fetchMock.mockResolvedValue(reply(401, { error: { code: "UNAUTHENTICATED", message: "Login diperlukan" } }));
     await expect(api.get("/users/me")).rejects.toMatchObject({ code: "UNAUTHENTICATED", status: 401 });
     expect(onUnauthenticated).toHaveBeenCalledTimes(1);
+  });
+
+  it("tidak memanggil onUnauthenticated bila redirectOnUnauthenticated: false (formulir login)", async () => {
+    fetchMock.mockResolvedValue(reply(401, { error: { code: "UNAUTHENTICATED", message: "Email atau kata sandi salah." } }));
+    await expect(api.post("/auth/login", { email: "a@b.c", password: "x" }, { redirectOnUnauthenticated: false })).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
+    expect(onUnauthenticated).not.toHaveBeenCalled();
   });
 
   it("membaca Retry-After pada 429 tanpa retry otomatis", async () => {

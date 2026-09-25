@@ -4,9 +4,12 @@
 // 60 detik; saat kedaluwarsa, tabel lama tetap dipakai sambil disegarkan di latar belakang (waitUntil). Kegagalan membaca tidak pernah menghalangi
 // halaman: tanpa data pengalihan, request diteruskan apa adanya. Hanya jalur internal yang dialihkan (lib/seo/url-redirects.ts).
 // Tidak berlaku untuk /api, aset Next, dan berkas statis (matcher).
+// Tambahan (Fase 1): untuk jalur aplikasi (/agent, /admin, /partner, /instructor, /notifikasi, /portal, /login) middleware juga menyegarkan sesi Supabase dan
+// menambah header x-pathname (lib/supabase/middleware.ts); halaman publik tidak menyentuh Supabase di sini.
 
 import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 import { buildRedirectMap, resolveRedirect, type RedirectMap } from "@/lib/seo/url-redirects";
+import { needsSession, updateSession } from "@/lib/supabase/middleware";
 
 const TTL_MS = 60_000;
 const RETRY_AFTER_FAILURE_MS = 10_000;
@@ -49,6 +52,11 @@ async function refresh(): Promise<void> {
 export async function middleware(request: NextRequest, event: NextFetchEvent) {
   if (request.method !== "GET" && request.method !== "HEAD") {
     return NextResponse.next();
+  }
+
+  // Jalur aplikasi: segarkan sesi, tidak ada pengalihan URL publik untuknya.
+  if (needsSession(request.nextUrl.pathname)) {
+    return updateSession(request);
   }
 
   if (!cache) {

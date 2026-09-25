@@ -56,7 +56,13 @@ export const InboxIcon = (p: IconProps) => (
     <path d="M3 13v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6h-5a3 3 0 0 1-6 0H3Z" />
   </Icon>
 );
-export const HomeIcon = (p: IconProps) => (
+/** Ikon netral untuk menu yang belum punya ikon khusus (diganti per modul saat layarnya dibangun). */
+export const DotIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="4" />
+  </Icon>
+);
+export const HomeIcon =(p: IconProps) => (
   <Icon {...p}>
     <path d="M3 11l9-7 9 7" />
     <path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9" />
