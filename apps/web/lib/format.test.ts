@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatArea, formatDate, formatDateTime, formatListingPrice, formatRupiah, whatsappUrl } from "./format";
+import { formatArea, formatDate, formatDateTime, formatListingPrice, formatPriceRange, formatRupiah, whatsappUrl } from "./format";
 
 describe("format", () => {
   it("rupiah memakai titik ribuan", () => {
@@ -9,6 +9,14 @@ describe("format", () => {
     expect(formatListingPrice(5000000, "per_bulan")).toBe("Rp 5.000.000 / bulan");
     expect(formatListingPrice(1200000000, "total")).toBe("Rp 1.200.000.000");
     expect(formatListingPrice(1200000000, null)).toBe("Rp 1.200.000.000");
+  });
+  it("rentang harga proyek", () => {
+    expect(formatPriceRange(650000000, 950000000, "total")).toBe("Rp 650.000.000 – Rp 950.000.000");
+    expect(formatPriceRange(450000000, 450000000, null)).toBe("Rp 450.000.000");
+    expect(formatPriceRange(450000000, null, null)).toBe("Mulai Rp 450.000.000");
+    expect(formatPriceRange(null, 900000000, null)).toBe("Hingga Rp 900.000.000");
+    expect(formatPriceRange(3000000, 5000000, "per_bulan")).toBe("Rp 3.000.000 – Rp 5.000.000 / bulan");
+    expect(formatPriceRange(null, null, "total")).toBe("Hubungi developer");
   });
   it("luas", () => {
     expect(formatArea(120)).toBe("120 m²");

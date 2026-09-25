@@ -14,6 +14,17 @@ export function formatListingPrice(price: number, unit: string | null | undefine
   return `${formatRupiah(price)}${unit ? (PRICE_SUFFIX[unit] ?? "") : ""}`;
 }
 
+/** Rentang harga proyek: "Rp 650.000.000 – Rp 950.000.000", "Mulai Rp 450.000.000", "Hingga Rp X", satu harga bila min = max, atau "Hubungi developer". Satuan sewa ikut. */
+export function formatPriceRange(min: number | null | undefined, max: number | null | undefined, unit: string | null | undefined): string {
+  const suffix = unit ? (PRICE_SUFFIX[unit] ?? "") : "";
+  const hasMin = min !== null && min !== undefined;
+  const hasMax = max !== null && max !== undefined;
+  if (hasMin && hasMax) return min === max ? `${formatRupiah(min)}${suffix}` : `${formatRupiah(min)} – ${formatRupiah(max)}${suffix}`;
+  if (hasMin) return `Mulai ${formatRupiah(min)}${suffix}`;
+  if (hasMax) return `Hingga ${formatRupiah(max)}${suffix}`;
+  return "Hubungi developer";
+}
+
 /** 120 -> "120 m²" (desimal dibuang bila bulat). */
 export function formatArea(value: number | null | undefined): string | null {
   if (value === null || value === undefined) return null;

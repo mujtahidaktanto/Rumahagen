@@ -25,6 +25,24 @@ export function listingCode(id: string): string {
 /** Tanda * dan _ membuat teks tercetak miring/tebal di WhatsApp; dihapus dari judul agar format pesan tidak rusak. */
 const plain = (s: string) => s.replace(/[*_~`]/g, "").replace(/\s+/g, " ").trim();
 
+/** Pesan awal ke PIC developer dari halaman proyek: nama proyek, lokasi, rentang harga, dan tautan halaman. */
+export function buildProjectWhatsAppMessage(i: { picName?: string | null; projectName: string; slug: string; location?: string | null; priceLabel: string; siteUrl: string }): string {
+  return [
+    i.picName ? `Halo ${plain(i.picName)},` : "Halo,",
+    "",
+    "Saya melihat proyek Anda di RumahAgen.com dan tertarik dengan proyek berikut:",
+    "",
+    `*${plain(i.projectName)}*`,
+    ...(i.location ? [`• Lokasi: ${plain(i.location)}`] : []),
+    `• Harga: ${i.priceLabel}`,
+    `• Tautan: ${i.siteUrl.replace(/\/+$/, "")}/project/${i.slug}`,
+    "",
+    "Boleh saya minta informasi lebih detail (unit yang tersedia, skema pembayaran, dan jadwal survei)?",
+    "",
+    "Terima kasih.",
+  ].join("\n");
+}
+
 /** Pesan awal dari profil agen (tanpa listing tertentu): memuat tautan profil agar agen tahu dari mana calon klien datang. */
 export function buildAgentWhatsAppMessage(i: { agentName: string; slug: string; siteUrl: string }): string {
   return [
