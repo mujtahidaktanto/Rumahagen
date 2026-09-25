@@ -33,6 +33,12 @@
 </helmet>
 <div class="page">
 
+<sc-if value="{{stNotMain}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;min-height:844px;background:#fff;"><div style="height:56px;flex:none;display:flex;align-items:center;padding:0 8px;border-bottom:1px solid var(--ra-ink-100);"><button class="ra-iconbtn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+<sc-if value="{{stLoading}}" hint-placeholder-val="{{false}}"><div role="status" aria-busy="true" aria-label="Memuat data"><div style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:220px;border-radius:var(--ra-radius-lg);"></div><div class="ra-skel" style="height:26px;width:65%;"></div><div class="ra-skel" style="height:14px;"></div><div class="ra-skel" style="height:14px;width:80%;"></div><div class="ra-skel" style="height:14px;width:60%;"></div></div><div class="ra-caption" style="text-align:center;padding-bottom:16px;">Memuat data…</div></div></sc-if>
+<sc-if value="{{stEmpty}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:72px 24px;text-align:center;color:var(--ra-ink-500);" role="status"><span style="color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M3 13l3-8h12l3 8"/><path d="M3 13v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6h-5a3 3 0 0 1-6 0H3Z"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Listing tidak ditemukan</span><p class="ra-body-md" style="max-width:380px;margin:0;">Tautan yang Anda buka salah, atau listing ini sudah tidak tersedia.</p><a class="ra-btn ra-btn-primary ra-btn-sm" href="M11-Discovery.dc.html">Cari listing lain</a></div></sc-if>
+<sc-if value="{{stError}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:72px 24px;text-align:center;color:var(--ra-ink-500);" role="alert"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Listing gagal dimuat</span><p class="ra-body-md" style="max-width:380px;margin:0;">Terjadi gangguan saat memuat halaman. Coba lagi beberapa saat.</p><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{stRetry}}">Coba Lagi</button></div></sc-if>
+</div></sc-if>
+<sc-if value="{{stMain}}" hint-placeholder-val="{{true}}">
   <div class="gallery">
     <div class="gallery-topbar">
       <button class="gtb-btn" aria-label="Kembali"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -129,12 +135,18 @@
       Chat via WhatsApp
     </button>
   </div>
+</sc-if>
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"listingStatus":{"editor":"enum","default":"published","options":["published","sold","rented","suspended","expired"],"section":"Skenario status listing"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"listingStatus":{"editor":"enum","default":"published","options":["published","sold","rented","suspended","expired"],"section":"Skenario status listing"},"keadaan":{"editor":"enum","default":"normal","options":["normal","memuat","tidak_ditemukan","gagal_muat"],"section":"Skenario halaman"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
-  renderVals() {
+  renderVals() { return Object.assign(this.stBase(), this.stVals()); }
+  stVals() {
+    var self = this, st = this.state || {}, k = st.stRetried ? 'normal' : (this.props.keadaan || 'normal');
+    return { stMain: k === 'normal', stNotMain: k !== 'normal', stLoading: k === 'memuat', stEmpty: k === 'tidak_ditemukan', stError: k === 'gagal_muat', stRetry: function () { self.setState({ stRetried: true }); } };
+  }
+  stBase() {
     const status = this.props.listingStatus ?? 'published';
     const statusCopy = {
       published: { label: 'published', badge: 'ra-badge-success' },

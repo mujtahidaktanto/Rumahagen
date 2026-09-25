@@ -36,6 +36,12 @@
   </div>
 
   <div class="ra-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+<sc-if value="{{stNotMain}}" hint-placeholder-val="{{false}}"><div class="ra-card" style="overflow:hidden;">
+<sc-if value="{{stLoading}}" hint-placeholder-val="{{false}}"><div role="status" aria-busy="true" aria-label="Memuat data"><div style="padding:16px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:72px;"></div><div class="ra-skel" style="height:72px;"></div><div class="ra-skel" style="height:72px;"></div><div class="ra-skel" style="height:72px;"></div></div><div class="ra-caption" style="text-align:center;padding-bottom:16px;">Memuat data…</div></div></sc-if>
+<sc-if value="{{stEmpty}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:32px 24px;text-align:center;color:var(--ra-ink-500);" role="status"><span style="color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M3 13l3-8h12l3 8"/><path d="M3 13v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6h-5a3 3 0 0 1-6 0H3Z"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada kasus rekonsiliasi</span><p class="ra-body-md" style="max-width:380px;margin:0;">Kasus muncul saat data pembayaran dan pesanan tidak cocok, atau saat Anda membukanya manual.</p></div></sc-if>
+<sc-if value="{{stError}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:32px 24px;text-align:center;color:var(--ra-ink-500);" role="alert"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Kasus rekonsiliasi gagal dimuat</span><p class="ra-body-md" style="max-width:380px;margin:0;">Terjadi gangguan saat mengambil daftar kasus. Tidak ada data yang berubah.</p><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{stRetry}}">Coba Lagi</button></div></sc-if>
+</div></sc-if>
+<sc-if value="{{stMain}}" hint-placeholder-val="{{true}}">
     <sc-for list="{{cases}}" as="c" hint-placeholder-count="4">
       <div class="item-card">
         <div style="display:flex;align-items:center;justify-content:space-between;"><span class="ra-label-lg" style="font-family:monospace;font-size:12px;">{{c.caseNumber}}</span><span class="ra-badge {{c.badgeClass}}">{{c.statusLabel}}</span></div>
@@ -46,7 +52,8 @@
         </sc-if>
       </div>
     </sc-for>
-    <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openNewCase}}">+ Buka Kasus</button>
+
+</sc-if>    <button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{openNewCase}}">+ Buka Kasus</button>
 
     <sc-if value="{{isSuperadmin}}" hint-placeholder-val="{{true}}">
       <div class="manual-zone">
@@ -131,7 +138,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"viewerRole":{"editor":"enum","default":"admin","options":["superadmin","admin","manager"],"section":"Skenario aktor"},"keadaan":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario data"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -152,7 +159,12 @@ class Component extends DCLogic {
   closeDialogs(){ this.setState({ newCaseOpen: false, resolveOpen: false, manualOpen: false }); }
   stopClick(e){ if (e && e.stopPropagation) e.stopPropagation(); }
   onNewCaseCategoryInput(e){ this.setState({ newCaseCategory: e.target.value }); }
-  renderVals() {
+  renderVals() { return Object.assign(this.stBase(), this.stVals()); }
+  stVals() {
+    var self = this, st = this.state || {}, k = st.stRetried ? 'normal' : (this.props.keadaan || 'normal');
+    return { stMain: k === 'normal', stNotMain: k !== 'normal', stLoading: k === 'memuat', stEmpty: k === 'kosong', stError: k === 'gagal_muat', stRetry: function () { self.setState({ stRetried: true }); } };
+  }
+  stBase() {
     const viewerRole = this.props.viewerRole ?? 'admin';
     const isSuperadmin = viewerRole === 'superadmin';
     const canResolve = isSuperadmin || viewerRole === 'admin';

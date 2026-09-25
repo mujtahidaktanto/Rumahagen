@@ -46,6 +46,7 @@
   <div class="content">
     <div class="form-wrap">
 
+      <sc-if value="{{isError}}" hint-placeholder-val="{{false}}"><div role="alert" style="width:100%;box-sizing:border-box;text-align:left;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--ra-radius-md);background:var(--ra-danger-100);border:1px solid #F3B9B9;color:var(--ra-danger-600);margin-bottom:16px;"><span style="flex:none;margin-top:1px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-body-md" style="color:var(--ra-danger-600);">Organisasi belum dibuat karena ada gangguan saat menyimpan. Isian Anda tetap ada di formulir; tekan Buat Organisasi untuk mencoba lagi.</span></div></sc-if>
       <div class="immutable-warn">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-warning-600)" stroke-width="1.8" width="18" height="18" style="flex:none;margin-top:1px;"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9.5"/></svg>
         <span class="ra-body-md">Nama, jenis, alamat, dan nomor telepon organisasi <strong>tidak bisa diubah lagi setelah dibuat</strong>. Pastikan sudah benar sebelum melanjutkan.</span>
@@ -107,7 +108,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"formState":{"editor":"enum","default":"idle","options":["idle","submitting","success"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"formState":{"editor":"enum","default":"idle","options":["idle","submitting","error","success"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const formState = this.props.formState ?? 'idle';
@@ -117,7 +118,8 @@ class Component extends DCLogic {
       isForm: !isSuccess,
       isSuccess,
       isSubmitting,
-      isNotSubmitting: !isSubmitting
+      isNotSubmitting: !isSubmitting,
+      isError: formState === 'error'
     };
   }
 }

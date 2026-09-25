@@ -128,6 +128,8 @@ permission, migration, audit) jadi itu yang dipakai sebagai struktur folder, buk
 rujuk link canvas hidup di atas — folder ini bisa jadi ketinggalan kalau canvas terus diedit
 tanpa export ulang.*
 
+**Update 2026-09-25 (keadaan memuat/kosong/gagal):** 13 layar yang sebelumnya tanpa keadaan itu kini punya prop `keadaan` di editor (Desktop + Mobile; tombol "Coba Lagi" kembali ke normal). Data: Admin Bank Master, Matriks Izin, Provider AI, Jalur Penghargaan, Komersial & Rekonsiliasi; Agent Katalog Komersial (kisi add-on). Halaman detail publik (Listing, Developer Project, Event, Learning, Promo) memakai `memuat` / `tidak_ditemukan` / `gagal_muat`. Formulir: Lupa Password (+ memproses, gagal kirim, link kedaluwarsa) dan Buat Organisasi (+ galat simpan). Cakupan (heuristik `audit_states`): loading 106/180, kosong 151/180, galat 123/180.
+
 **Update 2026-09-25 (keputusan privasi profil, KTP, dan moderasi):**
 - `01-Agent/M02-Profil-Saya`: kartu **Verifikasi KTP** (unggah foto KTP + isi nomor KTP/NIK, privat, verified otomatis, lencana), kontak WhatsApp selalu publik (toggle "Tampilkan Kontak" dihapus), aturan title 1 utama + 3 tambahan.
 - `00-Publik/M11-Detail-Agen`: lencana Terverifikasi dari KTP, WhatsApp selalu tampil, jumlah listing aktif, nomor lisensi, nama organisasi, dan title 1+3.

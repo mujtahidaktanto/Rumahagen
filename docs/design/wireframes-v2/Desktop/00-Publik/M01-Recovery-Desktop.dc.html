@@ -35,11 +35,12 @@
         <h1 class="ra-headline">Lupa Password?</h1>
         <p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:6px;">Masukkan email terdaftar Anda — kami akan mengirim link untuk membuat password baru.</p>
       </div>
+      <sc-if value="{{reqFail}}" hint-placeholder-val="{{false}}"><div role="alert" style="width:100%;box-sizing:border-box;text-align:left;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--ra-radius-md);background:var(--ra-danger-100);border:1px solid #F3B9B9;color:var(--ra-danger-600);"><span style="flex:none;margin-top:1px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-body-md" style="color:var(--ra-danger-600);">Link reset belum terkirim karena ada gangguan. Email Anda tidak diubah; coba lagi.</span></div></sc-if>
       <div class="field">
         <span class="field-label">Email</span>
         <div class="ra-input" style="display:flex;align-items:center;color:var(--ra-ink-300);">nama@email.com</div>
       </div>
-      <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Kirim Link Reset</button>
+      <sc-if value="{{reqIdle}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Kirim Link Reset</button></sc-if><sc-if value="{{reqBusy}}" hint-placeholder-val="{{false}}"><button class="ra-btn ra-btn-primary" style="width:100%;height:48px;" disabled aria-busy="true">Mengirim…</button></sc-if>
       <a href="M01-Login-Desktop.dc.html" class="ra-caption">← Kembali ke Masuk</a>
     </sc-if>
 
@@ -95,15 +96,25 @@
       <button class="ra-btn ra-btn-primary" style="width:100%;height:48px;">Masuk Sekarang</button>
     </sc-if>
 
+  <sc-if value="{{isExpired}}" hint-placeholder-val="{{false}}">
+    <div class="icon-ring" style="background:var(--ra-warning-100);color:var(--ra-warning-600);" role="img" aria-label="Peringatan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></div>
+    <div>
+        <h1 class="ra-headline">Link Reset Tidak Berlaku</h1>
+        <p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:6px;">Link ini sudah kedaluwarsa (berlaku 1 jam) atau sudah pernah dipakai. Minta link baru untuk melanjutkan.</p>
+      </div>
+    <a class="ra-btn ra-btn-primary" style="width:100%;height:48px;" href="M01-Recovery-Desktop.dc.html">Minta Link Baru</a>
+    <a href="M01-Login-Desktop.dc.html" class="ra-caption">← Kembali ke Masuk</a>
+  </sc-if>
+
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"stage":{"editor":"enum","default":"request","options":["request","sent","reset","reset_success"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"stage":{"editor":"enum","default":"request","options":["request","request_memproses","request_gagal","sent","reset","link_kedaluwarsa","reset_success"],"section":"Skenario"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const stage = this.props.stage ?? 'request';
     return {
-      isRequest: stage === 'request',
+      isRequest: stage === 'request' || stage === 'request_memproses' || stage === 'request_gagal', reqBusy: stage === 'request_memproses', reqIdle: stage !== 'request_memproses', reqFail: stage === 'request_gagal', isExpired: stage === 'link_kedaluwarsa',
       isSent: stage === 'sent',
       isReset: stage === 'reset',
       isResetSuccess: stage === 'reset_success'

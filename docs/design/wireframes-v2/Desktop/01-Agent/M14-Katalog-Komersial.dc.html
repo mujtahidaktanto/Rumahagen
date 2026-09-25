@@ -75,6 +75,12 @@
       <div style="display:flex;align-items:flex-start;gap:10px;background:var(--ra-info-100);border-radius:var(--ra-radius-md);padding:14px 18px;margin-bottom:16px;">
         <span class="ra-body-md"><strong>Slot listing</strong> menambah kuota penerbitan di atas kuota Gratis dan Pro. Slot dipakai terakhir (setelah Gratis dan Pro), tidak reset, dan tidak kedaluwarsa sebelum dipakai. Tiap slot yang dipakai berlaku 90 hari + 7 hari masa tenggang. <a class="ra-label-lg" style="color:var(--ra-blue-600);" href="M03-Listing-Saya.dc.html">Lihat kuota saya</a></span>
       </div>
+<sc-if value="{{stNotMain}}" hint-placeholder-val="{{false}}"><div class="ra-card" style="overflow:hidden;">
+<sc-if value="{{stLoading}}" hint-placeholder-val="{{false}}"><div role="status" aria-busy="true" aria-label="Memuat data"><div style="padding:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"><div style="border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:40px;width:40px;"></div><div class="ra-skel" style="height:20px;"></div><div class="ra-skel" style="height:14px;width:70%;"></div><div class="ra-skel" style="height:36px;"></div></div><div style="border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:40px;width:40px;"></div><div class="ra-skel" style="height:20px;"></div><div class="ra-skel" style="height:14px;width:70%;"></div><div class="ra-skel" style="height:36px;"></div></div><div style="border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:20px;display:flex;flex-direction:column;gap:12px;"><div class="ra-skel" style="height:40px;width:40px;"></div><div class="ra-skel" style="height:20px;"></div><div class="ra-skel" style="height:14px;width:70%;"></div><div class="ra-skel" style="height:36px;"></div></div></div><div class="ra-caption" style="text-align:center;padding-bottom:16px;">Memuat data…</div></div></sc-if>
+<sc-if value="{{stEmpty}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:48px 24px;text-align:center;color:var(--ra-ink-500);" role="status"><span style="color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M3 13l3-8h12l3 8"/><path d="M3 13v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6h-5a3 3 0 0 1-6 0H3Z"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Belum ada add-on yang dijual</span><p class="ra-body-md" style="max-width:380px;margin:0;">Katalog add-on kosong saat ini. Kuota Gratis dan Pro Anda tetap berlaku; cek lagi nanti.</p><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M14-Langganan-Saya.dc.html">Lihat Langganan Saya</a></div></sc-if>
+<sc-if value="{{stError}}" hint-placeholder-val="{{false}}"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:48px 24px;text-align:center;color:var(--ra-ink-500);" role="alert"><span style="color:var(--ra-danger-600);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><span class="ra-title-md" style="color:var(--ra-ink-900);">Katalog add-on gagal dimuat</span><p class="ra-body-md" style="max-width:380px;margin:0;">Terjadi gangguan saat mengambil katalog. Tidak ada pembelian yang diproses.</p><button class="ra-btn ra-btn-primary ra-btn-sm" onClick="{{stRetry}}">Coba Lagi</button></div></sc-if>
+</div></sc-if>
+<sc-if value="{{stMain}}" hint-placeholder-val="{{true}}">
       <div class="addon-grid">
         <sc-for list="{{addons}}" as="a" hint-placeholder-count="6">
           <div class="addon-card">
@@ -94,6 +100,7 @@
           </div>
         </sc-for>
       </div>
+</sc-if>
     </div>
 
     <sc-if value="{{buyModalOpen}}" hint-placeholder-val="{{false}}">
@@ -153,7 +160,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"organisasi":{"editor":"enum","default":"ada","options":["ada","belum_bergabung"],"section":"Skenario pembelian slot"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"organisasi":{"editor":"enum","default":"ada","options":["ada","belum_bergabung"],"section":"Skenario pembelian slot"},"keadaan":{"editor":"enum","default":"normal","options":["normal","memuat","kosong","gagal_muat"],"section":"Skenario katalog"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
@@ -185,7 +192,12 @@ class Component extends DCLogic {
     ];
   }
 
-  renderVals() { var self = this, st = this.state || {}; var col = st.navCollapsed === true; var shell = { navCollapsed: col, navExpanded: !col, navWidth: col ? 76 : 240, labelOp: col ? 0 : 1, toggleNav: function(){ self.setState({ navCollapsed: !(self.state && self.state.navCollapsed === true) }); } }; return Object.assign(shell, this.renderVals_page()); }
+  renderVals() { return Object.assign(this.stBase(), this.stVals()); }
+  stVals() {
+    var self = this, st = this.state || {}, k = st.stRetried ? 'normal' : (this.props.keadaan || 'normal');
+    return { stMain: k === 'normal', stNotMain: k !== 'normal', stLoading: k === 'memuat', stEmpty: k === 'kosong', stError: k === 'gagal_muat', stRetry: function () { self.setState({ stRetried: true }); } };
+  }
+  stBase() { var self = this, st = this.state || {}; var col = st.navCollapsed === true; var shell = { navCollapsed: col, navExpanded: !col, navWidth: col ? 76 : 240, labelOp: col ? 0 : 1, toggleNav: function(){ self.setState({ navCollapsed: !(self.state && self.state.navCollapsed === true) }); } }; return Object.assign(shell, this.renderVals_page()); }
 
   renderVals_page() {
     const defs = this.addonDefs;
