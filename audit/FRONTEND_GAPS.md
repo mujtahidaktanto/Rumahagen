@@ -49,6 +49,14 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 7. **Pesan WhatsApp** (`lib/public/whatsapp-message.ts`) memuat nama agen, judul, harga, lokasi, tipe, kode listing (`RA-` + 8 karakter pertama id), dan tautan. Tautan memakai `NEXT_PUBLIC_SITE_URL`: harus diubah ke `https://staging.rumahagen.com` di Vercel (item Fase 0 yang belum selesai) agar tautan di pesan benar. Belum ada pencarian agen berdasarkan kode listing.
 8. **Verifikasi memakai data contoh:** database staging belum punya listing terbit, profil agen, atau fasilitas, sehingga tampilan lengkap dicek lewat `/komponen/listing` (`?status=sold|suspended|...`, `?kosong=1`), bukan data nyata.
 
+## 2026-09-26 — Fase 2, M11 Promo dan Konten Publik
+
+1. **Tidak ada layar Admin untuk mengelola Konten Publik dan Promo** (Fase 5). Sampai itu ada, isi diubah lewat SQL. Tiga artikel footer (`syarat-ketentuan`, `kebijakan-privasi`, `hubungi-kami`) sudah ada sebagai DRAF CONTOH bertanda "belum ditinjau ahli hukum": **harus diganti teks resmi sebelum peluncuran.**
+2. **Promo tidak punya slug, jenis, atau relasi proyek.** URL memakai uuid (`/promo/{id}`); label kampanye diambil dari `campaign_reference`; "Proyek terkait promo ini" di wireframe tidak punya kolom relasi ke `developer_projects`, jadi tidak ditampilkan. `cta_reference` hanya diterima bila jalur situs sendiri atau https (`safeHref`).
+3. **Status promo yang belum mulai/berakhir/diarsipkan tidak terlihat pengunjung** (RLS `select_public` hanya active dalam jendela jadwal), jadi tiga keadaan spanduk di wireframe Promo-Detail tidak pernah tampil ke publik; diperlakukan sebagai "Promo tidak ditemukan" (konsisten dengan keputusan sold/expired listing).
+4. **Format isi:** kolom `content` diperlakukan teks biasa: baris kosong = paragraf, `## Judul` = subjudul, `- butir` = daftar (tanpa HTML mentah, aman dari XSS). Bila Admin kelak ingin teks kaya (tebal, tautan, gambar), format ini perlu diperluas.
+5. **Sitemap `static_public_content`** (`sitemap_participation`, `indexability`) belum punya rute sitemap; `indexability = noindex` sudah dihormati lewat meta robots.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

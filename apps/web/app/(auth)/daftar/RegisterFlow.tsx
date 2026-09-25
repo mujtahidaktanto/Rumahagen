@@ -200,7 +200,15 @@ export function RegisterFlow({ next }: { next: string }) {
       <label className="flex cursor-pointer items-start gap-2.5">
         <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-5 w-5 flex-none accent-blue-600" />
         <span className="text-body-md text-ink-700">
-          Saya setuju dengan Syarat &amp; Ketentuan dan Kebijakan Privasi RumahAgen
+          Saya setuju dengan{" "}
+          <Link href={"/konten/syarat-ketentuan" as Route} target="_blank" rel="noopener">
+            Syarat &amp; Ketentuan
+          </Link>{" "}
+          dan{" "}
+          <Link href={"/konten/kebijakan-privasi" as Route} target="_blank" rel="noopener">
+            Kebijakan Privasi
+          </Link>{" "}
+          RumahAgen
         </span>
       </label>
       {touched && !agree ? <p role="alert" className="-mt-2 text-caption text-danger-600">Centang persetujuan untuk melanjutkan.</p> : null}
