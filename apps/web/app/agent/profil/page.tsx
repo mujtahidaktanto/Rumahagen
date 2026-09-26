@@ -31,6 +31,7 @@ export default async function AgentProfilePage() {
       initial={p.values}
       avatarUrl={p.avatarUrl}
       publicSlug={p.publicSlug}
+      slugChangedAt={p.slugChangedAt}
       soldCount={p.soldCount}
       rentedCount={p.rentedCount}
       provinceName={p.provinceName}

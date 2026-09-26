@@ -12,14 +12,15 @@ const icon = (
   </svg>
 );
 
-export function ShareButton({ title }: { title: string }) {
+/** `label` = tombol berteks (mis. "Bagikan Profil"); tanpa label = tombol ikon bulat. `text` = teks ajakan yang ikut dibagikan lewat lembar bagikan perangkat. */
+export function ShareButton({ title, label, text, className }: { title: string; label?: string; text?: string; className?: string }) {
   const [note, setNote] = useState<string | null>(null);
 
   async function share() {
     const url = window.location.href;
     try {
       if (navigator.share) {
-        await navigator.share({ title, url });
+        await navigator.share({ title, ...(text ? { text } : {}), url });
         return;
       }
       await navigator.clipboard.writeText(url);
@@ -32,10 +33,17 @@ export function ShareButton({ title }: { title: string }) {
   }
 
   return (
-    <span className="relative inline-flex">
-      <button type="button" onClick={share} aria-label="Bagikan" className="flex h-11 w-11 items-center justify-center rounded-full border-[1.5px] border-ink-100 text-ink-700 hover:bg-ink-50">
-        {icon}
-      </button>
+    <span className={`relative inline-flex ${className ?? ""}`}>
+      {label ? (
+        <button type="button" onClick={share} className="flex h-11 items-center gap-2 rounded-pill border-[1.5px] border-ink-100 px-4 text-label-lg text-blue-600 hover:bg-ink-50">
+          {icon}
+          {label}
+        </button>
+      ) : (
+        <button type="button" onClick={share} aria-label="Bagikan" className="flex h-11 w-11 items-center justify-center rounded-full border-[1.5px] border-ink-100 text-ink-700 hover:bg-ink-50">
+          {icon}
+        </button>
+      )}
       <span role="status" aria-live="polite" className="absolute top-full right-0 mt-1 text-caption whitespace-nowrap text-ink-500">
         {note}
       </span>

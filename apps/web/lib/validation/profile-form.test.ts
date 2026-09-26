@@ -13,6 +13,7 @@ const base: ProfileFormValues = {
   cityId: "",
   profileVisibility: "public",
   publicCtaEnabled: false,
+  publicSlug: "rian-saputra-12345678",
 };
 
 describe("validateProfile", () => {
@@ -42,6 +43,11 @@ describe("toProfilePayload", () => {
     expect(p).toMatchObject({ full_name: "Rian", whatsapp_number: "0812-3456-7890", specialization: ["Rumah"], profile_visibility: "public", public_cta_enabled: false });
     expect(p).not.toHaveProperty("province_id");
     expect(p).not.toHaveProperty("city_id");
+  });
+  it("alamat profil hanya dikirim bila berubah", () => {
+    expect(toProfilePayload(base)).not.toHaveProperty("public_slug");
+    expect(toProfilePayload({ ...base, publicSlug: "rian-properti" }, { slugChanged: true })).toMatchObject({ public_slug: "rian-properti" });
+    expect(toProfilePayload({ ...base, publicSlug: "" }, { slugChanged: true })).not.toHaveProperty("public_slug");
   });
   it("menyertakan provinsi dan kota bila dipilih", () => {
     expect(toProfilePayload({ ...base, provinceId: "p1", cityId: "c1" })).toMatchObject({ province_id: "p1", city_id: "c1" });

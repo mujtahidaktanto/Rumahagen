@@ -61,9 +61,10 @@ export default async function SampleAgentPage({ searchParams }: Props) {
       <div className="min-h-dvh bg-surface">
         <ProfileForm
           exists={!baru}
-          initial={{ fullName: "Rian Saputra", whatsapp: baru ? "" : "0812-3456-7890", bio: baru ? "" : "Agen properti berpengalaman 6 tahun dengan fokus di kawasan BSD City dan sekitarnya.", specialization: baru ? [] : ["Rumah Tapak", "Apartemen", "KPR Konsultasi"], coverageArea: baru ? "" : "BSD City & Sekitarnya", licenseNumber: baru ? "" : "AREBI-2024-08123", officeName: "", provinceId: "", cityId: "", profileVisibility: "public", publicCtaEnabled: false }}
+          initial={{ fullName: "Rian Saputra", whatsapp: baru ? "" : "0812-3456-7890", bio: baru ? "" : "Agen properti berpengalaman 6 tahun dengan fokus di kawasan BSD City dan sekitarnya.", specialization: baru ? [] : ["Rumah Tapak", "Apartemen", "KPR Konsultasi"], coverageArea: baru ? "" : "BSD City & Sekitarnya", licenseNumber: baru ? "" : "AREBI-2024-08123", officeName: "", provinceId: "", cityId: "", profileVisibility: "public", publicCtaEnabled: false, publicSlug: baru ? "" : "rian-saputra-12345678" }}
           avatarUrl={null}
           publicSlug={baru ? null : "rian-saputra-12345678"}
+          slugChangedAt={(ktp === "terverifikasi") ? "2026-09-10T03:00:00Z" : null}
           soldCount={baru ? 0 : 34}
           rentedCount={baru ? 0 : 12}
           provinceName={null}

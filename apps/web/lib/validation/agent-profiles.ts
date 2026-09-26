@@ -26,6 +26,8 @@ export const upsertAgentProfileSchema = z.object({
   contact_visibility: z.enum(["public", "hidden"]).optional(),
   public_cta_enabled: z.boolean().optional(),
   profile_visibility: z.enum(["public", "private"]).optional(),
+  // Alamat profil publik (/agen/{slug}); hanya berlaku saat MENGUBAH profil yang sudah ada (profil baru selalu dibuat server). Aturan lengkap dan batas 1x/bulan di trigger 0157.
+  public_slug: z.string().min(3).max(60).regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Alamat profil hanya boleh huruf kecil, angka, dan tanda hubung.").optional(),
 });
 export type UpsertAgentProfileInput = z.infer<typeof upsertAgentProfileSchema>;
 

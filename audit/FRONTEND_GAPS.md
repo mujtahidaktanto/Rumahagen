@@ -157,6 +157,12 @@ Register/OTP/Login/Akun Dibatasi diperbarui mengikuti keputusan dan implementasi
 9. **Kuota refresh harian** dibaca dari `agent_statistics_summary` (quota.allowance/used_today); tanpa kolam kuota terbaca tombol tetap dicoba dan server memutuskan. Slug listing dibuat server (`slugify(title)` + akhiran acak).
 10. **Fitur wireframe yang belum ada:** menu ⋮ per baris, filter/cari di Listing Saya, tautan Beli Slot/Paket Pro (Fase 4, tampil "segera hadir"), Leads penuh (hanya 5 terbaru; layar Leads belum ada).
 
+## 2026-09-26 — Alamat profil publik bisa diganti + Bagikan Profil
+
+1. **Alamat profil (`/agen/{slug}`) sebelumnya permanen** (dibuat sekali dari nama + 8 karakter user_id; `PUT /users/profile` tidak menerimanya). Keputusan pemilik produk: bisa diganti Agent, dengan cek ketersediaan sebelum simpan dan maksimal 1x per bulan kalender WIB. Migration 0157 (DITERAPKAN 2026-09-26), `GET /api/agents/me/slug-availability?slug=`, `public_slug` di `PUT /users/profile` (galat aturan -> 409 berpesan), dan bidang "Alamat Profil Publik" di Profil Saya (cek otomatis setelah berhenti mengetik, konfirmasi sebelum ganti, keterangan kapan boleh ganti lagi). 0157 sudah diterapkan sebelum kode dideploy.
+2. **Perbaikan**: trigger pengalihan slug agen memakai `/agent/` (area aplikasi) bukan `/agen/`; diganti di 0157.
+3. **Tombol "Bagikan Profil"** ditambahkan di kepala profil publik Agen (`ShareButton` berlabel: lembar bagikan perangkat, atau salin tautan). **Wireframe belum diperbarui**: `M02-Profil-Saya` (kartu Alamat Profil Publik) dan `M11-Detail-Agen` (tombol Bagikan Profil).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

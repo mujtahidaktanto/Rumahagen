@@ -14,6 +14,8 @@ export type ProfileFormValues = {
   cityId: string;
   profileVisibility: "public" | "private";
   publicCtaEnabled: boolean;
+  /** Alamat profil publik (/agen/{slug}); dikirim hanya bila berubah. Profil baru: kosong (dibuat server). */
+  publicSlug: string;
 };
 
 export const BIO_MAX = 2000;
@@ -43,7 +45,7 @@ export function validateProfile(v: ProfileFormValues): ProfileErrors {
 }
 
 /** Badan PUT /users/profile. Provinsi/kota kosong dihilangkan (API tidak menerima null); teks kosong tetap dikirim agar bisa mengosongkan kolom. */
-export function toProfilePayload(v: ProfileFormValues): Record<string, unknown> {
+export function toProfilePayload(v: ProfileFormValues, opts: { slugChanged?: boolean } = {}): Record<string, unknown> {
   return {
     full_name: v.fullName.trim(),
     whatsapp_number: v.whatsapp.trim(),
@@ -56,6 +58,7 @@ export function toProfilePayload(v: ProfileFormValues): Record<string, unknown> 
     ...(v.provinceId && v.cityId ? { city_id: v.cityId } : {}),
     profile_visibility: v.profileVisibility,
     public_cta_enabled: v.publicCtaEnabled,
+    ...(opts.slugChanged && v.publicSlug ? { public_slug: v.publicSlug } : {}),
   };
 }
 

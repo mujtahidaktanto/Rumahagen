@@ -10,10 +10,13 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Button, LinkButton } from "@/components/ui/Button";
+import { Dialog } from "@/components/ui/Dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { BuildingIcon, CheckCircleIcon, CloseIcon, InfoIcon, TrophyIcon } from "@/components/ui/icons";
 import { Switch } from "@/components/ui/Switch";
 import { ApiClientError, api } from "@/lib/api-client";
+import { SITE_PROFILE_PREFIX, SLUG_REASON_TEXT, canChangeSlug, finalizeSlug, nextSlugChangeAt, normalizeSlugInput, slugShapeError, type SlugReason } from "@/lib/agent/slug";
+import { formatDate } from "@/lib/format";
 import { BIO_MAX, addSpecialization, toProfilePayload, validateProfile, type ProfileErrors, type ProfileFormValues } from "@/lib/validation/profile-form";
 
 type Option = { id: string; name: string };
@@ -22,6 +25,8 @@ export type ProfileFormProps = {
   initial: ProfileFormValues;
   avatarUrl: string | null;
   publicSlug: string | null;
+  /** Terakhir kali alamat profil diganti (null = belum pernah); dasar batas 1x per bulan kalender WIB. */
+  slugChangedAt: string | null;
   soldCount: number;
   rentedCount: number;
   provinceName: string | null;
@@ -58,6 +63,9 @@ function ToggleRow({ id, title, hint, children }: { id: string; title: string; h
   );
 }
 
+type SlugCheck = { state: "idle" | "checking" | "ok" | "bad" | "error"; text: string | null };
+type SlugAvailability = { available: boolean; reason: SlugReason | null; can_change: boolean; next_change_at: string | null };
+
 export function ProfileForm(p: ProfileFormProps) {
   const router = useRouter();
   const [saved, setSaved] = useState<ProfileFormValues>(p.initial);
@@ -70,8 +78,13 @@ export function ProfileForm(p: ProfileFormProps) {
   const [provinces, setProvinces] = useState<Option[]>(p.initial.provinceId && p.provinceName ? [{ id: p.initial.provinceId, name: p.provinceName }] : []);
   const [cities, setCities] = useState<Option[]>(p.initial.cityId && p.cityName ? [{ id: p.initial.cityId, name: p.cityName }] : []);
   const [regionError, setRegionError] = useState(false);
+  const [slugCheck, setSlugCheck] = useState<SlugCheck>({ state: "idle", text: null });
+  const [confirmSlug, setConfirmSlug] = useState(false);
 
   const dirty = useMemo(() => JSON.stringify(v) !== JSON.stringify(saved), [v, saved]);
+  const slugChanged = p.exists && v.publicSlug !== saved.publicSlug;
+  const mayChangeSlug = canChangeSlug(p.slugChangedAt);
+  const nextChange = formatDate(nextSlugChangeAt().toISOString());
   const errors: ProfileErrors = tried ? validateProfile(v) : {};
   const set = <K extends keyof ProfileFormValues>(k: K, val: ProfileFormValues[K]) => {
     setV((x) => ({ ...x, [k]: val }));
@@ -100,6 +113,37 @@ export function ProfileForm(p: ProfileFormProps) {
     };
   }, [v.provinceId]);
 
+  // Pengecekan alamat profil: bentuk diperiksa langsung, ketersediaan ke server setelah berhenti mengetik.
+  useEffect(() => {
+    if (!slugChanged) {
+      setSlugCheck({ state: "idle", text: null });
+      return;
+    }
+    const slug = finalizeSlug(v.publicSlug);
+    const shape = slugShapeError(slug);
+    if (shape) {
+      setSlugCheck({ state: "bad", text: shape });
+      return;
+    }
+    setSlugCheck({ state: "checking", text: "Memeriksa ketersediaan…" });
+    let live = true;
+    const t = setTimeout(() => {
+      api
+        .get<SlugAvailability>("/agents/me/slug-availability", { slug }, { redirectOnUnauthenticated: false })
+        .then((r) => {
+          if (!live) return;
+          if (r.data.reason === "sama") setSlugCheck({ state: "idle", text: null });
+          else if (r.data.reason) setSlugCheck({ state: "bad", text: SLUG_REASON_TEXT[r.data.reason] ?? "Alamat tidak bisa dipakai." });
+          else setSlugCheck({ state: "ok", text: "Alamat tersedia." });
+        })
+        .catch(() => live && setSlugCheck({ state: "error", text: "Ketersediaan belum bisa diperiksa. Coba lagi beberapa saat lagi." }));
+    }, 450);
+    return () => {
+      live = false;
+      clearTimeout(t);
+    };
+  }, [slugChanged, v.publicSlug]);
+
   function addTag() {
     const res = addSpecialization(v.specialization, tag);
     setTagError(res.error ?? null);
@@ -109,17 +153,32 @@ export function ProfileForm(p: ProfileFormProps) {
     }
   }
 
-  async function save() {
+  function requestSave() {
     setTried(true);
     if (Object.keys(validateProfile(v)).length > 0) {
       setNotice({ kind: "err", text: "Periksa kembali isian yang ditandai." });
       return;
     }
+    if (slugChanged) {
+      if (!mayChangeSlug || slugCheck.state !== "ok") {
+        setNotice({ kind: "err", text: mayChangeSlug ? "Alamat profil belum bisa disimpan. Periksa alamat yang Anda pilih." : `Alamat profil hanya bisa diganti 1 kali per bulan. Bisa diganti lagi mulai ${nextChange}.` });
+        return;
+      }
+      setConfirmSlug(true);
+      return;
+    }
+    void save();
+  }
+
+  async function save() {
+    setConfirmSlug(false);
     setSaving(true);
     setNotice(null);
     try {
-      await api.put("/users/profile", toProfilePayload(v));
-      setSaved(v);
+      await api.put("/users/profile", toProfilePayload({ ...v, publicSlug: finalizeSlug(v.publicSlug) }, { slugChanged }));
+      const done = { ...v, publicSlug: finalizeSlug(v.publicSlug) };
+      setV(done);
+      setSaved(done);
       setTried(false);
       setNotice({ kind: "ok", text: "Profil berhasil disimpan." });
       router.refresh();
@@ -185,6 +244,40 @@ export function ProfileForm(p: ProfileFormProps) {
               {(a) => <Textarea rows={4} value={v.bio} onChange={(e) => set("bio", e.target.value)} {...a} />}
             </Field>
           </Card>
+
+          {p.exists ? (
+            <Card title="Alamat Profil Publik">
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="slug" className="text-label-lg">
+                  Alamat profil Anda
+                </label>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <span className="flex-none text-body-md text-ink-500">{SITE_PROFILE_PREFIX}</span>
+                  <Input
+                    id="slug"
+                    value={v.publicSlug}
+                    maxLength={60}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    disabled={!mayChangeSlug}
+                    aria-invalid={slugCheck.state === "bad" ? true : undefined}
+                    aria-describedby="slug-status"
+                    onChange={(e) => set("publicSlug", normalizeSlugInput(e.target.value))}
+                    className="min-w-0 flex-1"
+                  />
+                </div>
+                <p id="slug-status" role={slugCheck.state === "bad" || slugCheck.state === "error" ? "alert" : "status"} className={`min-h-5 text-caption ${slugCheck.state === "bad" || slugCheck.state === "error" ? "text-danger-600" : slugCheck.state === "ok" ? "text-success-600" : ""}`}>
+                  {slugCheck.text}
+                </p>
+              </div>
+              <p className="text-caption">
+                {mayChangeSlug
+                  ? "Alamat ini dipakai untuk membagikan profil Anda. Bisa diganti 1 kali per bulan kalender (reset tanggal 1). Tautan lama otomatis dialihkan ke yang baru."
+                  : `Alamat sudah diganti bulan ini. Bisa diganti lagi mulai ${nextChange}.`}
+              </p>
+            </Card>
+          ) : null}
 
           <Card title="Informasi Profesional">
             <div className="flex flex-col gap-1.5">
@@ -370,6 +463,23 @@ export function ProfileForm(p: ProfileFormProps) {
         </aside>
       </div>
 
+      <Dialog
+        open={confirmSlug}
+        onClose={() => setConfirmSlug(false)}
+        title="Ganti alamat profil?"
+        description={`Alamat baru: ${SITE_PROFILE_PREFIX}${finalizeSlug(v.publicSlug)}. Tautan lama tetap berfungsi (dialihkan otomatis), tetapi Anda baru bisa mengganti lagi mulai ${nextChange}.`}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setConfirmSlug(false)}>
+              Batal
+            </Button>
+            <Button loading={saving} onClick={save}>
+              Ganti dan Simpan
+            </Button>
+          </>
+        }
+      />
+
       {dirty || saving ? (
         <div className="sticky bottom-0 z-20 -mx-4 mt-6 flex items-center justify-between gap-3 border-t border-ink-100 bg-white px-4 py-3 shadow-[0_-4px_14px_rgba(11,20,31,.06)] lg:-mx-8 lg:-mb-8 lg:px-8">
           <span className="text-body-md text-ink-700">Ada perubahan yang belum disimpan.</span>
@@ -385,7 +495,7 @@ export function ProfileForm(p: ProfileFormProps) {
             >
               Batalkan
             </Button>
-            <Button loading={saving} onClick={save}>
+            <Button loading={saving} disabled={slugChanged && (slugCheck.state === "checking" || slugCheck.state === "bad")} onClick={requestSave}>
               {saving ? "Menyimpan…" : "Simpan Perubahan"}
             </Button>
           </div>

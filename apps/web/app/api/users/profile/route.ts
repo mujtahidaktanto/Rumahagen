@@ -14,6 +14,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { upsertAgentProfileSchema } from "@/lib/validation/agent-profiles";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 function slugify(input: string): string {
@@ -51,7 +52,9 @@ export const PUT = withApiHandler({}, async (ctx) => {
       .maybeSingle();
 
     if (error) {
-      throw error;
+      // Aturan alamat profil (0157, SQLSTATE 23514) menjadi 409 berpesan bahasa pengguna; alamat direbut bersamaan (23505) -> 409.
+      if (error.code === "23505") throw new ApiError("CONFLICT", "Alamat profil sudah dipakai. Pilih alamat lain.");
+      throwIntegrityError(error);
     }
     return { data };
   }
@@ -59,6 +62,7 @@ export const PUT = withApiHandler({}, async (ctx) => {
   const baseSlug = slugify(body.full_name) || "agent";
   const publicSlug = `${baseSlug}-${ctx.userId.slice(0, 8)}`;
 
+  // Profil baru: slug selalu dibuat server (public_slug dari klien diabaikan; alamat kustom hanya lewat perubahan profil yang sudah ada).
   const { data, error } = await supabase
     .from("agent_profiles")
     .insert({ ...body, user_id: ctx.userId, public_slug: publicSlug })

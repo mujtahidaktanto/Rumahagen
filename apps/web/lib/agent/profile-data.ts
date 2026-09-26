@@ -12,6 +12,8 @@ export type MyProfile = {
   values: ProfileFormValues;
   avatarUrl: string | null;
   publicSlug: string | null;
+  /** Terakhir kali alamat profil diganti (batas 1x per bulan kalender WIB, migration 0157); null = belum pernah. */
+  slugChangedAt: string | null;
   soldCount: number;
   rentedCount: number;
   provinceName: string | null;
@@ -35,6 +37,7 @@ type ProfileRow = {
   public_cta_enabled: boolean;
   ktp_requirement_state: KtpState;
   public_slug: string | null;
+  slug_changed_at: string | null;
   total_listings_sold: number;
   total_listings_rented: number;
   province_id: string | null;
@@ -45,7 +48,7 @@ type ProfileRow = {
 };
 
 const SELECT =
-  "full_name, avatar_url, bio, specialization, coverage_area, office_name, license_number, whatsapp_number, profile_visibility, public_cta_enabled, ktp_requirement_state, public_slug, total_listings_sold, total_listings_rented, province_id, city_id, organization_id, province:ref_provinces(name), city:ref_cities(name)";
+  "full_name, avatar_url, bio, specialization, coverage_area, office_name, license_number, whatsapp_number, profile_visibility, public_cta_enabled, ktp_requirement_state, public_slug, slug_changed_at, total_listings_sold, total_listings_rented, province_id, city_id, organization_id, province:ref_provinces(name), city:ref_cities(name)";
 
 export async function getMyProfile(userId: string, fallbackName: string): Promise<MyProfileResult> {
   const supabase = await createClient();
@@ -64,9 +67,10 @@ export async function getMyProfile(userId: string, fallbackName: string): Promis
     cityId: "",
     profileVisibility: "public",
     publicCtaEnabled: false,
+    publicSlug: "",
   };
   if (!row) {
-    return { state: "ok", profile: { exists: false, values: blank, avatarUrl: null, publicSlug: null, soldCount: 0, rentedCount: 0, provinceName: null, cityName: null, organization: null, titles: [], ktp: { state: "deferred", maskedNik: null, submittedAt: null } } };
+    return { state: "ok", profile: { exists: false, values: blank, avatarUrl: null, publicSlug: null, slugChangedAt: null, soldCount: 0, rentedCount: 0, provinceName: null, cityName: null, organization: null, titles: [], ktp: { state: "deferred", maskedNik: null, submittedAt: null } } };
   }
 
   // Bagian pelengkap: gagal memuat tidak menjatuhkan halaman (kosong).
@@ -101,9 +105,11 @@ export async function getMyProfile(userId: string, fallbackName: string): Promis
         cityId: row.city_id ?? "",
         profileVisibility: row.profile_visibility === "private" ? "private" : "public",
         publicCtaEnabled: row.public_cta_enabled,
+        publicSlug: row.public_slug ?? "",
       },
       avatarUrl: row.avatar_url,
       publicSlug: row.public_slug,
+      slugChangedAt: row.slug_changed_at,
       soldCount: row.total_listings_sold,
       rentedCount: row.total_listings_rented,
       provinceName: row.province?.name ?? null,

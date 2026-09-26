@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import type { ReactNode } from "react";
 import { PropertyCard } from "@/components/public/PropertyCard";
+import { ShareButton } from "@/components/public/ShareButton";
 import { RatingStars } from "@/components/public/RatingStars";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { Avatar } from "@/components/ui/Avatar";
@@ -65,6 +66,7 @@ export function AgentDetailView({ agent: a, listings, listingsOk, reviews }: { a
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-headline break-words">{a.full_name}</h1>
                 {a.is_verified ? <Badge tone="info">Terverifikasi</Badge> : null}
+                <ShareButton title={`${a.full_name} — Agen Properti | RumahAgen`} text={`Lihat profil ${a.full_name}, agen properti di RumahAgen.`} label="Bagikan Profil" className="sm:ml-auto" />
               </div>
               {org ? <p className="text-body-md text-ink-700">{org}</p> : null}
               {place || a.coverage_area ? (
