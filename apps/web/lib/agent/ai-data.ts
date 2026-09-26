@@ -94,15 +94,15 @@ export async function getAiConnectionsPage(userId: string): Promise<AiConnection
   return { connections, providers };
 }
 
-export type ActiveAiConnection = { id: string; providerName: string };
-type ActiveConnectionRow = { id: string; ai_providers: Pick<ProviderRow, "display_name"> | Pick<ProviderRow, "display_name">[] | null };
+export type ActiveAiConnection = { id: string; providerName: string; providerCode: string };
+type ActiveConnectionRow = { id: string; ai_providers: Pick<ProviderRow, "display_name" | "code"> | Pick<ProviderRow, "display_name" | "code">[] | null };
 
-/** Koneksi berstatus 'active' saja, untuk AI Assistant — hanya koneksi ini yang boleh dipakai invocation (Gate PRE-00-O §7-8: "AI DITOLAK selagi UNVERIFIED"). */
+/** Koneksi berstatus 'active' saja, untuk AI Assistant — hanya koneksi ini yang boleh dipakai invocation (Gate PRE-00-O §7-8: "AI DITOLAK selagi UNVERIFIED"). providerCode dipakai memilih daftar model (lib/agent/ai-rules.ts, cocok dengan resolveAdapter di lib/ai/adapters.ts). */
 export async function getActiveAiConnectionsForChat(userId: string, supabase?: Supabase): Promise<Part<ActiveAiConnection[]>> {
   const sb = supabase ?? (await createClient());
   const { data, error } = await sb
     .from("agent_ai_connections")
-    .select("id, ai_providers(display_name)")
+    .select("id, ai_providers(display_name, code)")
     .eq("user_id", userId)
     .eq("status", "active")
     .order("connected_at", { ascending: false })
@@ -110,6 +110,9 @@ export async function getActiveAiConnectionsForChat(userId: string, supabase?: S
   if (error) return { ok: false };
   return {
     ok: true,
-    data: (data ?? []).map((r) => ({ id: r.id, providerName: oneOf(r.ai_providers)?.display_name ?? "Provider AI" })),
+    data: (data ?? []).map((r) => {
+      const p = oneOf(r.ai_providers);
+      return { id: r.id, providerName: p?.display_name ?? "Provider AI", providerCode: p?.code ?? "" };
+    }),
   };
 }

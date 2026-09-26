@@ -10,6 +10,7 @@ import { ErrorState } from "@/components/ui/States";
 import { SparkleIcon } from "@/components/ui/icons";
 import type { ActiveAiConnection } from "@/lib/agent/ai-data";
 import type { Part } from "@/lib/agent/dashboard-data";
+import { aiModelOptionsFor } from "@/lib/agent/ai-rules";
 import { ApiClientError, api } from "@/lib/api-client";
 import { initialsOf } from "@/lib/initials";
 
@@ -29,6 +30,8 @@ export function AiAssistantView({ data, agentName }: { data: Part<ActiveAiConnec
 
 function AiAssistantChat({ connections, agentName }: { connections: ActiveAiConnection[]; agentName: string }) {
   const [connectionId, setConnectionId] = useState(connections[0]?.id ?? "");
+  const modelOptions = aiModelOptionsFor(connections.find((c) => c.id === connectionId)?.providerCode ?? "");
+  const [model, setModel] = useState(modelOptions[0]?.value ?? "");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -57,7 +60,11 @@ function AiAssistantChat({ connections, agentName }: { connections: ActiveAiConn
     setBusy(true);
     setError(null);
     try {
-      const res = await api.post<{ reply: { role: string; content: string } }>("/ai-assistant/chat", { connection_id: connectionId, messages: next }, { idempotency: true });
+      const res = await api.post<{ reply: { role: string; content: string }; model: string }>(
+        "/ai-assistant/chat",
+        { connection_id: connectionId, messages: next, ...(model ? { model } : {}) },
+        { idempotency: true },
+      );
       setMessages((cur) => [...cur, { role: "assistant", content: res.data.reply.content }]);
     } catch (e) {
       setError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : "Pesan belum terkirim. Periksa koneksi Anda lalu coba lagi.");
@@ -76,7 +83,9 @@ function AiAssistantChat({ connections, agentName }: { connections: ActiveAiConn
               aria-label="Pilih koneksi AI"
               value={connectionId}
               onChange={(e) => {
-                setConnectionId(e.target.value);
+                const nextId = e.target.value;
+                setConnectionId(nextId);
+                setModel(aiModelOptionsFor(connections.find((c) => c.id === nextId)?.providerCode ?? "")[0]?.value ?? "");
                 setMessages([]);
                 setError(null);
               }}
@@ -96,6 +105,15 @@ function AiAssistantChat({ connections, agentName }: { connections: ActiveAiConn
               {connections[0]!.providerName}
             </span>
           )}
+          {modelOptions.length > 0 ? (
+            <Select aria-label="Pilih model" value={model} onChange={(e) => setModel(e.target.value)} className="h-9 w-auto">
+              {modelOptions.map((m) => (
+                <option key={m.value} value={m.value}>
+                  {m.label}
+                </option>
+              ))}
+            </Select>
+          ) : null}
           <LinkButton href={"/agent/ai" as Route} variant="secondary" size="sm">
             Kelola Koneksi
           </LinkButton>

@@ -59,3 +59,36 @@ export function toCreateConnectionPayload(f: AddConnectionForm): { provider_id: 
   if (f.secondaryKey.trim()) body.secondary_key = f.secondaryKey.trim();
   return body;
 }
+
+export type AiModelOption = { value: string; label: string };
+
+/**
+ * Model yang bisa dipilih di AI Assistant, per keluarga provider — dicocokkan dengan cara yang sama seperti
+ * resolveAdapter (lib/ai/adapters.ts): kode provider dicek substring "gemini"/"google", "openai", "anthropic"/"claude".
+ * Provider tanpa adapter chat (mis. Cloudinary, dipakai untuk media bukan chat) mengembalikan array kosong — UI
+ * menyembunyikan pemilih model untuk koneksi itu. Baris pertama tiap keluarga = default server bila `model` tidak
+ * dikirim (lihat komentar default di masing-masing fungsi call* pada adapters.ts).
+ */
+export function aiModelOptionsFor(providerCode: string): AiModelOption[] {
+  const code = providerCode.toLowerCase();
+  if (code.includes("gemini") || code.includes("google")) {
+    return [
+      { value: "gemini-flash-latest", label: "Gemini Flash (bawaan — cepat, seimbang)" },
+      { value: "gemini-flash-lite-latest", label: "Gemini Flash-Lite (paling hemat/cepat)" },
+      { value: "gemini-pro-latest", label: "Gemini Pro (paling kuat)" },
+    ];
+  }
+  if (code.includes("openai")) {
+    return [
+      { value: "gpt-4o-mini", label: "GPT-4o mini (bawaan — cepat, hemat)" },
+      { value: "gpt-4o", label: "GPT-4o (paling kuat)" },
+    ];
+  }
+  if (code.includes("anthropic") || code.includes("claude")) {
+    return [
+      { value: "claude-3-5-haiku-20241022", label: "Claude 3.5 Haiku (bawaan — cepat, hemat)" },
+      { value: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet (paling kuat)" },
+    ];
+  }
+  return [];
+}

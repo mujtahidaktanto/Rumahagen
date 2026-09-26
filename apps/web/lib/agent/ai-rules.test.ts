@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canDisconnectConnection, canTestConnection, toCreateConnectionPayload, validateAddConnection } from "./ai-rules";
+import { aiModelOptionsFor, canDisconnectConnection, canTestConnection, toCreateConnectionPayload, validateAddConnection } from "./ai-rules";
 
 describe("canTestConnection", () => {
   it("hanya unverified", () => {
@@ -33,5 +33,17 @@ describe("toCreateConnectionPayload", () => {
       public_identifier: "cloud1",
       secondary_key: "sec1",
     });
+  });
+});
+
+describe("aiModelOptionsFor", () => {
+  it("cocok per keluarga provider (case-insensitive), termasuk Flash-Lite", () => {
+    expect(aiModelOptionsFor("gemini").map((m) => m.value)).toEqual(["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-pro-latest"]);
+    expect(aiModelOptionsFor("Google Gemini")[0]?.value).toBe("gemini-flash-latest");
+    expect(aiModelOptionsFor("openai")[0]?.value).toBe("gpt-4o-mini");
+    expect(aiModelOptionsFor("anthropic-claude")[0]?.value).toBe("claude-3-5-haiku-20241022");
+  });
+  it("provider tanpa adapter chat (mis. cloudinary) tidak punya pilihan model", () => {
+    expect(aiModelOptionsFor("cloudinary")).toEqual([]);
   });
 });
