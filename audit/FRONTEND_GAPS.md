@@ -114,6 +114,17 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 3. **API admin `POST/PUT /api/admin/banners` (`bannerSchema` di `lib/validation/admin.ts`) belum memvalidasi `cta_reference`** (hanya string maks. 500). Usul: validasi dengan `parseCta` agar hanya format sah yang tersimpan. Butuh izin karena mengubah API.
 4. **Data uji diperbaiki:** promo Cashback Kanaya -> `project:cluster-kanaya-residence-uji`; promo agen baru -> `page:daftar` (nanti bisa ke halaman langganan Agent setelah Fase 3-4; kunci halaman baru ditambahkan ke `CTA_PAGES`).
 
+## 2026-09-26 — Wireframe baru: Beri Ulasan, Form Banner, Form Konten Publik, Title di Sertifikat-Kursus
+
+1. **Layar Admin Konten Publik butuh API baru:** tidak ada route admin untuk `static_public_content` (hanya RLS `m11.static_public_content.publish` untuk Admin/Superadmin). Usul: `GET/POST /api/admin/static-content`, `GET/PUT /api/admin/static-content/{id}` (siklus status draft → published → unpublished → archived; slug unik 409). Usul produk yang digambar: halaman footer (syarat-ketentuan, kebijakan-privasi, hubungi-kami) dikunci slug dan statusnya; belum ada aturan seperti itu di database.
+2. **Form Banner:** `POST/PUT /admin/banners` belum memvalidasi `cta_reference` (usul: `parseCta` dari `lib/public/cta.ts`); tidak ada unggah gambar banner (hanya tautan); status `scheduled` tidak otomatis menjadi tampil (RLS publik hanya membaca status active dalam jadwal). Pemilih proyek/kursus/event memakai API daftar yang sudah ada.
+3. **Beri Ulasan:** API ulasan mengizinkan ulasan ke profil sendiri (buyer_id NULL = self-review) dan tidak membatasi satu ulasan per pengulas; wireframe memblokir profil sendiri sebagai usul produk. Ulasan tayang langsung dan tidak bisa diedit pengulasnya (RLS).
+4. **Sertifikat-Kursus:** kartu "Title setelah lulus" memakai `awards_title_definition_id` (PUT certificate-config); daftar title = title aktif dengan cakupan otoritas aktif (API daftar Jalur Penghargaan M15).
+
+## 2026-09-26 — Wireframe M01 diselaraskan
+
+Register/OTP/Login/Akun Dibatasi diperbarui mengikuti keputusan dan implementasi (lihat README wireframe). Celah lama yang ditutup: nomor WhatsApp di Register, OTP via WhatsApp, "Email atau Nomor HP" di Login, dan keadaan pending_review di Akun Dibatasi. Verifikasi nomor WhatsApp tetap tidak ada di backend (butuh penyedia WA/SMS); bila kelak dibuat, wireframe OTP perlu langkah tambahan.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

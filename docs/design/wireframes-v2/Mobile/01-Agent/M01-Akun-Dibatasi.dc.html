@@ -55,7 +55,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"reason":{"editor":"enum","default":"suspended","options":["suspended","rejected"],"section":"Skenario"},"isChecking":{"editor":"boolean","default":false,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"reason":{"editor":"enum","default":"suspended","options":["suspended","rejected","pending_review"],"section":"Skenario"},"isChecking":{"editor":"boolean","default":false,"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   renderVals() {
     const reason = this.props.reason ?? 'suspended';
@@ -68,6 +68,14 @@ class Component extends DCLogic {
         badgeClass: 'ra-badge-danger',
         reasonBg: '#FCE7E7',
         reasonColor: '#D23B3B'
+      },
+      pending_review: {
+        title: 'Akun Sedang Ditinjau',
+        body: 'Pendaftaran Anda sedang ditinjau tim RumahAgen. Anda bisa masuk setelah selesai.',
+        statusLabel: 'pending_review',
+        badgeClass: 'ra-badge-warning',
+        reasonBg: 'var(--ra-warning-100)',
+        reasonColor: 'var(--ra-warning-600)'
       },
       rejected: {
         title: 'Pendaftaran Akun Ditolak',

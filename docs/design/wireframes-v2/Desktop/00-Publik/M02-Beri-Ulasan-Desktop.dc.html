@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Tulis Ulasan — Desktop</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:1440px;box-sizing:border-box;background:#fff;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px;}
+
+  .header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .header-row{height:76px;display:flex;align-items:center;gap:28px;}
+  .pub-nav{display:flex;align-items:center;gap:4px;flex:1;}
+  .pub-nav a{display:flex;align-items:center;gap:3px;height:40px;padding:0 11px;border-radius:var(--ra-radius-sm);color:var(--ra-ink-700);text-decoration:none;font-size:13.5px;font-weight:600;white-space:nowrap;}
+  .pub-nav a:hover{background:var(--ra-ink-50);color:var(--ra-blue-600);}
+  .pub-nav a.is-active{color:var(--ra-blue-600);background:var(--ra-blue-50);}
+
+  .breadcrumb{padding:16px 0 0;display:flex;align-items:center;gap:6px;color:var(--ra-ink-500);font-size:13px;}
+  .breadcrumb a{color:var(--ra-ink-500);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--ra-blue-600);}
+
+  .hero{display:flex;align-items:flex-start;gap:24px;padding:24px 0;border-bottom:1px solid var(--ra-ink-100);}
+  .avatar-xl{width:96px;height:96px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:32px;flex:none;}
+  .stat-row{display:flex;gap:28px;padding:18px 0;}
+  .stat-item{display:flex;flex-direction:column;gap:2px;}
+
+  .detail-grid{display:grid;grid-template-columns:1fr 340px;gap:32px;padding:32px 0 56px;align-items:start;}
+  .spec-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--ra-radius-pill);background:var(--ra-blue-50);color:var(--ra-blue-600);font-size:13px;font-weight:700;}
+  .contact-card{position:sticky;top:96px;background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:22px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--ra-shadow-2);}
+  .review-item{padding:16px 0;border-bottom:1px solid var(--ra-ink-100);display:flex;flex-direction:column;gap:8px;}
+  .similar-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  .prop-card{border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;}
+  .prop-photo{height:120px;background:var(--ra-ink-100);flex:none;}
+  .prop-body{padding:12px;display:flex;flex-direction:column;gap:5px;}
+  .empty-box{padding:64px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--ra-ink-500);}
+
+  .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;margin-top:8px;}
+  .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13.5px;padding:5px 0;}
+
+  .panel{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:28px;display:flex;flex-direction:column;gap:20px;}
+  .field{display:flex;flex-direction:column;gap:8px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .banner{display:flex;gap:12px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:14px 16px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .radio-card{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);width:100%;box-sizing:border-box;min-height:56px;}
+  .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+  .radio-card:focus-visible,.star-btn:focus-visible{outline:2.5px solid var(--ra-blue-500);outline-offset:2px;}
+  .star-btn{width:52px;height:52px;border-radius:var(--ra-radius-md);border:1.5px solid var(--ra-ink-100);background:#fff;font-size:30px;line-height:1;color:var(--ra-gold-600);cursor:pointer;font-family:var(--ra-font);}
+  .star-btn[aria-checked="true"]{border-color:var(--ra-gold-600);background:var(--ra-gold-100);}
+  .agent-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .avatar-md{width:52px;height:52px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex:none;}
+  .posted{width:100%;max-width:460px;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--ra-ink-50);color:var(--ra-gold-600);}
+</style>
+</helmet>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="wrap header-row">
+      <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:32px;width:auto;object-fit:contain;">
+      <nav class="pub-nav">
+        <a href="M11-Homepage.dc.html">Beranda</a>
+        <a href="M11-Discovery.dc.html">Listing</a>
+        <a class="is-active" href="M11-Discovery.dc.html">Agen</a>
+        <a href="M11-Discovery.dc.html">Organisasi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Developer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="M11-Discovery.dc.html">Event</a>
+        <a href="#">Learning</a>
+        <a href="#">Learning Session</a>
+        <a href="M11-Konten-Publik-Desktop.dc.html">Konten Publik</a>
+        <a href="M11-Promo-Desktop.dc.html">Promo</a>
+      </nav>
+      <button class="ra-iconbtn" aria-label="Cari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <a class="ra-btn ra-btn-secondary ra-btn-sm" href="M01-Login-Desktop.dc.html">Masuk</a>
+        <a class="ra-btn ra-btn-primary ra-btn-sm" href="M01-Register-Desktop.dc.html">Daftar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="breadcrumb"><a href="M11-Homepage.dc.html">Beranda</a><span>/</span><a href="M11-Discovery.dc.html">Agen</a><span>/</span><a href="M11-Detail-Agen-Desktop.dc.html">Rian Saputra</a><span>/</span><span style="color:var(--ra-ink-900);">Tulis Ulasan</span></div>
+    <div class="detail-grid">
+      <div style="min-width:0;display:flex;flex-direction:column;gap:16px;"><div><h1 class="ra-headline">Tulis Ulasan</h1><p class="ra-body-md" style="color:var(--ra-ink-500);margin-top:4px;">Bagikan pengalaman Anda bersama agen ini. Ulasan membantu pengunjung lain memilih agen.</p></div><sc-if value="{{isGuest}}" hint-placeholder-val="{{false}}"><div class="panel" style="align-items:center;text-align:center;"><span style="color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h2 class="ra-title-lg">Masuk untuk menulis ulasan</h2><p class="ra-body-md" style="color:var(--ra-ink-500);max-width:420px;">Ulasan hanya bisa ditulis oleh akun yang sudah masuk, agar penilaian tetap terpercaya.</p><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;"><a class="ra-btn ra-btn-primary" href="M01-Login-Desktop.dc.html">Masuk</a><a class="ra-btn ra-btn-secondary" href="M01-Register-Desktop.dc.html">Daftar</a></div></div></sc-if><sc-if value="{{isBlocked}}" hint-placeholder-val="{{false}}"><div class="panel" style="align-items:center;text-align:center;"><span style="color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></span><h2 class="ra-title-lg">{{blockedTitle}}</h2><p class="ra-body-md" style="color:var(--ra-ink-500);max-width:420px;">{{blockedText}}</p><a class="ra-btn ra-btn-secondary" href="M11-Detail-Agen-Desktop.dc.html">Kembali ke profil agen</a></div></sc-if><sc-if value="{{isDone}}" hint-placeholder-val="{{false}}"><div class="panel" style="align-items:center;text-align:center;" role="status"><span style="width:56px;height:56px;border-radius:50%;background:var(--ra-success-100);color:var(--ra-success-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><h2 class="ra-title-lg">Terima kasih, ulasan Anda sudah tayang</h2><p class="ra-body-md" style="color:var(--ra-ink-500);max-width:440px;">Ulasan tampil langsung di profil agen. Admin dapat meninjaunya setelah tayang. Ulasan yang sudah dikirim tidak bisa diubah.</p><div class="posted"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span class="ra-label-lg ra-truncate-1">{{postedName}}</span><span style="display:inline-flex;gap:2px;">{{postedStars}}</span></div><p class="ra-body-md" style="color:var(--ra-ink-700);text-align:left;overflow-wrap:anywhere;">{{postedComment}}</p></div><a class="ra-btn ra-btn-primary" href="M11-Detail-Agen-Desktop.dc.html">Kembali ke profil agen</a></div></sc-if><sc-if value="{{isForm}}" hint-placeholder-val="{{true}}"><div class="panel"><sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger" role="alert"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Ulasan belum terkirim. Tidak ada yang tersimpan; coba lagi.</p></div></sc-if><sc-if value="{{limited}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn" role="alert"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Terlalu banyak percobaan. Coba lagi dalam 1 menit.</p></div></sc-if><div class="field"><span class="ra-label-lg" id="lbl-rating">Penilaian Anda <span class="req">*</span></span><div role="radiogroup" aria-labelledby="lbl-rating" style="display:flex;gap:8px;"><sc-for list="{{stars}}" as="s" hint-placeholder-count="5"><button class="star-btn" role="radio" aria-checked="{{s.checked}}" aria-label="{{s.label}}" onClick="{{s.pick}}" disabled="{{busy}}">{{s.icon}}</button></sc-for></div><span class="ra-body-md" style="color:var(--ra-ink-700);min-height:22px;">{{ratingText}}</span><sc-if value="{{hasRatingErr}}" hint-placeholder-val="{{false}}"><span class="err" role="alert">Pilih jumlah bintang terlebih dulu.</span></sc-if></div><div class="field"><span class="ra-label-lg" id="lbl-nama">Tampil sebagai</span><div role="radiogroup" aria-labelledby="lbl-nama" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><button class="radio-card" role="radio" aria-checked="{{nameReal}}" onClick="{{pickReal}}" disabled="{{busy}}"><span class="ra-label-lg ra-truncate-1">Nama saya</span><span class="ra-caption ra-truncate-1">{{myName}}</span></button><button class="radio-card" role="radio" aria-checked="{{nameAnon}}" onClick="{{pickAnon}}" disabled="{{busy}}"><span class="ra-label-lg">Anonim</span><span class="ra-caption">Tampil sebagai &quot;Pengguna RumahAgen&quot;</span></button></div></div><div class="field"><label class="ra-label-lg" for="f-komentar">Komentar (opsional)</label><textarea id="f-komentar" class="ra-input {{cls_komentar}}" style="height:160px;" maxlength="1000" placeholder="Ceritakan pengalaman Anda: respons, kejujuran informasi, dan proses transaksi." value="{{val_komentar}}" onInput="{{on_komentar}}" disabled="{{busy}}"></textarea><div style="display:flex;justify-content:space-between;gap:8px;"><sc-if value="{{has_komentar}}" hint-placeholder-val="{{false}}"><span class="err" role="alert">{{err_komentar}}</span></sc-if><span class="ra-caption" style="margin-left:auto;">{{cnt}}/1.000</span></div></div><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Ulasan tayang langsung, dapat ditinjau admin setelahnya, dan tidak bisa diubah atau dihapus setelah dikirim. Tulis dengan jujur dan sopan; jangan mencantumkan data pribadi.</p></div><div style="display:flex;justify-content:flex-end;gap:10px;"><a class="ra-btn ra-btn-secondary" href="M11-Detail-Agen-Desktop.dc.html">Batal</a><button class="ra-btn ra-btn-primary" onClick="{{submit}}" disabled="{{busy}}">{{submitLabel}}</button></div></div></sc-if></div>
+      <div style="position:sticky;top:96px;"><div class="agent-card"><div style="display:flex;align-items:center;gap:12px;"><div class="avatar-md">RS</div><div style="min-width:0;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="ra-title-md">Rian Saputra</span><span class="ra-badge ra-badge-info">Terverifikasi</span></div><span class="ra-caption ra-truncate-1">PT Properti Jaya Sejahtera</span></div></div><div style="display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="var(--ra-gold-500)" stroke="var(--ra-gold-600)" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8L3.5 9.7l5.9-.9L12 3.5Z"/></svg><span class="ra-title-md">{{sumRating}}</span><span class="ra-caption">{{sumCount}}</span></div><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M11-Detail-Agen-Desktop.dc.html">Lihat profil agen</a></div></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="wrap footer-grid">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <img src="/_blob/52b17458b047cd48bbb134bb60ce32fa" alt="RumahAgen" style="height:26px;width:auto;object-fit:contain;">
+        <p class="ra-body-md" style="color:rgba(255,255,255,.55);max-width:260px;">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.</p>
+      </div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Jelajahi</span><a href="M11-Discovery.dc.html">Listing</a><a href="M11-Discovery.dc.html">Agen</a><a href="M11-Discovery.dc.html">Organisasi</a><a href="M11-Discovery.dc.html">Developer</a><a href="M11-Discovery.dc.html">Event</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Learning</span><a href="#">Learning</a><a href="#">Learning Session</a><a href="M11-Konten-Publik-Desktop.dc.html">Konten Publik</a><a href="M11-Promo-Desktop.dc.html">Promo</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Bantuan</span><a href="M11-Konten-Publik-Desktop.dc.html">Pusat Bantuan</a><a href="M11-Konten-Publik-Detail-Desktop.dc.html">Syarat &amp; Ketentuan</a><a href="M11-Konten-Publik-Detail-Desktop.dc.html">Kebijakan Privasi</a><a href="M11-Konten-Publik-Detail-Desktop.dc.html">Hubungi Kami</a></div>
+      <div class="footer-col"><span class="ra-label-md" style="color:rgba(255,255,255,.4);">Download Aplikasi</span></div>
+    </div>
+    <div class="wrap" style="padding:20px 0;"><span class="ra-caption" style="color:rgba(255,255,255,.4);">© 2026 RumahAgen.com</span></div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"akses":{"editor":"enum","default":"boleh","options":["boleh","belum_login","peran_lain","profil_sendiri"],"section":"Skenario akses"},"kirim":{"editor":"enum","default":"normal","options":["normal","mengirim","gagal","dibatasi","sukses"],"section":"Skenario kirim"},"profil":{"editor":"enum","default":"ada_ulasan","options":["ada_ulasan","belum_ada_ulasan"],"section":"Ringkasan agen"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { rating: 0, name: 'real', komentar: '', tried: false, phase: props.kirim === 'sukses' ? 'sukses' : 'normal', posted: null };
+    var self = this;
+    ['submit', 'pickReal', 'pickAnon', 'onKomentar'].forEach(function(m){ self[m] = self[m].bind(self); });
+    if (props.kirim === 'sukses') { this.state.rating = 5; this.state.komentar = 'Sangat responsif dan membantu proses KPR sampai selesai. Survei rumah dijadwalkan rapi.'; this.state.posted = { rating: 5, name: 'Andi Pratama', comment: this.state.komentar }; }
+  }
+  pickReal(){ this.setState({ name: 'real' }); }
+  pickAnon(){ this.setState({ name: 'anon' }); }
+  onKomentar(e){ this.setState({ komentar: e && e.target ? e.target.value : '' }); }
+  submit(){
+    var st = this.state;
+    if (!st.rating) { this.setState({ tried: true }); return; }
+    if (st.komentar.length > 1000) { this.setState({ tried: true }); return; }
+    this.setState({ phase: 'sukses', tried: false, posted: { rating: st.rating, name: st.name === 'real' ? 'Andi Pratama' : 'Pengguna RumahAgen', comment: st.komentar.trim() || '(tanpa komentar)' } });
+  }
+  renderVals(){
+    var self = this, st = this.state, pr = this.props, akses = pr.akses || 'boleh', kirim = pr.kirim || 'normal';
+    var LBL = ['Sangat buruk', 'Buruk', 'Cukup', 'Baik', 'Sangat baik'];
+    var stars = [1, 2, 3, 4, 5].map(function(n){ return { checked: st.rating === n ? 'true' : 'false', label: n + ' bintang, ' + LBL[n - 1], icon: n <= st.rating ? '★' : '☆', pick: function(){ self.setState({ rating: n }); } }; });
+    var done = akses === 'boleh' && (st.phase === 'sukses' || kirim === 'sukses');
+    var form = akses === 'boleh' && !done;
+    var blocked = akses === 'peran_lain' || akses === 'profil_sendiri';
+    var has = pr.profil !== 'belum_ada_ulasan';
+    var p = st.posted || { rating: 5, name: 'Andi Pratama', comment: '' };
+    var out = {
+      isGuest: akses === 'belum_login', isBlocked: blocked, isDone: done, isForm: form,
+      blockedTitle: akses === 'profil_sendiri' ? 'Anda tidak dapat mengulas profil sendiri' : 'Akun Anda belum bisa menulis ulasan',
+      blockedText: akses === 'profil_sendiri' ? 'Ulasan hanya untuk menilai agen lain agar penilaian tetap objektif.' : 'Menulis ulasan tersedia untuk akun Agent dan pengunjung yang sudah masuk. Peran akun Anda saat ini tidak mendapat izin tersebut.',
+      failed: form && kirim === 'gagal' && st.tried !== 'x', limited: form && kirim === 'dibatasi', busy: kirim === 'mengirim', submitLabel: kirim === 'mengirim' ? 'Mengirim…' : 'Kirim Ulasan',
+      stars: stars, ratingText: st.rating ? st.rating + ' dari 5 · ' + LBL[st.rating - 1] : 'Belum dipilih', hasRatingErr: st.tried === true && !st.rating,
+      myName: 'Andi Pratama', nameReal: st.name === 'real' ? 'true' : 'false', nameAnon: st.name === 'anon' ? 'true' : 'false', pickReal: this.pickReal, pickAnon: this.pickAnon,
+      val_komentar: st.komentar, on_komentar: this.onKomentar, cls_komentar: st.komentar.length > 1000 ? 'input-err' : '', has_komentar: st.komentar.length > 1000, err_komentar: 'Maksimal 1.000 karakter.', cnt: st.komentar.length.toLocaleString('id-ID'),
+      submit: this.submit,
+      postedName: p.name, postedComment: p.comment, postedStars: '★★★★★'.slice(0, p.rating) + '☆☆☆☆☆'.slice(0, 5 - p.rating),
+      sumRating: has ? '4.8' : '—', sumCount: has ? '(126 ulasan)' : 'Belum ada ulasan'
+    };
+    if (kirim === 'gagal') out.failed = form;
+    return out;
+  }
+}
+</script>
+</body>
+</html>

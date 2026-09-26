@@ -5,7 +5,7 @@ Claude Design (Artifact "Design" — canvas dengan artboard hidup, state loading
 dan komponen interaktif nyata). Wireframe ini menggantikan pendekatan lama di
 `docs/design/wireframes/` (WF-00–WF-11, PNG statis) karena divalidasi langsung terhadap
 skema Supabase live (`jawywzavznjekxxlhwqo`, migration #0001–#0151 per 2026-09-25; 0146 dicadangkan, belum ada), bukan cuma dokumen spesifikasi.
-Isi saat ini: **180 layar** (90 Desktop + 90 Mobile) + `Design-System.dc.html`. Canvas hidup versi 111.
+Isi saat ini: **186 layar** (93 Desktop + 93 Mobile) + `Design-System.dc.html`. Canvas hidup versi 111.
 
 **Kanvas hidup (sumber kebenaran, bisa diedit & diklik interaktif):**
 https://claude.ai/artifact/E2exTSy32okUjjacqMqB2Q
@@ -36,8 +36,8 @@ wireframes-v2/
 ├── Design-System.dc.html       # lembar referensi: palet warna, type scale, katalog status badge
 ├── assets/
 │   └── rumahagen-logo.png      # logo asli (transparan), dipakai semua layar
-├── Desktop/                    # 1440×900, breakpoint desktop (90 layar)
-│   ├── 00-Publik/              # 18: M01 Login/OTP/Recovery/Register; M04 Verifikasi-Sertifikat (/verifikasi/{kode});
+├── Desktop/                    # 1440×900, breakpoint desktop (93 layar)
+│   ├── 00-Publik/              # 19: M01 Login/OTP/Recovery/Register; M02 Beri-Ulasan; M04 Verifikasi-Sertifikat (/verifikasi/{kode});
 │   │                           #     M11 Homepage, Discovery, Detail-Listing, Detail-Agen/Organisasi/Developer-Project/Event/
 │   │                           #     Learning/Learning-Session, Konten-Publik (+Detail), Promo (+Detail)
 │   ├── 01-Agent/               # 25: M01 Akun-Dibatasi; M02 Profil-Saya; M03 Listing-Saya, Create-Listing-Wizard, Listing-Detail;
@@ -46,9 +46,9 @@ wireframes-v2/
 │   │                           #     M12 Organisasi-Dashboard (+kartu "Undangan untuk Anda"), Buat-Organisasi, Kelola-Anggota;
 │   │                           #     M13 Koneksi-AI, AI-Assistant; M14 Katalog-Komersial, Pesanan-Kuota, Langganan-Saya;
 │   │                           #     M15 Evidence, Evaluasi, Title-Award-Presentation
-│   ├── 02-Admin/               # 27: M03 Moderasi-Listing; M04 Kelola-Kursus, Form-Kursus, Detail-Kursus, Editor-Kuis,
+│   ├── 02-Admin/               # 29: M03 Moderasi-Listing; M04 Kelola-Kursus, Form-Kursus, Detail-Kursus, Editor-Kuis,
 │   │                           #     Learning-Economy-Config, Konfigurasi-Belajar, Sertifikat-Kursus; M06 Developer-Project-Admin;
-│   │                           #     M07 Bank-Master; M09 Dashboard-Analytics, Direktori-Pengguna, Staf-Internal, Konten-Notifikasi,
+│   │                           #     M07 Bank-Master; M09 Dashboard-Analytics, Form-Banner, Form-Konten-Publik, Direktori-Pengguna, Staf-Internal, Konten-Notifikasi,
 │   │                           #     Konfigurasi-Sistem, Audit-Oversight; M10 Matriks-Izin; M11 Pengalihan-URL; M13 Provider-Catalogue;
 │   │                           #     M14 Komersial-Admin, Katalog-Addon, Form-Addon, Promosi-Admin, Form-Promosi, Katalog-Paket;
 │   │                           #     M15 Award-Appeal, Awarding-Path-Admin
@@ -110,6 +110,8 @@ permission, migration, audit) jadi itu yang dipakai sebagai struktur folder, buk
 | **Langganan Pro (M14)** | Langganan Saya diperbarui + Katalog Paket (Admin) baru, desktop+mobile | ✅ Wireframe selesai 2026-09-24 (sumber: `SOURCE-Langganan-Pro.md`): beli paket Pro dengan pilihan pemilik (pribadi/organisasi, leader saja), katalog paket admin (harga per cakupan, aktifkan). Backend: migration 0142 (diterapkan) + API plans/orders | Selesai juga: item menu Admin "Paket Langganan" di semua layar Admin. Selesai juga: promosi untuk paket (migration 0143) |
 | **M04 MVP — Sertifikat & Konfigurasi Belajar** | 8 layar × desktop+mobile baru/diperbarui | ✅ Wireframe selesai 2026-09-25: `02-Admin/M04-Konfigurasi-Belajar` (tab Umum, Kuis & Kelulusan, Sertifikat & LP: template, logo, nama/jabatan/tanda tangan penandatangan) dan `M04-Sertifikat-Kursus` (template + logo mitra per kursus, terbitkan/cabut); nav "Konfigurasi Belajar" di semua layar Admin; `01-Agent/M04-Pembelajaran` (kartu Sertifikat Saya) dan `M04-Belajar-Course` (unduh PDF); `00-Publik/M04-Verifikasi-Sertifikat` (tujuan QR). Backend: **migration 0150 diterapkan** (nomor `RA-{tahun}-{6 digit}`, kode verifikasi, 4 template PDF: Klasik/Modern/Korporat/Premium, aturan kuis pihak ketiga, LP awal 25), API `/admin/learning/settings`, `/courses/{id}/certificate*`, `/certificates/*`, `/agents/me/certificates`, dan halaman Next.js `/verifikasi/{kode}` | Konsol M04 penuh (18 bagian di luar MVP) belum dibangun |
 | **Notifikasi organisasi & sertifikat (M08/M12)** | `01-Agent/M12-Organisasi-Dashboard`, `06-Bersama/M08-Pusat-Notifikasi` diperbarui | ✅ 2026-09-25: kartu "Undangan untuk Anda" (terima/tolak, kedaluwarsa, skenario lambat/gagal) pada keadaan belum tergabung organisasi; Pusat Notifikasi memuat contoh "Undangan bergabung organisasi" dan "Sertifikat dicabut". **Migration 0151 diterapkan**: trigger notifikasi undangan/permohonan organisasi dan notifikasi saat sertifikat dicabut | — |
+| **Penyelarasan M01 Auth (2026-09-26)** | 4 layar × desktop+mobile diperbarui | ✅ `M01-Register` (hanya nama lengkap, tanpa WhatsApp; ditambah Ulangi Password), `M01-OTP` (Verifikasi Email: kode 6 digit ke email, cek folder spam, Ubah email), `M01-Login` (label Email saja; "Ingat saya" dihapus karena tidak ada di implementasi), `01-Agent/M01-Akun-Dibatasi` (skenario baru `pending_review`, lencana peringatan). Mengikuti keputusan pemilik produk 2026-09-26 dan halaman yang sudah dibangun | — |
+| **Pembaruan Fase 2 — Ulasan, CTA promo, Konten Publik, Title kursus (2026-09-26)** | 3 layar baru + 3 diperbarui × desktop+mobile | ✅ Wireframe selesai 2026-09-26: `00-Publik/M02-Beri-Ulasan` (rating 1–5, tampil sebagai nama/anonim, komentar; keadaan belum login, peran tak berizin, profil sendiri, kirim/gagal/dibatasi/sukses; tautan "Tulis Ulasan" ditambahkan di `M11-Detail-Agen`); `02-Admin/M09-Form-Banner` (jenis CTA + pemilih isi: proyek/kursus/event dari data, halaman tetap, WhatsApp, tautan luar; jadwal, prioritas, status, pratinjau Detail Promo); `02-Admin/M09-Form-Konten-Publik` (judul, slug, isi, SEO, indeks, sitemap, siklus status; halaman footer dikunci); `M09-Konten-Notifikasi` diperbarui (banner diedit di layar Form, tab baru "Konten Publik", keadaan memuat/kosong/gagal); `M04-Sertifikat-Kursus` diperbarui (kartu "Title setelah lulus": pilih title aktif, backfill lulusan, title nonaktif, ditolak 409; baris Title di pratinjau; tombol Hapus tanda tangan kini terhubung). **Bergantung pada**: format `cta_reference` terstruktur (`lib/public/cta.ts`, sudah dipakai halaman publik) dan `awards_title_definition_id` (migration 0155). **Celah backend**: belum ada API admin untuk `static_public_content` (hanya RLS Admin/Superadmin), belum ada validasi `cta_reference` di `POST/PUT /admin/banners`, belum ada unggah gambar banner, API ulasan belum melarang ulasan ke profil sendiri atau membatasi satu ulasan per pengulas | — |
 
 ## Prinsip desain (ringkas)
 

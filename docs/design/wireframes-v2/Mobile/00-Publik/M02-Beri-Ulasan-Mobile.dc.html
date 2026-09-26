@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Tulis Ulasan — Mobile</title>
+<script src="./support.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;font-family:var(--ra-font);}
+  .page{width:390px;box-sizing:border-box;background:#fff;position:relative;}
+  .topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--ra-ink-100);display:flex;align-items:center;gap:10px;padding:12px 14px;}
+  .tb-btn{width:38px;height:38px;border-radius:50%;background:var(--ra-ink-50);display:flex;align-items:center;justify-content:center;border:none;flex:none;}
+  .sec{padding:18px 16px;}
+  .avatar-xl{width:72px;height:72px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;flex:none;}
+  .stat-row{display:flex;gap:20px;padding:14px 16px;border-top:1px solid var(--ra-ink-100);border-bottom:1px solid var(--ra-ink-100);}
+  .stat-item{display:flex;flex-direction:column;gap:2px;}
+  .spec-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--ra-radius-pill);background:var(--ra-blue-50);color:var(--ra-blue-600);font-size:12px;font-weight:700;}
+  .review-item{padding:14px 0;border-bottom:1px solid var(--ra-ink-100);display:flex;flex-direction:column;gap:6px;}
+  .similar-scroll{display:flex;gap:10px;overflow-x:auto;}
+  .prop-card{flex:none;width:160px;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);overflow:hidden;text-decoration:none;color:inherit;}
+  .prop-photo{height:90px;background:var(--ra-ink-100);}
+  .prop-body{padding:10px;display:flex;flex-direction:column;gap:4px;}
+  .empty-box{padding:40px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ra-ink-500);}
+  .bottom-cta{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--ra-ink-100);padding:10px 16px calc(10px + env(safe-area-inset-bottom));}
+
+  .panel{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:18px;display:flex;flex-direction:column;gap:20px;}
+  .field{display:flex;flex-direction:column;gap:8px;}
+  .req{color:var(--ra-danger-600);}
+  .err{color:var(--ra-danger-600);font-size:12px;line-height:16px;}
+  .input-err{border-color:var(--ra-danger-600);}
+  textarea.ra-input{height:auto;padding:12px 14px;resize:none;line-height:20px;}
+  .banner{display:flex;gap:12px;align-items:flex-start;border-radius:var(--ra-radius-md);padding:14px 16px;}
+  .banner-info{background:var(--ra-info-100);border:1px solid var(--ra-blue-200);}
+  .banner-warn{background:var(--ra-warning-100);border:1px solid var(--ra-gold-200);}
+  .banner-danger{background:var(--ra-danger-100);border:1px solid #F3B9B9;}
+  .radio-card{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border:1.5px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);background:#fff;text-align:left;cursor:pointer;font-family:var(--ra-font);width:100%;box-sizing:border-box;min-height:56px;}
+  .radio-card[aria-checked="true"]{border-color:var(--ra-blue-600);background:var(--ra-blue-50);}
+  .radio-card:focus-visible,.star-btn:focus-visible{outline:2.5px solid var(--ra-blue-500);outline-offset:2px;}
+  .star-btn{width:48px;height:48px;font-size:26px;border-radius:var(--ra-radius-md);border:1.5px solid var(--ra-ink-100);background:#fff;font-size:30px;line-height:1;color:var(--ra-gold-600);cursor:pointer;font-family:var(--ra-font);}
+  .star-btn[aria-checked="true"]{border-color:var(--ra-gold-600);background:var(--ra-gold-100);}
+  .agent-card{background:#fff;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-lg);padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .avatar-md{width:52px;height:52px;border-radius:50%;background:var(--ra-blue-100);color:var(--ra-blue-600);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex:none;}
+  .posted{width:100%;max-width:460px;border:1px solid var(--ra-ink-100);border-radius:var(--ra-radius-md);padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--ra-ink-50);color:var(--ra-gold-600);}
+</style>
+</helmet>
+<div class="page">
+  <div class="topbar"><button class="tb-btn" aria-label="Kembali" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M15 5l-7 7 7 7"/></svg></button><span class="ra-label-lg ra-truncate-1">Tulis Ulasan</span></div>
+  <div class="ra-scroll" style="max-height:calc(844px - 64px - 76px);overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;"><div class="agent-card"><div style="display:flex;align-items:center;gap:12px;"><div class="avatar-md">RS</div><div style="min-width:0;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="ra-title-md">Rian Saputra</span><span class="ra-badge ra-badge-info">Terverifikasi</span></div><span class="ra-caption ra-truncate-1">PT Properti Jaya Sejahtera</span></div></div><div style="display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="var(--ra-gold-500)" stroke="var(--ra-gold-600)" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8L3.5 9.7l5.9-.9L12 3.5Z"/></svg><span class="ra-title-md">{{sumRating}}</span><span class="ra-caption">{{sumCount}}</span></div><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M11-Detail-Agen-Mobile.dc.html">Lihat profil agen</a></div><sc-if value="{{isGuest}}" hint-placeholder-val="{{false}}"><div class="panel" style="align-items:center;text-align:center;"><span style="color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h2 class="ra-title-lg">Masuk untuk menulis ulasan</h2><p class="ra-body-md" style="color:var(--ra-ink-500);max-width:420px;">Ulasan hanya bisa ditulis oleh akun yang sudah masuk, agar penilaian tetap terpercaya.</p><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;"><a class="ra-btn ra-btn-primary" href="M01-Login-Mobile.dc.html">Masuk</a><a class="ra-btn ra-btn-secondary" href="M01-Register-Mobile.dc.html">Daftar</a></div></div></sc-if><sc-if value="{{isBlocked}}" hint-placeholder-val="{{false}}"><div class="panel" style="align-items:center;text-align:center;"><span style="color:var(--ra-ink-300);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></span><h2 class="ra-title-lg">{{blockedTitle}}</h2><p class="ra-body-md" style="color:var(--ra-ink-500);max-width:420px;">{{blockedText}}</p><a class="ra-btn ra-btn-secondary" href="M11-Detail-Agen-Mobile.dc.html">Kembali ke profil agen</a></div></sc-if><sc-if value="{{isDone}}" hint-placeholder-val="{{false}}"><div class="panel" style="align-items:center;text-align:center;" role="status"><span style="width:56px;height:56px;border-radius:50%;background:var(--ra-success-100);color:var(--ra-success-600);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><h2 class="ra-title-lg">Terima kasih, ulasan Anda sudah tayang</h2><p class="ra-body-md" style="color:var(--ra-ink-500);max-width:440px;">Ulasan tampil langsung di profil agen. Admin dapat meninjaunya setelah tayang. Ulasan yang sudah dikirim tidak bisa diubah.</p><div class="posted"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span class="ra-label-lg ra-truncate-1">{{postedName}}</span><span style="display:inline-flex;gap:2px;">{{postedStars}}</span></div><p class="ra-body-md" style="color:var(--ra-ink-700);text-align:left;overflow-wrap:anywhere;">{{postedComment}}</p></div><a class="ra-btn ra-btn-primary" href="M11-Detail-Agen-Mobile.dc.html">Kembali ke profil agen</a></div></sc-if><sc-if value="{{isForm}}" hint-placeholder-val="{{true}}"><div class="panel"><sc-if value="{{failed}}" hint-placeholder-val="{{false}}"><div class="banner banner-danger" role="alert"><span style="color:var(--ra-danger-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Ulasan belum terkirim. Tidak ada yang tersimpan; coba lagi.</p></div></sc-if><sc-if value="{{limited}}" hint-placeholder-val="{{false}}"><div class="banner banner-warn" role="alert"><span style="color:var(--ra-warning-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l10 18H2L12 3Z"/><path d="M12 10v5"/><circle cx="12" cy="18" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Terlalu banyak percobaan. Coba lagi dalam 1 menit.</p></div></sc-if><div class="field"><span class="ra-label-lg" id="lbl-rating">Penilaian Anda <span class="req">*</span></span><div role="radiogroup" aria-labelledby="lbl-rating" style="display:flex;gap:6px;"><sc-for list="{{stars}}" as="s" hint-placeholder-count="5"><button class="star-btn" role="radio" aria-checked="{{s.checked}}" aria-label="{{s.label}}" onClick="{{s.pick}}" disabled="{{busy}}">{{s.icon}}</button></sc-for></div><span class="ra-body-md" style="color:var(--ra-ink-700);min-height:22px;">{{ratingText}}</span><sc-if value="{{hasRatingErr}}" hint-placeholder-val="{{false}}"><span class="err" role="alert">Pilih jumlah bintang terlebih dulu.</span></sc-if></div><div class="field"><span class="ra-label-lg" id="lbl-nama">Tampil sebagai</span><div role="radiogroup" aria-labelledby="lbl-nama" style="display:grid;grid-template-columns:1fr;gap:10px;"><button class="radio-card" role="radio" aria-checked="{{nameReal}}" onClick="{{pickReal}}" disabled="{{busy}}"><span class="ra-label-lg ra-truncate-1">Nama saya</span><span class="ra-caption ra-truncate-1">{{myName}}</span></button><button class="radio-card" role="radio" aria-checked="{{nameAnon}}" onClick="{{pickAnon}}" disabled="{{busy}}"><span class="ra-label-lg">Anonim</span><span class="ra-caption">Tampil sebagai &quot;Pengguna RumahAgen&quot;</span></button></div></div><div class="field"><label class="ra-label-lg" for="f-komentar">Komentar (opsional)</label><textarea id="f-komentar" class="ra-input {{cls_komentar}}" style="height:140px;" maxlength="1000" placeholder="Ceritakan pengalaman Anda: respons, kejujuran informasi, dan proses transaksi." value="{{val_komentar}}" onInput="{{on_komentar}}" disabled="{{busy}}"></textarea><div style="display:flex;justify-content:space-between;gap:8px;"><sc-if value="{{has_komentar}}" hint-placeholder-val="{{false}}"><span class="err" role="alert">{{err_komentar}}</span></sc-if><span class="ra-caption" style="margin-left:auto;">{{cnt}}/1.000</span></div></div><div class="banner banner-info"><span style="color:var(--ra-info-600);flex:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></span><p class="ra-body-md">Ulasan tayang langsung, dapat ditinjau admin setelahnya, dan tidak bisa diubah atau dihapus setelah dikirim. Tulis dengan jujur dan sopan; jangan mencantumkan data pribadi.</p></div></div></sc-if></div>
+  <sc-if value="{{isForm}}" hint-placeholder-val="{{true}}"><div class="bottom-cta"><button class="ra-btn ra-btn-primary" style="width:100%;" onClick="{{submit}}" disabled="{{busy}}">{{submitLabel}}</button></div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"akses":{"editor":"enum","default":"boleh","options":["boleh","belum_login","peran_lain","profil_sendiri"],"section":"Skenario akses"},"kirim":{"editor":"enum","default":"normal","options":["normal","mengirim","gagal","dibatasi","sukses"],"section":"Skenario kirim"},"profil":{"editor":"enum","default":"ada_ulasan","options":["ada_ulasan","belum_ada_ulasan"],"section":"Ringkasan agen"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { rating: 0, name: 'real', komentar: '', tried: false, phase: props.kirim === 'sukses' ? 'sukses' : 'normal', posted: null };
+    var self = this;
+    ['submit', 'pickReal', 'pickAnon', 'onKomentar'].forEach(function(m){ self[m] = self[m].bind(self); });
+    if (props.kirim === 'sukses') { this.state.rating = 5; this.state.komentar = 'Sangat responsif dan membantu proses KPR sampai selesai. Survei rumah dijadwalkan rapi.'; this.state.posted = { rating: 5, name: 'Andi Pratama', comment: this.state.komentar }; }
+  }
+  pickReal(){ this.setState({ name: 'real' }); }
+  pickAnon(){ this.setState({ name: 'anon' }); }
+  onKomentar(e){ this.setState({ komentar: e && e.target ? e.target.value : '' }); }
+  submit(){
+    var st = this.state;
+    if (!st.rating) { this.setState({ tried: true }); return; }
+    if (st.komentar.length > 1000) { this.setState({ tried: true }); return; }
+    this.setState({ phase: 'sukses', tried: false, posted: { rating: st.rating, name: st.name === 'real' ? 'Andi Pratama' : 'Pengguna RumahAgen', comment: st.komentar.trim() || '(tanpa komentar)' } });
+  }
+  renderVals(){
+    var self = this, st = this.state, pr = this.props, akses = pr.akses || 'boleh', kirim = pr.kirim || 'normal';
+    var LBL = ['Sangat buruk', 'Buruk', 'Cukup', 'Baik', 'Sangat baik'];
+    var stars = [1, 2, 3, 4, 5].map(function(n){ return { checked: st.rating === n ? 'true' : 'false', label: n + ' bintang, ' + LBL[n - 1], icon: n <= st.rating ? '★' : '☆', pick: function(){ self.setState({ rating: n }); } }; });
+    var done = akses === 'boleh' && (st.phase === 'sukses' || kirim === 'sukses');
+    var form = akses === 'boleh' && !done;
+    var blocked = akses === 'peran_lain' || akses === 'profil_sendiri';
+    var has = pr.profil !== 'belum_ada_ulasan';
+    var p = st.posted || { rating: 5, name: 'Andi Pratama', comment: '' };
+    var out = {
+      isGuest: akses === 'belum_login', isBlocked: blocked, isDone: done, isForm: form,
+      blockedTitle: akses === 'profil_sendiri' ? 'Anda tidak dapat mengulas profil sendiri' : 'Akun Anda belum bisa menulis ulasan',
+      blockedText: akses === 'profil_sendiri' ? 'Ulasan hanya untuk menilai agen lain agar penilaian tetap objektif.' : 'Menulis ulasan tersedia untuk akun Agent dan pengunjung yang sudah masuk. Peran akun Anda saat ini tidak mendapat izin tersebut.',
+      failed: form && kirim === 'gagal' && st.tried !== 'x', limited: form && kirim === 'dibatasi', busy: kirim === 'mengirim', submitLabel: kirim === 'mengirim' ? 'Mengirim…' : 'Kirim Ulasan',
+      stars: stars, ratingText: st.rating ? st.rating + ' dari 5 · ' + LBL[st.rating - 1] : 'Belum dipilih', hasRatingErr: st.tried === true && !st.rating,
+      myName: 'Andi Pratama', nameReal: st.name === 'real' ? 'true' : 'false', nameAnon: st.name === 'anon' ? 'true' : 'false', pickReal: this.pickReal, pickAnon: this.pickAnon,
+      val_komentar: st.komentar, on_komentar: this.onKomentar, cls_komentar: st.komentar.length > 1000 ? 'input-err' : '', has_komentar: st.komentar.length > 1000, err_komentar: 'Maksimal 1.000 karakter.', cnt: st.komentar.length.toLocaleString('id-ID'),
+      submit: this.submit,
+      postedName: p.name, postedComment: p.comment, postedStars: '★★★★★'.slice(0, p.rating) + '☆☆☆☆☆'.slice(0, 5 - p.rating),
+      sumRating: has ? '4.8' : '—', sumCount: has ? '(126 ulasan)' : 'Belum ada ulasan'
+    };
+    if (kirim === 'gagal') out.failed = form;
+    return out;
+  }
+}
+</script>
+</body>
+</html>

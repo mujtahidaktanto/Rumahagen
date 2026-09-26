@@ -118,7 +118,7 @@
     </div>
 
     <div class="sec" style="padding-top:0;">
-      <h2 class="ra-title-md" style="margin-bottom:4px;">Ulasan ({{reviewCount}})</h2>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px;"><h2 class="ra-title-md">Ulasan ({{reviewCount}})</h2><a class="ra-btn ra-btn-secondary ra-btn-sm" href="M02-Beri-Ulasan-Mobile.dc.html">Tulis Ulasan</a></div>
       <sc-if value="{{hasReviews}}" hint-placeholder-val="{{true}}">
         <sc-for list="{{reviews}}" as="r" hint-placeholder-count="3">
           <div class="review-item">
