@@ -39,9 +39,18 @@
   <sc-if value="{{isPrivate}}" hint-placeholder-val="{{false}}">
     <div class="empty-box" style="margin-top:24px;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="36" height="36"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="M3 3l18 18"/></svg>
-      <h2 class="ra-title-md">Profil Agen Tidak Publik</h2>
-      <p class="ra-body-md">Agen ini memilih untuk tidak menampilkan profilnya secara publik.</p>
+      <h2 class="ra-title-md">Profil Agen Tidak Ditemukan</h2>
+      <p class="ra-body-md">Tautan salah, atau agen ini memilih untuk tidak menampilkan profilnya secara publik.</p>
       <a class="ra-btn ra-btn-primary" href="M11-Discovery.dc.html">Cari Agen Lain</a>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+    <div class="empty-box" style="margin-top:24px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="36" height="36"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg>
+      <h2 class="ra-title-md">Profil agen gagal dimuat</h2>
+      <p class="ra-body-md">Terjadi gangguan saat memuat halaman. Muat ulang beberapa saat lagi.</p>
+      <button class="ra-btn ra-btn-secondary">Coba Lagi</button>
     </div>
   </sc-if>
 
@@ -56,7 +65,7 @@
           <sc-if value="{{isVerified}}" hint-placeholder-val="{{true}}"><span class="ra-badge ra-badge-info">Terverifikasi</span></sc-if>
         </div>
         <span class="ra-body-md" style="color:var(--ra-ink-500);">{{coverageArea}}</span>
-        <a href="M11-Detail-Organisasi-Mobile.dc.html" class="ra-body-md">{{officeName}}</a>
+        <span class="ra-body-md">{{officeName}}</span>
       </div>
     </div>
 
@@ -68,10 +77,12 @@
       <div class="stat-item"><span class="ra-title-md">{{activeCount}}</span><span class="ra-caption">Aktif</span></div>
       <div class="stat-item"><span class="ra-title-md">{{soldCount}}</span><span class="ra-caption">Terjual</span></div>
       <div class="stat-item"><span class="ra-title-md">{{rentedCount}}</span><span class="ra-caption">Tersewa</span></div>
+      <sc-if value="{{showRating}}" hint-placeholder-val="{{true}}">
       <div class="stat-item">
         <div style="display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="var(--ra-gold-500)" width="14" height="14"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.3l7.1-.7L12 2Z"/></svg><span class="ra-title-md">{{ratingAvg}}</span></div>
         <span class="ra-caption">{{reviewCount}} ulasan</span>
       </div>
+      </sc-if>
     </div>
 
     <sc-if value="{{hasTitles}}" hint-placeholder-val="{{true}}">
@@ -98,7 +109,7 @@
       <p class="ra-body-md" style="color:var(--ra-ink-700);line-height:22px;">{{bio}}</p>
       <div style="border-top:1px solid var(--ra-ink-100);margin-top:12px;padding-top:12px;display:flex;flex-direction:column;gap:6px;">
         <div style="display:flex;justify-content:space-between;"><span class="ra-caption">No. Lisensi</span><span class="ra-body-md" style="font-weight:700;">{{licenseNumber}}</span></div>
-        <div style="display:flex;justify-content:space-between;"><span class="ra-caption">Kantor</span><span class="ra-body-md" style="font-weight:700;">{{officeName}}</span></div>
+        <div style="display:flex;justify-content:space-between;"><span class="ra-caption">WhatsApp</span><span class="ra-body-md" style="font-weight:700;">{{waNumber}}</span></div>
       </div>
     </div>
 
@@ -114,6 +125,7 @@
           </sc-for>
         </div>
       </sc-if>
+      <sc-if value="{{portErr}}" hint-placeholder-val="{{false}}"><div class="empty-box"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg><span class="ra-body-md" style="color:var(--ra-ink-900);font-weight:700;">Listing belum bisa dimuat</span><span class="ra-caption">Muat ulang beberapa saat lagi.</span></div></sc-if>
       <sc-if value="{{noListings}}" hint-placeholder-val="{{false}}"><div class="empty-box"><span class="ra-body-md">Belum ada listing aktif.</span></div></sc-if>
     </div>
 
@@ -130,6 +142,8 @@
           </div>
         </sc-for>
       </sc-if>
+      <sc-if value="{{hasReviews}}" hint-placeholder-val="{{true}}"><span class="ra-caption">Menampilkan ulasan terbaru (maks. 10) dari {{reviewCount}} ulasan.</span></sc-if>
+      <sc-if value="{{revErr}}" hint-placeholder-val="{{false}}"><div class="empty-box"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg><span class="ra-body-md" style="color:var(--ra-ink-900);font-weight:700;">Ulasan belum bisa dimuat</span><span class="ra-caption">Muat ulang beberapa saat lagi.</span></div></sc-if>
       <sc-if value="{{noReviews}}" hint-placeholder-val="{{false}}"><div class="empty-box"><span class="ra-body-md">Belum ada ulasan.</span></div></sc-if>
     </div>
 
@@ -142,7 +156,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"profileVisibility":{"editor":"enum","default":"public","options":["public","private"],"section":"Skenario"},"hasPortfolio":{"editor":"boolean","default":true,"section":"Skenario"},"hasReviewData":{"editor":"boolean","default":true,"section":"Skenario"},"verifiedProp":{"editor":"boolean","default":true,"section":"Skenario"},"titleScenario":{"editor":"enum","default":"empat","options":["kosong","satu","empat"],"section":"Skenario title"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"profileVisibility":{"editor":"enum","default":"public","options":["public","private","error"],"section":"Skenario"},"bagianGagal":{"editor":"enum","default":"tidak","options":["tidak","portofolio","ulasan"],"section":"Bagian gagal dimuat"},"hasPortfolio":{"editor":"boolean","default":true,"section":"Skenario"},"hasReviewData":{"editor":"boolean","default":true,"section":"Skenario"},"verifiedProp":{"editor":"boolean","default":true,"section":"Skenario"},"titleScenario":{"editor":"enum","default":"empat","options":["kosong","satu","empat"],"section":"Skenario title"},"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   renderVals() {
     const visibility = this.props.profileVisibility ?? 'public';
@@ -158,6 +172,7 @@ class Component extends DCLogic {
     const additionalTitles = shownTitles.slice(1);
     const hasPortfolio = this.props.hasPortfolio ?? true;
     const hasReviewData = this.props.hasReviewData ?? true;
+    const gagal = this.props.bagianGagal ?? 'tidak';
 
     const specializations = [{ label: 'Rumah Tapak' }, { label: 'Apartemen' }, { label: 'KPR Konsultasi' }];
     const portfolioListings = [
@@ -173,6 +188,9 @@ class Component extends DCLogic {
 
     return {
       isPrivate: visibility === 'private',
+      isError: visibility === 'error',
+      waNumber: '0812-1234-5678',
+      portErr: gagal === 'portofolio', revErr: gagal === 'ulasan', showRating: hasReviewData,
       isPublic: visibility === 'public',
       fullName: 'Rian Saputra',
       initials: 'RS',
@@ -189,8 +207,8 @@ class Component extends DCLogic {
       bio: 'Agen properti berpengalaman 6 tahun dengan fokus di kawasan BSD City. Membantu ratusan keluarga menemukan rumah idaman.',
       licenseNumber: 'AREBI-2024-08123',
       specializations,
-      hasListings: hasPortfolio, noListings: !hasPortfolio, portfolioListings,
-      hasReviews: hasReviewData, noReviews: !hasReviewData, reviews
+      hasListings: hasPortfolio && gagal !== 'portofolio', noListings: !hasPortfolio && gagal !== 'portofolio', portfolioListings,
+      hasReviews: hasReviewData && gagal !== 'ulasan', noReviews: !hasReviewData && gagal !== 'ulasan', reviews
     };
   }
 }

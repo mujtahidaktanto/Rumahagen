@@ -16,6 +16,10 @@
   .topbar{height:58px;position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
   .search-bar{background:#fff;padding:12px 16px 14px;border-bottom:1px solid var(--ra-ink-100);}
   .chip-row{display:flex;gap:8px;overflow-x:auto;margin-top:10px;}
+  .tx-row{padding:10px 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);}
+  .seg{display:flex;padding:4px;border:1.5px solid var(--ra-ink-100);border-radius:999px;background:#fff;}
+  .seg span{flex:1;display:inline-flex;align-items:center;justify-content:center;height:40px;border-radius:999px;font-size:14px;font-weight:700;color:var(--ra-ink-700);cursor:pointer;}
+  .seg span[aria-pressed="true"]{background:var(--ra-blue-600);color:#fff;}
   .filter-row{display:flex;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--ra-ink-100);align-items:center;}
   .filter-btn{display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:var(--ra-radius-pill);border:1.5px solid var(--ra-ink-100);background:#fff;font-size:13px;font-weight:700;color:var(--ra-ink-700);}
   .list-col{padding:16px;display:flex;flex-direction:column;gap:14px;}
@@ -68,15 +72,18 @@
     </div>
   </div>
 
+  <div class="tx-row"><div class="seg" role="group" aria-label="Jenis transaksi"><sc-for list="{{txTabs}}" as="x" hint-placeholder-count="2"><span aria-pressed="{{x.isActive}}" onClick="{{x.pick}}">{{x.label}}</span></sc-for></div></div>
+
   <div class="filter-row">
     <button class="filter-btn" onClick="{{openFilter}}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="2"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="2"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="7" cy="18" r="2"/></svg>
       Filter
+      <sc-if value="{{hasFilterCount}}" hint-placeholder-val="{{true}}"><span class="ra-badge ra-badge-info" style="padding:0 7px;min-width:20px;justify-content:center;">{{filterCount}}</span></sc-if>
     </button>
-    <span class="ra-caption" style="flex:1;">{{resultCount}} properti ditemukan</span>
+    <span class="ra-caption" style="flex:1;">{{resultCount}} properti {{txWord}} ditemukan</span>
     <button class="filter-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M8 3v14M8 17l-4-4M8 17l4-4"/><path d="M16 21V7M16 7l4 4M16 7l-4 4"/></svg>
-      Urutkan
+      Urut: {{sortLabel}}
     </button>
   </div>
 
@@ -91,8 +98,17 @@
     <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
       <div class="empty-wrap">
         <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="44" height="44"><circle cx="27" cy="27" r="16"/><path d="M38 38l14 14"/></svg>
-        <span class="ra-body-md">Tidak ada properti yang cocok dengan filter Anda</span>
-        <button class="ra-btn ra-btn-secondary ra-btn-sm">Reset Filter</button>
+        <span class="ra-body-md">{{emptyTitle}}</span>
+        <span class="ra-caption">{{emptyText}}</span>
+        <sc-if value="{{emptyHasReset}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-secondary ra-btn-sm">Reset Filter</button></sc-if>
+      </div>
+    </sc-if>
+    <sc-if value="{{isError}}" hint-placeholder-val="{{false}}">
+      <div class="empty-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ra-danger-600)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><circle cx="12" cy="12" r="9.5"/><path d="M12 8v5"/></svg>
+        <span class="ra-body-md" style="color:var(--ra-ink-900);">Gagal memuat hasil pencarian</span>
+        <span class="ra-caption">Periksa koneksi internet Anda, lalu coba lagi.</span>
+        <button class="ra-btn ra-btn-secondary ra-btn-sm">Coba Lagi</button>
       </div>
     </sc-if>
     <sc-if value="{{isLoaded}}" hint-placeholder-val="{{true}}">
@@ -184,11 +200,11 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"visitorState":{"editor":"enum","default":"guest","options":["guest","agent"],"section":"Skenario"},"resultState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty"],"section":"Skenario"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"visitorState":{"editor":"enum","default":"guest","options":["guest","agent"],"section":"Skenario"},"resultState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","empty_none","error"],"section":"Skenario"},"$preview":{"width":390,"height":844},"transaksi":{"editor":"enum","default":"sale","options":["sale","rent"],"section":"Jenis transaksi"},"urut":{"editor":"enum","default":"terbaru","options":["terbaru","termurah","termahal"],"section":"Urutan"},"filterAktif":{"editor":"enum","default":"dua","options":["nol","dua"],"section":"Jumlah filter aktif"}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { drawerOpen: false, filterOpen: false, activeType: 'properti' };
+    this.state = { drawerOpen: false, filterOpen: false, activeType: 'properti', txPicked: null };
     this.openDrawer = this.openDrawer.bind(this);
     this.closeDrawer = this.closeDrawer.bind(this);
     this.openFilter = this.openFilter.bind(this);
@@ -199,14 +215,22 @@ class Component extends DCLogic {
   openFilter(){ this.setState({ filterOpen: true }); }
   closeFilter(){ this.setState({ filterOpen: false }); }
   pickType(key){ this.setState({ activeType: key }); }
+  pickTx(key){ this.setState({ txPicked: key }); }
   renderVals() {
     const visitorState = this.props.visitorState ?? 'guest';
     const resultState = this.props.resultState ?? 'loaded';
     const activeType = this.state.activeType ?? 'properti';
+    const tx = this.state.txPicked ?? this.props.transaksi ?? 'sale';
+    const isRent = tx === 'rent';
+    const urutLabel = { terbaru: 'Terbaru', termurah: 'Harga terendah', termahal: 'Harga tertinggi' }[this.props.urut ?? 'terbaru'];
+    const txTabs = [{ key: 'sale', label: 'Dijual' }, { key: 'rent', label: 'Disewa' }].map(t => ({ ...t, isActive: t.key === tx, pick: () => this.pickTx(t.key) }));
+    const emptyNone = resultState === 'empty_none';
+    const filterCount = (this.props.filterAktif ?? 'dua') === 'nol' ? 0 : 2;
 
     const typeDefs = [
       { key: 'properti', label: 'Properti' },
       { key: 'agen', label: 'Agen' },
+      { key: 'organisasi', label: 'Organisasi' },
       { key: 'developer', label: 'Developer' },
       { key: 'event', label: 'Event' }
     ];
@@ -216,8 +240,9 @@ class Component extends DCLogic {
       { title: 'Rumah Minimalis Modern Dekat Sekolah', location: 'Bogor, Jawa Barat', price: 'Rp 850.000.000', meta: '3 KT · 2 KM · 120 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
       { title: 'Apartemen Strategis Furnished', location: 'Jakarta Selatan', price: 'Rp 5.000.000/bln', meta: '2 KT · 1 KM · 60 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' },
       { title: 'Ruko Lokasi Premium 3 Lantai', location: 'Bandung, Jawa Barat', price: 'Rp 2.500.000.000', meta: '2 KT · 2 KM · 150 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
-      { title: 'Tanah Kavling Siap Bangun', location: 'Surabaya, Jawa Timur', price: 'Rp 1.200.000.000', meta: '300 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' }
-    ];
+      { title: 'Tanah Kavling Siap Bangun', location: 'Surabaya, Jawa Timur', price: 'Rp 1.200.000.000', meta: '300 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
+      { title: 'Rumah Sewa 2 Lantai Dekat Stasiun', location: 'Bekasi, Jawa Barat', price: 'Rp 4.200.000/bln', meta: '3 KT · 2 KM · 100 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' }
+    ].filter(p => p.tag === (isRent ? 'Disewa' : 'Dijual'));
 
     const resultHrefMap = {
       properti: 'M11-Detail-Listing.dc.html',
@@ -236,10 +261,15 @@ class Component extends DCLogic {
       isGuest: visitorState === 'guest',
       isAgent: visitorState === 'agent',
       typeTabs,
-      resultCount: 47,
+      txTabs, txWord: isRent ? 'disewakan' : 'dijual', sortLabel: urutLabel, filterCount, hasFilterCount: filterCount > 0,
+      resultCount: (resultState === 'empty' || resultState === 'empty_none') ? 0 : (isRent ? 12 : 47),
+      emptyTitle: emptyNone ? (isRent ? 'Belum ada properti yang disewakan' : 'Belum ada properti yang dijual') : 'Tidak ada properti yang cocok dengan filter Anda',
+      emptyText: emptyNone ? 'Listing yang sudah terbit akan tampil di sini.' : 'Coba longgarkan filter atau kurangi jumlah kamar.',
+      emptyHasReset: !emptyNone,
+      isError: resultState === 'error',
       resultHref: resultHrefMap[activeType] ?? resultHrefMap.properti,
       isLoading: resultState === 'loading',
-      isEmpty: resultState === 'empty',
+      isEmpty: resultState === 'empty' || resultState === 'empty_none',
       isLoaded: resultState === 'loaded',
       listings
     };

@@ -46,6 +46,9 @@
 
   .empty-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:64px 20px;color:var(--ra-ink-300);text-align:center;grid-column:1 / -1;}
 
+  .seg{display:inline-flex;padding:4px;border:1.5px solid var(--ra-ink-100);border-radius:999px;background:#fff;margin-bottom:14px;}
+  .seg span{display:inline-flex;align-items:center;justify-content:center;min-width:112px;height:40px;padding:0 20px;border-radius:999px;font-size:14px;font-weight:700;color:var(--ra-ink-700);cursor:pointer;}
+  .seg span[aria-pressed="true"]{background:var(--ra-blue-600);color:#fff;}
   .footer{background:var(--ra-ink-900);color:rgba(255,255,255,.68);padding:48px 0 0;}
   .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.1);}
   .footer-col a{display:block;color:rgba(255,255,255,.68);text-decoration:none;font-size:13.5px;padding:5px 0;}
@@ -157,11 +160,16 @@
 
     <!-- hasil -->
     <div>
+      <div class="seg" role="group" aria-label="Jenis transaksi">
+        <sc-for list="{{txTabs}}" as="x" hint-placeholder-count="2">
+          <span aria-pressed="{{x.isActive}}" onClick="{{x.pick}}">{{x.label}}</span>
+        </sc-for>
+      </div>
       <div class="result-head">
-        <span class="ra-body-md" style="color:var(--ra-ink-500);"><strong style="color:var(--ra-ink-900);">{{resultCount}}</strong> properti ditemukan</span>
+        <span class="ra-body-md" style="color:var(--ra-ink-500);"><strong style="color:var(--ra-ink-900);">{{resultCount}}</strong> properti {{txWord}} ditemukan</span>
         <div class="sort-select">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M8 3v14M8 17l-4-4M8 17l4-4"/><path d="M16 21V7M16 7l4 4M16 7l-4 4"/></svg>
-          Terbaru
+          {{sortLabel}}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M6 9l6 6 6-6"/></svg>
         </div>
       </div>
@@ -189,9 +197,9 @@
       <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
         <div class="empty-wrap">
           <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="52" height="52"><circle cx="27" cy="27" r="16"/><path d="M38 38l14 14"/></svg>
-          <span class="ra-title-md">Tidak ada properti yang cocok dengan filter Anda</span>
-          <span class="ra-body-md">Coba longgarkan filter, misalnya perluas rentang harga atau kurangi jumlah kamar.</span>
-          <button class="ra-btn ra-btn-secondary ra-btn-sm">Reset Filter</button>
+          <span class="ra-title-md">{{emptyTitle}}</span>
+          <span class="ra-body-md">{{emptyText}}</span>
+          <sc-if value="{{emptyHasReset}}" hint-placeholder-val="{{true}}"><button class="ra-btn ra-btn-secondary ra-btn-sm">Reset Filter</button></sc-if>
         </div>
       </sc-if>
 
@@ -272,16 +280,22 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"resultState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","error"],"section":"Skenario"},"$preview":{"width":1440,"height":1900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"resultState":{"editor":"enum","default":"loaded","options":["loaded","loading","empty","empty_none","error"],"section":"Skenario"},"transaksi":{"editor":"enum","default":"sale","options":["sale","rent"],"section":"Jenis transaksi"},"urut":{"editor":"enum","default":"terbaru","options":["terbaru","termurah","termahal"],"section":"Urutan"},"$preview":{"width":1440,"height":1900}}'>
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    this.state = { activeType: 'properti' };
+    this.state = { activeType: 'properti', txPicked: null };
   }
   pickType(key){ this.setState({ activeType: key }); }
+  pickTx(key){ this.setState({ txPicked: key }); }
   renderVals() {
     const resultState = this.props.resultState ?? 'loaded';
     const activeType = this.state.activeType ?? 'properti';
+    const tx = this.state.txPicked ?? this.props.transaksi ?? 'sale';
+    const isRent = tx === 'rent';
+    const urutLabel = { terbaru: 'Terbaru', termurah: 'Harga terendah', termahal: 'Harga tertinggi' }[this.props.urut ?? 'terbaru'];
+    const txTabs = [{ key: 'sale', label: 'Dijual' }, { key: 'rent', label: 'Disewa' }].map(t => ({ ...t, isActive: t.key === tx, pick: () => this.pickTx(t.key) }));
+    const emptyNone = resultState === 'empty_none';
     const typeDefs = [
       { key: 'properti', label: 'Properti' },
       { key: 'agen', label: 'Agen' },
@@ -297,9 +311,11 @@ class Component extends DCLogic {
       { title: 'Ruko Lokasi Premium 3 Lantai', location: 'Bandung, Jawa Barat', price: 'Rp 2.500.000.000', beds: 2, baths: 2, area: '150 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
       { title: 'Tanah Kavling Siap Bangun Cluster Elite', location: 'Surabaya, Jawa Timur', price: 'Rp 1.200.000.000', beds: null, baths: null, area: '300 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
       { title: 'Rumah Cluster Syariah 1 Lantai', location: 'Depok, Jawa Barat', price: 'Rp 780.000.000', beds: 2, baths: 1, area: '90 m²', tag: 'Dijual', tagColor: 'var(--ra-blue-600)' },
-      { title: 'Apartemen Studio View Kota', location: 'Jakarta Barat', price: 'Rp 3.500.000/bln', beds: 1, baths: 1, area: '35 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' }
+      { title: 'Apartemen Studio View Kota', location: 'Jakarta Barat', price: 'Rp 3.500.000/bln', beds: 1, baths: 1, area: '35 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' },
+      { title: 'Rumah Sewa 2 Lantai Dekat Stasiun', location: 'Bekasi, Jawa Barat', price: 'Rp 4.200.000/bln', beds: 3, baths: 2, area: '100 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' },
+      { title: 'Ruko Sewa Jalan Utama', location: 'Tangerang, Banten', price: 'Rp 9.000.000/bln', beds: 1, baths: 1, area: '80 m²', tag: 'Disewa', tagColor: 'var(--ra-gold-600)' }
     ];
-    const listings = listingsRaw.map(p => ({ ...p, hasBeds: p.beds !== null }));
+    const listings = listingsRaw.filter(p => p.tag === (isRent ? 'Disewa' : 'Dijual')).map(p => ({ ...p, hasBeds: p.beds !== null }));
 
     const resultHrefMap = {
       properti: 'M11-Detail-Listing.dc.html',
@@ -311,11 +327,15 @@ class Component extends DCLogic {
 
     return {
       typeTabs,
-      resultCount: 47,
+      txTabs, txWord: isRent ? 'disewakan' : 'dijual', sortLabel: urutLabel,
+      resultCount: (resultState === 'empty' || resultState === 'empty_none') ? 0 : (isRent ? 12 : 47),
+      emptyTitle: emptyNone ? (isRent ? 'Belum ada properti yang disewakan' : 'Belum ada properti yang dijual') : 'Tidak ada properti yang cocok dengan filter Anda',
+      emptyText: emptyNone ? 'Listing yang sudah terbit akan tampil di sini.' : 'Coba longgarkan filter, misalnya perluas rentang harga atau kurangi jumlah kamar.',
+      emptyHasReset: !emptyNone,
       resultHref: resultHrefMap[activeType] ?? resultHrefMap.properti,
       isLoading: resultState === 'loading',
       isError: resultState === 'error',
-      isEmpty: resultState === 'empty',
+      isEmpty: resultState === 'empty' || resultState === 'empty_none',
       isLoaded: resultState === 'loaded',
       listings
     };
