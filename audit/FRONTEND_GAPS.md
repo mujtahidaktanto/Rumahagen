@@ -292,6 +292,7 @@ Tanpa migration dan tanpa perubahan API: memakai `loadAgentStats` (RPC `agent_st
 5. **Tidak ada pembaruan otomatis** (data dibaca saat halaman dibuka); stempel waktu `generated_at` belum ditampilkan.
 6. **Perbandingan anonim** butuh minimal 30 agen aktif; sampai itu tercapai kartu menampilkan penjelasan (kemungkinan besar di staging).
 7. **Angka besar di kartu Learning/DBR** mengikuti isi RPC (learning tidak difilter rentang, DBR difilter rentang).
+9. **Excel tanpa logo gambar (keputusan pemilik 2026-09-26):** lembar Ringkasan memakai pita identitas berwarna (baris biru merek "RumahAgen" + baris navy "Statistik Saya") sebagai pengganti logo; pembuat Excel (`lib/analytics/xlsx.ts`) belum mendukung gambar. Gaya baru `brand`/`brandSub` juga tersedia untuk ekspor Admin. PDF tetap berlogo gambar.
 8. Ekspor memakai fetch + unduh blob agar galat (izin, batas laju) tampil di dialog; pada sesi habis pengguna dialihkan ke login.
 
 ## Catatan performa

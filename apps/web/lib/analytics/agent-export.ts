@@ -17,6 +17,7 @@ const LEAD_STATUS_LABEL: Record<string, string> = { new: "Baru", contacted: "Dih
 const LISTING_STATUS_LABEL: Record<string, string> = { draft: "Draft", published: "Terbit", pending_review: "Menunggu review", archived: "Diarsipkan", rejected: "Ditolak" };
 const BENCH_LABEL: Record<string, string> = { views: "Dilihat", leads: "Lead", conversion: "Konversi lead per tayangan" };
 
+const BAND_FILL = [0, 1, 2, 3]; // sel tambahan pita identitas setelah kolom A (kolom B-E)
 const title = (d: AgentStats): string => (d.scope === "own" ? "Statistik Saya" : "Statistik Organisasi");
 const rangeText = (d: AgentStats): string =>
   `Rentang ${d.range.from} s.d. ${d.range.to} (${d.range.days} hari)` + (d.previous ? `  |  Pembanding ${d.previous.from} s.d. ${d.previous.to}` : "  |  Tanpa pembanding");
@@ -30,7 +31,9 @@ export function buildAgentStatsWorkbook(d: AgentStats, opts: { exportedBy: strin
 
   // Ringkasan
   const sum: Cell[][] = [
-    [{ v: `RumahAgen - ${title(d)}`, s: "title" }],
+    // Pita identitas RumahAgen (pengganti logo gambar): dua baris berwarna melintasi kolom A-E.
+    [{ v: "RumahAgen", s: "brand" }, ...BAND_FILL.map(() => ({ v: null, s: "brand" as StyleKey }))],
+    [{ v: title(d), s: "brandSub" }, ...BAND_FILL.map(() => ({ v: null, s: "brandSub" as StyleKey }))],
     [{ v: `${rangeText(d)}  |  Data per ${d.generated_at}`, s: "note" }],
     [{ v: `Diekspor oleh: ${opts.exportedBy}. Export ini dicatat di audit log.`, s: "note" }],
     [],
