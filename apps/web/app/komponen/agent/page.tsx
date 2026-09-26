@@ -17,6 +17,9 @@ import { ListingWizard } from "@/components/agent/ListingWizard";
 import type { ActiveContext, ContextOrg } from "@/lib/agent/context";
 import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
 import { CatalogView } from "@/components/agent/CatalogView";
+import { DbrCalculatorView, DbrDetailView, DbrHistoryView } from "@/components/agent/DbrViews";
+import { SharedDbrView } from "@/components/public/SharedDbrView";
+import type { DbrSimulation } from "@/lib/agent/dbr-types";
 import { MyListingsView } from "@/components/agent/MyListingsView";
 import { OrdersView } from "@/components/agent/OrdersView";
 import { SubscriptionsView } from "@/components/agent/SubscriptionsView";
@@ -348,6 +351,27 @@ export default async function SampleAgentPage({ searchParams }: Props) {
         />
       </div>
     );
+  }
+  if (layar === "dbr" || layar === "dbr-riwayat" || layar === "dbr-detail" || layar === "dbr-publik") {
+    const { keadaan = "normal" } = await searchParams;
+    const ago = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
+    const base: DbrSimulation = { id: "2e310408-7a1a-4c3b-9d2e-0a1b2c3d4e5f", bankId: "b1", bankName: "Bank Mandiri", prospectName: "Budi Santoso", prospectPhone: "0812-3456-7890", netIncome: 15000000, existingInstallments: 1000000, propertyPrice: 500000000, downPayment: 100000000, loanAmount: 400000000, tenorMonths: 180, interestRateAnnual: 8.5, monthlyInstallment: 3826000, dbrPercent: 32.4, eligibilityStatus: "layak", thresholdUsed: 35, createdAt: ago(2), shareToken: null, sharedAt: null, revokedAt: null };
+    const sims: DbrSimulation[] = [
+      base,
+      { ...base, id: "s2", prospectName: null, prospectPhone: null, bankName: "Bank BTN", propertyPrice: 850000000, dbrPercent: 41.2, eligibilityStatus: "perlu_review", createdAt: ago(5) },
+      { ...base, id: "s3", prospectName: "Siti Aminah dengan Nama yang Sangat Panjang untuk Menguji Pemotongan Teks", bankName: "Bank BCA", propertyPrice: 1200000000, dbrPercent: 58.7, eligibilityStatus: "tidak_layak", createdAt: ago(9) },
+      { ...base, id: "s4", eligibilityStatus: "aneh", dbrPercent: 30, createdAt: ago(12) },
+    ];
+    const banks = [
+      { id: "b1", name: "Bank Mandiri", thresholdPercent: 35, defaultRate: 8.5 },
+      { id: "b2", name: "Bank BTN", thresholdPercent: 40, defaultRate: 7.9 },
+    ];
+    let node: React.ReactNode;
+    if (layar === "dbr") node = <DbrCalculatorView banks={keadaan === "gagal" ? { ok: false } : keadaan === "kosong" ? { ok: true, data: [] } : { ok: true, data: banks }} />;
+    else if (layar === "dbr-riwayat") node = <DbrHistoryView history={keadaan === "gagal" ? { ok: false } : keadaan === "kosong" ? { ok: true, data: { items: [], total: 0 } } : { ok: true, data: { items: sims, total: 25 } }} tampil={10} />;
+    else if (layar === "dbr-detail") node = <DbrDetailView id={base.id} result={keadaan === "gagal" ? { state: "error" } : { state: "ok", simulation: keadaan === "dibagikan" ? { ...base, shareToken: "9f0f0f0f-1111-4222-8333-444455556666", sharedAt: ago(1) } : keadaan === "tanpa_prospek" ? { ...base, prospectName: null, prospectPhone: null } : base }} />;
+    else node = <SharedDbrView data={{ ...base, prospectName: keadaan === "tanpa_nama" ? null : base.prospectName }} />;
+    return <div className="min-h-dvh bg-surface">{node}</div>;
   }
   if (layar === "katalog" || layar === "pesanan" || layar === "langganan") {
     const { keadaan = "normal" } = await searchParams;
