@@ -4,16 +4,8 @@
 // pada wireframe tidak bisa dihitung; halaman hanya menampilkan kuota total. Status pendaftaran milik pengguna sendiri dibaca (RLS: baris sendiri).
 import { createClient } from "@/lib/supabase/server";
 
-export const EVENT_CATEGORIES = ["training", "launching_proyek", "open_house", "gathering"] as const;
-export type EventCategory = (typeof EVENT_CATEGORIES)[number];
-export const EVENT_CATEGORY_LABEL: Record<string, string> = { training: "Training", launching_proyek: "Launching Proyek", open_house: "Open House", gathering: "Gathering" };
-export const REGISTRATION_STATUS_LABEL: Record<string, string> = {
-  registered: "Terdaftar",
-  pending_approval: "Menunggu persetujuan penyelenggara",
-  waitlist: "Daftar tunggu",
-  attended: "Sudah hadir",
-  cancelled: "Dibatalkan",
-};
+export { EVENT_CATEGORIES, EVENT_CATEGORY_LABEL, REGISTRATION_STATUS_LABEL, type EventCategory } from "./event-labels";
+import { EVENT_CATEGORIES, type EventCategory } from "./event-labels";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const isEventId = (v: string) => UUID.test(v);
