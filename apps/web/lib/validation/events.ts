@@ -57,3 +57,7 @@ export const rsvpSchema = z
     path: ["guest_email"],
   });
 export type RsvpInput = z.infer<typeof rsvpSchema>;
+
+// PATCH /events/{id}/registrations/{registrationId} — penyelenggara mengatur status pendaftar (transisi diizinkan ditegakkan trigger 0160: menunggu/tunggu -> registered|cancelled, registered -> attended|cancelled).
+export const registrationStatusSchema = z.object({ status: z.enum(["registered", "cancelled", "attended"]) });
+export type RegistrationStatusInput = z.infer<typeof registrationStatusSchema>;

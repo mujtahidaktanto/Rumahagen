@@ -61,6 +61,41 @@ export const canPublishEvent = (status: string) => status === "pending_approval"
 /** Event ditolak tim: diperbaiki lalu diajukan kembali (status kembali ke pending_approval), bukan diterbitkan langsung. */
 export const canResubmitEvent = (status: string) => status === "rejected";
 
+// ── Pendaftar (sisi penyelenggara) ──
+export type RegistrantAction = { to: "registered" | "cancelled" | "attended"; label: string; confirm: boolean; danger?: boolean };
+
+/**
+ * Aksi penyelenggara per status pendaftar (transisi mengikuti trigger 0160): menunggu/tunggu -> Setujui atau Tolak; terdaftar -> Tandai Hadir (hanya setelah event mulai) atau Batalkan.
+ * Yang menghapus/menolak meminta konfirmasi karena peserta ikut diberi tahu.
+ */
+export function registrantActions(status: string, eventStarted: boolean): RegistrantAction[] {
+  if (status === "pending_approval" || status === "waitlist") {
+    return [
+      { to: "registered", label: "Setujui", confirm: false },
+      { to: "cancelled", label: "Tolak", confirm: true, danger: true },
+    ];
+  }
+  if (status === "registered") {
+    return [...(eventStarted ? [{ to: "attended" as const, label: "Tandai Hadir", confirm: false }] : []), { to: "cancelled" as const, label: "Batalkan", confirm: true, danger: true }];
+  }
+  return [];
+}
+
+export type RegistrantCounts = { pending: number; registered: number; attended: number; cancelled: number };
+export function countRegistrants(list: { status: string }[]): RegistrantCounts {
+  const c: RegistrantCounts = { pending: 0, registered: 0, attended: 0, cancelled: 0 };
+  for (const r of list) {
+    if (r.status === "pending_approval" || r.status === "waitlist") c.pending += 1;
+    else if (r.status === "registered") c.registered += 1;
+    else if (r.status === "attended") c.attended += 1;
+    else if (r.status === "cancelled") c.cancelled += 1;
+  }
+  return c;
+}
+
+/** Peserta boleh membatalkan pendaftarannya hanya pada status aktif (trigger 0160). */
+export const canCancelRegistration = (status: string) => status === "registered" || status === "waitlist" || status === "pending_approval";
+
 // ── Formulir ──
 export type EventFormValues = {
   title: string;

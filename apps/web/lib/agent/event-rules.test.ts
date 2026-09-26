@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_EVENT, canEditEvent, canPublishEvent, canResubmitEvent, isoToWibLocal, toEventPayload, validateEvent, wibLocalToIso, type EventFormValues } from "./event-rules";
+import { EMPTY_EVENT, canCancelRegistration, canEditEvent, canPublishEvent, canResubmitEvent, countRegistrants, registrantActions, isoToWibLocal, toEventPayload, validateEvent, wibLocalToIso, type EventFormValues } from "./event-rules";
 
 const ok: EventFormValues = { ...EMPTY_EVENT, title: "Open House Green Valley", category: "open_house", startAt: "2026-10-02T10:00" };
 
@@ -73,5 +73,26 @@ describe("aksi menurut status", () => {
     expect(canResubmitEvent("pending_approval")).toBe(false);
     expect(canPublishEvent("published")).toBe(false);
     expect(canPublishEvent("cancelled")).toBe(false);
+  });
+});
+
+describe("pendaftar", () => {
+  it("aksi penyelenggara per status", () => {
+    expect(registrantActions("pending_approval", false).map((a) => a.to)).toEqual(["registered", "cancelled"]);
+    expect(registrantActions("waitlist", true).map((a) => a.to)).toEqual(["registered", "cancelled"]);
+    expect(registrantActions("registered", false).map((a) => a.to)).toEqual(["cancelled"]); // belum mulai: belum bisa tandai hadir
+    expect(registrantActions("registered", true).map((a) => a.to)).toEqual(["attended", "cancelled"]);
+    expect(registrantActions("attended", true)).toEqual([]);
+    expect(registrantActions("cancelled", true)).toEqual([]);
+    expect(registrantActions("pending_approval", false)[1]).toMatchObject({ confirm: true, danger: true });
+  });
+  it("hitung per kelompok", () => {
+    expect(countRegistrants([{ status: "pending_approval" }, { status: "waitlist" }, { status: "registered" }, { status: "attended" }, { status: "cancelled" }, { status: "cancelled" }])).toEqual({ pending: 2, registered: 1, attended: 1, cancelled: 2 });
+  });
+  it("peserta hanya boleh membatalkan status aktif", () => {
+    expect(canCancelRegistration("registered")).toBe(true);
+    expect(canCancelRegistration("pending_approval")).toBe(true);
+    expect(canCancelRegistration("attended")).toBe(false);
+    expect(canCancelRegistration("cancelled")).toBe(false);
   });
 });

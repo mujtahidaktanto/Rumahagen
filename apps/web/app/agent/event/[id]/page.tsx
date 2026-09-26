@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { EventForm } from "@/components/agent/EventForm";
 import { LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
-import { getEventFormOptions, getMyEventForEdit } from "@/lib/agent/event-data";
+import { EventRegistrants } from "@/components/agent/EventRegistrants";
+import { getEventFormOptions, getEventRegistrants, getMyEventForEdit } from "@/lib/agent/event-data";
 import { requireArea } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ export default async function ManageEventPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { baru } = await searchParams;
   const user = await requireArea("agent");
-  const [res, options] = await Promise.all([getMyEventForEdit(user.id, id), getEventFormOptions()]);
+  const [res, options, registrants] = await Promise.all([getMyEventForEdit(user.id, id), getEventFormOptions(), getEventRegistrants(id)]);
   if (res.state === "not_found") notFound();
   if (res.state === "error") {
     return (
@@ -30,5 +31,10 @@ export default async function ManageEventPage({ params, searchParams }: Props) {
       </div>
     );
   }
-  return <EventForm key={`${res.event.id}-${res.event.status}`} mode="kelola" eventId={res.event.id} status={res.event.status} initial={res.event.values} options={options} justCreated={baru === "1"} />;
+  return (
+    <EventForm
+      key={`${res.event.id}-${res.event.status}`} mode="kelola" eventId={res.event.id} status={res.event.status} initial={res.event.values} options={options} justCreated={baru === "1"}
+      extra={<EventRegistrants eventId={res.event.id} registrants={registrants} startIso={res.event.startIso} quota={res.event.quota} approvalMode={res.event.approvalMode} />}
+    />
+  );
 }

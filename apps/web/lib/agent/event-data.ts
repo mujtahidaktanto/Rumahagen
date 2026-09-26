@@ -72,7 +72,17 @@ export async function getEventFormOptions(): Promise<EventFormOptions> {
   };
 }
 
-export type EditableEvent = { id: string; status: string; values: EventFormValues; submittedByMe: true };
+export type EditableEvent = { id: string; status: string; values: EventFormValues; submittedByMe: true; startIso: string; approvalMode: string; quota: number | null };
+export type Registrant = { id: string; status: string; participantMode: string; guestEmail: string | null; registeredAt: string; agentName: string; agentOffice: string | null };
+
+/** Daftar pendaftar untuk penyelenggara lewat RPC event_registrants (migration 0160). */
+export async function getEventRegistrants(eventId: string): Promise<Part<Registrant[]>> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("event_registrants", { p_event_id: eventId });
+  if (error) return { ok: false };
+  const rows = (data ?? []) as { id: string; status: string; participant_mode: string; guest_email: string | null; registered_at: string; agent_name: string; agent_office: string | null }[];
+  return { ok: true, data: rows.map((r) => ({ id: r.id, status: r.status, participantMode: r.participant_mode, guestEmail: r.guest_email, registeredAt: r.registered_at, agentName: r.agent_name, agentOffice: r.agent_office })) };
+}
 export type EditableEventResult = { state: "ok"; event: EditableEvent } | { state: "not_found" } | { state: "error" };
 
 type EventRow = {
@@ -113,6 +123,9 @@ export async function getMyEventForEdit(userId: string, id: string): Promise<Edi
       id: data.id,
       status: data.status,
       submittedByMe: true,
+      startIso: data.start_at,
+      approvalMode: data.registration_approval_mode,
+      quota: data.quota,
       values: {
         title: data.title,
         category: data.category,

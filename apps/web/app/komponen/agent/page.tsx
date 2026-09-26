@@ -1,11 +1,12 @@
 // app/komponen/agent/page.tsx — layar Agent dengan DATA CONTOH (bukan database) untuk memeriksa tampilan tanpa login: /komponen/agent?dashboard=normal|kosong|gagal|ktp dan
-// /komponen/agent?layar=belajar&belajar=normal|kosong|gagal (Pembelajaran) dan ?layar=course&course=normal|selesai|tanpa-kuis (Belajar-Course; soal kuis dimuat dari API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=event&event=normal|kosong|gagal (Event Saya) dan ?layar=event-form&mode=baru|belum|tayang|ditolak|batal (Ajukan/Kelola Event; simpan memanggil API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=profil&profil=terisi|baru&ktp=belum|terverifikasi (menyimpan/verifikasi di sini memanggil API sungguhan dan akan gagal tanpa sesi).
+// /komponen/agent?layar=belajar&belajar=normal|kosong|gagal (Pembelajaran) dan ?layar=course&course=normal|selesai|tanpa-kuis (Belajar-Course; soal kuis dimuat dari API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=event&event=normal|kosong|gagal (Event Saya) dan ?layar=event-form&mode=baru|belum|tayang|ditolak|batal&pendaftar=normal|kosong|gagal (Ajukan/Kelola Event, kartu Pendaftar; simpan memanggil API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=profil&profil=terisi|baru&ktp=belum|terverifikasi (menyimpan/verifikasi di sini memanggil API sungguhan dan akan gagal tanpa sesi).
 // Sembunyikan di produksi nyata dengan env HIDE_DEV_PAGES=1 (sama seperti /komponen).
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DashboardView } from "@/components/agent/DashboardView";
 import { CourseRunner } from "@/components/agent/CourseRunner";
 import { EventForm } from "@/components/agent/EventForm";
+import { EventRegistrants } from "@/components/agent/EventRegistrants";
 import { MyEventsView } from "@/components/agent/MyEventsView";
 import { KtpCard } from "@/components/agent/KtpCard";
 import { LearningView } from "@/components/agent/LearningView";
@@ -14,7 +15,7 @@ import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
 import { MyListingsView } from "@/components/agent/MyListingsView";
 import { ProfileForm } from "@/components/agent/ProfileForm";
 import type { DashboardData } from "@/lib/agent/dashboard-data";
-import type { MyEvents } from "@/lib/agent/event-data";
+import type { MyEvents, Registrant } from "@/lib/agent/event-data";
 import { EMPTY_EVENT, type EventFormValues } from "@/lib/agent/event-rules";
 import type { CourseRun, MyLearning } from "@/lib/agent/learning-data";
 import type { MyListingItem, MyListingsData } from "@/lib/agent/listing-data";
@@ -22,7 +23,7 @@ import { EMPTY_WIZARD, WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wi
 
 export const metadata: Metadata = { title: "Contoh Layar Agent | RumahAgen", robots: { index: false, follow: false } };
 
-type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string }> };
+type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string }> };
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
@@ -177,7 +178,17 @@ export default async function SampleAgentPage({ searchParams }: Props) {
     );
   }
   if (layar === "event-form") {
-    const { mode = "baru" } = await searchParams;
+    const { mode = "baru", pendaftar = "normal" } = await searchParams;
+    const ago = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
+    const rows: Registrant[] = [
+      { id: "g1", status: "pending_approval", participantMode: "self", guestEmail: null, registeredAt: ago(1), agentName: "Budi Santoso dengan Nama yang Sangat Panjang untuk Menguji Pemotongan Teks di Baris", agentOffice: "Ray White Kelapa Gading" },
+      { id: "g2", status: "pending_approval", participantMode: "self", guestEmail: null, registeredAt: ago(2), agentName: "Sinta Dewi", agentOffice: null },
+      { id: "g3", status: "registered", participantMode: "self", guestEmail: null, registeredAt: ago(3), agentName: "Andi Wijaya", agentOffice: "Century 21 Bintaro" },
+      { id: "g4", status: "registered", participantMode: "guest", guestEmail: "tamu@contoh.com", registeredAt: ago(3), agentName: "Rian Saputra", agentOffice: null },
+      { id: "g5", status: "attended", participantMode: "self", guestEmail: null, registeredAt: ago(9), agentName: "Maya Putri", agentOffice: "RE/MAX Pantai Indah" },
+      { id: "g6", status: "cancelled", participantMode: "self", guestEmail: null, registeredAt: ago(5), agentName: "Dodi Prasetyo", agentOffice: null },
+    ];
+    const registrants = pendaftar === "gagal" ? ({ ok: false } as const) : ({ ok: true, data: pendaftar === "kosong" ? [] : rows } as const);
     const filled: EventFormValues = {
       ...EMPTY_EVENT,
       title: "Sharing Session: Strategi Closing Q4",
@@ -192,7 +203,18 @@ export default async function SampleAgentPage({ searchParams }: Props) {
     const options = { courses: { ok: true as const, data: [{ id: "c1", name: "Financial & KPR: Dasar Analisis DBR" }, { id: "c2", name: "Sales Skill: Negosiasi Properti Tingkat Lanjut" }] }, projects: { ok: true as const, data: [{ id: "p1", name: "Green Valley Residence" }] } };
     return (
       <div className="min-h-dvh bg-surface">
-        {mode === "baru" ? <EventForm mode="baru" options={options} /> : <EventForm mode="kelola" eventId="1a2b3c4d-1111-2222-3333-444455556666" status={status} initial={filled} options={options} />}
+        {mode === "baru" ? (
+          <EventForm mode="baru" options={options} />
+        ) : (
+          <EventForm
+            mode="kelola"
+            eventId="1a2b3c4d-1111-2222-3333-444455556666"
+            status={status}
+            initial={filled}
+            options={options}
+            extra={<EventRegistrants eventId="1a2b3c4d-1111-2222-3333-444455556666" registrants={registrants} startIso={new Date(Date.now() - 3_600_000).toISOString()} quota={50} approvalMode="manual_approval" />}
+          />
+        )}
       </div>
     );
   }

@@ -1,14 +1,15 @@
 // components/agent/MyEventsView.tsx — isi "Event Saya" Agent (M05, wireframe 01-Agent/M05-Event-Saya): "Event yang Saya Daftar" (status pendaftaran) dan "Event yang Saya Ajukan" (status tayang + mode registrasi,
-// tautan Kelola). Tiap kartu punya empat keadaan (memuat = loading.tsx, kosong, gagal, sukses). Tombol "Batalkan" pendaftaran di wireframe belum ada: tidak ada API pembatalan pendaftaran dan RLS
-// mengizinkan peserta mengubah status pendaftarannya bebas (lihat audit/FRONTEND_GAPS.md), jadi belum ditampilkan.
+// tautan Kelola). Tiap kartu punya empat keadaan (memuat = loading.tsx, kosong, gagal, sukses). "Batalkan" pendaftaran (status aktif saja) memakai DELETE /events/{id}/rsvp
+// (migration 0160: peserta hanya boleh membatalkan).
 import Link from "next/link";
 import type { Route } from "next";
+import { CancelRegistrationButton } from "@/components/agent/CancelRegistrationButton";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { CalendarIcon } from "@/components/ui/icons";
 import type { MyEvents } from "@/lib/agent/event-data";
-import { APPROVAL_LABEL, EVENT_CATEGORY_LABEL, EVENT_STATUS_LABEL, EVENT_STATUS_TONE, REGISTRATION_LABEL, REGISTRATION_TONE } from "@/lib/agent/event-rules";
+import { APPROVAL_LABEL, canCancelRegistration, EVENT_CATEGORY_LABEL, EVENT_STATUS_LABEL, EVENT_STATUS_TONE, REGISTRATION_LABEL, REGISTRATION_TONE } from "@/lib/agent/event-rules";
 import { formatDateTime } from "@/lib/format";
 
 function Section({ title, count, children }: { title: string; count?: string; children: React.ReactNode }) {
@@ -49,8 +50,8 @@ export function MyEventsView({ data }: { data: MyEvents }) {
         ) : (
           <ul>
             {data.registrations.data.map((r) => (
-              <li key={r.id} className="border-b border-ink-50 last:border-b-0">
-                <Link href={`/event/${r.eventId}` as Route} className="flex items-center gap-3.5 py-3.5 text-inherit no-underline hover:no-underline">
+              <li key={r.id} className="flex items-center gap-3 border-b border-ink-50 last:border-b-0">
+                <Link href={`/event/${r.eventId}` as Route} className="flex min-w-0 flex-1 items-center gap-3.5 py-3.5 text-inherit no-underline hover:no-underline">
                   <span aria-hidden="true" className="flex h-11 w-11 flex-none items-center justify-center rounded-sm bg-blue-100 text-blue-600">
                     <CalendarIcon size={20} />
                   </span>
@@ -65,6 +66,7 @@ export function MyEventsView({ data }: { data: MyEvents }) {
                     {REGISTRATION_LABEL[r.status] ?? r.status}
                   </Badge>
                 </Link>
+                {canCancelRegistration(r.status) ? <CancelRegistrationButton eventId={r.eventId} title={r.title} /> : null}
               </li>
             ))}
           </ul>

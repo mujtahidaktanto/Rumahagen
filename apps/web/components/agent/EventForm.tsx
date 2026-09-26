@@ -33,7 +33,7 @@ import {
 import { ApiClientError, api } from "@/lib/api-client";
 import { cn } from "@/lib/cn";
 
-type Props = { mode: "baru" | "kelola"; eventId?: string; status?: string; initial?: EventFormValues; options: EventFormOptions; justCreated?: boolean };
+type Props = { mode: "baru" | "kelola"; eventId?: string; status?: string; initial?: EventFormValues; options: EventFormOptions; justCreated?: boolean; /** Kartu tambahan di bawah formulir (mis. Pendaftar untuk penyelenggara). */ extra?: ReactNode };
 
 const BANNER: Record<string, { cls: string; title: string; caption: string }> = {
   pending_approval: { cls: "border-warning-600/40 bg-warning-100", title: "Belum Tayang", caption: "Event ini belum terlihat publik. Terbitkan agar Agent lain bisa menemukan dan mendaftar." },
@@ -96,7 +96,7 @@ function Pick({ id, label, value, onChange, opts, disabled }: { id: string; labe
   );
 }
 
-export function EventForm({ mode, eventId, status = "pending_approval", initial = EMPTY_EVENT, options, justCreated = false }: Props) {
+export function EventForm({ mode, eventId, status = "pending_approval", initial = EMPTY_EVENT, options, justCreated = false, extra }: Props) {
   const router = useRouter();
   const manage = mode === "kelola";
   const locked = manage && status === "cancelled";
@@ -245,6 +245,8 @@ export function EventForm({ mode, eventId, status = "pending_approval", initial 
           </div>
         </Card>
       </div>
+
+      {extra ? <div className="mt-5">{extra}</div> : null}
 
       <div className="sticky bottom-0 z-10 mt-5 -mx-4 border-t border-ink-100 bg-white px-4 py-3 lg:-mx-8 lg:px-8">
         <div className="flex justify-end gap-3">
