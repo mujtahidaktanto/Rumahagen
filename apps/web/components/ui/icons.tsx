@@ -77,7 +77,8 @@ export const OfficeIcon = mk(<><rect x="4" y="3" width="16" height="18" rx="1.5"
 export const TagIcon = mk(<><path d="M3 12V4h8l10 10-8 8L3 12Z" /><circle cx="7.5" cy="8.5" r="1.2" /></>);
 export const LayersIcon = mk(<><path d="M12 3l9 5-9 5-9-5 9-5Z" /><path d="M3 13l9 5 9-5" /></>);
 export const TrophyIcon = mk(<><path d="M8 21h8M12 17v4" /><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z" /></>);
-export const StarIcon = mk(<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8L3.5 9.7l5.9-.9L12 3.5Z" />);
+export const InfoIcon = mk(<><circle cx="12" cy="12" r="9" /><path d="M12 11v5" /><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none" /></>);
+export const StarIcon =mk(<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8L3.5 9.7l5.9-.9L12 3.5Z" />);
 export const SwapIcon =mk(<><path d="M4 8h12M12 4l4 4-4 4" /><path d="M20 16H8m4 4-4-4 4-4" /></>);
 export const CalendarIcon = mk(<><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 9h18M8 3v4M16 3v4" /></>);
 export const CardIcon = mk(<><rect x="2.5" y="6" width="19" height="13" rx="2" /><path d="M2.5 10.5h19" /></>);

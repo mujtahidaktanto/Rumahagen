@@ -125,6 +125,15 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 
 Register/OTP/Login/Akun Dibatasi diperbarui mengikuti keputusan dan implementasi (lihat README wireframe). Celah lama yang ditutup: nomor WhatsApp di Register, OTP via WhatsApp, "Email atau Nomor HP" di Login, dan keadaan pending_review di Akun Dibatasi. Verifikasi nomor WhatsApp tetap tidak ada di backend (butuh penyedia WA/SMS); bila kelak dibuat, wireframe OTP perlu langkah tambahan.
 
+## 2026-09-26 — Fase 3a, M08 Dashboard Agent
+
+1. **Belum diuji dengan Agent yang login** (kata sandi akun uji tidak dimiliki Claude): kode dan pembacaan data belum dijalankan terhadap akun nyata. Tampilan diperiksa lewat galeri `/komponen/agent?dashboard=normal|kosong|gagal|ktp` (data contoh), tsc, dan uji Vitest untuk fungsi murni. Perlu uji manual: buka `/agent` setelah login.
+2. **Wireframe menyebut banner "pending_review" untuk verifikasi identitas**, padahal itu bukan `users.status` (akun pending_review tidak bisa masuk area, dialihkan ke /akun-dibatasi). Implementasi memakai `agent_profiles.ktp_requirement_state = 'submitted'` (deferred/verified tidak menampilkan spanduk); lencana diberi teks "submitted".
+3. **"Leads Baru" = klik CTA WhatsApp bulan ini** (definisi agent_statistics_daily, migration 0125), bukan jumlah pesan WA yang benar-benar masuk; tercantum di keterangan kartu. Rentang = awal bulan sampai hari ini (WIB).
+4. **Pintasan Kalkulator DBR, Klaim Proyek, Kualifikasi & Penghargaan, Statistik Saya nonaktif ("Segera hadir")** sampai halamannya dibangun (Fase 4); ganti `href` di `QUICK_ACTIONS`.
+5. **Belum ada:** pengalih konteks Personal/Organisasi (M12), kolom cari, dan lonceng notifikasi di bilah atas (wireframe); tautan "Lihat semua" Listing Terbaru dan Notifikasi menunggu Listing Saya (Fase 3c) dan Pusat Notifikasi (Fase 6). Ringkasan memakai RPC agent_statistics_* (sekaligus memanggil perbandingan anonim yang tak dipakai dashboard).
+6. Badge status listing memakai teks nilai CHECK apa adanya (`components/ui/StatusBadge.tsx`) sesuai aturan desain; agent awam melihat "pending_review" dll.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
