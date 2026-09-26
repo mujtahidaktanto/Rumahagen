@@ -1,6 +1,6 @@
 // lib/agent/org-data.ts — data layar Organisasi Agent (M12 Dashboard dan Kelola Anggota), dibaca di server dengan RLS pemanggil. Keanggotaan sendiri dibaca dari organization_members (RLS: anggota),
 // nama anggota/pemohon lewat RPC (RLS agent_profiles tidak mengizinkan sesama anggota membaca profil; migration 0161). Tiap bagian dimuat sendiri-sendiri (gagal satu tidak menjatuhkan halaman).
-// Bila Agent aktif di lebih dari satu organisasi, yang ditampilkan adalah keanggotaan terbaru (wireframe mengasumsikan satu organisasi; lihat audit/FRONTEND_GAPS.md).
+// Bila Agent aktif di lebih dari satu organisasi, yang ditampilkan adalah organisasi pilihan Context Switcher (cookie ra_ctx, lib/agent/context.ts), selain itu keanggotaan terbaru.
 import { createClient } from "@/lib/supabase/server";
 import type { ListingQuotaSummary } from "@/lib/validation/listing-quota";
 import type { Part } from "./dashboard-data";
@@ -40,17 +40,18 @@ type MembershipRow = { id: string; role: string; organization_id: string; organi
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
 
-async function loadMembership(supabase: Supabase, userId: string): Promise<{ error: true } | { row: MembershipRow | null; error?: false }> {
+async function loadMembership(supabase: Supabase, userId: string, preferOrgId?: string | null): Promise<{ error: true } | { row: MembershipRow | null; error?: false }> {
   const { data, error } = await supabase
     .from("organization_members")
     .select("id, role, organization_id, organization:organizations(organization_name, slug, organization_type, status, logo_url, banner_url, description, website, social_media, address, contact_phone)")
     .eq("agent_id", userId)
     .eq("status", "active")
     .order("joined_at", { ascending: false })
-    .limit(1)
+    .limit(20)
     .returns<MembershipRow[]>();
   if (error) return { error: true };
-  return { row: data?.[0] ?? null };
+  const rows = data ?? [];
+  return { row: (preferOrgId ? rows.find((r) => r.organization_id === preferOrgId) : undefined) ?? rows[0] ?? null };
 }
 
 const toInfo = (id: string, o: OrgRow): OrgInfo => ({
@@ -96,9 +97,9 @@ export async function getMyInvitations(supabase?: Supabase): Promise<Part<MyInvi
   };
 }
 
-export async function getOrgPage(userId: string): Promise<OrgPageData> {
+export async function getOrgPage(userId: string, preferOrgId?: string | null): Promise<OrgPageData> {
   const supabase = await createClient();
-  const m = await loadMembership(supabase, userId);
+  const m = await loadMembership(supabase, userId, preferOrgId);
   if ("error" in m && m.error) return { state: "error" };
   const row = (m as { row: MembershipRow | null }).row;
   if (!row || !row.organization) return { state: "no_org", invitations: await getMyInvitations(supabase) };
@@ -128,9 +129,9 @@ export type OrgMembersPageData =
   | { state: "no_org" }
   | { state: "org"; role: string; org: Pick<OrgInfo, "id" | "name" | "status">; roster: Part<RosterMember[]>; pending: Part<PendingRequest[]> | null };
 
-export async function getOrgMembersPage(userId: string): Promise<OrgMembersPageData> {
+export async function getOrgMembersPage(userId: string, preferOrgId?: string | null): Promise<OrgMembersPageData> {
   const supabase = await createClient();
-  const m = await loadMembership(supabase, userId);
+  const m = await loadMembership(supabase, userId, preferOrgId);
   if ("error" in m && m.error) return { state: "error" };
   const row = (m as { row: MembershipRow | null }).row;
   if (!row || !row.organization) return { state: "no_org" };

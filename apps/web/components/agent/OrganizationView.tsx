@@ -96,9 +96,9 @@ export function OrganizationView({ data, maskedEmail }: { data: OrgPageData; mas
         {org.bannerUrl ? (
           // Banner dari storage (URL publik); gambar biasa tanpa optimasi Next.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={org.bannerUrl} alt="" className="h-32 w-full rounded-lg bg-ink-100 object-cover sm:h-40" />
+          <img src={org.bannerUrl} alt="" className="aspect-[4/1] w-full rounded-lg bg-ink-100 object-cover" />
         ) : (
-          <div aria-hidden="true" className="h-32 rounded-lg bg-gradient-to-br from-blue-600 to-blue-900 sm:h-40" />
+          <div aria-hidden="true" className="aspect-[4/1] rounded-lg bg-gradient-to-br from-blue-600 to-blue-900" />
         )}
         <div className="flex flex-wrap items-start gap-4 px-2">
           {org.logoUrl ? (

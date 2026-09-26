@@ -30,6 +30,12 @@ type AppShellProps = {
   profileHref?: string;
   /** Slot tambahan di bawah blok pengguna (opsional). */
   footer?: ReactNode;
+  /** Topbar layar lebar (lg ke atas): cari, konteks, notifikasi, akun. Tanpa ini tidak ada topbar desktop. */
+  desktopTop?: ReactNode;
+  /** Aksi di topbar layar sempit (mis. lonceng notifikasi), di sebelah judul persona. */
+  mobileTop?: ReactNode;
+  /** Blok di atas menu pada laci layar sempit (mis. Context Switcher). */
+  drawerTop?: ReactNode;
   children: ReactNode;
 };
 
@@ -67,7 +73,7 @@ function NavList({ items, collapsed, onNavigate }: { items: NavItem[]; collapsed
   );
 }
 
-export function AppShell({ items, title, tone = "blue", user, profileHref, footer, children }: AppShellProps) {
+export function AppShell({ items, title, tone = "blue", user, profileHref, footer, desktopTop, mobileTop, drawerTop, children }: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef<HTMLDialogElement>(null);
@@ -116,8 +122,11 @@ export function AppShell({ items, title, tone = "blue", user, profileHref, foote
             <MenuIcon />
           </IconButton>
           <Logo height={28} />
-          <span className="ml-auto pr-2 text-label-lg text-ink-500">{title}</span>
+          <span className="ml-auto pr-1 text-label-lg text-ink-500">{title}</span>
+          {mobileTop}
         </header>
+        {/* Topbar (layar lebar): tetap terlihat saat menggulir; halaman membawa judulnya sendiri. */}
+        {desktopTop ? <div className="sticky top-0 z-30 hidden h-[72px] flex-none items-center gap-3 border-b border-ink-100 bg-white px-8 lg:flex">{desktopTop}</div> : null}
         <main className="min-w-0 flex-1">{children}</main>
       </div>
 
@@ -138,6 +147,7 @@ export function AppShell({ items, title, tone = "blue", user, profileHref, foote
               <CloseIcon />
             </IconButton>
           </div>
+          {drawerTop ? <div className="flex-none border-b border-ink-100 bg-white p-3">{drawerTop}</div> : null}
           <nav className="scroll-thin flex-1">
             <NavList items={items} onNavigate={() => setDrawerOpen(false)} />
           </nav>

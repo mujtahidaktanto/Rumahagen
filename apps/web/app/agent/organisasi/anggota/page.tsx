@@ -4,6 +4,7 @@ import { OrgMembersPanel } from "@/components/agent/OrgMembersPanel";
 import { LinkButton } from "@/components/ui/Button";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { getOrgMembersPage } from "@/lib/agent/org-data";
+import { getActiveContext } from "@/lib/agent/shell-data";
 import { requireArea } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +12,8 @@ export const metadata = { title: "Kelola Anggota | RumahAgen" };
 
 export default async function OrganizationMembersPage() {
   const user = await requireArea("agent");
-  const data = await getOrgMembersPage(user.id);
+  const ctx = await getActiveContext(user.id);
+  const data = await getOrgMembersPage(user.id, ctx.kind === "org" ? ctx.org.id : null);
   if (data.state === "error") {
     return (
       <div className="mx-auto w-full max-w-[900px] p-4 lg:p-8">

@@ -211,13 +211,23 @@ Laporan pemilik: klik Refresh selalu "kuota harian habis" dan jatahnya tidak ter
 
 Layar: `/agent/organisasi` (belum tergabung: Undangan untuk Anda + Buat/Cari; sudah tergabung: dashboard), `/agent/organisasi/baru`, `/agent/organisasi/anggota`; kartu "Bergabung" di `/organisasi/[slug]`. Galeri: `/komponen/agent?layar=organisasi&org=tanpa|undangan|gagal|leader|member|closing|ditutup|dibekukan|kuota-gagal`, `?layar=org-baru`, `?layar=org-anggota&peran=leader|member`. Belum diuji dengan login Agent (uji manual: buat organisasi, undang, terima/tolak, permohonan, keluarkan, Edit Branding, tutup 2 langkah + OTP).
 1. **[KEAMANAN] Celah undangan organisasi (Agent bisa masuk organisasi mana pun tanpa undangan lewat REST)** ditutup migration 0161 (lihat README migrations). **0161 sudah diterapkan sehingga celah tertutup.**
-2. **Wireframe dan data:** logo/banner tidak diunggah saat Buat Organisasi (butuh id organisasi untuk jalur unggah); ditambahkan lewat Edit Branding setelah dibuat. Logo (512 px) dan banner (1500x500 px) dipotong OTOMATIS dari tengah, tanpa pemangkas manual.
+2. **Wireframe dan data:** logo/banner tidak diunggah saat Buat Organisasi (butuh id organisasi untuk jalur unggah); ditambahkan lewat Edit Branding setelah dibuat. Logo (persegi, 512 px) dan banner (memanjang **4:1**, 1600x400 px; wireframe menyebut 3:1) dipangkas dengan `components/media/CropDialog` (bingkai mengikuti rasio hasil; geser, zoom 1-4x, putar 90 derajat, seperti foto profil). Banner tampil dengan rasio 4:1 yang sama di halaman Organisasi dan halaman publik agar tidak terpotong lagi. Foto yang sudah tersimpan belum bisa dipangkas ulang dari berkas tersimpan: pilih ulang foto aslinya lewat Ganti & Atur.
 3. **Satu organisasi:** wireframe mengasumsikan satu organisasi; DB mengizinkan keanggotaan aktif di beberapa organisasi. Layar menampilkan keanggotaan terbaru; pemilih organisasi belum ada.
 4. **Pencarian undangan** hanya menemukan Agent dengan profil publik (nama atau nomor lisensi, minimal 2 huruf). Undangan berlaku 7 hari (bawaan UI; API menerima `expires_at`).
 5. **Keluar dari organisasi** hanya untuk anggota biasa; keluarnya leader menutup organisasi (trigger `org_closing_on_lead_exit`), jadi leader memakai Tutup Organisasi. Tidak ada pengalihan leader (transfer kepemimpinan) di API.
 6. **Kuota organisasi** memakai kartu kuota yang sama dengan Listing Saya (lingkup organisasi); tautan "Beli Slot" dan "Lihat Paket Pro" tetap "segera hadir" sampai layar Komersial ada.
 7. Konteks organisasi di Wizard Listing (memilih listing pribadi atau organisasi) belum ada: `POST /listings` menerima `organization_id` tetapi Wizard belum menawarkannya (dikerjakan saat kuota/konteks dibahas).
 8. **Dashboard Agent:** angka/notifikasi undangan organisasi belum tampil di Dashboard; undangan baru terlihat di Organisasi dan Pusat Notifikasi (Fase 4).
+
+## 2026-09-26 — Topbar desktop Agent (cari, Context Switcher, lonceng notifikasi)
+
+`components/shell/{AgentTopbar,TopbarSearch,NotificationBell,ContextSwitcher,use-dismiss}`, data `lib/agent/shell-data.ts` (dimuat di `app/agent/layout.tsx`), aturan murni `lib/agent/{context,notification-link,search-scope}.ts` (diuji). Kerangka `AppShell` menerima `desktopTop`, `mobileTop`, `drawerTop`. Contoh: `/komponen/shell?notif=ada|kosong|gagal&org=ada|tanpa|aktif`. Belum diuji dengan login Agent.
+1. **Cari:** cakupan Listing / Agen / Event yang membuka halaman publik dengan `?q=` (bukan pencarian global lintas entitas dan bukan pencarian listing milik sendiri; belum ada API pencarian global).
+2. **Lonceng:** angka belum dibaca + panel 6 notifikasi terbaru; klik = tandai dibaca lalu buka tujuan bila ada (event, listing, sesi, sertifikat, organisasi); "Tandai semua dibaca". **Halaman Pusat Notifikasi (semua notifikasi, filter) belum ada** (Fase 4), jadi tidak ada tautan "Lihat semua". Angka dimuat ulang tiap pindah halaman, tanpa polling atau push realtime.
+3. **Context Switcher:** Pribadi + organisasi yang diikuti (active atau closing), disimpan di cookie `ra_ctx` dan divalidasi server terhadap keanggotaan. **Baru mempengaruhi layar Organisasi** (organisasi yang ditampilkan). Daftar dan kuota Listing Saya tetap pribadi karena Wizard belum menawarkan listing organisasi (kuota organisasi memang tidak dipakai listing pribadi); wireframe menginginkan daftar, izin, dan kuota ikut berganti: dikerjakan bersama pilihan konteks di Wizard.
+4. **Judul halaman tidak di topbar:** tiap layar sudah memuat judulnya sendiri, jadi topbar tidak mengulang judul seperti wireframe. Avatar menuju Profil Saya (menu Keluar tetap di rel).
+5. **Layar sempit:** lonceng di bilah atas, Context Switcher di laci, kolom Cari belum ada di mobile.
+6. **Persona lain (Admin, Partner, Instructor) belum punya topbar;** komponen lonceng dan Cari bisa dipakai ulang, Context Switcher hanya untuk Agent (wireframe Partner tanpa Context Switcher).
 
 ## Catatan performa
 

@@ -1,7 +1,7 @@
 "use client";
 
-// components/agent/OrgBrandingDialog.tsx — "Edit Branding" organisasi (M12): logo (1:1, 512 px), banner (3:1, 1500x500 px), deskripsi, website, Instagram. Foto dipilih dari perangkat (hingga 25 MB), dipotong
-// otomatis dari tengah sesuai rasio dan dikecilkan di browser (<3 MB); saat Simpan: POST .../branding/upload-url -> PUT berkas -> PUT /organizations/{id}/branding (URL hasil unggah). Nama, jenis, alamat,
+// components/agent/OrgBrandingDialog.tsx — "Edit Branding" organisasi (M12): logo (persegi 1:1, 512 px), banner (memanjang 4:1, 1600x400 px), deskripsi, website, Instagram. Foto dipilih dari perangkat (hingga 25 MB),
+// dipangkas dengan CropDialog (bingkai mengikuti rasio hasil; geser, zoom, putar) dan dikecilkan di browser (<3 MB); saat Simpan: POST .../branding/upload-url -> PUT berkas -> PUT /organizations/{id}/branding (URL hasil unggah). Nama, jenis, alamat,
 // dan telepon terkunci permanen sejak dibuat. Hanya leader pada organisasi aktif.
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -11,15 +11,17 @@ import { Field, Input, Textarea } from "@/components/ui/Field";
 import type { OrgInfo } from "@/lib/agent/org-data";
 import { instagramOf, toBrandingPayload, validateBranding, type BrandingErrors } from "@/lib/agent/org-rules";
 import { ApiClientError, api } from "@/lib/api-client";
-import { loadSource, makeCoverImage, pickProblem, putToSignedUrl, type Encoded } from "@/lib/media/image-processing";
+import { CropDialog } from "@/components/media/CropDialog";
+import { loadSource, pickProblem, putToSignedUrl, type Encoded, type Source } from "@/lib/media/image-processing";
+import { ORG_BANNER, ORG_LOGO_SIZE } from "@/lib/media/variants";
 
 type Kind = "logo" | "banner";
 type Picked = { enc: Encoded; preview: string } | "remove" | null;
 type Target = { path: string; upload_url: string; public_url: string };
 
-const SIZES: Record<Kind, { w: number; h: number; label: string; hint: string }> = {
-  logo: { w: 512, h: 512, label: "Logo", hint: "Persegi 1:1. Bagian tengah foto dipakai." },
-  banner: { w: 1500, h: 500, label: "Banner", hint: "Lebar 3:1. Bagian tengah foto dipakai." },
+const SIZES: Record<Kind, { out: { w: number; h: number }; frame: { w: number; h: number }; label: string; hint: string; box: string }> = {
+  logo: { out: { w: ORG_LOGO_SIZE, h: ORG_LOGO_SIZE }, frame: { w: 280, h: 280 }, label: "Logo", hint: "Persegi 1:1.", box: "h-16 w-16" },
+  banner: { out: { w: ORG_BANNER.w, h: ORG_BANNER.h }, frame: { w: 480, h: 120 }, label: "Banner", hint: "Memanjang 4:1.", box: "h-16 w-64" },
 };
 
 export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
@@ -31,6 +33,7 @@ export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
   const [pick, setPick] = useState<Record<Kind, Picked>>({ logo: null, banner: null });
   const [errors, setErrors] = useState<BrandingErrors>({});
   const [busy, setBusy] = useState<"idle" | "read" | "save">("idle");
+  const [cropping, setCropping] = useState<{ kind: Kind; source: Source } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const refs = { logo: useRef<HTMLInputElement>(null), banner: useRef<HTMLInputElement>(null) };
 
@@ -56,12 +59,7 @@ export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
     if (problem) return setError(problem);
     setBusy("read");
     try {
-      const enc = await makeCoverImage(await loadSource(f), SIZES[kind].w, SIZES[kind].h);
-      setPick((cur) => {
-        const old = cur[kind];
-        if (old && old !== "remove") URL.revokeObjectURL(old.preview);
-        return { ...cur, [kind]: { enc, preview: URL.createObjectURL(enc.blob) } };
-      });
+      setCropping({ kind, source: await loadSource(f) });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Foto tidak bisa dibuka. Coba foto lain.");
     } finally {
@@ -95,6 +93,17 @@ export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
     } finally {
       setBusy("idle");
     }
+  }
+
+  function applyCropped(enc: Encoded) {
+    const kind = cropping?.kind;
+    setCropping(null);
+    if (!kind) return;
+    setPick((cur) => {
+      const old = cur[kind];
+      if (old && old !== "remove") URL.revokeObjectURL(old.preview);
+      return { ...cur, [kind]: { enc, preview: URL.createObjectURL(enc.blob) } };
+    });
   }
 
   const current = (kind: Kind) => {
@@ -140,7 +149,7 @@ export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
               <div key={kind} className="flex flex-col gap-1.5">
                 <span className="text-label-lg">{SIZES[kind].label}</span>
                 <div className="flex items-center gap-3">
-                  <span className={`flex flex-none items-center justify-center overflow-hidden rounded-md bg-ink-100 text-caption ${kind === "logo" ? "h-16 w-16" : "h-16 w-48"}`}>
+                  <span className={`flex flex-none items-center justify-center overflow-hidden rounded-md bg-ink-100 text-caption ${SIZES[kind].box}`}>
                     {url ? (
                       // Pratinjau berkas lokal atau URL tersimpan; gambar biasa tanpa optimasi Next.
                       // eslint-disable-next-line @next/next/no-img-element
@@ -152,7 +161,7 @@ export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
                   <span className="flex flex-col gap-1.5">
                     <input ref={refs[kind]} type="file" accept="image/*" className="sr-only" onChange={(e) => void onPick(kind, e.target.files)} />
                     <Button variant="secondary" size="sm" loading={busy === "read"} disabled={saving} onClick={() => refs[kind].current?.click()}>
-                      {url ? "Ganti" : "Unggah"}
+                      {url ? "Ganti & Atur" : "Unggah"}
                     </Button>
                     {url ? (
                       <Button variant="ghost" size="sm" className="text-danger-600" disabled={saving} onClick={() => setPick((c) => ({ ...c, [kind]: "remove" }))}>
@@ -161,7 +170,7 @@ export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
                     ) : null}
                   </span>
                 </div>
-                <p className="text-caption">JPG, PNG, atau WebP hingga 25 MB. {SIZES[kind].hint}</p>
+                <p className="text-caption">JPG, PNG, atau WebP hingga 25 MB. {SIZES[kind].hint} Anda bisa geser dan zoom untuk mengatur bagian yang tampil.</p>
               </div>
             );
           })}
@@ -181,6 +190,15 @@ export function OrgBrandingDialog({ org }: { org: OrgInfo }) {
           ) : null}
         </div>
       </Dialog>
+      <CropDialog
+        source={cropping?.source ?? null}
+        frame={cropping ? SIZES[cropping.kind].frame : SIZES.logo.frame}
+        output={cropping ? SIZES[cropping.kind].out : SIZES.logo.out}
+        title={cropping?.kind === "banner" ? "Atur Banner" : "Atur Logo"}
+        description={cropping?.kind === "banner" ? "Geser dan zoom foto sampai bagian yang Anda mau pas di dalam bingkai memanjang." : "Geser dan zoom foto sampai logo pas di dalam bingkai."}
+        onCancel={() => setCropping(null)}
+        onConfirm={applyCropped}
+      />
     </>
   );
 }

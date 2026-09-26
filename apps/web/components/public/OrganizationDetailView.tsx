@@ -71,9 +71,9 @@ export function OrganizationDetailView({
       {banner ? (
         // Banner dari data (jalur situs atau https); gambar biasa tanpa optimasi Next.
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={banner} alt="" className="mt-4 h-36 w-full rounded-lg object-cover sm:h-52" />
+        <img src={banner} alt="" className="mt-4 aspect-[4/1] w-full rounded-lg object-cover" />
       ) : (
-        <div className="mt-4 h-28 rounded-lg bg-linear-to-br from-blue-700 to-blue-500 sm:h-40" aria-hidden="true" />
+        <div className="mt-4 aspect-[4/1] rounded-lg bg-linear-to-br from-blue-700 to-blue-500" aria-hidden="true" />
       )}
 
       <div className="-mt-9 flex items-end gap-4 px-4 sm:px-6">

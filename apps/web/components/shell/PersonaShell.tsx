@@ -5,9 +5,9 @@ import { AppShell, type NavItem } from "./AppShell";
 import { AREA_PATH, ROLE_LABEL, type Area } from "@/lib/auth/roles";
 import { requireArea } from "@/lib/auth/session";
 
-type PersonaShellProps = { area: Area; title: string; tone?: "blue" | "ink"; items: NavItem[]; children: ReactNode };
+type PersonaShellProps = { area: Area; title: string; tone?: "blue" | "ink"; items: NavItem[]; desktopTop?: ReactNode; mobileTop?: ReactNode; drawerTop?: ReactNode; children: ReactNode };
 
-export async function PersonaShell({ area, title, tone = "blue", items, children }: PersonaShellProps) {
+export async function PersonaShell({ area, title, tone = "blue", items, desktopTop, mobileTop, drawerTop, children }: PersonaShellProps) {
   const user = await requireArea(area);
   return (
     <AppShell
@@ -16,6 +16,9 @@ export async function PersonaShell({ area, title, tone = "blue", items, children
       tone={tone}
       user={{ name: user.name, roleLabel: ROLE_LABEL[user.role], avatarUrl: user.avatarUrl }}
       profileHref={`${AREA_PATH[area]}/profil`}
+      desktopTop={desktopTop}
+      mobileTop={mobileTop}
+      drawerTop={drawerTop}
     >
       {children}
     </AppShell>

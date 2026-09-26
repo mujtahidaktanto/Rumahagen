@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { allVariantPaths, avatarPath, baseScale, centerCrop, clampCrop, fitWithin, listingPhotoPath, listingPhotoUrl, objectPathFromPublicUrl, sourceRect, zoomAtCenter } from "./variants";
+import { allVariantPaths, avatarPath, baseScale, centerCrop, clampCrop, fitWithin, listingPhotoPath, listingPhotoUrl, objectPathFromPublicUrl, sourceRect, zoomAtCenter, centerCropRect, clampCropRect, sourceRectFor, zoomAtCenterRect } from "./variants";
 
 const SB = "https://abc.supabase.co";
 
@@ -86,5 +86,40 @@ describe("pemangkas", () => {
       expect(r.sx + r.size).toBeLessThanOrEqual(W + 1e-6);
       expect(r.sy + r.size).toBeLessThanOrEqual(H + 1e-6);
     }
+  });
+});
+
+
+describe("pemangkas persegi panjang (banner)", () => {
+  const W = 4000;
+  const H = 3000;
+  const F = { w: 420, h: 105 }; // 4:1
+  it("awal di tengah dan menutupi bingkai (lebar penuh, tinggi dipotong)", () => {
+    const c = centerCropRect(W, H, F);
+    const r = sourceRectFor(W, H, F, c);
+    expect(r.sw).toBeCloseTo(W, 4);
+    expect(r.sh).toBeCloseTo(W / 4, 4);
+    expect(r.sx).toBeCloseTo(0, 4);
+    expect(r.sy).toBeCloseTo((H - W / 4) / 2, 4);
+  });
+  it("geser dijepit dan zoom mempertahankan titik tengah", () => {
+    const c0 = centerCropRect(W, H, F);
+    const far = clampCropRect(W, H, F, { zoom: 1, x: -1e6, y: -1e6 });
+    const rf = sourceRectFor(W, H, F, far);
+    expect(rf.sy + rf.sh).toBeLessThanOrEqual(H + 1e-6);
+    expect(rf.sx).toBeGreaterThanOrEqual(-1e-6);
+    const before = sourceRectFor(W, H, F, c0);
+    const c1 = zoomAtCenterRect(W, H, F, c0, 2);
+    const after = sourceRectFor(W, H, F, c1);
+    expect(after.sw).toBeCloseTo(before.sw / 2, 4);
+    expect(after.sx + after.sw / 2).toBeCloseTo(before.sx + before.sw / 2, 3);
+    expect(zoomAtCenterRect(W, H, F, c0, 99).zoom).toBe(4);
+  });
+  it("bingkai persegi memberi hasil yang sama dengan versi persegi", () => {
+    const sq = { w: 280, h: 280 };
+    const r = sourceRectFor(W, H, sq, centerCropRect(W, H, sq));
+    expect(r.sw).toBeCloseTo(3000, 4);
+    expect(r.sh).toBeCloseTo(3000, 4);
+    expect(r.sx).toBeCloseTo(500, 4);
   });
 });

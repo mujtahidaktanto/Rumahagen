@@ -97,3 +97,38 @@ export function sourceRect(w: number, h: number, frame: number, c: CropState): {
   const s = baseScale(w, h, frame) * c.zoom;
   return { sx: -c.x / s, sy: -c.y / s, size: frame / s };
 }
+
+// ── Geometri bingkai persegi panjang (logo persegi, banner memanjang) ──
+// Sama dengan versi persegi di atas, tetapi bingkai boleh berukuran w x h. x, y = posisi kiri-atas gambar terhadap bingkai (px layar).
+export type Frame = { w: number; h: number };
+
+/** Skala dasar agar gambar menutupi seluruh bingkai. */
+export const baseScaleRect = (iw: number, ih: number, f: Frame) => Math.max(f.w / iw, f.h / ih);
+
+export function clampCropRect(iw: number, ih: number, f: Frame, c: CropState): CropState {
+  const zoom = Math.min(CROP_MAX_ZOOM, Math.max(1, c.zoom));
+  const s = baseScaleRect(iw, ih, f) * zoom;
+  return { zoom, x: Math.min(0, Math.max(f.w - iw * s, c.x)), y: Math.min(0, Math.max(f.h - ih * s, c.y)) };
+}
+
+export function centerCropRect(iw: number, ih: number, f: Frame): CropState {
+  const s = baseScaleRect(iw, ih, f);
+  return { zoom: 1, x: (f.w - iw * s) / 2, y: (f.h - ih * s) / 2 };
+}
+
+/** Zoom baru dengan titik tengah bingkai tetap di tempat. */
+export function zoomAtCenterRect(iw: number, ih: number, f: Frame, c: CropState, zoom: number): CropState {
+  const z = Math.min(CROP_MAX_ZOOM, Math.max(1, zoom));
+  const ratio = z / c.zoom;
+  return clampCropRect(iw, ih, f, { zoom: z, x: f.w / 2 - (f.w / 2 - c.x) * ratio, y: f.h / 2 - (f.h / 2 - c.y) * ratio });
+}
+
+/** Persegi panjang sumber (piksel gambar asli) yang terlihat di dalam bingkai. */
+export function sourceRectFor(iw: number, ih: number, f: Frame, c: CropState): { sx: number; sy: number; sw: number; sh: number } {
+  const s = baseScaleRect(iw, ih, f) * c.zoom;
+  return { sx: -c.x / s, sy: -c.y / s, sw: f.w / s, sh: f.h / s };
+}
+
+// Ukuran banner: rasio 4:1 (halaman Organisasi dan halaman publik memakai rasio yang sama).
+export const ORG_LOGO_SIZE = 512;
+export const ORG_BANNER = { w: 1600, h: 400 } as const;

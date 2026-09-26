@@ -149,3 +149,14 @@ export async function makeCoverImage(src: Source, width: number, height: number)
   ctx.drawImage(src.canvas, (src.width - cw) / 2, (src.height - ch) / 2, cw, ch, 0, 0, width, height);
   return encodeUnderLimit(c);
 }
+
+/** Potong persegi panjang sumber (piksel gambar asli), lalu ubah ke ukuran tujuan (mis. logo 512x512, banner 1600x400). */
+export async function makeCropped(src: Source, rect: { sx: number; sy: number; sw: number; sh: number }, outW: number, outH: number): Promise<Encoded> {
+  const c = document.createElement("canvas");
+  c.width = outW;
+  c.height = outH;
+  const ctx = c.getContext("2d")!;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(src.canvas, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, outW, outH);
+  return encodeUnderLimit(c);
+}
