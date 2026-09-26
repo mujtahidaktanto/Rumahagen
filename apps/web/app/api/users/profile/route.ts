@@ -15,6 +15,8 @@ import { validateJsonBody } from "@/lib/api/validate";
 import { upsertAgentProfileSchema } from "@/lib/validation/agent-profiles";
 import { ApiError } from "@/lib/api/errors";
 import { throwIntegrityError } from "@/lib/api/integrity-error";
+import { AVATAR_BUCKET } from "@/lib/media/variants";
+import { ownAvatarPath, pathInBucket } from "@/lib/storage/public-images";
 import { createClient } from "@/lib/supabase/server";
 
 function slugify(input: string): string {
@@ -31,6 +33,11 @@ export const PUT = withApiHandler({}, async (ctx) => {
   }
 
   const body = await validateJsonBody(ctx.request, upsertAgentProfileSchema);
+  // Foto profil hanya lewat unggahan sendiri (PUT /agents/me/avatar); avatar_url di sini hanya boleh mengulang foto milik sendiri atau kosong (bukan tautan bebas).
+  if (body.avatar_url) {
+    const p = pathInBucket(body.avatar_url, AVATAR_BUCKET);
+    if (!p || !ownAvatarPath(ctx.userId, p)) throw new ApiError("VALIDATION_ERROR", "Foto profil harus diunggah lewat menu Ganti Foto.");
+  }
   const supabase = await createClient();
 
   const { data: existing, error: findErr } = await supabase

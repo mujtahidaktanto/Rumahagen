@@ -15,6 +15,7 @@ import { relativeTimeId } from "@/lib/agent/time";
 import { formatArea, formatListingPrice } from "@/lib/format";
 import { PROPERTY_TYPE_LABEL } from "@/lib/public/listing-params";
 import { CERTIFICATE_LABEL } from "@/lib/public/listing-labels";
+import { listingPhotoUrl } from "@/lib/media/variants";
 
 const nf = new Intl.NumberFormat("id-ID");
 type Ok = Extract<MyListingDetailResult, { state: "ok" }>;
@@ -148,7 +149,7 @@ export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?
                 {l.photos.slice(0, 6).map((p, i) => (
                   // Foto listing dari data (URL tersimpan); gambar biasa tanpa optimasi Next.
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img key={p.url + i} src={p.url} alt={p.alt ?? ""} className={`w-full rounded-sm bg-ink-100 object-cover ${i === 0 ? "col-span-3 h-56 sm:h-72" : "h-20 sm:h-28"}`} />
+                  <img key={p.url + i} src={listingPhotoUrl(p.url, i === 0 ? "md" : "sm") ?? p.url} alt={p.alt ?? ""} className={`w-full rounded-sm bg-ink-100 object-cover ${i === 0 ? "col-span-3 h-56 sm:h-72" : "h-20 sm:h-28"}`} />
                 ))}
               </div>
             )}

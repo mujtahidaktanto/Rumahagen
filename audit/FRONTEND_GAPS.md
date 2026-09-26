@@ -175,6 +175,16 @@ Layar: `/agent/belajar` (LP + riwayat, Course Saya, Sertifikat Saya, Sesi Belaja
 6. **Sesi belajar:** `learning_sessions` tidak punya judul, jadi memakai judul course terkait (atau "Sesi belajar"); kartu mengarah ke `/learning-session/[id]` publik.
 7. **Halaman course publik** `/learning/[id]`: setelah "Mulai Belajar" kini ada tombol "Buka Materi" ke `/agent/belajar/[id]` (`EnrollButton` menerima `doneHref`).
 
+## 2026-09-26 — Unggah foto profil dan foto listing (0158 DITERAPKAN)
+
+Keputusan pemilik produk: pilih berkas hingga 25 MB, dikecilkan di browser, batas simpan 3 MB, tiga varian ukuran web (400/1080/2048 px). **Migration 0158 (bucket `avatars` dan `listing-photos`) DITERAPKAN 2026-09-26**, sebelum kode dideploy.
+1. **Menggantikan** temuan lama: "tidak ada API unggah foto profil" (Profil Saya) dan "BLOKIR: tidak ada API unggah foto listing" (Wizard). Profil Saya: `AvatarUploader` (pangkas lingkaran: geser, zoom 1-4x, putar 90 derajat, 512x512). Wizard langkah Media: "+ Tambah Foto" (banyak berkas), pratinjau lokal, unggah saat Simpan/Terbitkan setelah listing dibuat; foto gagal terunggah dapat dicoba ulang tanpa mengunggah ulang yang sudah berhasil.
+2. **Verifikasi tanpa login:** `/komponen/media` menunjukkan ukuran hasil pengecilan dengan kode asli (foto uji 27 MP berderau 6,4 MB menjadi 47 KB / 213 KB / 477 KB dan avatar 83 KB, 2,9 detik). Alur unggah asli belum diuji (butuh 0158 diterapkan dan login Agent): uji manual pemilik produk.
+3. **Berkas yatim:** foto yang sudah terunggah tetapi listing gagal disimpan/ditinggalkan tetap ada di bucket (tidak ada pembersih). Dampaknya kecil (sekitar 0,5-1 MB per foto); pembersih terjadwal bisa ditambahkan kelak.
+4. **HEIC:** Chrome di komputer tidak bisa membuka HEIC; pesan menyarankan JPEG (Safari iPhone mengubah otomatis saat memilih dari galeri).
+5. **Tautan foto eksternal lama** masih diterima API (`POST /listings/{id}/media` dengan URL https) demi kompatibilitas; UI tidak lagi menawarkannya. Varian ukuran hanya untuk foto hasil unggah; tautan lama ditampilkan apa adanya.
+6. **Foto profil lama** (`avatar_url` bebas) kini ditolak oleh `PUT /users/profile` kecuali milik bucket sendiri; belum ada data seperti itu dari UI.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

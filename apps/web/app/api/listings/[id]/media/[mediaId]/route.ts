@@ -7,6 +7,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { removeListingPhotoObjects } from "@/lib/storage/public-images";
 import { createClient } from "@/lib/supabase/server";
 
 export const DELETE = withApiHandler({}, async (ctx) => {
@@ -17,13 +18,14 @@ export const DELETE = withApiHandler({}, async (ctx) => {
     .delete()
     .eq("id", ctx.params.mediaId)
     .eq("listing_id", ctx.params.id)
-    .select("id")
-    .maybeSingle();
+    .select("id, url")
+    .maybeSingle<{ id: string; url: string }>();
 
   if (photoErr) {
     throw photoErr;
   }
   if (deletedPhoto) {
+    await removeListingPhotoObjects(deletedPhoto.url); // varian 400/1080/2048 hasil unggah ikut dihapus (tautan eksternal lama diabaikan)
     return { data: { id: deletedPhoto.id, media_type: "photo" } };
   }
 

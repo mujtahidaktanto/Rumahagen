@@ -2,11 +2,12 @@
 
 // components/agent/ProfileForm.tsx — formulir Profil Saya (M02, wireframe 01-Agent/M02-Profil-Saya): foto, informasi pribadi dan profesional, KTP (slot), organisasi, title, privasi, dan ringkasan
 // di kanan. Simpan = PUT /users/profile (upsert; profil pertama dibuat server dengan slug publik). Empat keadaan: idle, menyimpan, sukses, gagal. Bilah simpan muncul saat ada perubahan.
-// Belum ada: unggah foto profil (API hanya menerima avatar_url berupa teks) dan mengosongkan provinsi/kota (API tidak menerima null) — lihat audit/FRONTEND_GAPS.md.
+// Foto profil: AvatarUploader (pangkas + unggah). Belum ada: mengosongkan provinsi/kota (API tidak menerima null) — lihat audit/FRONTEND_GAPS.md.
 import Link from "next/link";
 import type { Route } from "next";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { AvatarUploader } from "@/components/agent/AvatarUploader";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Button, LinkButton } from "@/components/ui/Button";
@@ -222,15 +223,7 @@ export function ProfileForm(p: ProfileFormProps) {
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="flex min-w-0 flex-col gap-5">
           <Card title="Foto Profil">
-            <div className="flex items-center gap-4">
-              <Avatar name={displayName} imageUrl={p.avatarUrl} size={72} />
-              <div className="flex flex-col gap-1.5">
-                <Button variant="secondary" size="sm" disabled className="self-start">
-                  Ganti Foto
-                </Button>
-                <p className="text-caption">Unggah foto profil belum tersedia. Sementara ini tampil inisial nama Anda.</p>
-              </div>
-            </div>
+            <AvatarUploader name={displayName} avatarUrl={p.avatarUrl} profileExists={p.exists} />
           </Card>
 
           <Card title="Informasi Pribadi">

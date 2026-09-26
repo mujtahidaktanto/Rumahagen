@@ -7,15 +7,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode, TouchEvent } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
+import { listingPhotoUrl, type ListingVariant } from "@/lib/media/variants";
 
 type Photo = { url: string; alt: string | null };
 
 const cameraPath = "M4 8a2 2 0 0 1 2-2h1.2l1-1.6h7.6l1 1.6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z";
 
-function Cover({ p, title, className }: { p: Photo; title: string; className?: string }) {
+function Cover({ p, title, className, variant = "md" }: { p: Photo; title: string; className?: string; variant?: ListingVariant }) {
   // Foto dari storage (URL publik); gambar biasa tanpa optimasi Next agar tidak memakai kuota gambar Vercel.
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={p.url} alt={p.alt ?? title} loading="lazy" className={cn("h-full w-full object-cover", className)} />;
+  return <img src={listingPhotoUrl(p.url, variant) ?? p.url} alt={p.alt ?? title} loading="lazy" className={cn("h-full w-full object-cover", className)} />;
 }
 
 function Viewer({ photos, title, index, onIndex, onClose }: { photos: Photo[]; title: string; index: number; onIndex: (i: number) => void; onClose: () => void }) {
@@ -76,7 +77,7 @@ function Viewer({ photos, title, index, onIndex, onClose }: { photos: Photo[]; t
         >
           {/* Foto utuh: object-contain agar tidak dipotong. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.url} alt={p.alt ?? `${title} — foto ${index + 1}`} className="max-h-full max-w-full object-contain" />
+          <img src={listingPhotoUrl(p.url, "lg") ?? p.url} alt={p.alt ?? `${title} — foto ${index + 1}`} className="max-h-full max-w-full object-contain" />
           {count > 1 ? (
             <>
               <button type="button" onClick={() => go(-1)} aria-label="Foto sebelumnya" className="absolute top-1/2 left-2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 sm:left-4">
@@ -105,7 +106,7 @@ function Viewer({ photos, title, index, onIndex, onClose }: { photos: Photo[]; t
                   aria-current={i === index}
                   className={cn("block h-14 w-20 overflow-hidden rounded-sm border-2 sm:h-16 sm:w-24", i === index ? "border-white" : "border-transparent opacity-60 hover:opacity-100")}
                 >
-                  <Cover p={t} title={title} />
+                  <Cover p={t} title={title} variant="sm" />
                 </button>
               </li>
             ))}
@@ -132,7 +133,7 @@ export function ListingGallery({ photos, title, overlay }: { photos: Photo[]; ti
             <div className="hidden min-h-0 grid-rows-2 gap-2 lg:grid">
               {subs.map((p, i) => (
                 <button key={p.url + i} type="button" onClick={() => setViewer(i + 1)} aria-label={`Lihat foto ${i + 2} lebih besar`} className="min-h-0">
-                  <Cover p={p} title={title} />
+                  <Cover p={p} title={title} variant="sm" />
                 </button>
               ))}
             </div>

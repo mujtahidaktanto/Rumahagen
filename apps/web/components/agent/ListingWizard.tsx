@@ -3,7 +3,7 @@
 // components/agent/ListingWizard.tsx — Wizard Buat/Edit Listing (M03, wireframe 01-Agent/M03-Create-Listing-Wizard): 9 langkah (Mulai, Kategori, Lokasi, Detail, Harga, Legalitas, Media, Kontak,
 // Terbitkan). Mode: baru (POST /listings lalu fasilitas dan media), salin (isian dari listing lain, tanpa media), edit (PUT /listings/{id} + selisih fasilitas/media). Data disimpan di server hanya saat
 // "Simpan sebagai Draf"/"Terbitkan"; API POST /listings butuh semua kolom wajib sehingga tidak bisa menyimpan draf parsial per langkah. Terbit = PATCH status published (memakai kuota; 409 bila habis;
-// listing tetap tersimpan sebagai draf). Media hanya lewat URL https (tidak ada endpoint unggah file). Konteks organisasi belum tersedia (Fase 3f).
+// listing tetap tersimpan sebagai draf). Foto: dipilih dari perangkat (hingga 25 MB), dikecilkan di browser jadi tiga varian WebP/JPEG (<3 MB) dan diunggah setelah listing dibuat; video hanya tautan https. Konteks organisasi belum tersedia (Fase 3f).
 import Link from "next/link";
 import type { Route } from "next";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -13,6 +13,9 @@ import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { AlertIcon, CheckCircleIcon, InfoIcon } from "@/components/ui/icons";
 import { Switch } from "@/components/ui/Switch";
 import { ApiClientError, api, newIdempotencyKey } from "@/lib/api-client";
+import { loadSource, makeListingVariants, pickProblem } from "@/lib/media/image-processing";
+import { uploadListingPhoto, type ProcessedPhoto } from "@/lib/media/upload";
+import { listingPhotoUrl } from "@/lib/media/variants";
 import { quotaLevel } from "@/lib/agent/listing-quota";
 import { publishErrorMessage } from "@/lib/agent/listing-rules";
 import {
@@ -26,6 +29,9 @@ import type { ListingQuotaSummary } from "@/lib/validation/listing-quota";
 
 type Option = { id: string; name: string };
 type Media = { id: string; url: string };
+/** Foto yang baru dipilih (sudah dikecilkan di browser) dan menunggu diunggah saat Simpan; di daftar foto diwakili kunci "pending:{id}". */
+type Pending = ProcessedPhoto & { preview: string; name: string; uploadedUrl?: string };
+const PENDING = "pending:";
 export type WizardProps = {
   mode: "baru" | "salin" | "edit";
   initial: WizardValues;
@@ -94,7 +100,10 @@ export function ListingWizard(p: WizardProps) {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<{ id: string; published: boolean; note: string | null } | null>(null);
   const [quota, setQuota] = useState<{ ok: true; data: ListingQuotaSummary } | { ok: false } | "memuat">("memuat");
-  const [photoInput, setPhotoInput] = useState("");
+  const [processing, setProcessing] = useState(0);
+  const [uploadNote, setUploadNote] = useState<string | null>(null);
+  const pending = useRef(new Map<string, Pending>());
+  const fileRef = useRef<HTMLInputElement>(null);
   const [videoInput, setVideoInput] = useState("");
   const [mediaError, setMediaError] = useState<string | null>(null);
   const createdId = useRef<string | null>(null);
@@ -138,15 +147,45 @@ export function ListingWizard(p: WizardProps) {
     window.scrollTo({ top: 0 });
   }
 
-  function addPhoto() {
-    const u = photoInput.trim();
-    if (!u) return;
-    if (!isHttpsUrl(u)) return setMediaError("Tautan foto harus diawali https://.");
-    if (v.photoUrls.includes(u)) return setMediaError("Foto itu sudah ditambahkan.");
-    if (v.photoUrls.length >= MAX_PHOTOS) return setMediaError(`Maksimal ${MAX_PHOTOS} foto.`);
+  async function addFiles(list: FileList | null) {
+    const files = Array.from(list ?? []);
+    if (fileRef.current) fileRef.current.value = "";
+    if (files.length === 0) return;
     setMediaError(null);
-    set("photoUrls", [...v.photoUrls, u]);
-    setPhotoInput("");
+    let count = v.photoUrls.length;
+    const added: string[] = [];
+    const problems: string[] = [];
+    for (const f of files) {
+      if (count >= MAX_PHOTOS) {
+        problems.push(`Maksimal ${MAX_PHOTOS} foto; sisanya dilewati.`);
+        break;
+      }
+      const pre = pickProblem(f);
+      if (pre) {
+        problems.push(`${f.name}: ${pre}`);
+        continue;
+      }
+      setProcessing((n) => n + 1);
+      try {
+        const photo = await makeListingVariants(await loadSource(f));
+        const key = PENDING + crypto.randomUUID();
+        pending.current.set(key, { ...photo, preview: URL.createObjectURL(photo.blobs.sm), name: f.name });
+        added.push(key);
+        count += 1;
+      } catch (e) {
+        problems.push(`${f.name}: ${e instanceof Error ? e.message : "tidak bisa diproses."}`);
+      } finally {
+        setProcessing((n) => n - 1);
+      }
+    }
+    if (added.length) setV((x) => ({ ...x, photoUrls: [...x.photoUrls, ...added] }));
+    if (problems.length) setMediaError(problems.join(" "));
+  }
+  function removePhoto(u: string) {
+    const p = pending.current.get(u);
+    if (p) URL.revokeObjectURL(p.preview);
+    pending.current.delete(u);
+    set("photoUrls", v.photoUrls.filter((x) => x !== u));
   }
   function addVideo() {
     const u = videoInput.trim();
@@ -184,8 +223,24 @@ export function ListingWizard(p: WizardProps) {
       for (const a of am.attach) await api.post(`/listings/${id}/amenities`, { amenity_id: a }, { idempotency: true });
       for (const a of am.detach) await api.delete(`/listings/${id}/amenities/${a}`);
 
+      stage = "mengunggah foto";
+      const desiredPhotos = [...v.photoUrls];
+      const toUpload = desiredPhotos.filter((u) => pending.current.get(u) && !pending.current.get(u)!.uploadedUrl);
+      let n = 0;
+      for (let i = 0; i < desiredPhotos.length; i++) {
+        const entry = pending.current.get(desiredPhotos[i]!);
+        if (!entry) continue;
+        if (!entry.uploadedUrl) {
+          n += 1;
+          setUploadNote(`Mengunggah foto ${n} dari ${toUpload.length}…`);
+          entry.uploadedUrl = await uploadListingPhoto(id!, entry);
+        }
+        desiredPhotos[i] = entry.uploadedUrl;
+      }
+      setUploadNote(null);
+
       stage = "media";
-      const ph = diffMedia(p.existingPhotos ?? [], v.photoUrls);
+      const ph = diffMedia(p.existingPhotos ?? [], desiredPhotos);
       for (const m of ph.remove) await api.delete(`/listings/${id}/media/${m}`);
       for (const m of ph.add) await api.post(`/listings/${id}/media`, { media_type: "photo", url: m.url, is_cover: m.index === 0, sort_order: m.index }, { idempotency: true });
       const vids = (p.existingVideos ?? []).map((x) => ({ id: x.id, url: x.url }));
@@ -209,6 +264,7 @@ export function ListingWizard(p: WizardProps) {
       setPhase("done");
     } catch (err) {
       setPhase("idle");
+      setUploadNote(null);
       const msg = err instanceof ApiClientError ? err.message : "Terjadi gangguan jaringan.";
       const saved = !edit && createdId.current ? " Listing sudah tersimpan sebagai draf; Anda bisa melengkapinya lewat Edit Listing." : "";
       setError(`Gagal pada tahap ${stage}: ${msg}${saved}`);
@@ -270,6 +326,11 @@ export function ListingWizard(p: WizardProps) {
       {error ? (
         <div className="mb-4">
           <Notice tone="danger">{error}</Notice>
+        </div>
+      ) : null}
+      {uploadNote ? (
+        <div className="mb-4">
+          <Notice tone="info">{uploadNote}</Notice>
         </div>
       ) : null}
 
@@ -499,17 +560,19 @@ export function ListingWizard(p: WizardProps) {
 
         {step.key === "media" ? (
           <>
-            <Header title="Media" text="Tambahkan foto lewat tautan. Foto pertama menjadi sampul." />
-            <Notice tone="info">Unggah file langsung belum tersedia. Tempelkan tautan foto (https) dari penyimpanan Anda; tautan harus bisa dibuka publik. Maksimal {MAX_PHOTOS} foto dan {MAX_VIDEOS} video.</Notice>
+            <Header title="Media" text="Tambahkan foto dari perangkat Anda. Foto pertama menjadi sampul." />
+            <Notice tone="info">
+              Pilih foto langsung dari kamera atau galeri (hingga 25 MB per foto, JPG/PNG/WebP). Foto dikecilkan otomatis di perangkat Anda dan diunggah saat listing disimpan. Maksimal {MAX_PHOTOS} foto dan {MAX_VIDEOS} video.
+            </Notice>
             <div className="flex flex-col gap-2">
-              <label htmlFor="foto-url" className="text-label-lg">
-                Tautan foto
-              </label>
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <Input id="foto-url" inputMode="url" placeholder="https://…/foto-depan.jpg" value={photoInput} onChange={(e) => setPhotoInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addPhoto())} className="min-w-0 flex-1" />
-                <Button variant="secondary" onClick={addPhoto} disabled={!photoInput.trim()}>
-                  Tambah Foto
+              <input ref={fileRef} id="foto-file" type="file" accept="image/*" multiple className="sr-only" onChange={(e) => void addFiles(e.target.files)} />
+              <div className="flex flex-wrap items-center gap-3">
+                <Button variant="secondary" loading={processing > 0} disabled={v.photoUrls.length >= MAX_PHOTOS || phase === "saving"} onClick={() => fileRef.current?.click()}>
+                  {processing > 0 ? `Memproses ${processing} foto…` : "+ Tambah Foto"}
                 </Button>
+                <span className="text-caption">
+                  {v.photoUrls.length} dari {MAX_PHOTOS} foto
+                </span>
               </div>
               {mediaError || errors.photoUrls ? (
                 <p role="alert" className="text-caption text-danger-600">
@@ -521,27 +584,30 @@ export function ListingWizard(p: WizardProps) {
               <p className="text-body-md text-ink-500">Belum ada foto. Listing dengan foto lebih menarik bagi calon pembeli.</p>
             ) : (
               <ul className="grid gap-3 sm:grid-cols-2">
-                {v.photoUrls.map((u, i) => (
-                  <li key={u} className="flex items-center gap-3 rounded-md border border-ink-100 p-2.5">
-                    {/* Pratinjau tautan foto dari pengguna; gambar biasa tanpa optimasi Next. */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={u} alt="" className="h-16 w-20 flex-none rounded-sm bg-ink-100 object-cover" />
-                    <div className="min-w-0 flex-1">
-                      {i === 0 ? <Badge tone="info" dot={false}>Sampul</Badge> : null}
-                      <p className="truncate text-caption">{u}</p>
-                    </div>
-                    <div className="flex flex-none flex-col gap-1">
-                      {i > 0 ? (
-                        <Button size="sm" variant="ghost" onClick={() => set("photoUrls", [u, ...v.photoUrls.filter((x) => x !== u)])}>
-                          Jadikan sampul
+                {v.photoUrls.map((u, i) => {
+                  const pend = pending.current.get(u);
+                  return (
+                    <li key={u} className="flex items-center gap-3 rounded-md border border-ink-100 p-2.5">
+                      {/* Pratinjau foto (varian kecil atau berkas lokal); gambar biasa tanpa optimasi Next. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={pend ? pend.preview : (listingPhotoUrl(u, "sm") ?? u)} alt="" className="h-16 w-20 flex-none rounded-sm bg-ink-100 object-cover" />
+                      <div className="min-w-0 flex-1">
+                        {i === 0 ? <Badge tone="info" dot={false}>Sampul</Badge> : null}
+                        <p className="truncate text-caption">{pend ? `${pend.name} · diunggah saat Simpan` : `Foto ${i + 1}`}</p>
+                      </div>
+                      <div className="flex flex-none flex-col gap-1">
+                        {i > 0 ? (
+                          <Button size="sm" variant="ghost" onClick={() => set("photoUrls", [u, ...v.photoUrls.filter((x) => x !== u)])}>
+                            Jadikan sampul
+                          </Button>
+                        ) : null}
+                        <Button size="sm" variant="ghost" className="text-danger-600" onClick={() => removePhoto(u)}>
+                          Hapus
                         </Button>
-                      ) : null}
-                      <Button size="sm" variant="ghost" className="text-danger-600" onClick={() => set("photoUrls", v.photoUrls.filter((x) => x !== u))}>
-                        Hapus
-                      </Button>
-                    </div>
-                  </li>
-                ))}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
             <div className="flex flex-col gap-2">

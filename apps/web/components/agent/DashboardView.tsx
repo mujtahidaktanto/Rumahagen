@@ -10,6 +10,7 @@ import { EmptyState, ErrorState } from "@/components/ui/States";
 import { ListingStatusBadge } from "@/components/ui/StatusBadge";
 import { BuildingIcon, ChartIcon, DocIcon, InfoIcon, TrophyIcon } from "@/components/ui/icons";
 import { relativeTimeId, type DashboardData, type Part } from "@/lib/agent/dashboard-data";
+import { listingPhotoUrl } from "@/lib/media/variants";
 
 const nf = new Intl.NumberFormat("id-ID");
 
@@ -131,7 +132,7 @@ export function DashboardView({ name, data }: { name: string; data: DashboardDat
                   {l.coverUrl ? (
                     // Foto sampul dari data (URL tersimpan); gambar biasa tanpa optimasi Next.
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={l.coverUrl} alt="" className="h-11 w-14 flex-none rounded-sm bg-ink-100 object-cover" />
+                    <img src={listingPhotoUrl(l.coverUrl, "sm") ?? l.coverUrl} alt="" className="h-11 w-14 flex-none rounded-sm bg-ink-100 object-cover" />
                   ) : (
                     <span aria-hidden="true" className="flex h-11 w-14 flex-none items-center justify-center rounded-sm bg-ink-100 text-ink-300">
                       <BuildingIcon size={18} />

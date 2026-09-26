@@ -11,6 +11,7 @@ import { BuildingIcon, EyeIcon, PinIcon } from "@/components/ui/icons";
 import type { MyListingsData } from "@/lib/agent/listing-data";
 import { MY_LISTING_STATUSES, myListingsQuery, MY_LISTING_PAGE_SIZE, type MyListingsSearch } from "@/lib/agent/listing-params";
 import { cn } from "@/lib/cn";
+import { listingPhotoUrl } from "@/lib/media/variants";
 
 const nf = new Intl.NumberFormat("id-ID");
 const NOTE_CLS = { normal: "text-ink-500", warn: "text-warning-600", danger: "text-danger-600" } as const;
@@ -95,7 +96,7 @@ export function MyListingsView({ data, search }: { data: MyListingsData; search:
                   {l.coverUrl ? (
                     // Foto sampul dari data (URL tersimpan); gambar biasa tanpa optimasi Next.
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={l.coverUrl} alt="" className="h-20 w-24 flex-none rounded-sm bg-ink-100 object-cover sm:h-24 sm:w-32" />
+                    <img src={listingPhotoUrl(l.coverUrl, "sm") ?? l.coverUrl} alt="" className="h-20 w-24 flex-none rounded-sm bg-ink-100 object-cover sm:h-24 sm:w-32" />
                   ) : (
                     <span aria-hidden="true" className="flex h-20 w-24 flex-none items-center justify-center rounded-sm bg-ink-100 text-ink-300 sm:h-24 sm:w-32">
                       <BuildingIcon size={24} />

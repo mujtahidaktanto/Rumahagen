@@ -5,6 +5,7 @@ import type { Route } from "next";
 import { AreaIcon, BathIcon, BedIcon, PinIcon } from "@/components/ui/icons";
 import type { FeaturedListing } from "@/lib/public/home-data";
 import { formatArea, formatListingPrice } from "@/lib/format";
+import { listingPhotoUrl } from "@/lib/media/variants";
 
 const TAG = { sale: { label: "Dijual", cls: "bg-blue-600" }, rent: { label: "Disewa", cls: "bg-gold-600" } } as const;
 
@@ -21,7 +22,7 @@ export function PropertyCard({ listing: p }: { listing: FeaturedListing }) {
         {p.coverUrl ? (
           // Foto listing dari storage (URL publik); gambar biasa tanpa optimasi Next agar tidak memakai kuota gambar Vercel.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={p.coverUrl} alt={p.coverAlt ?? p.title} loading="lazy" className="h-full w-full object-cover" />
+          <img src={listingPhotoUrl(p.coverUrl, "sm") ?? p.coverUrl} alt={p.coverAlt ?? p.title} loading="lazy" className="h-full w-full object-cover" />
         ) : null}
         <span className={`absolute top-2.5 left-2.5 rounded-pill px-2.5 py-0.5 text-[11px] font-bold text-white ${tag.cls}`}>{tag.label}</span>
       </div>

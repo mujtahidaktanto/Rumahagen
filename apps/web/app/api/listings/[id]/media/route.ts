@@ -9,6 +9,8 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
+import { ApiError } from "@/lib/api/errors";
+import { checkListingPhotoUrl } from "@/lib/storage/public-images";
 import { createListingMediaSchema } from "@/lib/validation/listing-media";
 import { createClient } from "@/lib/supabase/server";
 
@@ -40,6 +42,12 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
   const supabase = await createClient();
 
   if (body.media_type === "photo") {
+    // Foto hasil unggah (bucket listing-photos, migration 0158) harus milik pemanggil di folder listing ini dan lengkap tiga varian; tautan eksternal lama tetap diterima apa adanya.
+    if (ctx.userId) {
+      const check = await checkListingPhotoUrl(body.url, ctx.userId, ctx.params.id ?? "");
+      if (check === "not_own") throw new ApiError("VALIDATION_ERROR", "Foto tidak valid untuk listing ini.");
+      if (check === "incomplete") throw new ApiError("CONFLICT", "Foto belum terunggah lengkap. Coba unggah lagi.");
+    }
     const { data, error } = await supabase
       .from("listing_photos")
       .insert({
