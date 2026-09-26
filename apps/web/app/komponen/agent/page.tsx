@@ -16,6 +16,9 @@ import { LearningView } from "@/components/agent/LearningView";
 import { ListingWizard } from "@/components/agent/ListingWizard";
 import type { ActiveContext, ContextOrg } from "@/lib/agent/context";
 import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
+import type { CenterNotification, NotificationCenterData } from "@/lib/agent/notification-data";
+import { parseNotificationSearch, type NotificationArea } from "@/lib/agent/notification-rules";
 import { CatalogView } from "@/components/agent/CatalogView";
 import { DbrCalculatorView, DbrDetailView, DbrHistoryView } from "@/components/agent/DbrViews";
 import { SharedDbrView } from "@/components/public/SharedDbrView";
@@ -35,7 +38,7 @@ import { EMPTY_WIZARD, WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wi
 
 export const metadata: Metadata = { title: "Contoh Layar Agent | RumahAgen", robots: { index: false, follow: false } };
 
-type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string; konteks?: string; keadaan?: string }> };
+type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string; konteks?: string; keadaan?: string; area?: string; filter?: string; tampil?: string; tersembunyi?: string }> };
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
@@ -349,6 +352,34 @@ export default async function SampleAgentPage({ searchParams }: Props) {
             refresh: lihatSaja ? null : gagal ? { ok: false } : { ok: true, data: { allowance: 5, usedToday: 2 } },
           }}
         />
+      </div>
+    );
+  }
+  if (layar === "notifikasi") {
+    const sp = await searchParams;
+    const keadaan = sp.keadaan ?? "normal";
+    const area = (["agent", "instructor", "partner", "admin"].includes(sp.area ?? "") ? sp.area : "agent") as NotificationArea;
+    const search = parseNotificationSearch(sp as Record<string, string | undefined>);
+    const ago = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
+    const n = (o: Partial<CenterNotification> & { id: string; type: string; title: string }): CenterNotification => ({ message: null, createdAt: ago(1), isRead: false, dismissed: false, deliveryStatus: "delivered", entityType: null, entityId: null, ...o });
+    const all: CenterNotification[] = [
+      n({ id: "n1", type: "approval_status", title: "Event Anda disetujui", message: "Event Workshop Properti sudah tayang dan bisa didaftar peserta.", entityType: "event", entityId: "1a2b3c4d-1111-2222-3333-444455556666", createdAt: ago(0.5) }),
+      n({ id: "n2", type: "lead_new", title: "Lead baru untuk Rumah Minimalis 2 Lantai Desain Modern Dekat Sekolah Internasional", message: "Calon pembeli menghubungi lewat WhatsApp.", entityType: "listing", entityId: "1a2b3c4d-1111-2222-3333-444455556666", createdAt: ago(3) }),
+      n({ id: "n3", type: "certificate_issued", title: "Sertifikat diterbitkan", isRead: true, entityType: "certificate", entityId: "1a2b3c4d-1111-2222-3333-444455556666", createdAt: ago(30) }),
+      n({ id: "n4", type: "listing_expiring", title: "Listing segera berakhir", message: "Masa tayang berakhir 3 hari lagi.", isRead: true, deliveryStatus: "failed", createdAt: ago(50) }),
+      n({ id: "n5", type: "lainnya", title: "Pengumuman fitur baru", message: "Cek Statistik Saya di dashboard.", isRead: true, dismissed: true, createdAt: ago(170) }),
+      n({ id: "n6", type: "baru_dari_sistem", title: "Jenis notifikasi tak dikenal", isRead: true, createdAt: ago(200) }),
+    ];
+    const visible = all.filter((x) => (search.tersembunyi || !x.dismissed) && (search.filter === "semua" || !x.isRead));
+    const data: NotificationCenterData =
+      keadaan === "gagal"
+        ? { list: { ok: false }, unread: { ok: false } }
+        : keadaan === "kosong"
+          ? { list: { ok: true, data: { items: [], total: 0 } }, unread: { ok: true, data: 0 } }
+          : { list: { ok: true, data: { items: visible, total: visible.length + (search.tampil === 20 ? 14 : 0) } }, unread: { ok: true, data: 2 } };
+    return (
+      <div className="min-h-dvh bg-surface">
+        <NotificationCenter data={data} search={search} area={area} />
       </div>
     );
   }

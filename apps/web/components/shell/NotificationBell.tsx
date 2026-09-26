@@ -2,8 +2,9 @@
 
 // components/shell/NotificationBell.tsx — lonceng notifikasi di topbar (wireframe M08): lencana angka belum dibaca, dan panel berisi notifikasi terbaru. Klik notifikasi = tandai dibaca (PUT
 // /api/notifications/{id}/read) lalu buka tujuannya bila ada (lib/agent/notification-link.ts); "Tandai semua dibaca" = PUT /api/notifications/read-all. Empat keadaan panel: kosong, gagal dimuat,
-// daftar, memproses. Daftar dibawa dari layout server (dimuat ulang tiap pindah halaman dan setelah menandai dibaca). Halaman "semua notifikasi" (Pusat Notifikasi) belum ada.
+// daftar, memproses. Daftar dibawa dari layout server (dimuat ulang tiap pindah halaman dan setelah menandai dibaca). Panel diakhiri tautan "Lihat semua notifikasi" ke Pusat Notifikasi (/agent/notifikasi).
 import type { Route } from "next";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useId, useRef, useState } from "react";
 import { BellIcon } from "@/components/ui/icons";
@@ -114,6 +115,11 @@ export function NotificationBell({ notifications }: { notifications: ShellNotifi
               ))}
             </ul>
           )}
+          <div className="border-t border-ink-100">
+            <Link href={"/agent/notifikasi" as Route} onClick={() => setOpen(false)} className="flex min-h-11 items-center justify-center px-4 text-label-lg text-blue-600 no-underline hover:bg-ink-50 hover:no-underline">
+              Lihat semua notifikasi
+            </Link>
+          </div>
         </div>
       ) : null}
     </div>

@@ -262,6 +262,15 @@ Tanpa migration dan tanpa perubahan API. Rute `/agent/dbr` (Kalkulator), `/agent
 6. **Wireframe:** M07 tidak punya layar untuk prospek; halaman `/dbr/shared/{token}` baru perlu ditambahkan ke wireframe (desktop + mobile). Tautan di wireframe memakai `rumahagen.id`; aplikasi memakai origin tempat agen membuka aplikasi (staging: staging.rumahagen.com).
 7. Klien admin di halaman publik sudah tidak dipakai (0163 mengembalikan nama bank dari dalam fungsi).
 
+## 2026-09-26 — Fase 4c: Pusat Notifikasi (M08)
+
+Tanpa migration dan tanpa perubahan API (memakai `GET /notifications`, `PUT /notifications/read-all`, `PUT /notifications/{id}/read|dismiss`). Satu layar bersama semua persona, dipasang di `/agent/notifikasi`, `/instructor/notifikasi`, `/partner/notifikasi`, `/admin/notifikasi` (Kembali mengikuti persona); kode: `lib/agent/notification-{rules,data}.ts` (diuji), `components/notifications/{NotificationCenter,NotificationControls}.tsx`. Lonceng Agent kini punya tautan "Lihat semua notifikasi"; menu Instruktur "Notifikasi" menuju `/instructor/notifikasi` (sebelumnya `/notifikasi` yang tidak ada). Contoh: `/komponen/agent?layar=notifikasi&keadaan=normal|kosong|gagal&area=agent|instructor|partner|admin&filter=belum&tersembunyi=1`. Aksi baca/sembunyikan belum diuji dengan login.
+1. **Menyembunyikan tidak bisa dibatalkan lewat API** (tidak ada endpoint pulihkan): dialog memberi tahu; notifikasi tersembunyi tetap bisa dilihat lewat "Tampilkan yang disembunyikan" tetapi tidak kembali ke daftar.
+2. **Tujuan tombol Buka terbatas** pada entitas yang punya layar: event, listing, sesi belajar, sertifikat, organisasi/undangan (`lib/agent/notification-link.ts`). Award, klaim proyek, langganan, dan lainnya tanpa tombol Buka (tetap bisa ditandai dibaca) sampai layarnya ada. Tujuan untuk Instruktur/Partner (mis. sesi, klaim) belum dipetakan.
+3. **Lonceng topbar hanya untuk Agent.** Persona lain mengakses Pusat Notifikasi lewat menu (Instruktur) atau alamat langsung; Partner dan Admin belum punya menu/lonceng ke sana (Admin memakai "Konten & Notifikasi" untuk hal lain).
+4. **Belum ada pembaruan otomatis:** jumlah belum dibaca dimuat ulang tiap pindah halaman, tanpa polling atau push (`delivery_status` hanya ditampilkan bila failed).
+5. Wireframe M08-Pusat-Notifikasi menyebut tombol Kembali per persona; tautan "Lihat semua" di panel lonceng dan label "Jangan tampilkan yang disembunyikan" (saat filter aktif) belum ada di wireframe.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

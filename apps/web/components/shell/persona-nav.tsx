@@ -35,7 +35,7 @@ export const instructorNav: NavItem[] = [
   { href: "/instructor/sesi", label: "Sesi Saya", icon: <VideoIcon size={s} /> },
   { href: "/instructor/kursus", label: "Kursus Saya", icon: <BookIcon size={s} /> },
   { href: "/instructor/event", label: "Event", icon: <CalendarIcon size={s} /> },
-  { href: "/notifikasi", label: "Notifikasi", icon: <BellIcon size={s} /> },
+  { href: "/instructor/notifikasi", label: "Notifikasi", icon: <BellIcon size={s} /> },
   { href: "/instructor/profil", label: "Profil Saya", icon: <UserIcon size={s} /> },
 ];
 
