@@ -86,7 +86,7 @@ export function NotificationCenter({ data, search, area, now = new Date() }: { d
           <ul className="flex flex-col gap-2.5">
             {list.items.map((n) => {
               const t = notificationType(n.type);
-              const href = notificationHref(n.entityType, n.entityId);
+              const href = notificationHref(n.entityType, n.entityId, area);
               return (
                 <li key={n.id} className={cn("flex flex-wrap items-start gap-x-4 gap-y-3 rounded-md border p-4", n.isRead ? "border-ink-100 bg-white" : "border-blue-200 bg-blue-50", n.dismissed && "opacity-70")}>
                   <div className="flex min-w-0 flex-1 flex-col gap-1">

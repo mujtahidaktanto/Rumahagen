@@ -32,6 +32,11 @@ describe("notifikasi", () => {
     expect(notificationHref("listing", "l1")).toBe("/agent/listing/l1");
     expect(notificationHref("certificate", "c1")).toBe("/agent/belajar");
     expect(notificationHref("organization", null)).toBe("/agent/organisasi");
+    expect(notificationHref("project_claim", "x")).toBe("/agent/klaim");
+    // Tautan area Agent tidak diberikan ke persona lain (mis. developer menerima "klaim proyek baru" bertipe sama).
+    expect(notificationHref("project_claim", "x", "partner")).toBeNull();
+    expect(notificationHref("listing", "l1", "instructor")).toBeNull();
+    expect(notificationHref("event", "e1", "partner")).toBe("/event/e1");
     expect(notificationHref("award", "a1")).toBeNull();
     expect(notificationHref(null, null)).toBeNull();
     expect(notificationHref("event", null)).toBeNull();

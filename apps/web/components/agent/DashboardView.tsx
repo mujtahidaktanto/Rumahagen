@@ -26,7 +26,7 @@ function Tile({ label, value, hint }: { label: string; value: ReactNode; hint?: 
 
 const QUICK_ACTIONS: { title: string; note: string; icon: ReactNode; href: string | null }[] = [
   { title: "Kalkulator DBR", note: "Cek kelayakan KPR prospek", icon: <DocIcon size={20} />, href: "/agent/dbr" },
-  { title: "Klaim Proyek", note: "Proyek developer & marketing kit", icon: <BuildingIcon size={20} />, href: null },
+  { title: "Klaim Proyek", note: "Proyek developer & marketing kit", icon: <BuildingIcon size={20} />, href: "/agent/klaim" },
   { title: "Kualifikasi & Penghargaan", note: "Ajukan bukti, cek status, kelola title", icon: <TrophyIcon size={20} />, href: null },
   { title: "Statistik Saya", note: "Performa listing, lead, dan kuota", icon: <ChartIcon size={20} />, href: null },
 ];

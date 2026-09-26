@@ -20,6 +20,8 @@ import { NotificationCenter } from "@/components/notifications/NotificationCente
 import type { CenterNotification, NotificationCenterData } from "@/lib/agent/notification-data";
 import { parseNotificationSearch, type NotificationArea } from "@/lib/agent/notification-rules";
 import { CatalogView } from "@/components/agent/CatalogView";
+import { ClaimsView } from "@/components/agent/ClaimsView";
+import type { ClaimItem, ClaimsData } from "@/lib/agent/claim-data";
 import { DbrCalculatorView, DbrDetailView, DbrHistoryView } from "@/components/agent/DbrViews";
 import { SharedDbrView } from "@/components/public/SharedDbrView";
 import type { DbrSimulation } from "@/lib/agent/dbr-types";
@@ -352,6 +354,26 @@ export default async function SampleAgentPage({ searchParams }: Props) {
             refresh: lihatSaja ? null : gagal ? { ok: false } : { ok: true, data: { allowance: 5, usedToday: 2 } },
           }}
         />
+      </div>
+    );
+  }
+  if (layar === "klaim") {
+    const { keadaan = "normal" } = await searchParams;
+    const ago = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
+    const c = (o: Partial<ClaimItem> & { id: string; status: string; projectName: string }): ClaimItem => ({ projectId: "1a2b3c4d-1111-2222-3333-444455556666", projectSlug: "green-valley", location: "Cibubur, Jakarta Timur", kind: "Primary · Rumah", claimedAt: ago(10), reviewedAt: null, listing: null, ...o });
+    const items: ClaimItem[] = [
+      c({ id: "c1", status: "approved", projectName: "Green Valley Residence", reviewedAt: ago(5) }),
+      c({ id: "c2", status: "approved", projectName: "Kanaya Heights Apartemen dengan Nama Proyek yang Sangat Panjang untuk Menguji Pemotongan Teks", kind: "Primary · Apartemen", reviewedAt: ago(8), listing: { id: "l1", status: "draft" } }),
+      c({ id: "c3", status: "pending", projectName: "Sinar Griya Townhouse", claimedAt: ago(1) }),
+      c({ id: "c4", status: "rejected", projectName: "Bukit Asri", reviewedAt: ago(20), claimedAt: ago(25) }),
+      c({ id: "c5", status: "withdrawn", projectName: "Taman Sari Ruko", claimedAt: ago(30) }),
+      c({ id: "c6", status: "revoked", projectName: "Proyek tidak tersedia", projectSlug: null, location: null, kind: "", claimedAt: ago(60), reviewedAt: ago(40) }),
+      c({ id: "c7", status: "aneh", projectName: "Status Tak Dikenal" }),
+    ];
+    const data: ClaimsData = { defaultWhatsapp: "0812-3456-7890", claims: keadaan === "gagal" ? { ok: false } : keadaan === "kosong" ? { ok: true, data: [] } : { ok: true, data: items } };
+    return (
+      <div className="min-h-dvh bg-surface">
+        <ClaimsView data={data} />
       </div>
     );
   }

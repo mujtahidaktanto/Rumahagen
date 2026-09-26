@@ -271,6 +271,17 @@ Tanpa migration dan tanpa perubahan API (memakai `GET /notifications`, `PUT /not
 4. **Belum ada pembaruan otomatis:** jumlah belum dibaca dimuat ulang tiap pindah halaman, tanpa polling atau push (`delivery_status` hanya ditampilkan bila failed).
 5. Wireframe M08-Pusat-Notifikasi menyebut tombol Kembali per persona; tautan "Lihat semua" di panel lonceng dan label "Jangan tampilkan yang disembunyikan" (saat filter aktif) belum ada di wireframe.
 
+## 2026-09-26 — Fase 4d: Klaim Proyek Agent (M06)
+
+Tanpa migration dan tanpa perubahan API. Rute `/agent/klaim`; kode: `lib/agent/claim-{rules,data}.ts` (diuji), `components/agent/{ClaimsView,ClaimActions}.tsx`. Pintasan "Klaim Proyek" di Dashboard kini aktif; notifikasi bertipe `project_claim` (klaim disetujui/ditolak/dicabut) kini punya tombol Buka ke `/agent/klaim` (hanya untuk persona Agent). Klaim BARU tetap diajukan dari halaman detail proyek publik (tombol "Klaim Proyek Ini" sudah ada). Contoh: `/komponen/agent?layar=klaim&keadaan=normal|kosong|gagal`. Aksi tarik klaim/buat listing/marketing kit belum diuji dengan login (uji manual pemilik).
+1. **Klaim ulang tidak mungkin (perlu keputusan):** wireframe menulis "Anda bisa mengklaim ulang proyek ini kapan saja", tetapi `withdrawn` adalah status akhir (0127) dan `UNIQUE(agent_id, project_id)` menolak klaim kedua atas proyek yang sama (API 409 "sudah pernah mengklaim"). Teks dialog Batalkan Klaim saya sesuaikan dengan kenyataan (final; hubungi tim RumahAgen). Bila ingin klaim ulang diizinkan, perlu migration (mis. baris withdrawn/rejected boleh dibuka kembali) dan pembaruan halaman proyek publik; tanya dulu.
+2. **Draf listing ganda:** API `POST /listings/from-project/{id}` tidak menolak pembuatan berulang. UI menyembunyikan tombol bila sudah ada listing milik Agent dengan `developer_project_id` proyek itu (deteksi tercepat = listing tertua) dan menampilkan "Draft listing dibuat — Lihat Listing"; bila listing itu dihapus tombolnya muncul lagi. API tetap memungkinkan duplikat bila dipanggil langsung.
+3. **Media proyek disalin sebagai URL** (bukan tiga varian 400/1080/2048): tampil apa adanya di Listing dan Wizard; foto proyek yang dipakai ulang tidak dikecilkan oleh pipeline foto.
+4. **Marketing kit terbuka untuk semua Agent** (RLS `marketing_kit_select`), tidak digerbangi status klaim; wireframe mencatat hal ini. Kit dimuat saat tombol dibuka; unduhan = tautan bertanda tangan 1 jam (https saja).
+5. **Menu:** Agent hanya punya 8 item menu (wireframe); Klaim Proyek dijangkau dari pintasan Dashboard, halaman proyek publik, dan notifikasi.
+6. Proyek yang tidak terbaca (mis. sudah tidak tayang) tampil "Proyek tidak tersedia"; klaimnya tetap muncul.
+7. Notifikasi klaim masuk untuk developer (tipe sama, `lainnya`) tanpa tombol Buka sampai layar Klaim Masuk Partner dibangun (Fase Partner).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
