@@ -82,7 +82,13 @@ export function DashboardView({ name, data }: { name: string; data: DashboardDat
     <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-5 p-4 lg:p-8">
       <div>
         <h1 className="text-headline">Dashboard</h1>
-        <p className="text-body-md text-ink-500">Halo, {name}. Ringkasan aktivitas Anda bulan ini.</p>
+        <p className="text-body-md text-ink-500">Halo, {name}. {data.scope.kind === "org_leader" ? `Ringkasan bulan ini untuk organisasi ${data.scope.label}.` : "Ringkasan aktivitas Anda bulan ini."}</p>
+        {data.scope.kind === "personal" ? null : (
+          <p role="note" className="text-caption">
+            Konteks: <strong className="text-ink-900">{data.scope.label}</strong>
+            {data.scope.kind === "org_leader" ? " — angka dan listing seluruh organisasi (listing pribadi anggota tidak dihitung). Ganti konteks lewat pengalih di bilah atas." : " — Listing Terbaru menampilkan listing Anda di organisasi ini; angka di atas tetap angka pribadi Anda karena statistik organisasi hanya untuk pemimpin."}
+          </p>
+        )}
       </div>
 
       {data.identityInReview ? (

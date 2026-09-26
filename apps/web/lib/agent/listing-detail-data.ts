@@ -1,6 +1,7 @@
-// lib/agent/listing-detail-data.ts — data Detail Listing milik Agent (M03 Listing-Detail), dibaca di server dengan RLS pemanggil dan dibatasi agent_id = pengguna (pemilik saja; listing orang lain =
-// tidak ditemukan). Bagian pelengkap (lead, kuota refresh) dimuat sendiri-sendiri: gagal di sana tidak menjatuhkan halaman. Aturan pakai ada di lib/agent/listing-rules.ts.
+// lib/agent/listing-detail-data.ts — data Detail Listing milik Agent (M03 Listing-Detail), dibaca di server dengan RLS pemanggil. Boleh dibuka: listing milik sendiri, atau listing ORGANISASI yang organisasinya
+// dipimpin pengguna (baca saja, migration 0162); selain itu (termasuk listing pribadi anggota dan listing terbit orang lain) = tidak ditemukan. Bagian pelengkap (lead, kuota refresh) dimuat sendiri-sendiri: gagal di sana tidak menjatuhkan halaman. Aturan pakai ada di lib/agent/listing-rules.ts.
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { ContextOrg } from "@/lib/agent/context";
 import { createClient } from "@/lib/supabase/server";
 import { todayWIB } from "./time";
 
@@ -35,12 +36,15 @@ export type MyListingDetail = {
   lastRefreshedAt: string | null;
   publishedAt: string | null;
 };
+/** Siapa yang melihat: milik sendiri atau listing anggota (pemimpin, baca saja); dan organisasi pemilik kuota bila listing atas nama organisasi. */
+export type ListingViewer = { mine: boolean; creator: string | null; organization: { id: string; name: string } | null };
 export type MyLead = { id: string; source: string; createdAt: string; status: string };
 /** Jatah refresh harian efektif = bawaan sistem + tambahan (migration 0159). `defaultDaily`/`extraDaily` hanya ada setelah 0159 diterapkan. */
 export type RefreshQuota = { allowance: number; usedToday: number; defaultDaily?: number; extraDaily?: number; /** Saldo add-on (tanpa masa berlaku, tanpa reset harian); dipakai setelah jatah harian habis. */ stockRemaining?: number };
 
 export type MyListingDetailResult =
-  | { state: "ok"; listing: MyListingDetail; leads: Part<{ items: MyLead[]; total: number }>; refresh: Part<RefreshQuota | null> }
+  // leads dan refresh = null pada tampilan baca saja (listing anggota): leads hanya untuk pembuat, jatah refresh milik pembuat.
+  | { state: "ok"; listing: MyListingDetail; viewer: ListingViewer; leads: Part<{ items: MyLead[]; total: number }> | null; refresh: Part<RefreshQuota | null> | null }
   | { state: "not_found" }
   | { state: "error" };
 
@@ -49,6 +53,8 @@ export const isListingId = (v: string) => UUID.test(v);
 
 type Row = {
   id: string;
+  agent_id: string;
+  organization_id: string | null;
   slug: string;
   title: string;
   status: string;
@@ -80,7 +86,7 @@ type Row = {
 };
 
 const SELECT =
-  "id, slug, title, status, rejection_reason, transaction_type, category, property_type, price, price_unit, is_negotiable, address, land_area, building_area, bedrooms, bathrooms, floors, carport_capacity, certificate_type, description, view_count, cta_click_count, last_refreshed_at, published_at, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), photos:listing_photos(url, alt_text, is_cover, sort_order), amenities:listing_amenities(amenity:amenities(name))";
+  "id, agent_id, organization_id, slug, title, status, rejection_reason, transaction_type, category, property_type, price, price_unit, is_negotiable, address, land_area, building_area, bedrooms, bathrooms, floors, carport_capacity, certificate_type, description, view_count, cta_click_count, last_refreshed_at, published_at, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), photos:listing_photos(url, alt_text, is_cover, sort_order), amenities:listing_amenities(amenity:amenities(name))";
 
 async function loadLeads(supabase: SupabaseClient, listingId: string, userId: string): Promise<Part<{ items: MyLead[]; total: number }>> {
   const { data, count, error } = await supabase
@@ -104,17 +110,28 @@ async function loadRefreshQuota(supabase: SupabaseClient, now: Date): Promise<Pa
   return { ok: true, data: q && q.has_pool ? { allowance: q.allowance, usedToday: q.used_today, defaultDaily: q.default_daily, extraDaily: q.extra_daily, stockRemaining: q.stock_remaining } : null };
 }
 
-export async function getMyListingDetail(id: string, userId: string, now: Date = new Date()): Promise<MyListingDetailResult> {
+/** `orgs` = organisasi yang diikuti pengguna (role dipakai untuk memutuskan apakah pemimpin boleh melihat listing anggota). */
+export async function getMyListingDetail(id: string, userId: string, orgs: ContextOrg[] = [], now: Date = new Date()): Promise<MyListingDetailResult> {
   if (!isListingId(id)) return { state: "not_found" };
   const supabase = await createClient();
-  const { data: r, error } = await supabase.from("listings").select(SELECT).eq("id", id).eq("agent_id", userId).is("deleted_at", null).maybeSingle<Row>();
+  // Tanpa filter agent_id: RLS juga membuka listing terbit orang lain dan (0162) listing organisasi bagi pemimpin, jadi kepemilikan diperiksa di bawah.
+  const { data: r, error } = await supabase.from("listings").select(SELECT).eq("id", id).is("deleted_at", null).maybeSingle<Row>();
   if (error) return { state: "error" };
   if (!r) return { state: "not_found" };
+  const mine = r.agent_id === userId;
+  const org = r.organization_id ? (orgs.find((o) => o.id === r.organization_id) ?? null) : null;
+  if (!mine && !(org && org.role === "leader")) return { state: "not_found" };
 
-  const [leads, refresh] = await Promise.all([loadLeads(supabase, id, userId), loadRefreshQuota(supabase, now)]);
+  let creator: string | null = null;
+  if (!mine && org) {
+    const { data: roster } = await supabase.rpc("organization_roster", { p_organization_id: org.id });
+    creator = ((roster ?? []) as { agent_id: string; agent_name: string }[]).find((m) => m.agent_id === r.agent_id)?.agent_name ?? "Mantan anggota";
+  }
+  const [leads, refresh] = mine ? await Promise.all([loadLeads(supabase, id, userId), loadRefreshQuota(supabase, now)]) : [null, null];
   const photos = [...(r.photos ?? [])].sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order).map((p) => ({ url: p.url, alt: p.alt_text }));
   return {
     state: "ok",
+    viewer: { mine, creator, organization: org ? { id: org.id, name: org.name } : r.organization_id ? { id: r.organization_id, name: "Organisasi" } : null },
     leads,
     refresh,
     listing: {

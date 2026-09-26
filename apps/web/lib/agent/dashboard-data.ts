@@ -1,6 +1,7 @@
 // lib/agent/dashboard-data.ts — data Dashboard Agent (M08 Dashboard), dibaca di server dengan RLS pemanggil (sama seperti route /api/agents/me/*). Tiap bagian (angka, listing terbaru,
 // notifikasi) dimuat sendiri-sendiri: gagal di satu bagian menampilkan keadaan gagal bagian itu saja, bukan seluruh halaman. Angka bulan ini memakai tanggal kalender WIB.
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { isLeaderContext, type ActiveContext } from "@/lib/agent/context";
 import { loadAgentStats } from "@/lib/analytics/agent-stats";
 import { createClient } from "@/lib/supabase/server";
 
@@ -11,7 +12,11 @@ export type RecentListing = { id: string; title: string; status: string; locatio
 export type DashboardNotification = { id: string; title: string; message: string | null; createdAt: string; isRead: boolean };
 export type DashboardNotifications = { items: DashboardNotification[]; unread: number };
 
+/** Cakupan angka dan listing di Dashboard menurut konteks aktif: pribadi, organisasi (pemimpin: seluruh organisasi), atau organisasi sebagai anggota (listing organisasi milik sendiri; angka tetap pribadi). */
+export type DashboardScope = { kind: "personal" | "org_leader" | "org_member"; label: string };
+
 export type DashboardData = {
+  scope: DashboardScope;
   /** agent_profiles.ktp_requirement_state = 'submitted' (verifikasi identitas sedang ditinjau; hanya informasi, fitur tetap terbuka). */
   identityInReview: boolean;
   stats: Part<DashboardStats>;
@@ -22,10 +27,10 @@ export type DashboardData = {
 export { monthRangeWIB, relativeTimeId, todayWIB } from "./time";
 import { monthRangeWIB } from "./time";
 
-async function loadStats(supabase: SupabaseClient, now: Date): Promise<Part<DashboardStats>> {
+async function loadStats(supabase: SupabaseClient, now: Date, organizationId?: string): Promise<Part<DashboardStats>> {
   try {
     const { from, to } = monthRangeWIB(now);
-    const s = await loadAgentStats(supabase, { from, to, compare: false });
+    const s = await loadAgentStats(supabase, { from, to, compare: false, organizationId });
     const val = (key: string) => s.series.find((x) => x.key === key)?.value ?? 0;
     return { ok: true, data: { activeListings: s.summary.active_listings ?? 0, views: val("views"), leads: val("leads"), points: s.summary.learning?.points_balance ?? null } };
   } catch {
@@ -42,15 +47,16 @@ type ListingRow = {
   photos: { url: string; is_cover: boolean; sort_order: number }[] | null;
 };
 
-async function loadListings(supabase: SupabaseClient, userId: string): Promise<Part<RecentListing[]>> {
-  const { data, error } = await supabase
+async function loadListings(supabase: SupabaseClient, userId: string, context: ActiveContext): Promise<Part<RecentListing[]>> {
+  const orgId = context.kind === "org" ? context.org.id : null;
+  let q = supabase
     .from("listings")
     .select("id, title, status, city:ref_cities(name), province:ref_provinces(name), photos:listing_photos(url, is_cover, sort_order)")
-    .eq("agent_id", userId)
-    .is("deleted_at", null)
-    .order("created_at", { ascending: false })
-    .limit(3)
-    .returns<ListingRow[]>();
+    .is("deleted_at", null);
+  // Pemimpin melihat semua listing organisasi (migration 0162); anggota dan mode pribadi hanya listing milik sendiri, dipisah menurut organisasi.
+  if (!isLeaderContext(context)) q = q.eq("agent_id", userId);
+  q = orgId ? q.eq("organization_id", orgId) : q.is("organization_id", null);
+  const { data, error } = await q.order("created_at", { ascending: false }).limit(3).returns<ListingRow[]>();
   if (error) return { ok: false };
   return {
     ok: true,
@@ -77,13 +83,16 @@ async function loadNotifications(supabase: SupabaseClient, userId: string): Prom
   return { ok: true, data: { unread: unread.count ?? 0, items: (list.data ?? []).map((n) => ({ id: n.id, title: n.title, message: n.message, createdAt: n.created_at, isRead: n.is_read })) } };
 }
 
-export async function getAgentDashboard(userId: string, now: Date = new Date()): Promise<DashboardData> {
+export async function getAgentDashboard(userId: string, context: ActiveContext, now: Date = new Date()): Promise<DashboardData> {
   const supabase = await createClient();
+  const leader = isLeaderContext(context);
+  const scope: DashboardScope = context.kind === "personal" ? { kind: "personal", label: "Pribadi" } : { kind: leader ? "org_leader" : "org_member", label: context.org.name };
   const [stats, listings, notifications, profile] = await Promise.all([
-    loadStats(supabase, now),
-    loadListings(supabase, userId),
+    // Statistik organisasi hanya untuk pemimpin (RPC menolak anggota); anggota tetap melihat angka pribadinya.
+    loadStats(supabase, now, leader && context.kind === "org" ? context.org.id : undefined),
+    loadListings(supabase, userId, context),
     loadNotifications(supabase, userId),
     supabase.from("agent_profiles").select("ktp_requirement_state").eq("user_id", userId).maybeSingle<{ ktp_requirement_state: string }>(),
   ]);
-  return { identityInReview: profile.data?.ktp_requirement_state === "submitted", stats, listings, notifications };
+  return { scope, identityInReview: profile.data?.ktp_requirement_state === "submitted", stats, listings, notifications };
 }

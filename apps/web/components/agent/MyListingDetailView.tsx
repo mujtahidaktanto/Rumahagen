@@ -88,8 +88,12 @@ function Spec({ label, value, locked }: { label: string; value: ReactNode; locke
 
 export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?: Date }) {
   const l = data.listing;
+  const { viewer } = data;
+  const readOnly = !viewer.mine;
+  const leadsP = data.leads ?? ({ ok: false } as const);
+  const refreshP = data.refresh ?? ({ ok: false } as const);
   const actions = detailActions(l);
-  const rq = data.refresh.ok ? data.refresh.data : "gagal";
+  const rq = refreshP.ok ? refreshP.data : "gagal";
   const rState = refreshState(l, rq, now);
   const locked = l.publishedAt !== null;
   const priceText = `${formatListingPrice(l.price, l.priceUnit)}${l.isNegotiable ? " (nego)" : ""}`;
@@ -125,9 +129,24 @@ export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?
             </LinkButton>
           ) : null}
         </div>
-        <ListingActions id={l.id} title={l.title} actions={actions} />
+        {viewer.organization ? (
+          <p className="text-body-md text-ink-500">
+            Atas nama organisasi <strong className="text-ink-900">{viewer.organization.name}</strong> · memakai kuota organisasi
+            {viewer.creator ? (
+              <>
+                {" "}· dibuat oleh <strong className="text-ink-900">{viewer.creator}</strong>
+              </>
+            ) : null}
+          </p>
+        ) : null}
+        {readOnly ? null : <ListingActions id={l.id} title={l.title} actions={actions} />}
       </header>
 
+      {readOnly ? (
+        <Banner tone="neutral" title="Hanya lihat">
+          Ini listing anggota organisasi Anda. Sebagai pemimpin Anda bisa melihatnya, tetapi hanya pembuatnya yang bisa mengubah, menerbitkan, atau me-refresh. Leads juga hanya untuk pembuatnya.
+        </Banner>
+      ) : null}
       {statusBanner(l)}
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -135,9 +154,11 @@ export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?
           <Card
             title="Media"
             right={
-              <LinkButton href={`/agent/listing/${l.id}/edit?langkah=media` as Route} variant="secondary" size="sm">
-                Kelola Media
-              </LinkButton>
+              readOnly ? undefined : (
+                <LinkButton href={`/agent/listing/${l.id}/edit?langkah=media` as Route} variant="secondary" size="sm">
+                  Kelola Media
+                </LinkButton>
+              )
             }
           >
             {l.photos.length === 0 ? (
@@ -186,14 +207,14 @@ export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?
             </Card>
           ) : null}
 
-          <Card title="Leads Masuk" right={data.leads.ok ? <span className="text-caption">{nf.format(data.leads.data.total)} total</span> : undefined}>
-            {!data.leads.ok ? (
+          {readOnly ? null : <Card title="Leads Masuk" right={leadsP.ok ? <span className="text-caption">{nf.format(leadsP.data.total)} total</span> : undefined}>
+            {!leadsP.ok ? (
               <ErrorState title="Leads gagal dimuat" message="Muat ulang halaman beberapa saat lagi." className="py-6" />
-            ) : data.leads.data.items.length === 0 ? (
+            ) : leadsP.data.items.length === 0 ? (
               <EmptyState title="Belum ada leads" message="Belum ada leads masuk untuk listing ini." className="py-6" />
             ) : (
               <ul>
-                {data.leads.data.items.map((x) => {
+                {leadsP.data.items.map((x) => {
                   const st = LEAD_STATUS[x.status] ?? { label: x.status, tone: "neutral" as const };
                   return (
                     <li key={x.id} className="flex items-center justify-between gap-3 border-b border-ink-50 py-2.5 last:border-b-0">
@@ -207,13 +228,13 @@ export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?
                 })}
               </ul>
             )}
-          </Card>
+          </Card>}
         </div>
 
         <aside className="flex min-w-0 flex-col gap-5 lg:sticky lg:top-6">
           <section aria-label="Statistik" className="flex flex-col gap-3 rounded-md border border-ink-100 bg-white p-5">
             <h2 className="text-title-md">Statistik</h2>
-            <dl className="grid grid-cols-3 gap-2 text-center">
+            <dl className={`grid gap-2 text-center ${readOnly ? "grid-cols-2" : "grid-cols-3"}`}>
               <div>
                 <dd className="text-title-lg">{nf.format(l.viewCount)}</dd>
                 <dt className="text-caption">Dilihat</dt>
@@ -222,13 +243,15 @@ export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?
                 <dd className="text-title-lg">{nf.format(l.ctaClickCount)}</dd>
                 <dt className="text-caption">Klik CTA</dt>
               </div>
-              <div>
-                <dd className="text-title-lg">{data.leads.ok ? nf.format(data.leads.data.total) : "—"}</dd>
-                <dt className="text-caption">Leads</dt>
-              </div>
+              {readOnly ? null : (
+                <div>
+                  <dd className="text-title-lg">{leadsP.ok ? nf.format(leadsP.data.total) : "—"}</dd>
+                  <dt className="text-caption">Leads</dt>
+                </div>
+              )}
             </dl>
           </section>
-          <RefreshCard id={l.id} state={rState} used={data.refresh.ok && data.refresh.data ? data.refresh.data.usedToday : null} allowance={data.refresh.ok && data.refresh.data ? data.refresh.data.allowance : null} defaultDaily={data.refresh.ok && data.refresh.data ? (data.refresh.data.defaultDaily ?? null) : null} extraDaily={data.refresh.ok && data.refresh.data ? (data.refresh.data.extraDaily ?? null) : null} stockRemaining={data.refresh.ok && data.refresh.data ? (data.refresh.data.stockRemaining ?? null) : null} lastRefreshedAt={l.lastRefreshedAt} />
+          {readOnly ? null : <RefreshCard id={l.id} state={rState} used={refreshP.ok && refreshP.data ? refreshP.data.usedToday : null} allowance={refreshP.ok && refreshP.data ? refreshP.data.allowance : null} defaultDaily={refreshP.ok && refreshP.data ? (refreshP.data.defaultDaily ?? null) : null} extraDaily={refreshP.ok && refreshP.data ? (refreshP.data.extraDaily ?? null) : null} stockRemaining={refreshP.ok && refreshP.data ? (refreshP.data.stockRemaining ?? null) : null} lastRefreshedAt={l.lastRefreshedAt} />}
         </aside>
       </div>
     </div>

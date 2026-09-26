@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CONTEXT_COOKIE, contextCookieString, contextLabel, resolveContext } from "./context";
+import { CONTEXT_COOKIE, contextCookieString, contextLabel, isLeaderContext, resolveContext } from "./context";
 import { notificationHref, unreadBadge } from "./notification-link";
 import { searchHref } from "./search-scope";
 
@@ -52,5 +52,14 @@ describe("searchHref", () => {
   it("kosong atau cakupan asing = null", () => {
     expect(searchHref("listing", "  ")).toBeNull();
     expect(searchHref("proyek", "x")).toBeNull();
+  });
+});
+
+describe("isLeaderContext", () => {
+  const org = (role: string) => ({ kind: "org" as const, org: { id: "0f3c1a52-9c1d-4c47-8a55-2b0f6f0a9a11", name: "X", role } });
+  it("hanya pemimpin pada konteks organisasi", () => {
+    expect(isLeaderContext(org("leader"))).toBe(true);
+    expect(isLeaderContext(org("member"))).toBe(false);
+    expect(isLeaderContext({ kind: "personal" })).toBe(false);
   });
 });

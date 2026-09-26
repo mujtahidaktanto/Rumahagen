@@ -16,6 +16,9 @@ export function resolveContext(cookieValue: string | undefined | null, orgs: Con
   return org ? { kind: "org", org } : { kind: "personal" };
 }
 
+/** Pemimpin aktif organisasi pada konteks aktif (boleh melihat semua listing organisasi, baca saja; migration 0162). */
+export const isLeaderContext = (c: ActiveContext) => c.kind === "org" && c.org.role === "leader";
+
 export const contextLabel = (c: ActiveContext) => (c.kind === "org" ? c.org.name : "Pribadi");
 
 /** String cookie untuk klien (berlaku 1 tahun, seluruh situs). */

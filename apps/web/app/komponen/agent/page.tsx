@@ -32,15 +32,16 @@ type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profi
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
-  { id: "l1", title: "Tanah Kavling Siap Bangun 200m² — Cluster Green Valley", status: "draft", location: "Cibubur, Jakarta Timur", priceText: "Rp 850 Jt", viewCount: 12, coverUrl: null, note: { text: "Belum terbit — memakai 1 jatah saat terbit", tone: "normal" } },
-  { id: "l2", title: "Ruko 3 Lantai Siap Pakai Dekat Stasiun Commuter Line", status: "pending_review", location: "Bekasi Timur, Jawa Barat", priceText: "Rp 3,2 M", viewCount: 88, coverUrl: null, note: null },
-  { id: "l3", title: "Rumah Minimalis 2 Lantai Desain Modern Dekat Sekolah Internasional", status: "published", location: "BSD City, Tangerang Selatan", priceText: "Rp 2,1 M", viewCount: 640, coverUrl: null, note: { text: "Tayang sampai 23 Des 2026 · 61 hari lagi", tone: "normal" } },
-  { id: "l4", title: "Apartemen 2BR Full Furnished View Kota", status: "published", location: "Jakarta Selatan", priceText: "Rp 8 Jt/bulan", viewCount: 210, coverUrl: null, note: { text: "Masa tenggang sampai 30 Des 2026 — tetap tampil, lalu kembali ke draf", tone: "warn" } },
+  { id: "l1", title: "Tanah Kavling Siap Bangun 200m² — Cluster Green Valley", status: "draft", location: "Cibubur, Jakarta Timur", priceText: "Rp 850 Jt", viewCount: 12, coverUrl: null, note: { text: "Belum terbit — memakai 1 jatah saat terbit", tone: "normal" }, owner: null, mine: true },
+  { id: "l2", title: "Ruko 3 Lantai Siap Pakai Dekat Stasiun Commuter Line", status: "pending_review", location: "Bekasi Timur, Jawa Barat", priceText: "Rp 3,2 M", viewCount: 88, coverUrl: null, note: null, owner: null, mine: true },
+  { id: "l3", title: "Rumah Minimalis 2 Lantai Desain Modern Dekat Sekolah Internasional", status: "published", location: "BSD City, Tangerang Selatan", priceText: "Rp 2,1 M", viewCount: 640, coverUrl: null, note: { text: "Tayang sampai 23 Des 2026 · 61 hari lagi", tone: "normal" }, owner: null, mine: true },
+  { id: "l4", title: "Apartemen 2BR Full Furnished View Kota", status: "published", location: "Jakarta Selatan", priceText: "Rp 8 Jt/bulan", viewCount: 210, coverUrl: null, note: { text: "Masa tenggang sampai 30 Des 2026 — tetap tampil, lalu kembali ke draf", tone: "warn" }, owner: null, mine: true },
 ];
 
 const ago = (min: number) => new Date(Date.now() - min * 60_000).toISOString();
 
 const filled: DashboardData = {
+  scope: { kind: "personal", label: "Pribadi" },
   identityInReview: false,
   stats: { ok: true, data: { activeListings: 18, views: 2140, leads: 9, points: 320 } },
   listings: {
@@ -71,7 +72,7 @@ const DEMO_ORGS: ContextOrg[] = [
 
 export default async function SampleAgentPage({ searchParams }: Props) {
   if (process.env.HIDE_DEV_PAGES === "1") notFound();
-  const { dashboard = "normal", layar, profil = "terisi", ktp = "belum" } = await searchParams;
+  const { dashboard = "normal", layar, profil = "terisi", ktp = "belum", konteks: konteksDash } = await searchParams;
   if (layar === "profil") {
     const baru = profil === "baru";
     const verified = ktp === "terverifikasi";
@@ -326,15 +327,19 @@ export default async function SampleAgentPage({ searchParams }: Props) {
   if (layar === "listing-detail") {
     const { status = "published" } = await searchParams;
     const gagal = (await searchParams).kuota === "gagal";
+    const ctxDemo = (await searchParams).konteks;
+    const lihatSaja = ctxDemo === "pemimpin";
+    const orgDemo = ctxDemo === "pemimpin" || ctxDemo === "org" ? { id: DEMO_ORGS[0]!.id, name: DEMO_ORGS[0]!.name } : null;
     const photo = (n: number) => ({ url: `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500'><rect width='800' height='500' fill='%23${["dbe7fb", "e3f5ec", "fdeccc"][n % 3]}'/></svg>`)}`, alt: null });
     return (
       <div className="min-h-dvh bg-surface">
         <MyListingDetailView
           data={{
             state: "ok",
+            viewer: { mine: !lihatSaja, creator: lihatSaja ? "Budi Santoso" : null, organization: orgDemo },
             listing: { id: "1a2b3c4d-1111-2222-3333-444455556666", slug: "rumah-minimalis-modern-a1b2c3", title: "Rumah Minimalis 2 Lantai Desain Modern Dekat Sekolah Internasional", status, rejectionReason: status === "rejected" ? "Foto tidak sesuai aturan: memuat watermark pihak lain." : null, transactionType: "sale", category: "secondary", propertyType: "rumah", price: 2100000000, priceUnit: null, isNegotiable: true, address: "Jl. Kenanga Raya No. 12, Cluster Anggrek", location: "Serpong, Tangerang Selatan, Banten", landArea: 150, buildingArea: 120, bedrooms: 3, bathrooms: 2, floors: 2, carportCapacity: 2, certificateType: "shm", description: "Rumah minimalis modern 2 lantai dalam kondisi siap huni, lokasi strategis dekat sekolah internasional dan akses tol. Lingkungan cluster aman dengan keamanan 24 jam.", amenities: ["Carport 2 Mobil", "Keamanan 24 Jam", "Taman"], photos: status === "draft" ? [] : [photo(0), photo(1), photo(2), photo(3)], viewCount: 640, ctaClickCount: 14, lastRefreshedAt: null, publishedAt: status === "draft" ? null : "2026-09-01T03:00:00Z" },
-            leads: gagal ? { ok: false } : { ok: true, data: { total: 9, items: [{ id: "a", source: "whatsapp_cta", createdAt: new Date(Date.now() - 2 * 3600_000).toISOString(), status: "new" }, { id: "b", source: "whatsapp_cta", createdAt: new Date(Date.now() - 26 * 3600_000).toISOString(), status: "contacted" }, { id: "c", source: "whatsapp_cta", createdAt: new Date(Date.now() - 74 * 3600_000).toISOString(), status: "converted" }] } },
-            refresh: gagal ? { ok: false } : { ok: true, data: { allowance: 5, usedToday: 2 } },
+            leads: lihatSaja ? null : gagal ? { ok: false } : { ok: true, data: { total: 9, items: [{ id: "a", source: "whatsapp_cta", createdAt: new Date(Date.now() - 2 * 3600_000).toISOString(), status: "new" }, { id: "b", source: "whatsapp_cta", createdAt: new Date(Date.now() - 26 * 3600_000).toISOString(), status: "contacted" }, { id: "c", source: "whatsapp_cta", createdAt: new Date(Date.now() - 74 * 3600_000).toISOString(), status: "converted" }] } },
+            refresh: lihatSaja ? null : gagal ? { ok: false } : { ok: true, data: { allowance: 5, usedToday: 2 } },
           }}
         />
       </div>
@@ -342,28 +347,28 @@ export default async function SampleAgentPage({ searchParams }: Props) {
   }
   if (layar === "listing") {
     const { kuota = "tersedia", daftar = "isi", status = "semua", konteks } = await searchParams;
-    const orgCtx: ActiveContext = konteks === "org" ? { kind: "org", org: DEMO_ORGS[0]! } : { kind: "personal" };
+    const orgCtx: ActiveContext = konteks === "pemimpin" ? { kind: "org", org: DEMO_ORGS[0]! } : konteks === "org" ? { kind: "org", org: DEMO_ORGS[1]! } : { kind: "personal" };
     const penuh = kuota === "penuh";
     const pro = kuota === "pro";
     const q: MyListingsData["quota"] = kuota === "gagal" ? { ok: false } : { ok: true, data: { scope: "personal", free: bucket(25, penuh ? 25 : kuota === "hampir" ? 23 : 7, "2026-09-30T17:00:00Z"), pro: { ...bucket(75, pro ? 12 : 0, "2026-10-14T00:00:00Z"), active: pro }, purchased: { balance: penuh ? 0 : pro ? 5 : 0 }, total_remaining: penuh ? 0 : kuota === "hampir" ? 2 : pro ? 81 : 18, validity_days: 90, grace_days: 7 } };
     const list: MyListingsData["list"] = daftar === "gagal" ? { ok: false } : daftar === "kosong" ? { ok: true, data: { items: [], filteredTotal: 0, total: 0, counts: {} } } : { ok: true, data: { items: status === "semua" ? sampleListings : sampleListings.filter((x) => x.status === status), filteredTotal: 47, total: 47, counts: { draft: 4, pending_review: 1, published: 32, sold: 5, rented: 3, expired: 2, rejected: 0, suspended: 0 } } };
     return (
       <div className="min-h-dvh bg-surface">
-        <MyListingsView data={{ list, quota: q }} search={{ status: (status as never) ?? "semua", tampil: 12 }} context={orgCtx} />
+        <MyListingsView data={{ list: konteks === "pemimpin" && list.ok ? { ok: true, data: { ...list.data, items: list.data.items.map((x, i) => ({ ...x, owner: i % 2 === 0 ? "Anda" : "Budi Santoso", mine: i % 2 === 0 })) } } : list, quota: q }} search={{ status: (status as never) ?? "semua", tampil: 12 }} context={orgCtx} />
       </div>
     );
   }
   const data: DashboardData =
     dashboard === "kosong"
-      ? { identityInReview: false, stats: { ok: true, data: { activeListings: 0, views: 0, leads: 0, points: null } }, listings: { ok: true, data: [] }, notifications: { ok: true, data: { unread: 0, items: [] } } }
+      ? { scope: { kind: "personal", label: "Pribadi" }, identityInReview: false, stats: { ok: true, data: { activeListings: 0, views: 0, leads: 0, points: null } }, listings: { ok: true, data: [] }, notifications: { ok: true, data: { unread: 0, items: [] } } }
       : dashboard === "gagal"
-        ? { identityInReview: false, stats: { ok: false }, listings: { ok: false }, notifications: { ok: false } }
+        ? { scope: { kind: "personal", label: "Pribadi" }, identityInReview: false, stats: { ok: false }, listings: { ok: false }, notifications: { ok: false } }
         : dashboard === "ktp"
           ? { ...filled, identityInReview: true }
           : filled;
   return (
     <div className="min-h-dvh bg-surface">
-      <DashboardView name="Rian Saputra" data={data} />
+      <DashboardView name="Rian Saputra" data={konteksDash === "pemimpin" ? { ...data, scope: { kind: "org_leader", label: DEMO_ORGS[0]!.name } } : konteksDash === "org" ? { ...data, scope: { kind: "org_member", label: DEMO_ORGS[1]!.name } } : data} />
     </div>
   );
 }

@@ -1,9 +1,10 @@
-// app/agent/listing/[id]/page.tsx — Detail Listing milik Agent (M03 Listing-Detail). Hanya pemilik yang melihat (listing orang lain/tidak ada = "tidak ditemukan"); data lib/agent/listing-detail-data.ts.
+// app/agent/listing/[id]/page.tsx — Detail Listing milik Agent (M03 Listing-Detail). Dibuka untuk pemilik, atau pemimpin organisasi pemilik listing (baca saja); selain itu/tidak ada = "tidak ditemukan"; data lib/agent/listing-detail-data.ts.
 import { notFound } from "next/navigation";
 import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
 import { LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
 import { getMyListingDetail } from "@/lib/agent/listing-detail-data";
+import { getMyContextOrgs } from "@/lib/agent/shell-data";
 import { requireArea } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ type Props = { params: Promise<{ id: string }> };
 export default async function MyListingDetailPage({ params }: Props) {
   const { id } = await params;
   const user = await requireArea("agent");
-  const res = await getMyListingDetail(id, user.id);
+  const res = await getMyListingDetail(id, user.id, await getMyContextOrgs(user.id));
   if (res.state === "not_found") notFound();
   if (res.state === "error") {
     return (

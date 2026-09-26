@@ -234,9 +234,10 @@ Layar: `/agent/organisasi` (belum tergabung: Undangan untuk Anda + Buat/Cari; su
 Tanpa migration (0140 sudah menyediakan kolom, trigger keanggotaan, dan kuota per pemilik). Kode: `lib/agent/listing-data.ts` (`getMyListingsData(userId, search, context)`), `listing-wizard.ts` (`organizationId`), `ListingWizard.tsx` (langkah Mulai), `MyListingsView.tsx`. Belum diuji dengan login Agent.
 1. **Wizard:** langkah Mulai kini memilih Pribadi / Organisasi (bawaan = konteks aktif; pemilih organisasi bila diikuti >1). Kuota dimuat ulang per pilihan (`?organization_id=`), ringkasan memakai "Pemilik kuota". Terkunci saat edit (organisasi listing tidak dipindah lewat UI; DB juga menolak bila jatah aktif).
 2. **Listing Saya:** daftar, jumlah per status, dan kartu kuota mengikuti konteks aktif (Pribadi = `organization_id` kosong; organisasi = listing yang dibuat sendiri atas nama organisasi itu; kuota = kuota bersama organisasi).
-3. **Batasan RLS:** `listings_select` hanya membuka baris milik sendiri atau yang `published`, sehingga anggota tidak melihat draf/listing tidak terbit milik rekan. "Listing Saya" pada konteks organisasi bukan "semua listing organisasi". Bila pemilik ingin pemimpin/anggota melihat listing organisasi, itu butuh perubahan RLS (tanya dulu).
+3. ~~Batasan RLS~~ SELESAI (migration 0162, diterapkan): pemimpin melihat semua listing organisasi (baca saja), tidak pernah listing pribadi anggota; anggota tetap hanya miliknya.
 4. **Organisasi berstatus closing** masih muncul di pilihan (trigger DB hanya memeriksa keanggotaan). Bila penerbitan di organisasi yang sedang ditutup harus dilarang, perlu aturan DB.
-5. Statistik/Dashboard Agent dan detail listing belum menyaring menurut konteks (tetap semua listing milik sendiri).
+5. ~~Dashboard dan detail listing belum menyaring konteks~~ SELESAI: Dashboard (angka + Listing Terbaru) mengikuti konteks (pemimpin = angka organisasi; anggota = listing organisasinya, angka tetap pribadi karena statistik organisasi hanya untuk pemimpin); Detail Listing menampilkan pemilik kuota dan mode Hanya lihat untuk pemimpin (tanpa aksi, leads, refresh).
+6. Halaman Statistik penuh (/agent/statistik, Fase 4) belum ada; RPC statistik organisasi sudah diperbaiki di 0162 agar tidak membuka listing pribadi anggota.
 
 ## Catatan performa
 

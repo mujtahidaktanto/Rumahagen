@@ -8,7 +8,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { ListingStatusBadge } from "@/components/ui/StatusBadge";
 import { BuildingIcon, EyeIcon, PinIcon } from "@/components/ui/icons";
-import { contextLabel, type ActiveContext } from "@/lib/agent/context";
+import { contextLabel, isLeaderContext, type ActiveContext } from "@/lib/agent/context";
 import type { MyListingsData } from "@/lib/agent/listing-data";
 import { MY_LISTING_STATUSES, myListingsQuery, MY_LISTING_PAGE_SIZE, type MyListingsSearch } from "@/lib/agent/listing-params";
 import { cn } from "@/lib/cn";
@@ -19,6 +19,7 @@ const NOTE_CLS = { normal: "text-ink-500", warn: "text-warning-600", danger: "te
 
 export function MyListingsView({ data, search, context }: { data: MyListingsData; search: MyListingsSearch; context: ActiveContext }) {
   const isOrg = context.kind === "org";
+  const isLeader = isLeaderContext(context);
   const list = data.list.ok ? data.list.data : null;
   const chips: { key: "semua" | (typeof MY_LISTING_STATUSES)[number]; label: string; count: number }[] = list
     ? [{ key: "semua", label: "Semua", count: list.total }, ...MY_LISTING_STATUSES.map((k) => ({ key: k, label: k, count: list.counts[k] ?? 0 }))]
@@ -32,7 +33,7 @@ export function MyListingsView({ data, search, context }: { data: MyListingsData
       </div>
       <p role="note" className="-mt-2 text-body-md text-ink-500">
         Konteks: <strong className="text-ink-900">{contextLabel(context)}</strong>
-        {isOrg ? " — listing yang Anda buat atas nama organisasi ini, memakai kuota bersama organisasi. Ganti konteks lewat pengalih di bilah atas." : " — listing pribadi Anda, memakai kuota pribadi. Listing atas nama organisasi tampil saat konteks organisasi dipilih."}
+        {isLeader ? " — semua listing atas nama organisasi ini (baca saja untuk listing anggota lain), memakai kuota bersama organisasi. Listing pribadi anggota tidak tampil. Ganti konteks lewat pengalih di bilah atas." : isOrg ? " — listing yang Anda buat atas nama organisasi ini, memakai kuota bersama organisasi. Ganti konteks lewat pengalih di bilah atas." : " — listing pribadi Anda, memakai kuota pribadi. Listing atas nama organisasi tampil saat konteks organisasi dipilih."}
       </p>
 
       <ListingQuotaCard quota={data.quota} />
@@ -119,6 +120,7 @@ export function MyListingsView({ data, search, context }: { data: MyListingsData
                         <span className="truncate">{l.location}</span>
                       </span>
                     ) : null}
+                    {l.owner ? <span className="text-caption">Dibuat oleh {l.owner}{l.mine ? "" : " · hanya lihat"}</span> : null}
                     {l.note ? <span className={cn("text-caption", NOTE_CLS[l.note.tone])}>{l.note.text}</span> : null}
                     <div className="mt-auto flex items-center justify-between gap-3 pt-1">
                       <span className="text-title-md text-blue-600">{l.priceText}</span>
