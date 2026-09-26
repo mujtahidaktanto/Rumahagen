@@ -20,6 +20,10 @@ import { NotificationCenter } from "@/components/notifications/NotificationCente
 import type { CenterNotification, NotificationCenterData } from "@/lib/agent/notification-data";
 import { parseNotificationSearch, type NotificationArea } from "@/lib/agent/notification-rules";
 import { CatalogView } from "@/components/agent/CatalogView";
+import { StatsView } from "@/components/agent/StatsView";
+import { parseStatsSearch } from "@/lib/agent/stats-view";
+import { assembleAgentStats, type AgentSummary, type DailyRow } from "@/lib/analytics/agent-stats";
+import { enumerateDays, previousRange } from "@/lib/analytics/period";
 import { ClaimsView } from "@/components/agent/ClaimsView";
 import type { ClaimItem, ClaimsData } from "@/lib/agent/claim-data";
 import { DbrCalculatorView, DbrDetailView, DbrHistoryView } from "@/components/agent/DbrViews";
@@ -40,7 +44,7 @@ import { EMPTY_WIZARD, WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wi
 
 export const metadata: Metadata = { title: "Contoh Layar Agent | RumahAgen", robots: { index: false, follow: false } };
 
-type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string; konteks?: string; keadaan?: string; area?: string; filter?: string; tampil?: string; tersembunyi?: string }> };
+type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string; konteks?: string; keadaan?: string; area?: string; rentang?: string; dari?: string; sampai?: string; bandingkan?: string; cakupan?: string; filter?: string; tampil?: string; tersembunyi?: string }> };
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
@@ -354,6 +358,72 @@ export default async function SampleAgentPage({ searchParams }: Props) {
             refresh: lihatSaja ? null : gagal ? { ok: false } : { ok: true, data: { allowance: 5, usedToday: 2 } },
           }}
         />
+      </div>
+    );
+  }
+  if (layar === "statistik") {
+    const sp = await searchParams;
+    const keadaan = sp.keadaan ?? "normal";
+    const ORG = "0db7b607-a7fa-41af-adbf-052707bf79fc";
+    const today = "2026-09-26";
+    const leaderOrgs = keadaan === "anggota" ? [] : [{ id: ORG, name: "PT Properti Jaya Sejahtera" }];
+    const state = parseStatsSearch(sp as Record<string, string | undefined>, today, leaderOrgs.map((o) => o.id), null);
+    const rows = (from: string, to: string, k: number): DailyRow[] =>
+      enumerateDays(from, to).flatMap((d, i) => [
+        { m_key: "views", m_day: d, m_value: Math.round((40 + 25 * Math.sin(i * 0.6)) * k) },
+        { m_key: "leads", m_day: d, m_value: Math.round((2 + 1.5 * Math.sin(i * 0.5 + 1)) * k) },
+        { m_key: "refresh_used", m_day: d, m_value: i % 3 === 0 ? 4 : 2 },
+        { m_key: "points_earned", m_day: d, m_value: i % 5 === 0 ? 20 : 0 },
+        { m_key: "dbr_simulations", m_day: d, m_value: i % 4 === 0 ? 1 : 0 },
+      ]);
+    const own: AgentSummary = {
+      listing_status: { published: 18, pending_review: 2, draft: 3, expired: 4, sold: 3, rented: 1, rejected: 1 },
+      lead_pipeline: { new: 9, contacted: 14, converted: 5, lost: 6 },
+      active_listings: 18,
+      stale_listings: 3,
+      top_listings: [
+        { listing_id: "1a2b3c4d-1111-2222-3333-444455556666", title: "Rumah Minimalis 2 Lantai Desain Modern Dekat Sekolah Internasional di BSD City", status: "published", views: 420, leads: 21 },
+        { listing_id: "l2", title: "Ruko 3 Lantai Siap Pakai", status: "published", views: 310, leads: 16 },
+        { listing_id: "l3", title: "Tanah Kavling Siap Bangun", status: "published", views: 0, leads: 0 },
+      ],
+      quota: { has_pool: true, allowance: 10, used_today: 7, default_daily: 5, extra_daily: 5, stock_remaining: 12 } as never,
+      entitlements: [{ type: "R50:listing_refresh", capacity: 50, ends_at: null }, { type: "refresh_bonus", capacity: 5, ends_at: "2026-10-20T00:00:00Z" }],
+      learning: { courses_in_progress: 2, avg_progress_percent: 45, points_balance: 320, certificates_total: 3, awards_active: 1 },
+      dbr: { total: 12, layak: 7, perlu_review: 3, tidak_layak: 2, saved_prospects: 5, shared: 4 },
+    };
+    const orgSummary: AgentSummary = {
+      ...own,
+      quota: undefined,
+      entitlements: undefined,
+      learning: undefined,
+      dbr: undefined,
+      members: [
+        { name: "Rian Saputra", is_leader: true, is_self: true, active_listings: 8, views: 1420, leads: 72, refresh: 35 },
+        { name: "Dewi Anggraini dengan Nama yang Panjang untuk Menguji Pemotongan Teks", is_leader: false, is_self: false, active_listings: 12, views: 980, leads: 41, refresh: 25 },
+      ],
+    };
+    const empty: AgentSummary = { listing_status: {}, lead_pipeline: {}, active_listings: 0, stale_listings: 0, top_listings: [], quota: { has_pool: false, allowance: 0, used_today: 0 } };
+    const pr = previousRange(state.from, state.to);
+    const previous = state.compare ? rows(pr.from, pr.to, 0.8) : null;
+    const orgMode = state.org !== null;
+    const stats =
+      keadaan === "gagal"
+        ? null
+        : assembleAgentStats({
+            scope: orgMode ? "organization" : "own",
+            organizationId: state.org,
+            from: state.from,
+            to: state.to,
+            compare: state.compare,
+            current: keadaan === "kosong" ? [] : rows(state.from, state.to, 1),
+            previous: keadaan === "kosong" ? (state.compare ? [] : null) : previous,
+            summary: keadaan === "kosong" ? empty : orgMode ? orgSummary : own,
+            benchmark: orgMode ? null : keadaan === "tanpa_pembanding" ? { available: false, sample_size: 12, min_sample: 30 } : { available: true, sample_size: 412, min_sample: 30, metrics: [{ key: "views", percentile: 78.5 }, { key: "leads", percentile: 64 }, { key: "conversion", percentile: 51.2 }] },
+            generatedAt: new Date().toISOString(),
+          });
+    return (
+      <div className="min-h-dvh bg-surface">
+        <StatsView stats={stats} state={state} leaderOrgs={leaderOrgs} />
       </div>
     );
   }

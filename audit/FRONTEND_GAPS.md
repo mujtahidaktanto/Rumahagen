@@ -282,6 +282,18 @@ Tanpa migration dan tanpa perubahan API. Rute `/agent/klaim`; kode: `lib/agent/c
 6. Proyek yang tidak terbaca (mis. sudah tidak tayang) tampil "Proyek tidak tersedia"; klaimnya tetap muncul.
 7. Notifikasi klaim masuk untuk developer (tipe sama, `lainnya`) tanpa tombol Buka sampai layar Klaim Masuk Partner dibangun (Fase Partner).
 
+## 2026-09-26 — Fase 4e: Statistik Saya (halaman penuh, M08)
+
+Tanpa migration dan tanpa perubahan API: memakai `loadAgentStats` (RPC `agent_statistics_daily/summary/benchmark`, sama dengan `GET /api/agents/me/statistics`) langsung di server, dan `GET /api/agents/me/statistics/export` untuk unduhan. Rute `/agent/statistik`; kode: `lib/agent/stats-view.ts` (diuji), `components/agent/{StatsView,StatsCharts,StatsExport}.tsx`. Filter lewat URL (`?rentang=7|14|30|bulan|kustom&dari=&sampai=&bandingkan=0&cakupan=organisasi&org=`). Grafik = SVG murni server-render (tanpa pustaka, nol JavaScript klien untuk grafik). Pintasan "Statistik Saya" di Dashboard kini aktif. Contoh: `/komponen/agent?layar=statistik&keadaan=normal|kosong|gagal|anggota|tanpa_pembanding&cakupan=organisasi&org=...&rentang=...`. Ekspor belum diuji dengan login (perlu izin `m08.dashboard_projection.export`).
+1. **Rentang kustom dibatasi 120 hari** (wireframe), lebih ketat dari API (366 hari); tanggal akhir dijepit ke hari ini; rentang tidak valid = 30 hari terakhir + pesan.
+2. **Tab Organisasi hanya untuk pemimpin aktif** (organisasi berstatus aktif/closing); anggota biasa tidak melihat tab itu, dan bila memaksa lewat URL DB menolak (keadaan gagal). Pemimpin beberapa organisasi memilih organisasinya lewat tab bernama.
+3. **Cakupan organisasi hanya menghitung listing atas nama organisasi** (migration 0162). Kolom "Refresh" per anggota tetap agregat orang (jatah refresh melekat pada orangnya), jadi bisa mencakup listing pribadi anggota; ada catatan di layar. Konversi harian dan grafik konversi tidak ada (API hanya memberi satu angka konversi periode); wireframe menampilkan grafik konversi.
+4. **Pipeline lead** memakai label "Konversi" (bukan "Berhasil (converted)") mengikuti label Listing Saya. Kondisi listing memakai terjemahan status (bukan nilai mentah) sesuai wireframe.
+5. **Tidak ada pembaruan otomatis** (data dibaca saat halaman dibuka); stempel waktu `generated_at` belum ditampilkan.
+6. **Perbandingan anonim** butuh minimal 30 agen aktif; sampai itu tercapai kartu menampilkan penjelasan (kemungkinan besar di staging).
+7. **Angka besar di kartu Learning/DBR** mengikuti isi RPC (learning tidak difilter rentang, DBR difilter rentang).
+8. Ekspor memakai fetch + unduh blob agar galat (izin, batas laju) tampil di dialog; pada sesi habis pengguna dialihkan ke login.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
