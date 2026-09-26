@@ -75,9 +75,17 @@ describe("validateStep", () => {
 });
 
 describe("payload", () => {
+  it("create atas nama organisasi: konteks organization + organization_id; update tidak mengirim keduanya", () => {
+    const org = { ...full, organizationId: "0f3c1a52-9c1d-4c47-8a55-2b0f6f0a9a11" };
+    expect(toCreatePayload(org)).toMatchObject({ listing_context: "organization", organization_id: "0f3c1a52-9c1d-4c47-8a55-2b0f6f0a9a11" });
+    const up = toUpdatePayload(org);
+    expect(up).not.toHaveProperty("listing_context");
+    expect(up).not.toHaveProperty("organization_id");
+  });
   it("create: angka terurai dan bidang kosong dihilangkan", () => {
     const p = toCreatePayload(full);
     expect(p).toMatchObject({ category: "secondary", transaction_type: "sale", title: "Rumah Minimalis 2 Lantai BSD City", property_type: "rumah", price: 850000000, price_unit: "total", land_area: 150, building_area: 120.5, bedrooms: 3, bathrooms: 2, whatsapp_number: "0812-3456-7890", listing_context: "personal" });
+    expect(p).not.toHaveProperty("organization_id");
     expect(p).not.toHaveProperty("floors");
     expect(p).not.toHaveProperty("certificate_type");
     expect(p).not.toHaveProperty("meta_title");

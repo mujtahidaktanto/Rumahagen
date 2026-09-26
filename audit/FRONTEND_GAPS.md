@@ -216,7 +216,7 @@ Layar: `/agent/organisasi` (belum tergabung: Undangan untuk Anda + Buat/Cari; su
 4. **Pencarian undangan** hanya menemukan Agent dengan profil publik (nama atau nomor lisensi, minimal 2 huruf). Undangan berlaku 7 hari (bawaan UI; API menerima `expires_at`).
 5. **Keluar dari organisasi** hanya untuk anggota biasa; keluarnya leader menutup organisasi (trigger `org_closing_on_lead_exit`), jadi leader memakai Tutup Organisasi. Tidak ada pengalihan leader (transfer kepemimpinan) di API.
 6. **Kuota organisasi** memakai kartu kuota yang sama dengan Listing Saya (lingkup organisasi); tautan "Beli Slot" dan "Lihat Paket Pro" tetap "segera hadir" sampai layar Komersial ada.
-7. Konteks organisasi di Wizard Listing (memilih listing pribadi atau organisasi) belum ada: `POST /listings` menerima `organization_id` tetapi Wizard belum menawarkannya (dikerjakan saat kuota/konteks dibahas).
+7. ~~Konteks organisasi di Wizard Listing~~ SELESAI 2026-09-26 (lihat bagian "Konteks organisasi pada Listing" di bawah).
 8. **Dashboard Agent:** angka/notifikasi undangan organisasi belum tampil di Dashboard; undangan baru terlihat di Organisasi dan Pusat Notifikasi (Fase 4).
 
 ## 2026-09-26 — Topbar desktop Agent (cari, Context Switcher, lonceng notifikasi)
@@ -224,10 +224,19 @@ Layar: `/agent/organisasi` (belum tergabung: Undangan untuk Anda + Buat/Cari; su
 `components/shell/{AgentTopbar,TopbarSearch,NotificationBell,ContextSwitcher,use-dismiss}`, data `lib/agent/shell-data.ts` (dimuat di `app/agent/layout.tsx`), aturan murni `lib/agent/{context,notification-link,search-scope}.ts` (diuji). Kerangka `AppShell` menerima `desktopTop`, `mobileTop`, `drawerTop`. Contoh: `/komponen/shell?notif=ada|kosong|gagal&org=ada|tanpa|aktif`. Belum diuji dengan login Agent.
 1. **Cari:** cakupan Listing / Agen / Event yang membuka halaman publik dengan `?q=` (bukan pencarian global lintas entitas dan bukan pencarian listing milik sendiri; belum ada API pencarian global).
 2. **Lonceng:** angka belum dibaca + panel 6 notifikasi terbaru; klik = tandai dibaca lalu buka tujuan bila ada (event, listing, sesi, sertifikat, organisasi); "Tandai semua dibaca". **Halaman Pusat Notifikasi (semua notifikasi, filter) belum ada** (Fase 4), jadi tidak ada tautan "Lihat semua". Angka dimuat ulang tiap pindah halaman, tanpa polling atau push realtime.
-3. **Context Switcher:** Pribadi + organisasi yang diikuti (active atau closing), disimpan di cookie `ra_ctx` dan divalidasi server terhadap keanggotaan. **Baru mempengaruhi layar Organisasi** (organisasi yang ditampilkan). Daftar dan kuota Listing Saya tetap pribadi karena Wizard belum menawarkan listing organisasi (kuota organisasi memang tidak dipakai listing pribadi); wireframe menginginkan daftar, izin, dan kuota ikut berganti: dikerjakan bersama pilihan konteks di Wizard.
+3. **Context Switcher:** Pribadi + organisasi yang diikuti (active atau closing), disimpan di cookie `ra_ctx` dan divalidasi server terhadap keanggotaan. Mempengaruhi layar Organisasi dan Listing Saya (kuota dan daftar), serta pemilik kuota bawaan Wizard (organisasi yang ditampilkan). Daftar dan kuota Listing Saya tetap pribadi karena Wizard belum menawarkan listing organisasi (kuota organisasi memang tidak dipakai listing pribadi); wireframe menginginkan daftar, izin, dan kuota ikut berganti: dikerjakan bersama pilihan konteks di Wizard.
 4. **Judul halaman tidak di topbar:** tiap layar sudah memuat judulnya sendiri, jadi topbar tidak mengulang judul seperti wireframe. Avatar menuju Profil Saya (menu Keluar tetap di rel).
 5. **Layar sempit:** lonceng di bilah atas, Context Switcher di laci, kolom Cari belum ada di mobile.
 6. **Persona lain (Admin, Partner, Instructor) belum punya topbar;** komponen lonceng dan Cari bisa dipakai ulang, Context Switcher hanya untuk Agent (wireframe Partner tanpa Context Switcher).
+
+## 2026-09-26 — Konteks organisasi pada Listing (Wizard + Listing Saya)
+
+Tanpa migration (0140 sudah menyediakan kolom, trigger keanggotaan, dan kuota per pemilik). Kode: `lib/agent/listing-data.ts` (`getMyListingsData(userId, search, context)`), `listing-wizard.ts` (`organizationId`), `ListingWizard.tsx` (langkah Mulai), `MyListingsView.tsx`. Belum diuji dengan login Agent.
+1. **Wizard:** langkah Mulai kini memilih Pribadi / Organisasi (bawaan = konteks aktif; pemilih organisasi bila diikuti >1). Kuota dimuat ulang per pilihan (`?organization_id=`), ringkasan memakai "Pemilik kuota". Terkunci saat edit (organisasi listing tidak dipindah lewat UI; DB juga menolak bila jatah aktif).
+2. **Listing Saya:** daftar, jumlah per status, dan kartu kuota mengikuti konteks aktif (Pribadi = `organization_id` kosong; organisasi = listing yang dibuat sendiri atas nama organisasi itu; kuota = kuota bersama organisasi).
+3. **Batasan RLS:** `listings_select` hanya membuka baris milik sendiri atau yang `published`, sehingga anggota tidak melihat draf/listing tidak terbit milik rekan. "Listing Saya" pada konteks organisasi bukan "semua listing organisasi". Bila pemilik ingin pemimpin/anggota melihat listing organisasi, itu butuh perubahan RLS (tanya dulu).
+4. **Organisasi berstatus closing** masih muncul di pilihan (trigger DB hanya memeriksa keanggotaan). Bila penerbitan di organisasi yang sedang ditutup harus dilarang, perlu aturan DB.
+5. Statistik/Dashboard Agent dan detail listing belum menyaring menurut konteks (tetap semua listing milik sendiri).
 
 ## Catatan performa
 

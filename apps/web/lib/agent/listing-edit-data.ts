@@ -44,6 +44,7 @@ export async function getWizardSource(id: string, userId: string): Promise<Wizar
   const videos = (data.videos ?? []).map((x) => ({ id: x.id, url: x.url, kind: (x.type === "virtual_tour" ? "virtual_tour" : "video") as "video" | "virtual_tour" }));
   const values: WizardValues = {
     ...EMPTY_WIZARD,
+    organizationId: str(data.organization_id),
     title: str(data.title),
     category: data.category === "primary" ? "primary" : "secondary",
     transactionType: data.transaction_type === "rent" ? "rent" : "sale",

@@ -3,7 +3,7 @@
 // components/agent/ListingWizard.tsx — Wizard Buat/Edit Listing (M03, wireframe 01-Agent/M03-Create-Listing-Wizard): 9 langkah (Mulai, Kategori, Lokasi, Detail, Harga, Legalitas, Media, Kontak,
 // Terbitkan). Mode: baru (POST /listings lalu fasilitas dan media), salin (isian dari listing lain, tanpa media), edit (PUT /listings/{id} + selisih fasilitas/media). Data disimpan di server hanya saat
 // "Simpan sebagai Draf"/"Terbitkan"; API POST /listings butuh semua kolom wajib sehingga tidak bisa menyimpan draf parsial per langkah. Terbit = PATCH status published (memakai kuota; 409 bila habis;
-// listing tetap tersimpan sebagai draf). Foto: dipilih dari perangkat (hingga 25 MB), dikecilkan di browser jadi tiga varian WebP/JPEG (<3 MB) dan diunggah setelah listing dibuat; video hanya tautan https. Konteks organisasi belum tersedia (Fase 3f).
+// listing tetap tersimpan sebagai draf). Foto: dipilih dari perangkat (hingga 25 MB), dikecilkan di browser jadi tiga varian WebP/JPEG (<3 MB) dan diunggah setelah listing dibuat; video hanya tautan https. Pemilik kuota (Pribadi atau organisasi yang diikuti) dipilih di langkah Mulai; bawaannya konteks aktif Context Switcher, dan terkunci saat edit.
 import Link from "next/link";
 import type { Route } from "next";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -16,6 +16,7 @@ import { ApiClientError, api, newIdempotencyKey } from "@/lib/api-client";
 import { loadSource, makeListingVariants, pickProblem } from "@/lib/media/image-processing";
 import { uploadListingPhoto, type ProcessedPhoto } from "@/lib/media/upload";
 import { listingPhotoUrl } from "@/lib/media/variants";
+import type { ContextOrg } from "@/lib/agent/context";
 import { quotaLevel } from "@/lib/agent/listing-quota";
 import { publishErrorMessage } from "@/lib/agent/listing-rules";
 import {
@@ -44,6 +45,8 @@ export type WizardProps = {
   existingVideos?: (Media & { kind: "video" | "virtual_tour" })[];
   /** Langkah awal (mis. "media" dari tombol Kelola Media). */
   startStep?: StepKey;
+  /** Organisasi yang diikuti (pilihan pemilik kuota di langkah Mulai). */
+  orgs?: ContextOrg[];
 };
 
 const nf = new Intl.NumberFormat("id-ID");
@@ -125,16 +128,22 @@ export function ListingWizard(p: WizardProps) {
   const districts = useOptions("/ref-districts", { city_id: v.cityId }, !!v.cityId);
   const amenities = useOptions("/amenities", {}, idx >= 3);
 
+  const orgs = p.orgs ?? [];
+  const chosenOrg = orgs.find((o) => o.id === v.organizationId);
+  // Organisasi listing yang sudah ada bisa tidak ada di daftar (mis. Anda sudah keluar): tetap ditampilkan sebagai organisasi.
+  const ownerLabel = v.organizationId ? (chosenOrg?.name ?? "Organisasi") : "Pribadi";
+
   useEffect(() => {
     let live = true;
+    setQuota("memuat");
     api
-      .get<ListingQuotaSummary>("/agents/me/listing-quota", undefined, { redirectOnUnauthenticated: false })
+      .get<ListingQuotaSummary>("/agents/me/listing-quota", v.organizationId ? { organization_id: v.organizationId } : undefined, { redirectOnUnauthenticated: false })
       .then((r) => live && setQuota({ ok: true, data: r.data }))
       .catch(() => live && setQuota({ ok: false }));
     return () => {
       live = false;
     };
-  }, []);
+  }, [v.organizationId]);
 
   const level = quota !== "memuat" && quota.ok ? quotaLevel(quota.data.total_remaining) : null;
   const dirtyPrice = useMemo(() => parseNumber(v.price), [v.price]);
@@ -351,12 +360,37 @@ export function ListingWizard(p: WizardProps) {
             <div className="flex flex-col gap-2.5">
               <span className="text-label-lg">Pemilik Kuota & Konteks</span>
               <div role="radiogroup" aria-label="Pemilik kuota" className="grid gap-3 sm:grid-cols-2">
-                <Choice checked title="Personal" hint="Milik akun Anda sendiri" onClick={() => undefined} />
-                <Choice checked={false} disabled title="Organisasi" hint="Tampil di bawah nama kantor · segera hadir (Fase 3f)" onClick={() => undefined} />
+                <Choice checked={!v.organizationId} disabled={edit} title="Pribadi" hint="Milik akun Anda sendiri · memakai kuota pribadi" onClick={() => set("organizationId", "")} />
+                <Choice
+                  checked={!!v.organizationId}
+                  disabled={edit || orgs.length === 0}
+                  title="Organisasi"
+                  hint={orgs.length === 0 ? "Anda belum menjadi anggota organisasi aktif" : "Tampil atas nama organisasi · memakai kuota bersama organisasi"}
+                  onClick={() => set("organizationId", v.organizationId || orgs[0]!.id)}
+                />
               </div>
-              <p className="text-caption">Menerbitkan listing memakai kuota pemiliknya. Kuota organisasi dipakai bersama seluruh anggota aktif.</p>
+              {v.organizationId && !edit && orgs.length > 1 ? (
+                <Field label="Organisasi">
+                  {(a) => (
+                    <Select value={v.organizationId} onChange={(e) => set("organizationId", e.target.value)} {...a}>
+                      {orgs.map((o) => (
+                        <option key={o.id} value={o.id}>
+                          {o.name}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                </Field>
+              ) : v.organizationId ? (
+                <p className="text-body-md">
+                  Organisasi: <strong>{ownerLabel}</strong>
+                </p>
+              ) : null}
+              <p className="text-caption">
+                {edit ? "Pemilik kuota tidak bisa diganti setelah listing dibuat. " : ""}Menerbitkan listing memakai kuota pemiliknya. Kuota organisasi dipakai bersama seluruh anggota aktif, dan listing tampil atas nama organisasi.
+              </p>
             </div>
-            <QuotaNote quota={quota} level={level} />
+            <QuotaNote quota={quota} level={level} owner={v.organizationId ? ownerLabel : null} />
           </>
         ) : null}
 
@@ -667,14 +701,14 @@ export function ListingWizard(p: WizardProps) {
         {isFinal ? (
           <>
             <Header title="Preview & Terbitkan" text="Periksa kembali sebelum menerbitkan. Listing langsung tayang tanpa menunggu moderasi." />
-            <Summary title="Konteks & Kategori" onEdit={() => goto("mulai")} rows={[["Judul", v.title.trim()], ["Konteks", "Personal"], ["Kategori / Transaksi", `${v.category === "primary" ? "Primary" : "Secondary"} · ${v.transactionType === "rent" ? "Disewakan" : "Dijual"}`]]} />
+            <Summary title="Konteks & Kategori" onEdit={() => goto("mulai")} rows={[["Judul", v.title.trim()], ["Pemilik kuota", ownerLabel], ["Kategori / Transaksi", `${v.category === "primary" ? "Primary" : "Secondary"} · ${v.transactionType === "rent" ? "Disewakan" : "Dijual"}`]]} />
             <Summary title="Lokasi & Properti" onEdit={() => goto("lokasi")} rows={[["Alamat", v.address.trim()], ["Wilayah", [districts.items.find((x) => x.id === v.districtId)?.name, cities.items.find((x) => x.id === v.cityId)?.name, provinces.items.find((x) => x.id === v.provinceId)?.name].filter(Boolean).join(", ") || "—"], ["Spesifikasi", specLine(v, typeLabel) || "—"]]} />
             <Summary title="Harga & Legalitas" onEdit={() => goto("harga")} rows={[["Harga", `${dirtyPrice ? formatListingPrice(dirtyPrice, v.priceUnit === "total" ? null : v.priceUnit) : "—"}${v.isNegotiable ? " (nego)" : ""}`], ["Sertifikat", v.certificateType ? `${CERTIFICATE_LABEL[v.certificateType] ?? v.certificateType}${v.certificateTransferred ? " · Bisa dibalik nama" : ""}` : "—"]]} />
             <Summary title="Media & Kontak" onEdit={() => goto("media")} rows={[["Media", `${v.photoUrls.length} foto${v.videoUrls.length ? ` · ${v.videoUrls.length} video` : ""}`], ["WhatsApp", v.whatsapp.trim()]]} />
             {!edit ? (
               <div className="rounded-md border border-ink-100 p-4">
                 <p className="mb-2 text-label-lg">Kuota & Masa Tayang</p>
-                <QuotaNote quota={quota} level={level} />
+                <QuotaNote quota={quota} level={level} owner={v.organizationId ? ownerLabel : null} />
                 {quota !== "memuat" && quota.ok ? <p className="mt-2 text-caption">Masa tayang {quota.data.validity_days} hari + {quota.data.grace_days} hari masa tenggang. Urutan pemakaian: Gratis → Pro → Slot beli.</p> : null}
               </div>
             ) : null}
@@ -750,7 +784,7 @@ function Summary({ title, rows, onEdit }: { title: string; rows: [string, string
   );
 }
 
-function QuotaNote({ quota, level }: { quota: { ok: true; data: ListingQuotaSummary } | { ok: false } | "memuat"; level: ReturnType<typeof quotaLevel> | null }) {
+function QuotaNote({ quota, level, owner }: { quota: { ok: true; data: ListingQuotaSummary } | { ok: false } | "memuat"; level: ReturnType<typeof quotaLevel> | null; owner: string | null }) {
   if (quota === "memuat") return <p className="text-caption">Memeriksa kuota…</p>;
   if (!quota.ok) return <Notice tone="warn">Kuota gagal dimuat. Anda tetap bisa menyusun listing; kuota diperiksa saat menerbitkan (bila habis, listing tetap tersimpan sebagai draf).</Notice>;
   const left = quota.data.total_remaining;
@@ -761,5 +795,5 @@ function QuotaNote({ quota, level }: { quota: { ok: true; data: ListingQuotaSumm
       </Notice>
     );
   if (level === "hampir_habis") return <Notice tone="warn">Sisa jatah menipis ({left}). Anda tetap bisa menyusun listing; penerbitan memakai jatah yang tersisa.</Notice>;
-  return <p className="text-body-md text-ink-700">Jatah penerbitan tersisa: <strong>{left}</strong>. Menerbitkan memakai 1 jatah.</p>;
+  return <p className="text-body-md text-ink-700">{owner ? `Jatah organisasi ${owner}` : "Jatah penerbitan"} tersisa: <strong>{left}</strong>. Menerbitkan memakai 1 jatah.</p>;
 }

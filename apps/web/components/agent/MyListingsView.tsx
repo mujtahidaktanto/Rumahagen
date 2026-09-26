@@ -8,6 +8,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { ListingStatusBadge } from "@/components/ui/StatusBadge";
 import { BuildingIcon, EyeIcon, PinIcon } from "@/components/ui/icons";
+import { contextLabel, type ActiveContext } from "@/lib/agent/context";
 import type { MyListingsData } from "@/lib/agent/listing-data";
 import { MY_LISTING_STATUSES, myListingsQuery, MY_LISTING_PAGE_SIZE, type MyListingsSearch } from "@/lib/agent/listing-params";
 import { cn } from "@/lib/cn";
@@ -16,7 +17,8 @@ import { listingPhotoUrl } from "@/lib/media/variants";
 const nf = new Intl.NumberFormat("id-ID");
 const NOTE_CLS = { normal: "text-ink-500", warn: "text-warning-600", danger: "text-danger-600" } as const;
 
-export function MyListingsView({ data, search }: { data: MyListingsData; search: MyListingsSearch }) {
+export function MyListingsView({ data, search, context }: { data: MyListingsData; search: MyListingsSearch; context: ActiveContext }) {
+  const isOrg = context.kind === "org";
   const list = data.list.ok ? data.list.data : null;
   const chips: { key: "semua" | (typeof MY_LISTING_STATUSES)[number]; label: string; count: number }[] = list
     ? [{ key: "semua", label: "Semua", count: list.total }, ...MY_LISTING_STATUSES.map((k) => ({ key: k, label: k, count: list.counts[k] ?? 0 }))]
@@ -28,6 +30,10 @@ export function MyListingsView({ data, search }: { data: MyListingsData; search:
         <h1 className="text-headline">Listing Saya</h1>
         <LinkButton href={"/agent/listing/baru" as Route}>+ Tambah Listing</LinkButton>
       </div>
+      <p role="note" className="-mt-2 text-body-md text-ink-500">
+        Konteks: <strong className="text-ink-900">{contextLabel(context)}</strong>
+        {isOrg ? " — listing yang Anda buat atas nama organisasi ini, memakai kuota bersama organisasi. Ganti konteks lewat pengalih di bilah atas." : " — listing pribadi Anda, memakai kuota pribadi. Listing atas nama organisasi tampil saat konteks organisasi dipilih."}
+      </p>
 
       <ListingQuotaCard quota={data.quota} />
 
@@ -69,7 +75,7 @@ export function MyListingsView({ data, search }: { data: MyListingsData; search:
         <div className="rounded-md bg-white">
           {list.total === 0 ? (
             <>
-              <EmptyState title="Belum ada listing" message="Buat listing pertama Anda. Listing tersimpan sebagai draf sampai Anda menerbitkannya." />
+              <EmptyState title={isOrg ? `Belum ada listing atas nama ${contextLabel(context)}` : "Belum ada listing"} message={isOrg ? "Buat listing dengan pemilik kuota organisasi ini. Listing tersimpan sebagai draf sampai Anda menerbitkannya." : "Buat listing pertama Anda. Listing tersimpan sebagai draf sampai Anda menerbitkannya."} />
               <div className="flex justify-center pb-10">
                 <LinkButton href={"/agent/listing/baru" as Route} size="sm">
                   Tambah Listing

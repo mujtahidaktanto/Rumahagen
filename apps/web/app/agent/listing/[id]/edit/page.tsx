@@ -5,6 +5,7 @@ import { ListingWizard } from "@/components/agent/ListingWizard";
 import { LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
 import { getWizardSource } from "@/lib/agent/listing-edit-data";
+import { getMyContextOrgs } from "@/lib/agent/shell-data";
 import { WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wizard";
 import { requireArea } from "@/lib/auth/session";
 
@@ -33,11 +34,13 @@ export default async function EditListingPage({ params, searchParams }: Props) {
   }
   const s = res.source;
   if (s.status === "suspended") redirect(`/agent/listing/${id}` as Route);
+  const orgs = await getMyContextOrgs(user.id);
   const start = (WIZARD_STEPS.map((x) => x.key) as string[]).includes(langkah ?? "") ? (langkah as StepKey) : undefined;
   return (
     <ListingWizard
       mode="edit"
       initial={s.values}
+      orgs={orgs}
       listingId={s.listingId}
       status={s.status}
       locked={s.locked}

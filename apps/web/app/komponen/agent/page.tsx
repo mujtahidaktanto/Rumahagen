@@ -14,6 +14,7 @@ import { OrganizationView } from "@/components/agent/OrganizationView";
 import { KtpCard } from "@/components/agent/KtpCard";
 import { LearningView } from "@/components/agent/LearningView";
 import { ListingWizard } from "@/components/agent/ListingWizard";
+import type { ActiveContext, ContextOrg } from "@/lib/agent/context";
 import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
 import { MyListingsView } from "@/components/agent/MyListingsView";
 import { ProfileForm } from "@/components/agent/ProfileForm";
@@ -27,7 +28,7 @@ import { EMPTY_WIZARD, WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wi
 
 export const metadata: Metadata = { title: "Contoh Layar Agent | RumahAgen", robots: { index: false, follow: false } };
 
-type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string }> };
+type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string; konteks?: string }> };
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
@@ -62,6 +63,11 @@ const filled: DashboardData = {
     },
   },
 };
+
+const DEMO_ORGS: ContextOrg[] = [
+  { id: "0db7b607-a7fa-41af-adbf-052707bf79fc", name: "PT Properti Jaya Sejahtera", role: "leader" },
+  { id: "7d1b1c5e-3d2a-4f0a-9d6b-1f4a8e2c9b10", name: "Sinar Griya Realty", role: "member" },
+];
 
 export default async function SampleAgentPage({ searchParams }: Props) {
   if (process.env.HIDE_DEV_PAGES === "1") notFound();
@@ -313,7 +319,7 @@ export default async function SampleAgentPage({ searchParams }: Props) {
     const filled = { ...EMPTY_WIZARD, title: "Rumah Minimalis 2 Lantai BSD City", category: "secondary" as const, transactionType: "sale" as const, address: "Jl. Kenanga Raya No. 12, Cluster Anggrek", propertyType: "rumah", landArea: "150", buildingArea: "120", bedrooms: "3", bathrooms: "2", price: "850.000.000", isNegotiable: true, certificateType: "shm", certificateTransferred: true, photoUrls: ["https://example.com/foto-1.jpg", "https://example.com/foto-2.jpg"], whatsapp: "0812-3456-7890", description: "Rumah minimalis modern 2 lantai, kondisi siap huni." };
     return (
       <div className="min-h-dvh bg-surface">
-        <ListingWizard mode={(sp as { mode?: string }).mode === "edit" ? "edit" : "baru"} initial={(sp as { isi?: string }).isi === "0" ? EMPTY_WIZARD : filled} listingId="1a2b3c4d-1111-2222-3333-444455556666" status="draft" startStep={start} />
+        <ListingWizard mode={(sp as { mode?: string }).mode === "edit" ? "edit" : "baru"} initial={(sp as { isi?: string }).isi === "0" ? EMPTY_WIZARD : filled} listingId="1a2b3c4d-1111-2222-3333-444455556666" status="draft" startStep={start} orgs={DEMO_ORGS} />
       </div>
     );
   }
@@ -335,14 +341,15 @@ export default async function SampleAgentPage({ searchParams }: Props) {
     );
   }
   if (layar === "listing") {
-    const { kuota = "tersedia", daftar = "isi", status = "semua" } = await searchParams;
+    const { kuota = "tersedia", daftar = "isi", status = "semua", konteks } = await searchParams;
+    const orgCtx: ActiveContext = konteks === "org" ? { kind: "org", org: DEMO_ORGS[0]! } : { kind: "personal" };
     const penuh = kuota === "penuh";
     const pro = kuota === "pro";
     const q: MyListingsData["quota"] = kuota === "gagal" ? { ok: false } : { ok: true, data: { scope: "personal", free: bucket(25, penuh ? 25 : kuota === "hampir" ? 23 : 7, "2026-09-30T17:00:00Z"), pro: { ...bucket(75, pro ? 12 : 0, "2026-10-14T00:00:00Z"), active: pro }, purchased: { balance: penuh ? 0 : pro ? 5 : 0 }, total_remaining: penuh ? 0 : kuota === "hampir" ? 2 : pro ? 81 : 18, validity_days: 90, grace_days: 7 } };
     const list: MyListingsData["list"] = daftar === "gagal" ? { ok: false } : daftar === "kosong" ? { ok: true, data: { items: [], filteredTotal: 0, total: 0, counts: {} } } : { ok: true, data: { items: status === "semua" ? sampleListings : sampleListings.filter((x) => x.status === status), filteredTotal: 47, total: 47, counts: { draft: 4, pending_review: 1, published: 32, sold: 5, rented: 3, expired: 2, rejected: 0, suspended: 0 } } };
     return (
       <div className="min-h-dvh bg-surface">
-        <MyListingsView data={{ list, quota: q }} search={{ status: (status as never) ?? "semua", tampil: 12 }} />
+        <MyListingsView data={{ list, quota: q }} search={{ status: (status as never) ?? "semua", tampil: 12 }} context={orgCtx} />
       </div>
     );
   }

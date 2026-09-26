@@ -1,7 +1,9 @@
 // lib/agent/listing-data.ts — data layar "Listing Saya" (M03), dibaca di server dengan RLS pemanggil (listings milik sendiri, termasuk yang belum terbit). Kuota lewat RPC listing_quota_summary
-// (sama seperti GET /agents/me/listing-quota). Bagian kuota dan daftar dimuat sendiri-sendiri: kuota gagal tidak mematikan daftar (wireframe: "Anda tetap bisa menyusun listing").
+// (sama seperti GET /agents/me/listing-quota). Konteks aktif (Context Switcher) menentukan daftar (listing milik sendiri berorganisasi kosong / organisasi itu) dan pemilik kuota; RLS listing hanya
+// membuka baris milik sendiri, jadi pada konteks organisasi yang tampil adalah listing yang Anda buat atas nama organisasi itu. Bagian kuota dan daftar dimuat sendiri-sendiri: kuota gagal tidak mematikan daftar (wireframe: "Anda tetap bisa menyusun listing").
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { formatListingPrice } from "@/lib/format";
+import type { ActiveContext } from "@/lib/agent/context";
 import { createClient } from "@/lib/supabase/server";
 import type { ListingQuotaSummary } from "@/lib/validation/listing-quota";
 import { MY_LISTING_STATUSES, type MyListingsSearch } from "./listing-params";
@@ -36,24 +38,28 @@ type Row = {
 
 const SELECT = "id, title, status, price, price_unit, view_count, city:ref_cities(name), province:ref_provinces(name), photos:listing_photos(url, is_cover, sort_order)";
 
-async function loadQuota(supabase: SupabaseClient): Promise<Part<ListingQuotaSummary>> {
-  const { data, error } = await supabase.rpc("listing_quota_summary", { p_organization_id: null });
+async function loadQuota(supabase: SupabaseClient, orgId: string | null): Promise<Part<ListingQuotaSummary>> {
+  const { data, error } = await supabase.rpc("listing_quota_summary", { p_organization_id: orgId });
   if (error || !data) return { ok: false };
   return { ok: true, data: data as ListingQuotaSummary };
 }
 
-async function loadList(supabase: SupabaseClient, userId: string, s: MyListingsSearch, quotaFull: boolean, now: Date): Promise<Part<MyListings>> {
+async function loadList(supabase: SupabaseClient, userId: string, orgId: string | null, s: MyListingsSearch, quotaFull: boolean, now: Date): Promise<Part<MyListings>> {
   let q = supabase
     .from("listings")
     .select(SELECT, { count: "exact" })
     .eq("agent_id", userId)
-    .is("deleted_at", null)
+    .is("deleted_at", null);
+  q = orgId ? q.eq("organization_id", orgId) : q.is("organization_id", null);
+  q = q
     .order("created_at", { ascending: false })
     .order("id", { ascending: true })
     .range(0, s.tampil - 1);
   if (s.status !== "semua") q = q.eq("status", s.status);
 
-  const [page, all] = await Promise.all([q.returns<Row[]>(), supabase.from("listings").select("status").eq("agent_id", userId).is("deleted_at", null).limit(5000).returns<{ status: string }[]>()]);
+  let allQ = supabase.from("listings").select("status").eq("agent_id", userId).is("deleted_at", null);
+  allQ = orgId ? allQ.eq("organization_id", orgId) : allQ.is("organization_id", null);
+  const [page, all] = await Promise.all([q.returns<Row[]>(), allQ.limit(5000).returns<{ status: string }[]>()]);
   if (page.error || all.error) return { ok: false };
 
   const rows = page.data ?? [];
@@ -95,10 +101,11 @@ async function loadList(supabase: SupabaseClient, userId: string, s: MyListingsS
   };
 }
 
-export async function getMyListingsData(userId: string, search: MyListingsSearch, now: Date = new Date()): Promise<MyListingsData> {
+export async function getMyListingsData(userId: string, search: MyListingsSearch, context: ActiveContext, now: Date = new Date()): Promise<MyListingsData> {
   const supabase = await createClient();
-  const quota = await loadQuota(supabase);
+  const orgId = context.kind === "org" ? context.org.id : null;
+  const quota = await loadQuota(supabase, orgId);
   const quotaFull = quota.ok && quotaLevel(quota.data.total_remaining) === "penuh";
-  const list = await loadList(supabase, userId, search, quotaFull, now);
+  const list = await loadList(supabase, userId, orgId, search, quotaFull, now);
   return { list, quota };
 }

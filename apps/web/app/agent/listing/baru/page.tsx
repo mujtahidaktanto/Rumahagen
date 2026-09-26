@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { ListingWizard } from "@/components/agent/ListingWizard";
 import { getDefaultWhatsapp, getWizardSource } from "@/lib/agent/listing-edit-data";
+import { getActiveContext, getMyContextOrgs } from "@/lib/agent/shell-data";
 import { EMPTY_WIZARD, type WizardValues } from "@/lib/agent/listing-wizard";
 import { requireArea } from "@/lib/auth/session";
 
@@ -13,18 +14,21 @@ type Props = { searchParams: Promise<{ salin?: string }> };
 export default async function NewListingPage({ searchParams }: Props) {
   const user = await requireArea("agent");
   const { salin } = await searchParams;
-  const whatsapp = await getDefaultWhatsapp(user.id);
+  const [whatsapp, orgs] = await Promise.all([getDefaultWhatsapp(user.id), getMyContextOrgs(user.id)]);
+  // Pemilik kuota bawaan = konteks aktif di Context Switcher (bisa diganti di langkah Mulai).
+  const context = await getActiveContext(user.id, orgs);
+  const organizationId = context.kind === "org" ? context.org.id : "";
 
-  let initial: WizardValues = { ...EMPTY_WIZARD, whatsapp };
+  let initial: WizardValues = { ...EMPTY_WIZARD, whatsapp, organizationId };
   let mode: "baru" | "salin" = "baru";
   if (salin) {
     const res = await getWizardSource(salin, user.id);
     if (res.state === "not_found") notFound();
     if (res.state === "ok") {
       // Salinan: tanpa media, judul ditandai, nomor WhatsApp profil bila listing asal kosong.
-      initial = { ...res.source.values, title: `${res.source.values.title} (salinan)`.slice(0, 200), photoUrls: [], videoUrls: [], virtualTourUrl: "", whatsapp: res.source.values.whatsapp || whatsapp };
+      initial = { ...res.source.values, title: `${res.source.values.title} (salinan)`.slice(0, 200), organizationId, photoUrls: [], videoUrls: [], virtualTourUrl: "", whatsapp: res.source.values.whatsapp || whatsapp };
       mode = "salin";
     }
   }
-  return <ListingWizard mode={mode} initial={initial} />;
+  return <ListingWizard mode={mode} initial={initial} orgs={orgs} />;
 }

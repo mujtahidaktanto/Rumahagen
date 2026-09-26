@@ -27,6 +27,8 @@ export const MAX_PHOTOS = 20;
 export const MAX_VIDEOS = 3;
 
 export type WizardValues = {
+  /** Pemilik kuota: "" = pribadi, selain itu id organisasi (listing organisasi memakai kuota bersama organisasi). */
+  organizationId: string;
   title: string;
   category: "" | "primary" | "secondary";
   transactionType: "" | "sale" | "rent";
@@ -64,6 +66,7 @@ export type WizardValues = {
 };
 
 export const EMPTY_WIZARD: WizardValues = {
+  organizationId: "",
   title: "",
   category: "",
   transactionType: "",
@@ -206,7 +209,8 @@ const int = (raw: string) => parseInteger(raw);
 /** Badan POST /listings (valid bila semua langkah lolos). */
 export function toCreatePayload(v: WizardValues): Record<string, unknown> {
   return {
-    listing_context: "personal",
+    listing_context: v.organizationId ? "organization" : "personal",
+    ...(v.organizationId ? { organization_id: v.organizationId } : {}),
     category: v.category,
     transaction_type: v.transactionType,
     title: v.title.trim(),
@@ -239,10 +243,11 @@ export function toCreatePayload(v: WizardValues): Record<string, unknown> {
   };
 }
 
-/** Badan PUT /listings/{id}: tanpa konteks/agen dan (bila terkunci) tanpa alamat, tipe properti, luas tanah/bangunan. */
+/** Badan PUT /listings/{id}: tanpa konteks/organisasi/agen dan (bila terkunci) tanpa alamat, tipe properti, luas tanah/bangunan. */
 export function toUpdatePayload(v: WizardValues, opts: { locked?: boolean } = {}): Record<string, unknown> {
   const body = { ...toCreatePayload(v) };
   delete body.listing_context;
+  delete body.organization_id;
   if (opts.locked) {
     for (const k of ["address", "property_type", "land_area", "building_area"]) delete body[k];
   }
