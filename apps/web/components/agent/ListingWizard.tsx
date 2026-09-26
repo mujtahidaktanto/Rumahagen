@@ -58,10 +58,17 @@ function useOptions(path: string, params: Record<string, string>, enabled: boole
     if (!enabled) return;
     let live = true;
     setFailed(false);
-    api
-      .get<Option[]>(path, { ...params, limit: 500 })
-      .then((r) => live && setItems(r.data))
-      .catch(() => live && setFailed(true));
+    // API membatasi limit maksimal 100 per permintaan: muat halaman demi halaman sampai habis.
+    (async () => {
+      const all: Option[] = [];
+      for (let offset = 0; offset < 2000; ) {
+        const r = await api.get<Option[]>(path, { ...params, limit: 100, offset });
+        all.push(...r.data);
+        if (!r.meta?.pagination?.hasMore || r.data.length === 0) break;
+        offset += r.data.length;
+      }
+      if (live) setItems(all);
+    })().catch(() => live && setFailed(true));
     return () => {
       live = false;
     };
