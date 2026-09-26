@@ -21,11 +21,14 @@
 // Endpoint generik ini sendiri menegakkan bagian KEDUA syarat itu: "own
 // valid/active connection" -- lewat RLS agent_ai_connections_select
 // (has_permission('m13.own_byok_connection.view', user_id), 0016) yang
-// SUDAH otomatis membatasi hanya Superadmin+Developer Partner (satu-satunya
-// role yang punya permission ini di seed 0009) yang bisa memiliki/melihat
-// baris koneksi sama sekali -- lalu ditambah pengecekan status='active'
-// eksplisit di bawah (Core Gate PRE-00-O §7-8: "AI DITOLAK selagi
-// UNVERIFIED").
+// SUDAH otomatis membatasi hanya Superadmin, Agent, dan Developer Partner
+// (role yang punya permission ini sejak migration 0164 -- Agent ditambahkan
+// 0164 untuk MVP, mengoreksi seed 0009 asli yang keliru hanya memberi
+// Developer Partner; Manager/Instructor sengaja belum disertakan di MVP,
+// lihat komentar 0164) yang bisa memiliki/melihat baris koneksi sama sekali
+// -- lalu ditambah
+// pengecekan status='active' eksplisit di bawah (Core Gate PRE-00-O §7-8: "AI
+// DITOLAK selagi UNVERIFIED").
 
 import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
