@@ -20,17 +20,8 @@ export type Promo = {
 const PROMO_SELECT = "id, title, content, image_reference, cta_reference, campaign_reference, priority, schedule_at, expires_at, created_at";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Jalur situs sendiri ("/promo/x", bukan "//host") atau URL https. Selain itu null. */
-export function safeHref(ref: string | null | undefined): string | null {
-  const v = (ref ?? "").trim();
-  if (/^\/(?!\/)[^\s]*$/.test(v)) return v;
-  try {
-    const u = new URL(v);
-    return u.protocol === "https:" ? u.toString() : null;
-  } catch {
-    return null;
-  }
-}
+// safeHref dipindah ke ./cta (satu sumber untuk CTA dan gambar); diekspor ulang agar pemanggil lama tetap jalan.
+export { safeHref } from "./cta";
 
 /** Label sisa waktu untuk kartu: "Berakhir hari ini", "Berakhir dalam 3 hari", "Berakhir 30 Sep 2026", atau "Tanpa batas waktu". */
 export function expiryLabel(expiresAt: string | null | undefined, now: Date = new Date()): string {

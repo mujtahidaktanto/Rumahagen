@@ -107,6 +107,13 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 4. **TERBUKA (perlu keputusan, ubah API): sitemap** hanya memuat listings, agents, developer-projects (kontrak API-150 mengunci 4 berkas). Organisasi, event, learning, konten, dan promo belum masuk sitemap.
 5. **`robots.txt`** hanya memblokir `/api/` dan `/admin/`; `/agent`, `/partner`, `/instructor`, `/portal` tidak diblokir (halaman butuh login, jadi tidak terindeks nyata).
 
+## 2026-09-26 — CTA promo terstruktur (KEPUTUSAN pemilik produk: pilihan jenis CTA di form admin)
+
+1. **Format `cta_reference` terstruktur** (tanpa perubahan skema; kolom tetap teks 500 karakter): `project:{slug}`, `course:{uuid}`, `event:{uuid}`, `page:{kunci}` (kunci tetap `CTA_PAGES` di `lib/public/cta.ts`), `whatsapp:{nomor}[?text=pesan]`, `url:https://...`. Nilai lama (jalur situs atau https) tetap diterima. Sisi publik sudah selesai: `parseCta`, `resolveCta` (project/course/event hanya jadi tombol bila terlihat publik), label tombol per jenis, dan bagian "Proyek/Kursus/Event terkait promo ini" di Detail Promo (menutup butir Promo #2 soal proyek terkait). Diuji 14 kasus + verifikasi di halaman.
+2. **HARUS DIKERJAKAN di Fase Admin (layar Banner & Promosi M09):** ganti kolom teks CTA dengan dropdown jenis + pemilih isi (proyek/kursus/event ditarik dari API daftar dengan pencarian nama; halaman = daftar `CTA_PAGES`; WhatsApp = nomor + pesan; tautan luar = URL https). Wireframe `M09-Konten-Notifikasi` perlu dilengkapi field CTA, gambar, dan kampanye (saat ini hanya Judul, Isi, Mulai, Berakhir, Status).
+3. **API admin `POST/PUT /api/admin/banners` (`bannerSchema` di `lib/validation/admin.ts`) belum memvalidasi `cta_reference`** (hanya string maks. 500). Usul: validasi dengan `parseCta` agar hanya format sah yang tersimpan. Butuh izin karena mengubah API.
+4. **Data uji diperbaiki:** promo Cashback Kanaya -> `project:cluster-kanaya-residence-uji`; promo agen baru -> `page:daftar` (nanti bisa ke halaman langganan Agent setelah Fase 3-4; kunci halaman baru ditambahkan ke `CTA_PAGES`).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

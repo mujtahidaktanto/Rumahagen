@@ -1,6 +1,7 @@
 // app/(publik)/promo/[id]/page.tsx — Detail Promo publik (M11 Promo-Detail): kampanye, judul, masa berlaku, isi, dan kartu "Ambil Penawaran Ini" (berlaku dari/berakhir + tombol ajakan bila tautannya aman).
 // {id} = uuid promo (promo tidak punya slug). Promo yang belum mulai/berakhir/diarsipkan tidak terlihat pengunjung (RLS) -> "Promo tidak ditemukan".
-// "Proyek terkait promo ini" di wireframe tidak punya kolom relasi di database: tidak ditampilkan (lihat audit/FRONTEND_GAPS.md).
+// Tombol ajakan dan "Proyek terkait promo ini" berasal dari cta_reference terstruktur (lib/public/cta.ts): project:{slug}, course:{id}, event:{id}, page:{kunci}, whatsapp:{nomor}, url:https://...;
+// target proyek/kursus/event hanya tampil bila terlihat publik.
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -8,12 +9,15 @@ import { RichText } from "@/components/public/RichText";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
-import { CalendarIcon } from "@/components/ui/icons";
+import { BookIcon, BuildingIcon, CalendarIcon, ChevronRightIcon } from "@/components/ui/icons";
 import { formatDate } from "@/lib/format";
+import { resolveCta } from "@/lib/public/cta";
 import { excerptOf } from "@/lib/public/rich-text";
 import { getPromo, safeHref, validityText } from "@/lib/public/promo-data";
 
 type Props = { params: Promise<{ id: string }> };
+
+const RELATED_HEADING = { project: "Proyek terkait promo ini", course: "Kursus terkait promo ini", event: "Event terkait promo ini" } as const;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -45,8 +49,7 @@ export default async function PromoDetailPage({ params }: Props) {
   }
 
   const p = res.promo;
-  const cta = safeHref(p.cta_reference);
-  const external = cta?.startsWith("https://") ?? false;
+  const cta = await resolveCta(p.cta_reference);
   const img = safeHref(p.image_reference);
 
   return (
@@ -88,6 +91,18 @@ export default async function PromoDetailPage({ params }: Props) {
           <div className="mt-6">
             <RichText text={p.content} empty="Detail promo belum ditambahkan." />
           </div>
+          {cta?.related ? (
+            <section className="mt-8">
+              <h2 className="mb-3 text-title-lg">{RELATED_HEADING[cta.related.kind]}</h2>
+              <Link href={cta.href as Route} className="flex items-center gap-3 rounded-md border border-ink-100 bg-white p-4 text-inherit no-underline hover:shadow-2 hover:no-underline">
+                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-sm bg-blue-100 text-blue-600">
+                  {cta.related.kind === "project" ? <BuildingIcon size={18} /> : cta.related.kind === "course" ? <BookIcon size={18} /> : <CalendarIcon size={18} />}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-label-lg text-ink-900">{cta.related.title}</span>
+                <ChevronRightIcon size={14} className="flex-none text-ink-500" />
+              </Link>
+            </section>
+          ) : null}
         </article>
 
         <aside aria-label="Ambil penawaran" className="flex flex-col gap-4 rounded-lg border border-gold-200 bg-white p-5 shadow-2 lg:sticky lg:top-24">
@@ -103,8 +118,8 @@ export default async function PromoDetailPage({ params }: Props) {
             </div>
           </dl>
           {cta ? (
-            <LinkButton href={cta as Route} className="w-full" {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
-              Lihat Selengkapnya
+            <LinkButton href={cta.href as Route} className="w-full" {...(cta.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+              {cta.label}
             </LinkButton>
           ) : (
             <p className="rounded-md bg-ink-50 p-3 text-body-md text-ink-500">Hubungi agen atau tim RumahAgen untuk mengambil penawaran ini.</p>
