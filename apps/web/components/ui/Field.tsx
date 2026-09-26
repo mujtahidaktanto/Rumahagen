@@ -2,7 +2,7 @@
 
 // components/ui/Field.tsx — bidang formulir: label, kontrol, petunjuk, dan pesan galat yang terhubung ke kontrol lewat aria-describedby / aria-invalid.
 import { useId } from "react";
-import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
 const control =
@@ -14,6 +14,14 @@ export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElem
 
 export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return <textarea className={cn(control, "min-h-24 py-3", className)} {...props} />;
+}
+
+export function Select({ className, children, ...props }: SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <select className={cn(control, "h-11 appearance-auto", className)} {...props}>
+      {children}
+    </select>
+  );
 }
 
 type FieldProps = {

@@ -134,6 +134,16 @@ Register/OTP/Login/Akun Dibatasi diperbarui mengikuti keputusan dan implementasi
 5. **Belum ada:** pengalih konteks Personal/Organisasi (M12), kolom cari, dan lonceng notifikasi di bilah atas (wireframe); tautan "Lihat semua" Listing Terbaru dan Notifikasi menunggu Listing Saya (Fase 3c) dan Pusat Notifikasi (Fase 6). Ringkasan memakai RPC agent_statistics_* (sekaligus memanggil perbandingan anonim yang tak dipakai dashboard).
 6. Badge status listing memakai teks nilai CHECK apa adanya (`components/ui/StatusBadge.tsx`) sesuai aturan desain; agent awam melihat "pending_review" dll.
 
+## 2026-09-26 — Fase 3b, M02 Profil Saya (+ verifikasi KTP)
+
+1. **Belum diuji dengan Agent yang login** (kata sandi akun uji tidak dimiliki Claude): simpan profil (`PUT /users/profile`), unggah foto KTP (upload-url -> PUT bertanda tangan -> `PUT /agents/me/ktp`), dan pemuat provinsi/kota belum dijalankan terhadap akun nyata. Tampilan diperiksa lewat galeri `/komponen/agent?layar=profil&profil=terisi|baru&ktp=belum|terverifikasi`, tsc, dan 9 uji Vitest untuk validasi (`lib/validation/profile-form.ts`). Perlu uji manual di staging: simpan profil baru, unggah KTP dengan NIK sah, NIK ganda (409), NIK dengan kode wilayah salah (galat server).
+2. **Tidak ada API unggah foto profil.** `avatar_url` hanya string; tombol "Ganti Foto" dinonaktifkan dengan keterangan. Butuh bucket + upload-url seperti KTP.
+3. **Provinsi/kota tidak bisa dikosongkan:** `upsertAgentProfileSchema` menerima uuid opsional, bukan null (form hanya mengirim bila dipilih).
+4. **Profil pertama mewajibkan nomor WhatsApp** (Register kini tidak memintanya, sesuai keputusan); `PUT /users/profile` menolak tanpa WhatsApp, jadi form menandainya wajib dan menjelaskan di spanduk "Lengkapi profil Anda". KTP baru bisa diunggah setelah profil ada (API upload-url mensyaratkan).
+5. **Nama Kantor (`office_name`)** ditambahkan sebagai isian (ada di API dan tampil di profil publik) walau tidak tergambar di wireframe; wireframe hanya punya kartu Organisasi.
+6. **Kelola Presentasi title dan Ajukan Bukti Kualifikasi** (M15) nonaktif "segera hadir" sampai Fase 4. Title yang tampil dibaca dari `title_presentations` aktif.
+7. **Foto/nomor KTP tidak pernah dikirim ke halaman:** hanya nomor tersamar (`maskNik`); "Ganti Data KTP" menimpa data lama (foto lama dihapus server). Status `submitted` (data lama) diperlakukan sebagai belum terverifikasi.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
