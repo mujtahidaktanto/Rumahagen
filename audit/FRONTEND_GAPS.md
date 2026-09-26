@@ -239,6 +239,17 @@ Tanpa migration (0140 sudah menyediakan kolom, trigger keanggotaan, dan kuota pe
 5. ~~Dashboard dan detail listing belum menyaring konteks~~ SELESAI: Dashboard (angka + Listing Terbaru) mengikuti konteks (pemimpin = angka organisasi; anggota = listing organisasinya, angka tetap pribadi karena statistik organisasi hanya untuk pemimpin); Detail Listing menampilkan pemilik kuota dan mode Hanya lihat untuk pemimpin (tanpa aksi, leads, refresh).
 6. Halaman Statistik penuh (/agent/statistik, Fase 4) belum ada; RPC statistik organisasi sudah diperbaiki di 0162 agar tidak membuka listing pribadi anggota.
 
+## 2026-09-26 — Fase 4a: Komersial Agent (Katalog, Pesanan & Kuota, Langganan Saya)
+
+Tanpa migration dan tanpa perubahan API. Rute `/agent/komersial` (Katalog add-on), `/agent/komersial/pesanan`, `/agent/komersial/langganan`; kode: `lib/agent/commercial-{rules,data}.ts` (diuji), `components/agent/{CommercialTabs,CatalogView,CatalogGrid,PurchaseDialog,OrdersView,OrderActions,SubscriptionsView,PlanGrid}.tsx`. Contoh: `/komponen/agent?layar=katalog|pesanan|langganan&keadaan=...`. Alur beli/bayar BELUM diuji dengan login dan Midtrans sandbox (uji manual pemilik).
+1. **Alamat kembali setelah bayar (perlu keputusan pemilik):** `createSnapTransaction` tidak mengirim `callbacks.finish`, jadi setelah membayar pengguna berhenti di halaman Midtrans kecuali "Finish Redirect URL" diisi di dashboard Midtrans. Usul: isi ke `https://staging.rumahagen.com/agent/komersial/pesanan` (dashboard, tanpa kode) atau tambahkan `callbacks.finish` di `lib/payments/midtrans.ts` (perubahan API kecil, tanya dulu). Sementara halaman Pesanan memberi catatan "muat ulang" dan tidak ada polling.
+2. **Sisa per entitlement tidak dibuka API:** kartu Entitlement menampilkan kapasitas diberikan, status, dan masa berlaku; saldo yang sah hanya untuk Refresh add-on (`stock_remaining`) dan slot beli pribadi (`purchased.balance`). Slot milik organisasi tidak dijumlahkan di layar ini.
+3. **Jumlah kuota Pro tidak ditampilkan** di kartu paket (wireframe menulis "75 jatah"): angkanya di `system_configs` `listing_quota.*` yang belum dibaca Agent. Kartu memakai teks umum "menambah kuota penerbitan di atas kuota Gratis".
+4. **Katalog hanya add-on aktif berharga > 0; saat ini 0 add-on, 2 paket Pro berstatus draf tanpa harga**, jadi di staging keadaan kosong tampil sampai staf mengisi dari layar Admin (belum dibangun, Fase 5; API admin ada).
+5. **Add-on non-slot selalu masuk kuota pribadi** (fungsi `grant_addon_capacity` hanya memberi organisasi untuk slot listing), jadi pilihan Organisasi hanya muncul untuk add-on berisi slot. Paket organisasi hanya leader; anggota biasa melihat alasan.
+6. **Promosi organisasi:** kartu menampilkan promosi cakupan pribadi; dialog memuat ulang penawaran saat organisasi dipilih (aturan `applies_to` bisa berbeda).
+7. Status pesanan `expired` dari wireframe tidak ditulis database (tanpa CHECK, hanya pending/confirmed/cancelled); nilai tak dikenal tampil apa adanya.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

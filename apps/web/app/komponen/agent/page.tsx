@@ -16,7 +16,11 @@ import { LearningView } from "@/components/agent/LearningView";
 import { ListingWizard } from "@/components/agent/ListingWizard";
 import type { ActiveContext, ContextOrg } from "@/lib/agent/context";
 import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
+import { CatalogView } from "@/components/agent/CatalogView";
 import { MyListingsView } from "@/components/agent/MyListingsView";
+import { OrdersView } from "@/components/agent/OrdersView";
+import { SubscriptionsView } from "@/components/agent/SubscriptionsView";
+import type { CatalogData, OrdersData, SubscriptionsData } from "@/lib/agent/commercial-data";
 import { ProfileForm } from "@/components/agent/ProfileForm";
 import type { DashboardData } from "@/lib/agent/dashboard-data";
 import type { MyEvents, Registrant } from "@/lib/agent/event-data";
@@ -28,7 +32,7 @@ import { EMPTY_WIZARD, WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wi
 
 export const metadata: Metadata = { title: "Contoh Layar Agent | RumahAgen", robots: { index: false, follow: false } };
 
-type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string; konteks?: string }> };
+type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string; konteks?: string; keadaan?: string }> };
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
@@ -342,6 +346,87 @@ export default async function SampleAgentPage({ searchParams }: Props) {
             refresh: lihatSaja ? null : gagal ? { ok: false } : { ok: true, data: { allowance: 5, usedToday: 2 } },
           }}
         />
+      </div>
+    );
+  }
+  if (layar === "katalog" || layar === "pesanan" || layar === "langganan") {
+    const { keadaan = "normal" } = await searchParams;
+    const orgs = [{ id: "0db7b607-a7fa-41af-adbf-052707bf79fc", name: "PT Properti Jaya Sejahtera" }];
+    const offer = (ok: boolean) => ({ promotion_id: "pr1", eligible: ok, reason: ok ? null : "Hanya untuk pembelian pertama", list_price: 150000, final_amount: 120000 });
+    const catalog: CatalogData = {
+      orgs,
+      defaultOrgId: null,
+      addons:
+        keadaan === "gagal"
+          ? { ok: false }
+          : keadaan === "kosong"
+            ? { ok: true, data: [] }
+            : {
+                ok: true,
+                data: [
+                  { id: "a1", code: "R50", name: "Paket 50 Refresh", price: 75000, capacities: [{ type: "listing_refresh", value: 50 }], validityLabel: "Tidak kedaluwarsa dan tidak reset; dipakai sampai habis", hasSlot: false, offer: null },
+                  { id: "a2", code: "SLOT25", name: "Paket Slot Listing 25", price: 150000, capacities: [{ type: "listing_slot", value: 25 }], validityLabel: "Tidak kedaluwarsa dan tidak reset; dipakai sampai habis", hasSlot: true, offer: offer(true) },
+                  { id: "a3", code: "KOMBO", name: "Paket Kombo Refresh + Slot dengan Nama yang Sangat Panjang untuk Menguji Pemotongan Teks", price: 200000, capacities: [{ type: "listing_refresh", value: 50 }, { type: "listing_slot", value: 25 }], validityLabel: "Tidak kedaluwarsa dan tidak reset; dipakai sampai habis", hasSlot: true, offer: offer(false) },
+                  { id: "a4", code: "POIN", name: "Paket 200 Learning Points", price: 90000, capacities: [{ type: "learning_point", value: 200 }], validityLabel: "Masa berlaku 30 hari", hasSlot: false, offer: null },
+                ],
+              },
+    };
+    const ago = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
+    const orders: OrdersData = {
+      balances: keadaan === "gagal" ? { ok: false } : { ok: true, data: { refreshStock: 32, slotBalance: 18 } },
+      entitlements:
+        keadaan === "gagal"
+          ? { ok: false }
+          : keadaan === "kosong"
+            ? { ok: true, data: [] }
+            : {
+                ok: true,
+                data: [
+                  { id: "e1", type: "R50:listing_refresh", capacity: 50, status: "active", startsAt: ago(10), endsAt: null, ownerOrg: null },
+                  { id: "e2", type: "SLOT25:listing_slot", capacity: 25, status: "active", startsAt: ago(5), endsAt: null, ownerOrg: "PT Properti Jaya Sejahtera" },
+                  { id: "e3", type: "POIN:learning_point", capacity: 30, status: "expired", startsAt: ago(60), endsAt: ago(15), ownerOrg: null },
+                  { id: "e4", type: "refresh_bonus", capacity: 10, status: "revoked", startsAt: ago(40), endsAt: ago(30), ownerOrg: null },
+                ],
+              },
+      orders:
+        keadaan === "gagal"
+          ? { ok: false }
+          : keadaan === "kosong"
+            ? { ok: true, data: { items: [], total: 0 } }
+            : {
+                ok: true,
+                data: {
+                  total: 25,
+                  items: [
+                    { id: "o1", orderNumber: "ORD-20260920-0098", name: "Paket 50 Refresh", kind: "Add-on", amount: 75000, placedAt: ago(6), status: "confirmed", ownerOrg: null },
+                    { id: "o2", orderNumber: "ORD-20260922-0140", name: "Paket Slot Listing 25", kind: "Add-on", amount: 150000, placedAt: ago(4), status: "pending", ownerOrg: "PT Properti Jaya Sejahtera" },
+                    { id: "o3", orderNumber: "ORD-20260915-0071", name: "Pro Bulanan", kind: "Paket Langganan", amount: 149000, placedAt: ago(11), status: "cancelled", ownerOrg: null },
+                    { id: "o4", orderNumber: "ORD-20260901-0007", name: "Pesanan", kind: "Add-on", amount: 99000, placedAt: ago(25), status: "aneh", ownerOrg: null },
+                  ],
+                },
+              },
+    };
+    const plan = (over: object) => ({ id: "pl1", code: "pro_bulanan", name: "Pro Bulanan", description: "Tambahan kuota penerbitan listing setiap bulan.", durationMonths: 1, pricePersonal: 149000, priceOrganization: 399000, offer: null, ...over });
+    const sub = (over: object) => ({ id: "s1", productCode: "pro_bulanan", productName: "Pro Bulanan", scope: "personal" as const, ownerOrg: null, status: "active", effective: "active", daysLeft: 20, startsAt: ago(10), endsAt: new Date(Date.now() + 20 * 86_400_000).toISOString(), renewsAt: null, snapshot: { harga_saat_beli: "Rp 149.000", promosi: "Tidak ada" }, ...over });
+    const cur = sub({});
+    const list =
+      keadaan === "free"
+        ? []
+        : keadaan === "segera"
+          ? [sub({ effective: "expiring", daysLeft: 3, endsAt: new Date(Date.now() + 3 * 86_400_000).toISOString() })]
+          : keadaan === "tak_dikenal"
+            ? [sub({ productName: "promo_ramadan_plus", productCode: "promo_ramadan_plus", status: "suspended_by_ops", effective: "unknown", daysLeft: null, endsAt: null })]
+            : [cur, sub({ id: "s2", scope: "organization" as const, ownerOrg: "PT Properti Jaya Sejahtera", productName: "Pro Tahunan", snapshot: null, endsAt: ago(-200) }), sub({ id: "s3", effective: "expired", status: "expired", daysLeft: null, endsAt: ago(30) })];
+    const subs: SubscriptionsData = {
+      leaderOrgs: keadaan === "member" ? [] : orgs,
+      memberOnlyOrgs: keadaan === "member" ? 1 : 0,
+      defaultOrgId: null,
+      plans: keadaan === "gagal_paket" ? { ok: false } : keadaan === "tanpa_paket" ? { ok: true, data: [] } : { ok: true, data: [plan({ offer: offer(true) }), plan({ id: "pl2", code: "pro_tahunan", name: "Pro Tahunan", durationMonths: 12, pricePersonal: 1490000, priceOrganization: null })] },
+      subscriptions: keadaan === "gagal" ? { ok: false } : { ok: true, data: { items: list, current: list.find((x) => x.effective === "active" || x.effective === "expiring") ?? null } },
+    };
+    return (
+      <div className="min-h-dvh bg-surface">
+        {layar === "katalog" ? <CatalogView data={catalog} /> : layar === "pesanan" ? <OrdersView data={orders} tampil={10} /> : <SubscriptionsView data={subs} cakupan="semua" />}
       </div>
     );
   }
