@@ -115,7 +115,7 @@ export function ListingActions({ id, title, actions }: { id: string; title: stri
 }
 
 /** Kartu "Refresh Listing": naikkan listing ke atas hasil pencarian (kuota harian agen, maksimal 1x per listing per hari). */
-export function RefreshCard({ id, state, used, allowance, lastRefreshedAt }: { id: string; state: RefreshState; used: number | null; allowance: number | null; lastRefreshedAt: string | null }) {
+export function RefreshCard({ id, state, used, allowance, defaultDaily, extraDaily, stockRemaining, lastRefreshedAt }: { id: string; state: RefreshState; used: number | null; allowance: number | null; defaultDaily?: number | null; extraDaily?: number | null; stockRemaining?: number | null; lastRefreshedAt: string | null }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
@@ -134,7 +134,7 @@ export function RefreshCard({ id, state, used, allowance, lastRefreshedAt }: { i
     }
   }
 
-  const disabled = state === "sudah_hari_ini" || state === "kuota_habis" || state === "tidak_tersedia";
+  const disabled = state === "sudah_hari_ini" || state === "kuota_habis" || state === "tanpa_jatah" || state === "tidak_tersedia";
   return (
     <div className="flex flex-col gap-3 rounded-md border border-ink-100 bg-white p-5">
       <h2 className="text-title-md">Refresh Listing</h2>
@@ -146,10 +146,25 @@ export function RefreshCard({ id, state, used, allowance, lastRefreshedAt }: { i
           </span>
         </div>
       ) : null}
-      <p className="text-caption">Reset otomatis 00.00 WIB, tidak terbawa ke hari berikutnya. Maks 1× sukses per listing per hari.</p>
+      {extraDaily && extraDaily > 0 && defaultDaily != null ? (
+        <p className="text-caption">
+          Jatah gratis {defaultDaily} + tambahan {extraDaily} per hari.
+        </p>
+      ) : null}
+      {stockRemaining != null && stockRemaining > 0 ? (
+        <div className="flex justify-between gap-3">
+          <span className="text-body-md">Saldo paket refresh</span>
+          <span className="text-body-md font-bold">{stockRemaining}</span>
+        </div>
+      ) : null}
+      <p className="text-caption">
+        Jatah harian (gratis, lalu bonus) reset otomatis 00.00 WIB dan tidak terbawa ke hari berikutnya.
+        {stockRemaining != null && stockRemaining > 0 ? " Saldo paket dari pembelian tidak hangus dan tidak reset; dipakai setelah jatah harian habis." : ""} Maks 1× sukses per listing per hari.
+      </p>
+      {state === "tanpa_jatah" ? <p className="text-body-md text-ink-500">Akun Anda belum memiliki jatah refresh harian. Hubungi tim RumahAgen bila seharusnya ada.</p> : null}
       {state === "tidak_tersedia" ? <p className="text-body-md text-ink-500">Refresh hanya tersedia untuk listing yang sedang tayang (published).</p> : null}
       <Button loading={busy} disabled={disabled} onClick={refresh} className="w-full">
-        {state === "sudah_hari_ini" ? "Sudah Di-refresh Hari Ini" : state === "kuota_habis" ? "Kuota Refresh Harian Habis" : "Refresh Sekarang"}
+        {state === "sudah_hari_ini" ? "Sudah Di-refresh Hari Ini" : state === "kuota_habis" ? "Kuota Refresh Harian Habis" : state === "tanpa_jatah" ? "Belum Ada Jatah Refresh" : "Refresh Sekarang"}
       </Button>
       {msg ? (
         <p role={msg.kind === "err" ? "alert" : "status"} className={msg.kind === "err" ? "text-caption text-danger-600" : "text-caption text-success-600"}>
@@ -163,7 +178,8 @@ export function RefreshCard({ id, state, used, allowance, lastRefreshedAt }: { i
 
 function refreshReason(reason: string): string {
   if (reason === "listing_already_refreshed_today") return "Listing ini sudah di-refresh hari ini.";
-  if (reason === "agent_daily_quota_exhausted") return "Kuota refresh harian habis.";
+  if (reason === "agent_daily_quota_exhausted") return "Kuota refresh harian habis. Jatah kembali 00.00 WIB.";
+  if (reason === "agent_refresh_allowance_none") return "Akun Anda belum memiliki jatah refresh harian. Hubungi tim RumahAgen bila seharusnya ada.";
   if (reason === "listing_not_published") return "Hanya listing yang tayang yang bisa di-refresh.";
   return reason;
 }

@@ -30,6 +30,7 @@ const FAILURE_STATUS: Record<string, "NOT_FOUND" | "CONFLICT"> = {
   listing_not_published: "CONFLICT",
   listing_already_refreshed_today: "CONFLICT",
   agent_daily_quota_exhausted: "CONFLICT",
+  agent_refresh_allowance_none: "CONFLICT", // jatah harian efektif 0 (migration 0159)
 };
 
 export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) => {

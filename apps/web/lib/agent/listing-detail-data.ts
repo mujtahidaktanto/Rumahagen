@@ -36,7 +36,8 @@ export type MyListingDetail = {
   publishedAt: string | null;
 };
 export type MyLead = { id: string; source: string; createdAt: string; status: string };
-export type RefreshQuota = { allowance: number; usedToday: number };
+/** Jatah refresh harian efektif = bawaan sistem + tambahan (migration 0159). `defaultDaily`/`extraDaily` hanya ada setelah 0159 diterapkan. */
+export type RefreshQuota = { allowance: number; usedToday: number; defaultDaily?: number; extraDaily?: number; /** Saldo add-on (tanpa masa berlaku, tanpa reset harian); dipakai setelah jatah harian habis. */ stockRemaining?: number };
 
 export type MyListingDetailResult =
   | { state: "ok"; listing: MyListingDetail; leads: Part<{ items: MyLead[]; total: number }>; refresh: Part<RefreshQuota | null> }
@@ -98,8 +99,9 @@ async function loadRefreshQuota(supabase: SupabaseClient, now: Date): Promise<Pa
   const day = todayWIB(now);
   const { data, error } = await supabase.rpc("agent_statistics_summary", { p_from: day, p_to: day, p_organization_id: null });
   if (error) return { ok: false };
-  const q = (data as { quota?: { has_pool: boolean; allowance: number; used_today: number } } | null)?.quota;
-  return { ok: true, data: q && q.has_pool ? { allowance: q.allowance, usedToday: q.used_today } : null };
+  const q = (data as { quota?: { has_pool: boolean; allowance: number; used_today: number; default_daily?: number; extra_daily?: number; stock_remaining?: number } } | null)?.quota;
+  // has_pool = jatah efektif > 0; null = tidak punya jatah harian sama sekali (bawaan 0 dan tanpa tambahan).
+  return { ok: true, data: q && q.has_pool ? { allowance: q.allowance, usedToday: q.used_today, defaultDaily: q.default_daily, extraDaily: q.extra_daily, stockRemaining: q.stock_remaining } : null };
 }
 
 export async function getMyListingDetail(id: string, userId: string, now: Date = new Date()): Promise<MyListingDetailResult> {

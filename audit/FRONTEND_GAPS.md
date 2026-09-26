@@ -197,6 +197,14 @@ Layar: `/agent/event` (Event Saya), `/agent/event/baru` (Ajukan Event), `/agent/
 7. **Kuota tidak ditegakkan** dan status `waitlist` tidak pernah dibuat sistem (belum ada aturan); kuota hanya informasi.
 8. Waktu diisi dan ditampilkan WIB (datetime-local <-> ISO UTC, `lib/agent/event-rules.ts`, diuji).
 
+## 2026-09-26 — Jatah Refresh Listing harian (migration 0159 DITERAPKAN 2026-09-26)
+
+Laporan pemilik: klik Refresh selalu "kuota harian habis" dan jatahnya tidak terlihat. Penyebab: 0 Agent punya kolam kuota refresh (hanya dibuat Superadmin atau add-on, tidak otomatis) dan pesan galat menyamakan "belum punya jatah" dengan "habis". Keputusan pemilik: semua Agent otomatis punya jatah gratis harian (bawaan 5), bisa diubah Superadmin, plus tambahan per orang. Detail aturan, uji, dan API di `supabase/migrations/README.md` (0159).
+1. Kartu Refresh Detail Listing kini punya keadaan "Belum Ada Jatah Refresh" (jatah efektif 0) dan pesan sendiri untuk alasan `agent_refresh_allowance_none`; menampilkan "Jatah gratis X + tambahan Y" bila ada tambahan.
+2. **Keputusan pemilik:** paket refresh dari add-on = SALDO tanpa masa berlaku dan tanpa reset, dipakai setelah jatah gratis harian dan bonus. Form katalog add-on (Fase Admin) sebaiknya menyembunyikan/mengunci masa berlaku untuk kapasitas `listing_refresh` dan menjelaskan artinya "jumlah refresh" (bukan per hari); DB sudah memaksa tanpa masa berlaku.
+3. Layar admin untuk angka bawaan dan bonus per orang belum ada (API-nya ada); dikerjakan di Fase Admin. Sementara angka bawaan diubah lewat `PUT /admin/config/system/refresh_allowance.default_daily`.
+4. Halaman "kuota refresh" khusus Agent (riwayat pemakaian) belum ada; `GET /agents/me/refresh-allowance` tersedia untuk Dashboard/Statistik nanti.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

@@ -228,7 +228,7 @@ export function MyListingDetailView({ data, now = new Date() }: { data: Ok; now?
               </div>
             </dl>
           </section>
-          <RefreshCard id={l.id} state={rState} used={data.refresh.ok && data.refresh.data ? data.refresh.data.usedToday : null} allowance={data.refresh.ok && data.refresh.data ? data.refresh.data.allowance : null} lastRefreshedAt={l.lastRefreshedAt} />
+          <RefreshCard id={l.id} state={rState} used={data.refresh.ok && data.refresh.data ? data.refresh.data.usedToday : null} allowance={data.refresh.ok && data.refresh.data ? data.refresh.data.allowance : null} defaultDaily={data.refresh.ok && data.refresh.data ? (data.refresh.data.defaultDaily ?? null) : null} extraDaily={data.refresh.ok && data.refresh.data ? (data.refresh.data.extraDaily ?? null) : null} stockRemaining={data.refresh.ok && data.refresh.data ? (data.refresh.data.stockRemaining ?? null) : null} lastRefreshedAt={l.lastRefreshedAt} />
         </aside>
       </div>
     </div>

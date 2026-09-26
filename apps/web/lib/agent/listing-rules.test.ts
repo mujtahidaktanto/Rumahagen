@@ -15,8 +15,11 @@ describe("refreshState", () => {
   it("kuota habis vs siap vs tidak diketahui", () => {
     expect(refreshState({ status: "published", lastRefreshedAt: null }, { allowance: 5, usedToday: 5 }, now)).toBe("kuota_habis");
     expect(refreshState({ status: "published", lastRefreshedAt: null }, { allowance: 5, usedToday: 2 }, now)).toBe("siap");
+    expect(refreshState({ status: "published", lastRefreshedAt: null }, { allowance: 5, usedToday: 5, stockRemaining: 2 }, now)).toBe("siap"); // saldo add-on menyambung setelah jatah harian habis
+    expect(refreshState({ status: "published", lastRefreshedAt: null }, { allowance: 5, usedToday: 5, stockRemaining: 0 }, now)).toBe("kuota_habis");
+    expect(refreshState({ status: "published", lastRefreshedAt: null }, { allowance: 0, usedToday: 0, stockRemaining: 3 }, now)).toBe("siap"); // bawaan 0 tetapi punya saldo
     expect(refreshState({ status: "published", lastRefreshedAt: null }, "gagal", now)).toBe("tidak_diketahui");
-    expect(refreshState({ status: "published", lastRefreshedAt: null }, null, now)).toBe("tidak_diketahui");
+    expect(refreshState({ status: "published", lastRefreshedAt: null }, null, now)).toBe("tanpa_jatah");
   });
 });
 
