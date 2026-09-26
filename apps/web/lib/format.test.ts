@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatArea, formatDate, formatDateTime, formatListingPrice, formatPriceRange, formatRupiah, whatsappUrl } from "./format";
+import { dateBox, formatArea, formatDate, formatDateLong, formatDateTime, formatTimeRange, formatListingPrice, formatPriceRange, formatRupiah, whatsappUrl } from "./format";
 
 describe("format", () => {
   it("rupiah memakai titik ribuan", () => {
@@ -26,6 +26,15 @@ describe("format", () => {
     expect(formatDateTime("2026-10-18T12:00:00Z")).toMatch(/^18 \w+ 2026 · 19\.00 WIB$/);
     expect(formatDateTime(null)).toBe("");
     expect(formatDateTime("x")).toBe("");
+  });
+  it("tanggal panjang, rentang jam, dan kotak tanggal", () => {
+    expect(formatDateLong("2026-10-18T12:00:00Z")).toBe("Minggu, 18 Oktober 2026");
+    expect(formatDateLong(null)).toBe("");
+    expect(formatTimeRange("2026-10-18T12:00:00Z", "2026-10-18T14:30:00Z")).toBe("19.00 – 21.30 WIB");
+    expect(formatTimeRange("2026-10-18T12:00:00Z")).toBe("19.00 WIB");
+    expect(formatTimeRange("x")).toBe("");
+    expect(dateBox("2026-10-18T12:00:00Z")).toEqual({ month: "OKT", day: "18" });
+    expect(dateBox(null)).toEqual({ month: "", day: "" });
   });
   it("URL WhatsApp dari berbagai format nomor", () => {
     expect(whatsappUrl("0812-3456-7890")).toBe("https://wa.me/6281234567890");

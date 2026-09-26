@@ -78,6 +78,8 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 
 ## 2026-09-26 — Fase 2, M11 Developer (daftar, detail proyek, kemitraan)
 
+> **KEPUTUSAN pemilik produk 2026-09-26:** butir 1 (komisi terbaca anon) **DIBIARKAN TERBUKA untuk sekarang** (risiko diterima, ditinjau ulang sebelum produksi); butir 2 (deskripsi) **tetap memakai `meta_description` 160 karakter untuk sekarang**. Tidak ada migration untuk keduanya.
+
 1. **KEAMANAN/BISNIS: skema komisi proyek terbaca anonim.** Wireframe menyatakan komisi hanya untuk Agent yang login ("Info Kemitraan Agen"; pengunjung melihat "Masuk sebagai Agen"), tetapi RLS `developer_projects_select` mengizinkan `anon` membaca SEMUA kolom proyek publik, termasuk `commission_scheme` dan `extra_commission`. Dibuktikan lewat `SET LOCAL ROLE anon` di DB live (komisi ketiga proyek uji terbaca). Halaman web tidak menampilkan komisi kepada pengunjung, tetapi siapa pun dapat mengambilnya lewat REST Supabase dengan kunci anon. Bila komisi rahasia: pisahkan lewat view publik tanpa kolom komisi + cabut baca kolom itu dari anon/authenticated (baca penuh hanya untuk agen/developer pemilik/staf). Butuh keputusan pemilik produk (sebelumnya materi kursus terbuka diterima sebagai risiko).
 2. **`developer_projects` tidak punya kolom deskripsi.** "Deskripsi" di wireframe hanya bisa memakai `meta_description` (maks. 160 karakter, teks SEO). Bila developer butuh deskripsi panjang, perlu kolom baru.
 3. **Tidak ada halaman profil developer sendiri.** Wireframe hanya memuat kartu "Tentang Developer" di halaman proyek; nama developer di kartu daftar tidak berupa tautan. `pic_contact` ditampilkan sebagai WhatsApp bila berupa nomor telepon (kontak PIC publik sesuai keputusan 2026-09-25).
@@ -85,6 +87,17 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 5. **Proyek `inactive` dan proyek milik developer nonaktif tidak terlihat publik** (RLS); pengunjung menerima "Proyek tidak ditemukan". Spanduk hanya untuk `sold_out` dan `coming_soon` (yang memang terlihat).
 6. **Belum diuji dengan Agent yang login:** panel "Info Kemitraan Agen" dan tombol Klaim Proyek Ini (kata sandi akun uji tidak dimiliki Claude); hanya sisi pengunjung yang diuji.
 7. **Data contoh:** developer "PT Kanaya Group Developer (data uji)" (PIC nomor fiktif 081200000001), proyek `active` (dengan komisi dan 3 foto + 1 video), `coming_soon`, `sold_out`, dan satu `inactive` serta satu proyek dari developer nonaktif yang sengaja tidak tampil.
+
+## 2026-09-26 — Fase 2, M11 Event (daftar dan detail)
+
+1. **Kuota terisi dan daftar tunggu tidak bisa dihitung publik.** RLS `event_registrations` hanya membuka baris milik sendiri, jadi bilah "terisi/kuota" dan status penuh/daftar tunggu di wireframe tidak bisa ditampilkan; halaman hanya menampilkan kuota total (`events.quota`). Bila perlu: fungsi/view agregat publik (jumlah pendaftar per event).
+2. **Kuota tidak ditegakkan database.** Kolom `events.quota` tidak dipakai constraint/trigger; pendaftaran melewati kuota tidak ditolak di level DB (diserahkan ke API rsvp/penyelenggara).
+3. **Pendaftaran wajib login sebagai Agent** (`POST /api/events/{id}/rsvp`); tidak ada pendaftaran tamu publik. Pengunjung diarahkan ke "Masuk untuk Mendaftar".
+4. **`meeting_link` tidak ditampilkan** di halaman publik (dibagikan penyelenggara setelah pendaftaran).
+5. **Tidak terlihat publik (RLS):** event `pending_approval`, `rejected`, `cancelled`, visibility `organization`/`private`, dan yang sudah dihapus; pengunjung menerima "Event tidak ditemukan".
+6. **`events.related_course_id` tidak punya foreign key ke `courses`** (hanya `related_project_id` yang punya), sehingga course terkait dibaca dengan query terpisah (hanya course `published`); tanpa FK, ID course yatim tidak dicegah DB.
+7. **Belum diuji dengan Agent yang login:** tombol Daftar Sekarang / Ajukan Pendaftaran dan status pendaftaran (kata sandi akun uji tidak dimiliki Claude).
+8. **Data contoh:** 7 event uji (3 akan datang: workshop online auto_confirm terkait course, open house manual_approval terkait proyek, gathering closed; 1 training lalu; 3 sengaja tersembunyi: pending_approval, private, cancelled).
 
 ## Catatan performa
 

@@ -57,6 +57,33 @@ export function formatDateTime(iso: string | null | undefined): string {
   return `${DATETIME_DATE.format(d)} · ${DATETIME_TIME.format(d).replace(":", ".")} WIB`;
 }
 
+const LONG_DATE = new Intl.DateTimeFormat("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
+const TIME_ONLY = new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Jakarta" });
+const MONTH_SHORT = new Intl.DateTimeFormat("id-ID", { month: "short", timeZone: "Asia/Jakarta" });
+const DAY_NUM = new Intl.DateTimeFormat("id-ID", { day: "numeric", timeZone: "Asia/Jakarta" });
+
+/** ISO -> "Sabtu, 18 Oktober 2026" (Asia/Jakarta). Kosong/tidak valid -> "". */
+export function formatDateLong(iso: string | null | undefined): string {
+  const d = iso ? new Date(iso) : null;
+  return d && !Number.isNaN(d.getTime()) ? LONG_DATE.format(d) : "";
+}
+
+/** "19.00 – 21.00 WIB", "19.00 WIB" (tanpa selesai), atau "" bila mulai tidak valid. */
+export function formatTimeRange(startIso: string | null | undefined, endIso?: string | null): string {
+  const s = startIso ? new Date(startIso) : null;
+  if (!s || Number.isNaN(s.getTime())) return "";
+  const t = (d: Date) => TIME_ONLY.format(d).replace(":", ".");
+  const e = endIso ? new Date(endIso) : null;
+  return e && !Number.isNaN(e.getTime()) ? `${t(s)} – ${t(e)} WIB` : `${t(s)} WIB`;
+}
+
+/** Bulan singkat huruf besar dan tanggal untuk kotak tanggal: { month: "OKT", day: "18" }. */
+export function dateBox(iso: string | null | undefined): { month: string; day: string } {
+  const d = iso ? new Date(iso) : null;
+  if (!d || Number.isNaN(d.getTime())) return { month: "", day: "" };
+  return { month: MONTH_SHORT.format(d).replace(".", "").toUpperCase(), day: DAY_NUM.format(d) };
+}
+
 /** ISO -> "1 Des 2026". Nilai kosong/tidak valid -> "". */
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "";
