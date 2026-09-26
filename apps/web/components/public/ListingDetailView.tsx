@@ -13,6 +13,8 @@ import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import { AreaIcon, BathIcon, BedIcon, CheckCircleIcon, PinIcon } from "@/components/ui/icons";
 import { formatArea, formatListingPrice, whatsappUrl } from "@/lib/format";
 import type { FeaturedListing } from "@/lib/public/home-data";
+import { RatingValue } from "@/components/public/RatingStars";
+import type { RatingSummary } from "@/lib/public/agent-reviews";
 import { CERTIFICATE_LABEL, FURNISHING_LABEL, IMB_LABEL, WATER_LABEL, type ListingAgent, type ListingDetail, type ListingStatus } from "@/lib/public/listing-detail";
 import { PROPERTY_TYPE_LABEL, type PropertyType } from "@/lib/public/listing-params";
 import { buildListingWhatsAppMessage } from "@/lib/public/whatsapp-message";
@@ -75,7 +77,7 @@ function detailRows(l: ListingDetail): [string, string][] {
   return rows.filter((x): x is [string, string] => x[1] !== null);
 }
 
-export function ListingDetailView({ listing: l, agent, similar, track = true }: { listing: ListingDetail; agent: ListingAgent | null; similar: FeaturedListing[]; track?: boolean }) {
+export function ListingDetailView({ listing: l, agent, agentRating, similar, track = true }: { listing: ListingDetail; agent: ListingAgent | null; agentRating?: RatingSummary; similar: FeaturedListing[]; track?: boolean }) {
   const published = l.status === "published";
   const location = [l.address, l.districtName, l.cityName, l.provinceName].filter(Boolean).join(", ");
   const area = { building: formatArea(l.building_area), land: formatArea(l.land_area) };
@@ -228,6 +230,7 @@ export function ListingDetailView({ listing: l, agent, similar, track = true }: 
                   {agent.is_verified ? <Badge tone="success">Terverifikasi</Badge> : null}
                   <span>{agent.active_listings_count} listing aktif</span>
                 </div>
+                {agentRating && agentRating.count > 0 ? <RatingValue summary={agentRating} className="mt-1" /> : null}
               </div>
             </div>
           ) : (

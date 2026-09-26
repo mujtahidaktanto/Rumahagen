@@ -6,6 +6,7 @@ import { AgentDetailView } from "@/components/public/AgentDetailView";
 import { LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
 import { getAgentBySlug } from "@/lib/public/agent-data";
+import { getAgentReviews } from "@/lib/public/agent-reviews";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -41,5 +42,6 @@ export default async function AgentDetailPage({ params }: Props) {
       </div>
     );
   }
-  return <AgentDetailView agent={res.agent} listings={res.listings} listingsOk={res.listingsOk} />;
+  const reviews = await getAgentReviews(res.agent.user_id);
+  return <AgentDetailView agent={res.agent} listings={res.listings} listingsOk={res.listingsOk} reviews={reviews} />;
 }

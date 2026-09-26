@@ -43,5 +43,5 @@ export default async function ListingDetailPage({ params }: Props) {
       </div>
     );
   }
-  return <ListingDetailView listing={res.listing} agent={res.agent} similar={res.similar} />;
+  return <ListingDetailView listing={res.listing} agent={res.agent} agentRating={res.agentRating} similar={res.similar} />;
 }

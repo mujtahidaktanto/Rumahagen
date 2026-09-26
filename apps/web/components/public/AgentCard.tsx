@@ -5,9 +5,11 @@ import type { Route } from "next";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { PinIcon } from "@/components/ui/icons";
+import { RatingValue } from "@/components/public/RatingStars";
 import type { PublicAgent } from "@/lib/public/agent-data";
+import type { RatingSummary } from "@/lib/public/agent-reviews";
 
-export function AgentCard({ agent: a }: { agent: PublicAgent }) {
+export function AgentCard({ agent: a, rating }: { agent: PublicAgent; rating?: RatingSummary }) {
   const place = [a.city_name, a.province_name].filter(Boolean).join(", ");
   const org = [a.office_name, a.organization_name].filter(Boolean).join(" · ");
   return (
@@ -27,6 +29,7 @@ export function AgentCard({ agent: a }: { agent: PublicAgent }) {
           Terverifikasi
         </Badge>
       ) : null}
+      {rating && rating.count > 0 ? <RatingValue summary={rating} /> : null}
       {place ? (
         <span className="flex items-center gap-1.5 text-ink-500">
           <PinIcon size={13} className="flex-none" />

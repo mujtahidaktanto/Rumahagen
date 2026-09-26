@@ -95,6 +95,11 @@ export default async function SessionDetailPage({ params }: Props) {
         <div className="flex min-w-0 flex-col gap-6">
           <header className="flex flex-col gap-3">
             <div className="flex flex-wrap gap-2">
+              {s.status === "live" ? (
+                <Badge tone="danger" className="uppercase">
+                  Live Sekarang
+                </Badge>
+              ) : null}
               <Badge tone="info" dot={false}>
                 {SESSION_TYPE_LABEL[s.session_type] ?? s.session_type}
               </Badge>
@@ -119,12 +124,33 @@ export default async function SessionDetailPage({ params }: Props) {
             </Link>
           ) : null}
           {s.organizationName ? (
-            <div className="flex items-center gap-3 rounded-md border border-ink-100 bg-white p-4">
-              <BuildingIcon size={20} className="flex-none text-blue-600" />
-              <span className="min-w-0">
-                <span className="block truncate text-label-lg text-ink-900">Diselenggarakan oleh {s.organizationName}</span>
+            s.organizationSlug ? (
+              <Link href={`/organisasi/${s.organizationSlug}` as Route} className="flex items-center gap-3 rounded-md border border-ink-100 bg-white p-4 text-inherit no-underline hover:shadow-2 hover:no-underline">
+                <BuildingIcon size={20} className="flex-none text-blue-600" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-label-lg text-ink-900">Diselenggarakan oleh {s.organizationName}</span>
+                  <span className="text-caption">Lihat profil organisasi</span>
+                </span>
+                <ChevronRightIcon size={14} className="flex-none text-ink-500" />
+              </Link>
+            ) : (
+              <div className="flex items-center gap-3 rounded-md border border-ink-100 bg-white p-4">
+                <BuildingIcon size={20} className="flex-none text-blue-600" />
+                <span className="min-w-0">
+                  <span className="block truncate text-label-lg text-ink-900">Diselenggarakan oleh {s.organizationName}</span>
+                </span>
+              </div>
+            )
+          ) : null}
+          {s.event ? (
+            <Link href={`/event/${s.event.id}` as Route} className="flex items-center gap-3 rounded-md border border-ink-100 bg-white p-4 text-inherit no-underline hover:shadow-2 hover:no-underline">
+              <CalendarIcon size={20} className="flex-none text-blue-600" />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-label-lg text-ink-900">Bagian dari event: {s.event.title}</span>
+                <span className="text-caption">Lihat detail event</span>
               </span>
-            </div>
+              <ChevronRightIcon size={14} className="flex-none text-ink-500" />
+            </Link>
           ) : null}
 
           <section>

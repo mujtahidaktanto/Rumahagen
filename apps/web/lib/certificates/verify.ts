@@ -17,6 +17,13 @@ export type CertificateVerification = {
   organizer_type: string | null;
 };
 
+const ORGANIZER_LABEL: Record<string, string> = { rumahagen: "RumahAgen", partner: "Mitra RumahAgen", instructor: "Instruktur" };
+
+/** Label penyelenggara untuk tampilan; jenis tak dikenal/kosong -> null (baris disembunyikan). */
+export function organizerLabel(type: string | null): string | null {
+  return type ? (ORGANIZER_LABEL[type] ?? null) : null;
+}
+
 export async function verifyCertificateByCode(rawCode: string): Promise<CertificateVerification | null> {
   const parsed = certificateCodeSchema.safeParse(rawCode);
   if (!parsed.success) {

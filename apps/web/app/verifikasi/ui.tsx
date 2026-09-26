@@ -1,59 +1,87 @@
-// app/verifikasi/ui.tsx
-// Potongan tampilan bersama untuk halaman publik verifikasi sertifikat. Gaya inline sengaja sederhana: aplikasi ini belum punya sistem desain UI
-// (layout root hanya scaffold); ganti dengan komponen sistem desain saat UI dibangun.
+// app/verifikasi/ui.tsx — potongan tampilan bersama halaman verifikasi sertifikat (M04): kerangka halaman + jejak, formulir kode (GET biasa, tanpa JavaScript),
+// dan "Cara kerja verifikasi". Memakai komponen dasar dan token desain.
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Field";
 
-import type { CSSProperties, ReactNode } from "react";
-
-export const cardStyle: CSSProperties = {
-  background: "#fff",
-  border: "1px solid #DDE3EA",
-  borderRadius: 12,
-  padding: 20,
-};
-
-const OrganizerLabels: Record<string, string> = { rumahagen: "RumahAgen", partner: "Mitra RumahAgen", instructor: "Instruktur" };
-
-export function organizerLabel(type: string | null): string | null {
-  return type ? OrganizerLabels[type] ?? null : null;
-}
-
-export function formatDate(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "-";
-  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" }).format(d);
-}
-
-export function VerifyShell({ children }: { children: ReactNode }) {
+export function VerifyPage({ children }: { children: ReactNode }) {
   return (
-    <main style={{ maxWidth: 560, margin: "0 auto", padding: "24px 16px 48px", display: "grid", gap: 16, fontFamily: "system-ui, sans-serif", color: "#14202E" }}>
-      <header>
-        <div style={{ fontWeight: 800, fontSize: 18 }}>RumahAgen</div>
-        <div style={{ color: "#5B6B7F", fontSize: 14 }}>Verifikasi Sertifikat</div>
+    <div className="mx-auto w-full max-w-[720px] px-4 sm:px-6">
+      <nav aria-label="Jejak halaman" className="flex flex-wrap items-center gap-1.5 pt-4 text-[13px] text-ink-500">
+        <Link href="/" className="text-ink-500">
+          Beranda
+        </Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page" className="text-ink-900">
+          Verifikasi Sertifikat
+        </span>
+      </nav>
+      <header className="flex flex-col gap-1.5 pt-6 pb-5">
+        <h1 className="text-headline">Verifikasi Sertifikat</h1>
+        <p className="text-body-lg text-ink-500">Periksa keaslian sertifikat RumahAgen tanpa perlu login.</p>
       </header>
-      {children}
-    </main>
+      <div className="flex flex-col gap-6 pb-14">{children}</div>
+    </div>
   );
 }
 
-// Formulir GET biasa (tanpa JavaScript): /verifikasi?kode=XXXX-XXXX-XXXX mengalihkan ke /verifikasi/{kode}.
-export function VerifyForm({ label = "Periksa", defaultValue = "" }: { label?: string; defaultValue?: string }) {
+// Formulir GET biasa: /verifikasi?kode=XXXX-XXXX-XXXX mengalihkan ke /verifikasi/{kode}.
+export function VerifyForm({ label = "Periksa", defaultValue = "", showHint = true }: { label?: string; defaultValue?: string; showHint?: boolean }) {
   return (
-    <form action="/verifikasi" method="get" style={{ ...cardStyle, display: "grid", gap: 10 }}>
-      <label htmlFor="kode" style={{ fontWeight: 600 }}>Kode verifikasi</label>
-      <input
-        id="kode"
-        name="kode"
-        defaultValue={defaultValue}
-        placeholder="XXXX-XXXX-XXXX"
-        autoComplete="off"
-        autoCapitalize="characters"
-        spellCheck={false}
-        required
-        style={{ minHeight: 44, padding: "0 12px", fontSize: 16, fontFamily: "ui-monospace, monospace", border: "1px solid #B8C2CF", borderRadius: 8 }}
-      />
-      <button type="submit" style={{ minHeight: 44, border: 0, borderRadius: 8, background: "#1F5FBF", color: "#fff", fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
-        {label}
-      </button>
+    <form action="/verifikasi" method="get" className="flex flex-col gap-2 rounded-lg border border-ink-100 bg-white p-5">
+      <label htmlFor="kode" className="text-label-lg">
+        Kode verifikasi
+      </label>
+      <div className="flex flex-col gap-2.5 sm:flex-row">
+        <Input
+          id="kode"
+          name="kode"
+          defaultValue={defaultValue}
+          placeholder="XXXX-XXXX-XXXX"
+          autoComplete="off"
+          autoCapitalize="characters"
+          spellCheck={false}
+          maxLength={40}
+          required
+          aria-describedby={showHint ? "kode-hint" : undefined}
+          className="min-w-0 flex-1 font-mono uppercase"
+        />
+        <Button type="submit" className="sm:w-32">
+          {label}
+        </Button>
+      </div>
+      {showHint ? (
+        <p id="kode-hint" className="text-caption">
+          Kode terdiri dari 12 karakter angka dan huruf A–F, contoh 3A62-89F8-8F1C. Kode tercetak di bawah QR pada sertifikat. Memindai QR membuka halaman ini dengan kode terisi.
+        </p>
+      ) : null}
     </form>
+  );
+}
+
+const STEPS = [
+  "Pindai QR pada sertifikat, atau ketik kode 12 karakter di kolom atas.",
+  "Kami mencocokkan kode dengan data resmi RumahAgen dan menampilkan status terkini.",
+  "Yang tampil hanya nama, kursus, nomor, tanggal, dan status. Tidak ada data pribadi lain seperti email atau nomor telepon.",
+];
+
+export function HowItWorks() {
+  return (
+    <section aria-labelledby="cara-kerja">
+      <h2 id="cara-kerja" className="mb-3 text-title-lg">
+        Cara kerja verifikasi
+      </h2>
+      <ol className="flex flex-col gap-3">
+        {STEPS.map((s, i) => (
+          <li key={i} className="flex items-start gap-3">
+            <span aria-hidden="true" className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-blue-100 text-[13px] font-bold text-blue-600">
+              {i + 1}
+            </span>
+            <span className="pt-0.5 text-body-md text-ink-700">{s}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }

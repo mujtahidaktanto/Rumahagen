@@ -2,6 +2,7 @@
 // melihat status lain (draft, sold, rented, suspended, expired, dst.) sehingga halaman memberi spanduk "tidak tersedia" untuk mereka. Profil agen dibaca dari view
 // `public_agent_profiles` (hanya profil publik dan akun aktif); agen berprofil privat tidak tampil sebagai kartu agen.
 import { createClient } from "@/lib/supabase/server";
+import { getAgentRatings, type RatingSummary } from "./agent-reviews";
 import { LISTING_CARD_SELECT, toFeaturedListing, type FeaturedListing, type ListingCardRow } from "./home-data";
 
 export type ListingStatus = "draft" | "pending_review" | "published" | "sold" | "rented" | "expired" | "rejected" | "suspended";
@@ -69,7 +70,7 @@ const DETAIL_SELECT =
   "id, slug, title, status, transaction_type, property_type, price, price_unit, is_negotiable, description, address, latitude, longitude, land_area, building_area, bedrooms, bathrooms, floors, carport_capacity, electrical_power, water_source, furnishing, year_built, certificate_type, imb_status, whatsapp_number, meta_title, meta_description, agent_id, province_id, city_id, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), photos:listing_photos(url, alt_text, is_cover, sort_order), amenities:listing_amenities(amenity:amenities(name))";
 
 export type ListingDetailResult =
-  | { state: "ok"; listing: ListingDetail; agent: ListingAgent | null; similar: FeaturedListing[] }
+  | { state: "ok"; listing: ListingDetail; agent: ListingAgent | null; agentRating?: RatingSummary; similar: FeaturedListing[] }
   | { state: "not_found" }
   | { state: "error" };
 
@@ -90,15 +91,16 @@ export async function getListingDetail(slug: string): Promise<ListingDetailResul
   };
 
   // Kartu agen dan listing serupa bersifat pelengkap: gagal memuat tidak boleh menjatuhkan halaman.
-  const [agentRes, similar] = await Promise.all([
+  const [agentRes, similar, ratings] = await Promise.all([
     supabase
       .from("public_agent_profiles")
       .select("user_id, public_slug, full_name, avatar_url, organization_name, active_listings_count, whatsapp_number, public_cta_enabled, is_verified")
       .eq("user_id", listing.agent_id)
       .maybeSingle<ListingAgent>(),
     getSimilarListings(listing),
+    getAgentRatings([listing.agent_id]),
   ]);
-  return { state: "ok", listing, agent: agentRes.error ? null : agentRes.data, similar };
+  return { state: "ok", listing, agent: agentRes.error ? null : agentRes.data, agentRating: ratings.get(listing.agent_id), similar };
 }
 
 async function getSimilarListings(l: ListingDetail, limit = 3): Promise<FeaturedListing[]> {

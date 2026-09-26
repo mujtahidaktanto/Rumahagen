@@ -41,7 +41,7 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 ## 2026-09-26 — Fase 2, M11 Detail Listing
 
 1. **Spanduk "Sudah Terjual / Disewa / Kedaluwarsa / Sedang Ditinjau" tidak akan terlihat pengunjung.** RLS listings hanya mengizinkan anon membaca status `published`; listing sold/rented/expired/suspended menjawab "Listing tidak ditemukan" bagi pengunjung (hanya pemilik dan staf yang melihat spanduk). Wireframe menggambarkan pengunjung melihat spanduk itu. Perbaikan butuh keputusan: perluas policy SELECT (mis. sold/rented/expired boleh dibaca publik, suspended tidak) atau terima perilaku sekarang.
-2. **Peringkat dan ulasan agen ("4.8 (126 ulasan)") tidak punya tabel/API.** Kartu agen menampilkan nama, organisasi, lencana Terverifikasi, dan jumlah listing aktif saja.
+2. **(DIKOREKSI 2026-09-26, pemeriksaan ulang Fase 2) Ulasan dan peringkat agen ADA datanya** (tabel `agent_reviews`, migration 0030; anon membaca yang `approved`, API `GET /api/agents/{id}/reviews`). Catatan lama "tidak punya tabel/API" salah. Sekarang tampil: rata-rata + jumlah di kartu agen (daftar `/agen`, kartu agen di Detail Listing) dan bagian "Ulasan" + statistik bintang di Detail Agen (10 ulasan terbaru; `lib/public/agent-reviews.ts`). Menulis ulasan (`POST /api/agents/{id}/reviews`, butuh login) belum punya layar. Data uji: 4 ulasan tayang + 1 pending + 1 dihapus (sengaja tersembunyi).
 3. **Tombol "Telepon Agent" tidak ditampilkan:** kontak publik agen hanya WhatsApp (keputusan privasi 2026-09-25); tidak ada nomor telepon terpisah di view `public_agent_profiles`.
 4. **Tautan "Cek kelayakan KPR dengan Kalkulator DBR" tidak ditampilkan:** kalkulator DBR ada di area Agent (butuh login) dan belum dibangun; tautan publik belum punya tujuan.
 5. **Peta lokasi:** wireframe hanya placeholder. Sekarang alamat teks + tautan "Buka di Google Maps" bila latitude/longitude ada; peta tertanam menunggu keputusan penyedia peta.
@@ -98,6 +98,14 @@ Dicatat sesuai aturan: UI tidak mengubah migration/API; celah dicatat di sini la
 6. **`events.related_course_id` tidak punya foreign key ke `courses`** (hanya `related_project_id` yang punya), sehingga course terkait dibaca dengan query terpisah (hanya course `published`); tanpa FK, ID course yatim tidak dicegah DB.
 7. **Belum diuji dengan Agent yang login:** tombol Daftar Sekarang / Ajukan Pendaftaran dan status pendaftaran (kata sandi akun uji tidak dimiliki Claude).
 8. **Data contoh:** 7 event uji (3 akan datang: workshop online auto_confirm terkait course, open house manual_approval terkait proyek, gathering closed; 1 training lalu; 3 sengaja tersembunyi: pending_approval, private, cancelled).
+
+## 2026-09-26 — Pemeriksaan ulang Fase 2 (wireframe, API, permission route)
+
+1. **Ulasan agen** ditambahkan (lihat Detail Listing butir 2 yang dikoreksi).
+2. **Verifikasi Sertifikat** (`/verifikasi`, `/verifikasi/[kode]`) dibangun ulang sesuai wireframe M04: memakai Global Public Shell (`app/verifikasi/layout.tsx`) dan komponen dasar; keadaan valid/dicabut/tidak ditemukan/gagal/terlalu banyak percobaan; "Salin tautan halaman ini", "Periksa kode lain", "Hubungi bantuan" (mailto), "Cara kerja verifikasi". Pembatas percobaan halaman memakai `rate_limit_log` yang sama dengan API (60/menit, kunci `verify:{ip}`, `lib/certificates/verify-rate.ts`); kegagalan pembatas tidak memblokir verifikasi. Folder tetap `app/verifikasi` (bukan `app/(publik)/verifikasi`) karena penghapusan folder lama ditolak; hasilnya sama.
+3. **Detail Learning Session** kini menampilkan "Bagian dari event" (event terbit+publik) dan "Lihat profil organisasi" (organisasi aktif), serta lencana "Live Sekarang". `learning_sessions.event_id` tidak punya foreign key ke `events` (dibaca dengan query terpisah). Tombol "Gabung Sekarang" dan "Tonton Rekaman" tetap belum ada (butuh API tautan sesi/rekaman; belum diuji dengan pengguna login).
+4. **TERBUKA (perlu keputusan, ubah API): sitemap** hanya memuat listings, agents, developer-projects (kontrak API-150 mengunci 4 berkas). Organisasi, event, learning, konten, dan promo belum masuk sitemap.
+5. **`robots.txt`** hanya memblokir `/api/` dan `/admin/`; `/agent`, `/partner`, `/instructor`, `/portal` tidak diblokir (halaman butuh login, jadi tidak terindeks nyata).
 
 ## Catatan performa
 

@@ -1,16 +1,18 @@
 // components/public/AgentDetailView.tsx — isi Detail Agen publik (M11 Detail-Agen): kepala profil (foto, nama, lencana, kantor/organisasi, lokasi, spesialisasi, statistik), Title & Penghargaan
-// (1 utama + maks. 3 tambahan), Tentang, Portofolio Listing, dan kartu Hubungi Agen (WhatsApp selalu tampil + nomor lisensi). Ulasan/peringkat tidak ada datanya (lihat FRONTEND_GAPS).
+// (1 utama + maks. 3 tambahan), Tentang, Portofolio Listing, dan kartu Hubungi Agen (WhatsApp selalu tampil + nomor lisensi). Ulasan (agent_reviews approved, 10 terbaru) dan peringkat rata-rata di kepala profil.
 import Link from "next/link";
 import type { Route } from "next";
 import type { ReactNode } from "react";
 import { PropertyCard } from "@/components/public/PropertyCard";
+import { RatingStars } from "@/components/public/RatingStars";
 import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState, ErrorState } from "@/components/ui/States";
-import { PinIcon, TrophyIcon } from "@/components/ui/icons";
+import { PinIcon, StarIcon, TrophyIcon } from "@/components/ui/icons";
 import { formatDate, whatsappUrl } from "@/lib/format";
 import type { PublicAgent } from "@/lib/public/agent-data";
+import { reviewerLabel, type AgentReviewsResult } from "@/lib/public/agent-reviews";
 import type { FeaturedListing } from "@/lib/public/home-data";
 import { buildAgentWhatsAppMessage } from "@/lib/public/whatsapp-message";
 import { SITE_URL } from "@/lib/seo/sitemap";
@@ -33,7 +35,7 @@ function Stat({ value, label }: { value: number; label: string }) {
   );
 }
 
-export function AgentDetailView({ agent: a, listings, listingsOk }: { agent: PublicAgent; listings: FeaturedListing[]; listingsOk: boolean }) {
+export function AgentDetailView({ agent: a, listings, listingsOk, reviews }: { agent: PublicAgent; listings: FeaturedListing[]; listingsOk: boolean; reviews: AgentReviewsResult }) {
   const place = [a.city_name, a.province_name].filter(Boolean).join(", ");
   const org = [a.office_name, a.organization_name].filter(Boolean).join(" · ");
   const wa = whatsappUrl(a.whatsapp_number, buildAgentWhatsAppMessage({ agentName: a.full_name, slug: a.public_slug, siteUrl: SITE_URL }));
@@ -84,6 +86,15 @@ export function AgentDetailView({ agent: a, listings, listingsOk }: { agent: Pub
                 <Stat value={a.active_listings_count} label="Listing Aktif" />
                 <Stat value={a.total_listings_sold} label="Listing Terjual" />
                 <Stat value={a.total_listings_rented} label="Listing Tersewa" />
+                {reviews.ok && reviews.summary.average !== null ? (
+                  <div className="flex flex-col">
+                    <span className="flex items-center gap-1 text-title-lg">
+                      <StarIcon size={18} className="fill-current text-gold-700" />
+                      {reviews.summary.average.toFixed(1)}
+                    </span>
+                    <span className="text-caption">{new Intl.NumberFormat("id-ID").format(reviews.summary.count)} ulasan</span>
+                  </div>
+                ) : null}
               </div>
             </div>
           </header>
@@ -142,6 +153,32 @@ export function AgentDetailView({ agent: a, listings, listingsOk }: { agent: Pub
                   </li>
                 ))}
               </ul>
+            )}
+          </Section>
+
+          <Section title={reviews.ok ? `Ulasan (${new Intl.NumberFormat("id-ID").format(reviews.summary.count)})` : "Ulasan"}>
+            {!reviews.ok ? (
+              <ErrorState title="Ulasan belum bisa dimuat" message="Terjadi gangguan saat mengambil ulasan agen ini. Muat ulang beberapa saat lagi." className="py-8" />
+            ) : reviews.reviews.length === 0 ? (
+              <EmptyState title="Belum ada ulasan" message="Belum ada ulasan untuk agen ini." className="py-8" />
+            ) : (
+              <>
+                <ul className="flex flex-col gap-3">
+                  {reviews.reviews.map((r) => (
+                    <li key={r.id} className="rounded-md border border-ink-100 bg-white p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="min-w-0 truncate text-label-lg">{reviewerLabel(r.reviewer_name)}</span>
+                        <RatingStars rating={r.rating} />
+                      </div>
+                      {r.comment ? <p className="mt-2 whitespace-pre-line break-words text-body-md text-ink-700">{r.comment}</p> : null}
+                      <span className="mt-2 block text-caption">{formatDate(r.created_at)}</span>
+                    </li>
+                  ))}
+                </ul>
+                {reviews.summary.count > reviews.reviews.length ? (
+                  <p className="mt-3 text-caption">Menampilkan {reviews.reviews.length} ulasan terbaru dari {new Intl.NumberFormat("id-ID").format(reviews.summary.count)} ulasan.</p>
+                ) : null}
+              </>
             )}
           </Section>
         </div>

@@ -178,6 +178,10 @@ export async function listPublicSessions(limit = 48): Promise<SessionsResult> {
 export type SessionDetail = SessionSummary & {
   course: { id: string; title: string; description: string | null } | null;
   organizationName: string | null;
+  /** Slug organisasi bila organisasi aktif (halaman publiknya ada); selain itu null. */
+  organizationSlug: string | null;
+  /** Event terkait bila event terbit dan publik (events RLS); null selain itu. */
+  event: { id: string; title: string } | null;
 };
 export type SessionDetailResult = { state: "ok"; session: SessionDetail } | { state: "not_found" } | { state: "error" };
 
@@ -186,14 +190,38 @@ export async function getSessionDetail(id: string): Promise<SessionDetailResult>
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("learning_sessions")
-    .select("id, session_type, status, start_at, end_at, visibility, course:courses(id, title, description), organization:organizations(organization_name)")
+    // learning_sessions.event_id TIDAK punya foreign key ke events (hanya course_id dan organization_id), jadi event dibaca terpisah di bawah.
+    .select("id, session_type, status, start_at, end_at, visibility, event_id, course:courses(id, title, description), organization:organizations(organization_name, slug, status)")
     .eq("id", id)
     .is("deleted_at", null)
-    .maybeSingle<Omit<SessionSummary, "courseTitle"> & { course: { id: string; title: string; description: string | null } | null; organization: { organization_name: string } | null }>();
+    .maybeSingle<
+      Omit<SessionSummary, "courseTitle"> & {
+        event_id: string | null;
+        course: { id: string; title: string; description: string | null } | null;
+        organization: { organization_name: string; slug: string | null; status: string } | null;
+      }
+    >();
   if (error) return { state: "error" };
   if (!data) return { state: "not_found" };
-  const { course, organization, ...rest } = data;
-  return { state: "ok", session: { ...rest, courseTitle: course?.title ?? null, course, organizationName: organization?.organization_name ?? null } };
+  const { course, organization, event_id, ...rest } = data;
+
+  // Event terkait pelengkap: hanya event terbit dan publik; gagal memuat tidak menjatuhkan halaman.
+  let event: { id: string; title: string } | null = null;
+  if (event_id) {
+    const { data: e } = await supabase.from("events").select("id, title").eq("id", event_id).eq("status", "published").eq("visibility", "public").is("deleted_at", null).maybeSingle<{ id: string; title: string }>();
+    event = e ?? null;
+  }
+  return {
+    state: "ok",
+    session: {
+      ...rest,
+      courseTitle: course?.title ?? null,
+      course,
+      organizationName: organization?.organization_name ?? null,
+      organizationSlug: organization && organization.status === "active" ? organization.slug : null,
+      event,
+    },
+  };
 }
 
 export async function isEnrolledInSession(sessionId: string, userId: string): Promise<boolean> {

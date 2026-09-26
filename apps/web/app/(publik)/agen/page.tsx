@@ -6,6 +6,7 @@ import { DiscoveryTabs } from "@/components/public/DiscoveryTabs";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { SearchIcon } from "@/components/ui/icons";
+import { getAgentRatings } from "@/lib/public/agent-reviews";
 import { AGENT_MAX_SHOWN, AGENT_PAGE_SIZE, agentQuery, parseAgentSearch, searchAgents } from "@/lib/public/agent-data";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
@@ -24,6 +25,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function AgentDiscoveryPage({ searchParams }: Props) {
   const search = parseAgentSearch(await searchParams);
   const result = await searchAgents(search);
+  const ratings = await getAgentRatings(result.items.map((a) => a.user_id));
 
   return (
     <div>
@@ -97,7 +99,7 @@ export default async function AgentDiscoveryPage({ searchParams }: Props) {
               <ul className="grid grid-cols-1 gap-5 min-[520px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {result.items.map((a) => (
                   <li key={a.user_id}>
-                    <AgentCard agent={a} />
+                    <AgentCard agent={a} rating={ratings.get(a.user_id)} />
                   </li>
                 ))}
               </ul>
