@@ -374,6 +374,40 @@ Tanpa migration baru — endpoint `GET/PUT /admin/learning/configuration`, `GET/
 4. **Pencarian Akun/Agent/Kursus di ketiga alat (Config, Penyesuaian Poin, Penerbitan Sertifikat) murni client-side atas data yang sudah dimuat** (agent aktif + semua kursus) — tidak ada endpoint pencarian server terpisah untuk kombinasi ini, dan jumlah agent/kursus saat ini masih kecil.
 5. **Katalog Aktivitas tidak menampilkan/mengedit `learning_path_version_id`** — `createLearningActivitySchema` menerimanya, tapi wireframe "Aktivitas Baru" tidak menyertakan field jalur pembelajaran; tidak ditambahkan karena tidak dievidensi wireframe maupun kebutuhan yang diminta.
 
+## 2026-09-26 — Fase 5 Kelompok 6 (bagian 2): Kelola Kursus (M04 — kursus, kuis, sertifikat)
+
+Tanpa migration baru — semua endpoint (`GET/POST /courses`, `GET/PUT /courses/{id}`, `PATCH /courses/{id}/status`, `POST /courses/{id}/{submit-review,review}`, `GET/POST /courses/{id}/lessons`,
+`PUT/DELETE /course-lessons/{id}`, `GET/POST /courses/{id}/quizzes`, `GET/PUT/DELETE /quizzes/{id}`, `POST /quizzes/{id}/questions`, `PUT/DELETE /quiz-questions/{id}`,
+`POST /quiz-questions/{id}/options`, `PUT/DELETE /quiz-options/{id}`, `GET/PUT /courses/{id}/certificate-config`, `POST /courses/{id}/certificate-assets/upload-url`) sudah ada tapi belum
+pernah dipakai UI. Rute `/admin/kursus` (daftar), `/admin/kursus/{id}` (4 tab), `/admin/kursus/{id}/kuis/{quizId}` (editor soal), `/admin/kursus/{id}/sertifikat`. Kode: `lib/admin/course-data.ts`,
+`lib/admin/course-labels.ts` (label kategori/tipe/template sebagai data murni — lihat poin 6), `components/admin/{CourseListView,CourseFormDialog,CourseDetailView,CourseStatusActions,
+LessonFormDialog,LessonRowActions,QuizCreateDialog,QuizRowActions,QuizEditorView,CertificateConfigView}.tsx`.
+1. **"Kesiapan untuk terbit" dikoreksi dari wireframe.** Wireframe sendiri menghitung `quizzesOk = quizzes.every(...)`, yang bernilai `true` untuk 0 kuis (array kosong). Tapi trigger backend
+   `enforce_course_quizzes_ready_on_publish` (migration 0150, v2) MEWAJIBKAN minimal 1 kuis (bukan cuma "semua kuis yang ada siap") untuk `pending_review` maupun `published`. UI di sini
+   memakai aturan backend yang lebih ketat (`quizList.length >= 1 && semua ready`), bukan logika wireframe.
+2. **Tombol "Ajukan Tinjauan"/"Tarik Kembali" sengaja tidak ada di sisi staf.** Staf (Superadmin/Admin/Manager) boleh transisi status apa saja langsung (trigger `enforce_course_status_workflow`
+   membebaskan staf dari daftar transisi terbatas), jadi draft→published langsung lewat "Terbitkan" tanpa perlu alur ajukan-tinjau. `withdraw-review` (`POST .../withdraw-review`) juga
+   TIDAK berfungsi untuk staf yang bukan pemilik kursus (trigger mewajibkan `review_note` yang tidak pernah dikirim endpoint itu) — dikonfirmasi lewat riset kode, bukan diasumsikan.
+3. **"Tolak" pengajuan HANYA lewat `POST /courses/{id}/review` (bukan `PATCH .../status`).** `PATCH /status` ke `draft` dari `pending_review` oleh staf yang bukan pemilik gagal 409 karena
+   endpoint itu tidak pernah mengirim `review_note` yang diwajibkan trigger untuk kasus itu. Aksi "Setujui & Terbitkan" pada `pending_review` juga memakai `/review` (bukan `/status`) agar
+   `reviewed_by`/`reviewed_at` tercatat dan notifikasi terkirim.
+4. **Tidak ada endpoint reorder pelajaran** — naik/turun urutan mengirim 2x `PUT /course-lessons/{id}` menukar `sort_order` secara berurutan (bukan satu operasi atomik/transaksional).
+5. **Readiness kuis (siap/belum, daftar masalah) dihitung lewat RPC `quiz_problems`/`quiz_has_attempts` dipanggil langsung dari server** (bukan lewat REST) karena tidak ada endpoint list yang
+   menyertakan info ini — pola sama seperti pembacaan langsung tabel lain di seluruh admin UI (RLS pemanggil, RPC `GRANT EXECUTE TO authenticated`), bukan pelanggaran "jangan panggil RPC dari
+   browser" (ini dipanggil di server, bukan dari klien).
+6. **Tidak ada endpoint list peserta per kursus** (`GET /enrollments?course_id=` tidak ada) — tab Peserta (read-only) dibaca langsung dari tabel `enrollments` via RLS `enrollments_select`
+   (scope 'all' untuk staf), pola identik dengan `getActiveAgentsForPicker`/`getStaffDirectory` di modul lain.
+7. **Label kategori/tipe pelajaran/template sertifikat DIDUPLIKASI secara sengaja** di `lib/admin/course-labels.ts` (bukan diimpor dari `lib/public/learning-data.ts` yang jadi sumber resmi
+   sebelumnya) — karena modul manapun yang mengimpor NILAI (bukan hanya tipe) dari file yang sama dengan fungsi `createClient()`/`next/headers` ikut membundel kode server itu ke bundel
+   klien dan build Next.js gagal ("next/headers ... not supported"). File baru ini murni data tanpa import, aman dipakai `CourseFormDialog`/`LessonFormDialog`/`CertificateConfigView`
+   (client). Nilai HARUS dijaga tetap sinkron manual dengan `lib/public/learning-data.ts` bila kategori/tipe berubah.
+8. **"Pemilik kursus" untuk instruktur ditampilkan sebagai email, bukan nama** — tidak ada tabel `instructor_profiles` (area Instruktur sendiri belum dibangun, masih placeholder "Fase 6"
+   di `app/instructor/page.tsx`), jadi tidak ada sumber nama tampilan untuk instruktur selain email dari Supabase Auth (pola sama seperti `staff-data.ts`).
+9. **Sertifikat Kursus TANPA mockup grafis template** (pratinjau visual 4 desain sertifikat di wireframe) — murni pilihan tombol berlabel, bukan potongan fungsi (backend hanya menyimpan
+   `certificate_template` sebagai enum, tidak ada endpoint pratinjau render).
+10. **Form Kursus tidak menyertakan field `learning_path_version_id`** pada aktivitas (tidak relevan di sini) maupun cross-check "siklus prasyarat" (A butuh B, B butuh A) — backend memang
+    belum mencegahnya (dicatat eksplisit di wireframe), jadi UI tidak menambah validasi yang tidak didukung backend.
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
