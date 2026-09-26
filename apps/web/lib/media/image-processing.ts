@@ -134,3 +134,18 @@ export async function putToSignedUrl(url: string, blob: Blob, type: string): Pro
   const res = await fetch(url, { method: "PUT", headers: { "Content-Type": type }, body: blob });
   if (!res.ok) throw new Error("upload");
 }
+
+/** Potong tengah gambar mengikuti rasio tujuan (cover), lalu ubah ke ukuran tujuan (mis. logo 512x512, banner 1500x500). */
+export async function makeCoverImage(src: Source, width: number, height: number): Promise<Encoded> {
+  const target = width / height;
+  const ratio = src.width / src.height;
+  const cw = ratio > target ? src.height * target : src.width;
+  const ch = ratio > target ? src.height : src.width / target;
+  const c = document.createElement("canvas");
+  c.width = width;
+  c.height = height;
+  const ctx = c.getContext("2d")!;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(src.canvas, (src.width - cw) / 2, (src.height - ch) / 2, cw, ch, 0, 0, width, height);
+  return encodeUnderLimit(c);
+}

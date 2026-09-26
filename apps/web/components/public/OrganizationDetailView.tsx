@@ -36,12 +36,15 @@ export function OrganizationDetailView({
   membersOk,
   listings,
   listingsOk,
+  joinCard,
 }: {
   org: PublicOrganization;
   members: PublicAgent[];
   membersOk: boolean;
   listings: FeaturedListing[];
   listingsOk: boolean;
+  /** Kartu "Bergabung" untuk Agent yang login (server-side); kosong bagi pengunjung/peran lain. */
+  joinCard?: React.ReactNode;
 }) {
   const banner = safeHref(org.banner_url);
   const website = safeHref(org.website);
@@ -125,7 +128,9 @@ export function OrganizationDetailView({
           </Section>
         </div>
 
-        <aside aria-label="Informasi kontak" className="flex flex-col gap-3.5 rounded-lg border border-ink-100 bg-white p-5 shadow-2 lg:sticky lg:top-24">
+        <div className="flex flex-col gap-4 lg:sticky lg:top-24">
+        {joinCard}
+        <aside aria-label="Informasi kontak" className="flex flex-col gap-3.5 rounded-lg border border-ink-100 bg-white p-5 shadow-2">
           <span className="text-label-md text-ink-500">Informasi Kontak</span>
           {website?.startsWith("https://") ? (
             <a href={website} target="_blank" rel="noopener noreferrer" className="flex min-h-11 items-center gap-2.5 break-all text-body-md">
@@ -158,6 +163,7 @@ export function OrganizationDetailView({
           ) : null}
           {!hasContact ? <p className="text-body-md text-ink-500">Informasi kontak belum ditambahkan.</p> : null}
         </aside>
+        </div>
       </div>
     </div>
   );

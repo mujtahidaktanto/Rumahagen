@@ -6,6 +6,7 @@
 
 import { withApiHandler } from "@/lib/api/handler";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 
 export const PUT = withApiHandler({}, async (ctx) => {
@@ -21,7 +22,7 @@ export const PUT = withApiHandler({}, async (ctx) => {
     if (error.message?.includes("tidak boleh menyetujui")) {
       throw new ApiError("FORBIDDEN", error.message);
     }
-    throw error;
+    throwIntegrityError(error); // 0161: kedaluwarsa, sudah dijawab, bukan hak Anda -> 409/403 berpesan
   }
   if (!data) {
     throw new ApiError("NOT_FOUND", "Undangan/permohonan tidak ditemukan atau Anda tidak punya akses.");

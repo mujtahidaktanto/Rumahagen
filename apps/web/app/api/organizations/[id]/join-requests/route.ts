@@ -17,6 +17,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { createJoinRequestSchema } from "@/lib/validation/organization-invitations";
 import { ApiError } from "@/lib/api/errors";
+import { throwIntegrityError } from "@/lib/api/integrity-error";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -58,7 +59,9 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
     .single();
 
   if (error) {
-    throw error;
+    // 0161: satu pending per (organisasi, Agent, jenis); organisasi tidak aktif, sudah anggota, dsb. = 409 berpesan.
+    if (error.code === "23505") throw new ApiError("CONFLICT", "Anda sudah mengajukan bergabung ke organisasi ini.");
+    throwIntegrityError(error);
   }
 
   return { data, status: 201 };

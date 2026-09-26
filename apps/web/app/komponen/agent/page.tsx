@@ -1,5 +1,5 @@
 // app/komponen/agent/page.tsx — layar Agent dengan DATA CONTOH (bukan database) untuk memeriksa tampilan tanpa login: /komponen/agent?dashboard=normal|kosong|gagal|ktp dan
-// /komponen/agent?layar=belajar&belajar=normal|kosong|gagal (Pembelajaran) dan ?layar=course&course=normal|selesai|tanpa-kuis (Belajar-Course; soal kuis dimuat dari API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=event&event=normal|kosong|gagal (Event Saya) dan ?layar=event-form&mode=baru|belum|tayang|ditolak|batal&pendaftar=normal|kosong|gagal (Ajukan/Kelola Event, kartu Pendaftar; simpan memanggil API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=profil&profil=terisi|baru&ktp=belum|terverifikasi (menyimpan/verifikasi di sini memanggil API sungguhan dan akan gagal tanpa sesi).
+// /komponen/agent?layar=belajar&belajar=normal|kosong|gagal (Pembelajaran) dan ?layar=course&course=normal|selesai|tanpa-kuis (Belajar-Course; soal kuis dimuat dari API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=event&event=normal|kosong|gagal (Event Saya) dan ?layar=event-form&mode=baru|belum|tayang|ditolak|batal&pendaftar=normal|kosong|gagal (Ajukan/Kelola Event, kartu Pendaftar; simpan memanggil API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=organisasi&org=tanpa|undangan|gagal|leader|member|closing|ditutup|dibekukan|kuota-gagal, ?layar=org-baru, ?layar=org-anggota&peran=leader|member (Organisasi; aksi memanggil API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=profil&profil=terisi|baru&ktp=belum|terverifikasi (menyimpan/verifikasi di sini memanggil API sungguhan dan akan gagal tanpa sesi).
 // Sembunyikan di produksi nyata dengan env HIDE_DEV_PAGES=1 (sama seperti /komponen).
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -8,6 +8,9 @@ import { CourseRunner } from "@/components/agent/CourseRunner";
 import { EventForm } from "@/components/agent/EventForm";
 import { EventRegistrants } from "@/components/agent/EventRegistrants";
 import { MyEventsView } from "@/components/agent/MyEventsView";
+import { OrgCreateForm } from "@/components/agent/OrgCreateForm";
+import { OrgMembersPanel } from "@/components/agent/OrgMembersPanel";
+import { OrganizationView } from "@/components/agent/OrganizationView";
 import { KtpCard } from "@/components/agent/KtpCard";
 import { LearningView } from "@/components/agent/LearningView";
 import { ListingWizard } from "@/components/agent/ListingWizard";
@@ -16,6 +19,7 @@ import { MyListingsView } from "@/components/agent/MyListingsView";
 import { ProfileForm } from "@/components/agent/ProfileForm";
 import type { DashboardData } from "@/lib/agent/dashboard-data";
 import type { MyEvents, Registrant } from "@/lib/agent/event-data";
+import type { MyOrgData, OrgPageData, PendingRequest, RosterMember } from "@/lib/agent/org-data";
 import { EMPTY_EVENT, type EventFormValues } from "@/lib/agent/event-rules";
 import type { CourseRun, MyLearning } from "@/lib/agent/learning-data";
 import type { MyListingItem, MyListingsData } from "@/lib/agent/listing-data";
@@ -23,7 +27,7 @@ import { EMPTY_WIZARD, WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wi
 
 export const metadata: Metadata = { title: "Contoh Layar Agent | RumahAgen", robots: { index: false, follow: false } };
 
-type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string }> };
+type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string; event?: string; mode?: string; pendaftar?: string; org?: string; peran?: string }> };
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
@@ -215,6 +219,90 @@ export default async function SampleAgentPage({ searchParams }: Props) {
             extra={<EventRegistrants eventId="1a2b3c4d-1111-2222-3333-444455556666" registrants={registrants} startIso={new Date(Date.now() - 3_600_000).toISOString()} quota={50} approvalMode="manual_approval" />}
           />
         )}
+      </div>
+    );
+  }
+  if (layar === "organisasi") {
+    const { org = "leader" } = await searchParams;
+    const at = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
+    const inv = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString();
+    const quota = { ok: true as const, data: { scope: "organization" as const, free: { limit: 50, used: 9, remaining: 41, period_start: null, resets_at: inv(5) }, pro: { limit: 100, used: 0, remaining: 0, period_start: null, resets_at: null, active: false }, purchased: { balance: 0 }, total_remaining: 41, validity_days: 90, grace_days: 7 } };
+    const roster: RosterMember[] = [
+      { memberId: "m1", agentId: "a1", role: "leader", joinedAt: at(700), name: "Rian Saputra", isSelf: org !== "member" },
+      { memberId: "m2", agentId: "a2", role: "member", joinedAt: at(240), name: "Dewi Anggraini", isSelf: org === "member" },
+      { memberId: "m3", agentId: "a3", role: "member", joinedAt: at(150), name: "Bambang Sutrisno", isSelf: false },
+      { memberId: "m4", agentId: "a4", role: "member", joinedAt: at(60), name: "Siti Rahma", isSelf: false },
+    ];
+    const status = org === "closing" ? "closing" : org === "ditutup" ? "closed" : org === "dibekukan" ? "suspended" : "active";
+    const base: MyOrgData = {
+      membershipId: "m1",
+      role: org === "member" ? "member" : "leader",
+      org: {
+        id: "0db7b607-a7fa-41af-adbf-052707bf79fc",
+        name: "PT Properti Jaya Sejahtera dengan Nama Organisasi yang Cukup Panjang",
+        slug: "properti-jaya",
+        type: "kantor",
+        status,
+        logoUrl: null,
+        bannerUrl: null,
+        description: "Kantor agen properti di BSD City.",
+        website: "https://propertijaya.id",
+        social: { instagram: "@propertijaya" },
+        address: "Ruko Sunburst CBD, BSD City, Tangerang Selatan",
+        phone: "(021) 5551234",
+      },
+      roster: { ok: true, data: roster },
+      pendingCount: org === "member" ? null : { ok: true, data: 2 },
+      listingCount: { ok: true, data: 12 },
+      quota: org === "kuota-gagal" ? { ok: false } : quota,
+    };
+    const data: OrgPageData =
+      org === "gagal"
+        ? { state: "error" }
+        : org === "tanpa"
+          ? { state: "no_org", invitations: { ok: true, data: [] } }
+          : org === "undangan"
+            ? {
+                state: "no_org",
+                invitations: {
+                  ok: true,
+                  data: [
+                    { id: "i1", organizationId: "o1", organizationName: "Kantor Properti Nusantara", organizationType: "kantor", leaderName: "Dewi Anggraini", createdAt: at(3), expiresAt: inv(4), isExpired: false },
+                    { id: "i2", organizationId: "o2", organizationName: "Tim Broker BSD dengan Nama yang Sangat Panjang untuk Menguji Pemotongan Teks", organizationType: "tim", leaderName: "Rian Saputra", createdAt: at(16), expiresAt: at(9), isExpired: true },
+                  ],
+                },
+              }
+            : { state: "org", ...base };
+    return (
+      <div className="min-h-dvh bg-surface">
+        <OrganizationView data={data} maskedEmail="m*****@gmail.com" />
+      </div>
+    );
+  }
+  if (layar === "org-baru") {
+    return (
+      <div className="min-h-dvh bg-surface">
+        <OrgCreateForm />
+      </div>
+    );
+  }
+  if (layar === "org-anggota") {
+    const { peran = "leader" } = await searchParams;
+    const at = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
+    const roster: RosterMember[] = [
+      { memberId: "m1", agentId: "a1", role: "leader", joinedAt: at(700), name: "Rian Saputra", isSelf: peran !== "member" },
+      { memberId: "m2", agentId: "a2", role: "member", joinedAt: at(240), name: "Dewi Anggraini", isSelf: peran === "member" },
+      { memberId: "m3", agentId: "a3", role: "member", joinedAt: at(150), name: "Bambang Sutrisno", isSelf: false },
+    ];
+    const pending: PendingRequest[] = [
+      { id: "p1", kind: "agent_request", createdAt: at(2), expiresAt: null, isExpired: false, agentName: "Fajar Nugroho", agentOffice: "Ray White Kelapa Gading" },
+      { id: "p2", kind: "agent_request", createdAt: at(5), expiresAt: null, isExpired: false, agentName: "Maya Kusuma", agentOffice: null },
+      { id: "p3", kind: "leader_invite", createdAt: at(1), expiresAt: new Date(Date.now() + 6 * 86_400_000).toISOString(), isExpired: false, agentName: "Andi Saputra", agentOffice: null },
+      { id: "p4", kind: "leader_invite", createdAt: at(12), expiresAt: at(5), isExpired: true, agentName: "Lestari Wulan", agentOffice: null },
+    ];
+    return (
+      <div className="min-h-dvh bg-surface">
+        <OrgMembersPanel orgId="0db7b607-a7fa-41af-adbf-052707bf79fc" orgName="PT Properti Jaya Sejahtera" role={peran === "member" ? "member" : "leader"} status="active" roster={{ ok: true, data: roster }} pending={peran === "member" ? null : { ok: true, data: pending }} />
       </div>
     );
   }

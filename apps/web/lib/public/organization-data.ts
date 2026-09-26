@@ -8,9 +8,8 @@ import { LISTING_CARD_SELECT, toFeaturedListing, type FeaturedListing, type List
 import { safeHref } from "./promo-data";
 import { AGENT_SELECT, type PublicAgent } from "./agent-data";
 
-export const ORG_TYPES = ["agency", "kantor", "tim", "komunitas"] as const;
-export type OrgType = (typeof ORG_TYPES)[number];
-export const ORG_TYPE_LABEL: Record<string, string> = { agency: "Agency", kantor: "Kantor", tim: "Tim", komunitas: "Komunitas" };
+export { ORG_TYPES, ORG_TYPE_LABEL, type OrgType } from "./organization-labels";
+import { ORG_TYPES, type OrgType } from "./organization-labels";
 
 export type PublicOrganization = {
   id: string;

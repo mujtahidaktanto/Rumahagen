@@ -207,6 +207,18 @@ Laporan pemilik: klik Refresh selalu "kuota harian habis" dan jatahnya tidak ter
 3. Layar admin untuk angka bawaan dan bonus per orang belum ada (API-nya ada); dikerjakan di Fase Admin. Sementara angka bawaan diubah lewat `PUT /admin/config/system/refresh_allowance.default_daily`.
 4. Halaman "kuota refresh" khusus Agent (riwayat pemakaian) belum ada; `GET /agents/me/refresh-allowance` tersedia untuk Dashboard/Statistik nanti.
 
+## 2026-09-26 — Fase 3f, M12 Organisasi, Buat Organisasi, Kelola Anggota (0161 DITERAPKAN 2026-09-26)
+
+Layar: `/agent/organisasi` (belum tergabung: Undangan untuk Anda + Buat/Cari; sudah tergabung: dashboard), `/agent/organisasi/baru`, `/agent/organisasi/anggota`; kartu "Bergabung" di `/organisasi/[slug]`. Galeri: `/komponen/agent?layar=organisasi&org=tanpa|undangan|gagal|leader|member|closing|ditutup|dibekukan|kuota-gagal`, `?layar=org-baru`, `?layar=org-anggota&peran=leader|member`. Belum diuji dengan login Agent (uji manual: buat organisasi, undang, terima/tolak, permohonan, keluarkan, Edit Branding, tutup 2 langkah + OTP).
+1. **[KEAMANAN] Celah undangan organisasi (Agent bisa masuk organisasi mana pun tanpa undangan lewat REST)** ditutup migration 0161 (lihat README migrations). **0161 sudah diterapkan sehingga celah tertutup.**
+2. **Wireframe dan data:** logo/banner tidak diunggah saat Buat Organisasi (butuh id organisasi untuk jalur unggah); ditambahkan lewat Edit Branding setelah dibuat. Logo (512 px) dan banner (1500x500 px) dipotong OTOMATIS dari tengah, tanpa pemangkas manual.
+3. **Satu organisasi:** wireframe mengasumsikan satu organisasi; DB mengizinkan keanggotaan aktif di beberapa organisasi. Layar menampilkan keanggotaan terbaru; pemilih organisasi belum ada.
+4. **Pencarian undangan** hanya menemukan Agent dengan profil publik (nama atau nomor lisensi, minimal 2 huruf). Undangan berlaku 7 hari (bawaan UI; API menerima `expires_at`).
+5. **Keluar dari organisasi** hanya untuk anggota biasa; keluarnya leader menutup organisasi (trigger `org_closing_on_lead_exit`), jadi leader memakai Tutup Organisasi. Tidak ada pengalihan leader (transfer kepemimpinan) di API.
+6. **Kuota organisasi** memakai kartu kuota yang sama dengan Listing Saya (lingkup organisasi); tautan "Beli Slot" dan "Lihat Paket Pro" tetap "segera hadir" sampai layar Komersial ada.
+7. Konteks organisasi di Wizard Listing (memilih listing pribadi atau organisasi) belum ada: `POST /listings` menerima `organization_id` tetapi Wizard belum menawarkannya (dikerjakan saat kuota/konteks dibahas).
+8. **Dashboard Agent:** angka/notifikasi undangan organisasi belum tampil di Dashboard; undangan baru terlihat di Organisasi dan Pusat Notifikasi (Fase 4).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
