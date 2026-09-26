@@ -163,6 +163,18 @@ Register/OTP/Login/Akun Dibatasi diperbarui mengikuti keputusan dan implementasi
 2. **Perbaikan**: trigger pengalihan slug agen memakai `/agent/` (area aplikasi) bukan `/agen/`; diganti di 0157.
 3. **Tombol "Bagikan Profil"** ditambahkan di kepala profil publik Agen (`ShareButton` berlabel: lembar bagikan perangkat, atau salin tautan). **Wireframe belum diperbarui**: `M02-Profil-Saya` (kartu Alamat Profil Publik) dan `M11-Detail-Agen` (tombol Bagikan Profil).
 
+## 2026-09-26 — Fase 3d, M04 Pembelajaran dan Belajar-Course
+
+Layar: `/agent/belajar` (LP + riwayat, Course Saya, Sertifikat Saya, Sesi Belajar Saya) dan `/agent/belajar/[id]` (materi, kuis, Course Selesai). Galeri: `/komponen/agent?layar=belajar&belajar=normal|kosong|gagal` dan `?layar=course&course=normal|selesai|tanpa-kuis`. Belum diuji dengan login Agent (uji manual pemilik produk: daftar course dari `/learning/[id]`, tandai materi, kerjakan kuis, unduh sertifikat).
+
+1. **Progres per pelajaran tidak tersimpan.** Server hanya punya `enrollments.progress_percent` (peserta maks 99; 100 hanya lewat kuis lulus, migration 0130). UI menyandikan k dari n pelajaran selesai sebagai round(k/n x 90)% dan mewajibkan pelajaran diselesaikan berurutan (`lib/agent/learning-rules.ts`). Konsekuensi: tidak bisa menandai pelajaran acak, dan mengubah jumlah pelajaran course di tengah jalan menggeser tanda selesai. Bila ingin per-pelajaran sungguhan: tabel `course_lesson_completions` + API (perlu izin mengubah migration/API).
+2. **Course tanpa kuis tidak bisa selesai oleh peserta** (penyelesaian hanya lewat kuis lulus atau staf). UI menampilkan catatan; keputusan produk: wajibkan minimal 1 kuis saat terbit, atau beri jalur selesai untuk course tanpa kuis.
+3. **Kartu "Learning Path" di wireframe M04-Pembelajaran tidak ditampilkan.** Wireframe berisi contoh statis ("Jalur Karier Agen Profesional, 4 dari 10 aktivitas"); `GET /agents/me/learning/progress` hanya mengembalikan `learning_unlock_progressions` (state per versi jalur, tanpa nama jalur atau jumlah aktivitas) sehingga tidak bisa diisi tanpa mengarang. Perlu API ringkasan jalur (nama, aktivitas selesai/total) atau keputusan menghapus kartu dari wireframe.
+4. **"+LP didapat" di layar Course Selesai (wireframe) tidak ditampilkan.** Tidak ada API yang menyatakan berapa LP yang diberikan saat course selesai; saldo dan riwayat ada di Pembelajaran. Riwayat LP memakai label dari `transaction_type` (earned/purchased/redeemed/used/adjustment/reversal) karena `source_type` tidak punya daftar nilai baku.
+5. **Materi PDF/slide dibuka di tab baru** (bukan disematkan) karena `content_url` bisa berupa tautan apa saja (Drive, Canva, dsb.) yang sering menolak disematkan. Video: YouTube disematkan (youtube-nocookie), berkas mp4/webm diputar langsung, selain itu tab baru. Hanya tautan https yang dipakai.
+6. **Sesi belajar:** `learning_sessions` tidak punya judul, jadi memakai judul course terkait (atau "Sesi belajar"); kartu mengarah ke `/learning-session/[id]` publik.
+7. **Halaman course publik** `/learning/[id]`: setelah "Mulai Belajar" kini ada tombol "Buka Materi" ke `/agent/belajar/[id]` (`EnrollButton` menerima `doneHref`).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

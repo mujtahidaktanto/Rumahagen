@@ -1,21 +1,24 @@
 // app/komponen/agent/page.tsx — layar Agent dengan DATA CONTOH (bukan database) untuk memeriksa tampilan tanpa login: /komponen/agent?dashboard=normal|kosong|gagal|ktp dan
-// /komponen/agent?layar=profil&profil=terisi|baru&ktp=belum|terverifikasi (menyimpan/verifikasi di sini memanggil API sungguhan dan akan gagal tanpa sesi).
+// /komponen/agent?layar=belajar&belajar=normal|kosong|gagal (Pembelajaran) dan ?layar=course&course=normal|selesai|tanpa-kuis (Belajar-Course; soal kuis dimuat dari API sungguhan dan gagal tanpa sesi), /komponen/agent?layar=profil&profil=terisi|baru&ktp=belum|terverifikasi (menyimpan/verifikasi di sini memanggil API sungguhan dan akan gagal tanpa sesi).
 // Sembunyikan di produksi nyata dengan env HIDE_DEV_PAGES=1 (sama seperti /komponen).
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DashboardView } from "@/components/agent/DashboardView";
+import { CourseRunner } from "@/components/agent/CourseRunner";
 import { KtpCard } from "@/components/agent/KtpCard";
+import { LearningView } from "@/components/agent/LearningView";
 import { ListingWizard } from "@/components/agent/ListingWizard";
 import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
 import { MyListingsView } from "@/components/agent/MyListingsView";
 import { ProfileForm } from "@/components/agent/ProfileForm";
 import type { DashboardData } from "@/lib/agent/dashboard-data";
+import type { CourseRun, MyLearning } from "@/lib/agent/learning-data";
 import type { MyListingItem, MyListingsData } from "@/lib/agent/listing-data";
 import { EMPTY_WIZARD, WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wizard";
 
 export const metadata: Metadata = { title: "Contoh Layar Agent | RumahAgen", robots: { index: false, follow: false } };
 
-type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string }> };
+type Props = { searchParams: Promise<{ dashboard?: string; layar?: string; profil?: string; ktp?: string; kuota?: string; daftar?: string; status?: string; belajar?: string; course?: string }> };
 
 const bucket = (limit: number, used: number, resets: string | null) => ({ limit, used, remaining: Math.max(0, limit - used), period_start: null, resets_at: resets });
 const sampleListings: MyListingItem[] = [
@@ -73,6 +76,68 @@ export default async function SampleAgentPage({ searchParams }: Props) {
           titles={baru ? [] : [{ name: "Top Performer Regional 2026", kind: "primary" }, { name: "Mentor Komunitas", kind: "additional" }]}
           ktpSlot={<KtpCard state={verified ? "verified" : "deferred"} maskedNik={verified ? "************0001" : null} submittedAt={verified ? "2026-09-25T03:00:00Z" : null} profileExists={!baru} />}
         />
+      </div>
+    );
+  }
+  if (layar === "belajar") {
+    const { belajar = "normal" } = await searchParams;
+    const day = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
+    const gagal: MyLearning = { points: { ok: false }, courses: { ok: false }, certificates: { ok: false }, sessions: { ok: false } };
+    const kosong: MyLearning = { points: { ok: true, data: 0 }, courses: { ok: true, data: [] }, certificates: { ok: true, data: [] }, sessions: { ok: true, data: [] } };
+    const normal: MyLearning = {
+      points: { ok: true, data: 320 },
+      courses: {
+        ok: true,
+        data: [
+          { enrollmentId: "e1", courseId: "c1", title: "Financial & KPR: Dasar Analisis DBR", category: "financial_kpr", status: "in_progress", progress: 60, lessonCount: 3, completedAt: null },
+          { enrollmentId: "e2", courseId: "c2", title: "Sales Skill: Negosiasi Properti Tingkat Lanjut dengan Judul yang Sangat Panjang untuk Menguji Pemotongan Teks", category: "sales_skill", status: "completed", progress: 100, lessonCount: 5, completedAt: day(4) },
+          { enrollmentId: "e3", courseId: "c3", title: "Legal & Regulasi: Memahami PPJB", category: "legal_regulasi", status: "in_progress", progress: 20, lessonCount: 4, completedAt: null },
+        ],
+      },
+      certificates: {
+        ok: true,
+        data: [
+          { id: "k1", courseId: "c2", title: "Sales Skill: Negosiasi Properti Tingkat Lanjut", status: "issued", number: "RA-2026-000123", verificationCode: "ABCD1234EFGH", passedAt: day(4), revokedAt: null },
+          { id: null, courseId: "c4", title: "Financial & KPR: Dasar Analisis DBR", status: "missing", number: null, verificationCode: null, passedAt: day(16), revokedAt: null },
+          { id: "k3", courseId: "c5", title: "Legal & Regulasi: Memahami PPJB", status: "revoked", number: "RA-2026-000077", verificationCode: "ZZZZ9999YYYY", passedAt: day(24), revokedAt: day(6) },
+        ],
+      },
+      sessions: {
+        ok: true,
+        data: [
+          { id: "s1", sessionId: "x1", title: "Sesi Live Q&A: Analisis DBR", status: "active", startAt: new Date(Date.now() + 20 * 86_400_000).toISOString(), endAt: null, completedAt: null },
+          { id: "s2", sessionId: "x2", title: "Workshop Negosiasi Batch September", status: "completed", startAt: day(21), endAt: day(21), completedAt: day(21) },
+          { id: "s3", sessionId: "x3", title: "Sesi menunggu aktivasi", status: "pending", startAt: null, endAt: null, completedAt: null },
+        ],
+      },
+    };
+    return (
+      <div className="min-h-dvh bg-surface">
+        <LearningView data={belajar === "kosong" ? kosong : belajar === "gagal" ? gagal : normal} />
+      </div>
+    );
+  }
+  if (layar === "course") {
+    const { course = "normal" } = await searchParams;
+    const selesai = course === "selesai";
+    const run: CourseRun = {
+      enrollmentId: "e1",
+      courseId: "c1",
+      title: "Financial & KPR: Dasar Analisis DBR",
+      passingGrade: 70,
+      status: selesai ? "completed" : "in_progress",
+      progress: selesai ? 100 : 30,
+      lessons: [
+        { id: "l1", title: "Pengantar Analisis DBR", type: "video", url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
+        { id: "l2", title: "Rumus dan Contoh Perhitungan DBR", type: "pdf", url: "https://example.com/dbr.pdf" },
+        { id: "l3", title: "Studi Kasus: Menilai Kelayakan KPR (judul panjang untuk menguji pemotongan teks di daftar materi)", type: "slide", url: null },
+      ],
+      quizzes: course === "tanpa-kuis" ? [] : [{ id: "q1", title: null, passed: selesai }],
+      certificateIssued: false,
+    };
+    return (
+      <div className="min-h-dvh bg-surface">
+        <CourseRunner run={run} />
       </div>
     );
   }

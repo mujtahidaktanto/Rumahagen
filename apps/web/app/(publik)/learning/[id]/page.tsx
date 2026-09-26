@@ -197,7 +197,9 @@ export default async function CourseDetailPage({ params }: Props) {
               endpoint={`/courses/${c.id}/enroll`}
               label="Mulai Belajar"
               alreadyEnrolled={enrolled}
-              doneMessage="Anda sudah terdaftar di course ini. Lanjutkan belajar dari menu Pembelajaran di akun Anda."
+              doneMessage="Anda sudah terdaftar di course ini."
+              doneHref={`/agent/belajar/${c.id}`}
+              doneLinkLabel="Buka Materi"
             />
           ) : (
             <p className="rounded-md bg-ink-50 p-3 text-body-md text-ink-500">Pendaftaran course hanya tersedia untuk akun Agent.</p>

@@ -2,6 +2,8 @@
 
 // components/public/EnrollButton.tsx — tombol aksi pendaftaran di halaman publik Learning: "Mulai Belajar" (POST /api/courses/{id}/enroll) dan "Daftar Sesi Ini"
 // (POST /api/learning/sessions/{id}/enrollments). Idempotency-Key dibuat sekali per klik pengguna; 409 (sudah terdaftar) diperlakukan sebagai berhasil; 401 -> ajakan masuk.
+import type { Route } from "next";
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { api, ApiClientError } from "@/lib/api-client";
@@ -15,9 +17,12 @@ type Props = {
   /** Sudah terdaftar sejak awal (dibaca server): tombol diganti pesan. */
   alreadyEnrolled?: boolean;
   body?: Record<string, unknown>;
+  /** Tautan lanjutan setelah terdaftar (mis. membuka materi course). */
+  doneHref?: string;
+  doneLinkLabel?: string;
 };
 
-export function EnrollButton({ endpoint, label, doneMessage, alreadyEnrolled = false, body }: Props) {
+export function EnrollButton({ endpoint, label, doneMessage, alreadyEnrolled = false, body, doneHref, doneLinkLabel = "Lanjutkan Belajar" }: Props) {
   const [state, setState] = useState<"idle" | "busy" | "done">(alreadyEnrolled ? "done" : "idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -45,9 +50,16 @@ export function EnrollButton({ endpoint, label, doneMessage, alreadyEnrolled = f
 
   if (state === "done") {
     return (
-      <p role="status" className="rounded-md bg-success-100 p-3 text-body-md text-success-600">
-        {doneMessage}
-      </p>
+      <div className="flex flex-col gap-2">
+        <p role="status" className="rounded-md bg-success-100 p-3 text-body-md text-success-600">
+          {doneMessage}
+        </p>
+        {doneHref ? (
+          <Link href={doneHref as Route} className="inline-flex h-12 items-center justify-center rounded-md bg-blue-600 px-5 text-label-lg text-white no-underline hover:bg-blue-700 hover:no-underline hover:text-white">
+            {doneLinkLabel}
+          </Link>
+        ) : null}
+      </div>
     );
   }
   return (
