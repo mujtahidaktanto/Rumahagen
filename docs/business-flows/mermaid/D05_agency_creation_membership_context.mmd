@@ -1,0 +1,14 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Validate organization request"] --> A2["Create / establish governed organization membership"]
+    A3["Establish Personal vs Agency context"] --> A4["Return active organization context"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Create or join Agency"] --> U2["Confirm membership"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Governed organization oversight"]
+  end
+  U1 --> A1
+  A1 --> A2 --> U2 --> A3 --> A4
+  A1 -.-> X1
