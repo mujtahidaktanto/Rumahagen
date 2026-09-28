@@ -1,0 +1,18 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Create invitation / join request"] --> A2["Validate target + Agency state"]
+    A3{"Can membership activate?"}
+    A4["Activate membership"]
+    A5["Reject / expire / retain governed pending state"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Invite or request to join"] --> U2["Accept / respond"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Resolve governed exception"]
+  end
+  U1 --> A1 --> A2
+  A2 --> U2 --> A3
+  A3 -->|Yes| A4
+  A3 -->|No| A5
+  A3 -.-> X1
