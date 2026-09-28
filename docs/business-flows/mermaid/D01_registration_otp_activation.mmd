@@ -1,0 +1,18 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Validate registration"] --> A2["Issue OTP challenge"]
+    A3["Validate submitted OTP"] --> A4{"OTP valid?"}
+    A5["Set Agent = ACTIVE"] --> A6["Establish session"]
+    A7["Return activation result"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Submit registration"] --> U2["Enter OTP"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Governed exception handling"]
+  end
+  U1 --> A1
+  A2 --> U2 --> A3 --> A4
+  A4 -->|Yes| A5 --> A6 --> A7
+  A4 -->|No| A7
+  A4 -.-> X1
