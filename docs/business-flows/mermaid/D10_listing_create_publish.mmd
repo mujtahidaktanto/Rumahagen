@@ -1,0 +1,19 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Receive draft listing"] --> A2["Validate required Listing conditions"]
+    A3["Resolve M10 authorization"] --> A4["Resolve M14 quota / entitlement where applicable"]
+    A5{"Publish conditions satisfied?"}
+    A6["Draft → PUBLISHED"] --> A7["Record publication outcome / audit"]
+    A8["Return failure without publication"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Create / edit Draft"] --> U2["Request publication"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Governed moderation / intervention (not mandatory publication gate)"]
+  end
+  U1 --> A1
+  U2 --> A2 --> A3 --> A4 --> A5
+  A5 -->|Yes| A6 --> A7
+  A5 -->|No| A8
+  A5 -.-> X1
