@@ -1,0 +1,21 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Receive closure request"] --> A2["Show irreversible warning"]
+    A3["Require explicit Continue"] --> A4["Send email OTP"]
+    A5["Validate OTP"] --> A6{"OTP success?"}
+    A7["Keep Agency ACTIVE; reset/retry closure flow"] 
+    A8["ACTIVE → CLOSING"] --> A9["Freeze governed operations"]
+    A10["Process closure dependencies"] --> A11{"Mandatory membership termination complete?"}
+    A12["CLOSING → CLOSED"] --> A13["Expose historical read-only state"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Lead requests closure"] --> U2["Continue"] --> U3["Enter OTP"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Governed closure exception / progress handling"]
+  end
+  U1 --> A1 --> A2 --> A3 --> A4 --> U3 --> A5 --> A6
+  A6 -->|No / expired / incomplete| A7
+  A6 -->|Yes| A8 --> A9 --> A10 --> A11
+  A11 -->|Yes| A12 --> A13
+  A11 -->|No| X1 --> A10
