@@ -1,22 +1,26 @@
+%% BF-09 — Agency Closure Resolution
+%% Core controls: BR-065–090, BR-125–151
 flowchart LR
   subgraph APP["APPLICATION"]
-    A1["Enter closure processing"] --> A2["Terminate Agency memberships"]
-    A3["Process all Agency Listings"] --> A4["Transfer to owner Personal Draft"]
-    A5["Forfeit Agency promo at closure"]
-    A6["Resolve allocated / unallocated Permanent Add-on ownership"]
-    A7["Apply one automatic retry to governed processing failure"]
-    A8{"Retry successful?"}
-    A9["Record TRANSFER_EXCEPTION"]
-    A10["Finalize closure-ready outcome"]
+    A1["Start closure processing"] --> A2["Terminate Agency memberships"]
+    A2 --> A3["Process all Agency Listings → owner Personal Draft"]
+    A3 --> A4["Forfeit Agency promo"]
+    A4 --> A5["Resolve allocated / unallocated add-on ownership"]
+    A5 --> A6["Apply governed retry on processing failure"]
+    A6 --> A7{"Retry successful?"}
+    A8["Record TRANSFER_EXCEPTION"] --> A9["Return closure-ready outcome"]
+    A10["Return closure-ready outcome"]
   end
   subgraph AGENT["AGENT"]
-    U1["Remain available for governed resolution / confirmation"]
+    U1["Participate only in governed resolution/confirmation"]
   end
   subgraph ADMIN["ADMIN"]
     X1["Review governed exception / closure progress"]
   end
-  U1 --> A1
-  A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8
-  A8 -->|Yes| A10
-  A8 -->|No| A9 --> A10
-  X1 -.-> A7
+  U1 -.-> A1
+  A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7
+  A7 -->|Yes| A10
+  A7 -->|No| A8 --> A9
+  X1 -.-> A6
+  %% Personal Listings and Personal Entitlements are never reclaimed.
+  %% Retry failure does not itself prevent CLOSED when mandatory membership termination is complete.
