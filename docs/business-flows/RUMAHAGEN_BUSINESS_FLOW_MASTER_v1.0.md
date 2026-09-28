@@ -1,6 +1,6 @@
 # RUMAHAGEN BUSINESS FLOW MASTER v1.0
 
-**Status:** DRAFT — MASTER FLOW STRUCTURE  
+**Status:** LOCKED — GREEN / MASTER FLOW STRUCTURE  
 **Purpose:** canonical business-flow inventory before visual rendering  
 **Source authority:** RumahAgen Core current baseline, STEP08 Business Rules, STEP13-B Successor Integrated Functional Specification v2.3, M01–M15 semantic authority  
 **Rendering standard:** 3 swimlanes only — APPLICATION / AGENT / ADMIN  
@@ -169,7 +169,15 @@ Mermaid supports swimlane diagrams where lanes represent responsibility and cros
 
 For maximum portability, the production source should remain plain Mermaid/Markdown in GitHub, while diagrams.net is used as the visual editing/export layer.
 
-## 7. Next controlled step
+## 7. Validation status
+
+Core Cross-Check is complete for BF-01–BF-37. The locked validation matrix is:
+
+`docs/business-flows/matrix/BUSINESS_FLOW_MATRIX_v1.0.md`
+
+The matrix is the controlled semantic gate for diagram generation. The master inventory remains the canonical list; the matrix records the cross-check and rendering controls.
+
+## 8. Next controlled step
 
 Do **not** render all 46 sheets immediately.
 
