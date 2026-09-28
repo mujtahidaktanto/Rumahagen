@@ -1,0 +1,19 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Validate profile / visibility action"] --> A2["Publish governed public representation"]
+    A3["Evaluate CTA eligibility + owner opt-in"] --> A4["Expose CTA when eligible"]
+    A5["Receive review"] --> A6["AUTO-APPROVE review"] --> A7["Publish / make viewable"]
+    A8["Project approved reviews / rating"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Edit profile / visibility"] --> U2["Opt in CTA"]
+    U3["Submit / receive review"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Post-publication moderation / governed override"]
+  end
+  U1 --> A1
+  U2 --> A3
+  U3 --> A5
+  A7 --> A8
+  A6 -.-> X1
