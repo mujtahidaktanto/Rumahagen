@@ -1,0 +1,21 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Receive login / recovery request"] --> A2["Validate credentials / recovery challenge"]
+    A3{"Valid?"}
+    A4["Establish authenticated session"]
+    A5["Complete controlled recovery"]
+    A6["Return result"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Request login / recovery"] --> U2["Submit credentials / recovery data"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Governed support intervention"]
+  end
+  U1 --> A1 --> A2
+  U2 --> A2
+  A2 --> A3
+  A3 -->|Login valid| A4 --> A6
+  A3 -->|Recovery valid| A5 --> A6
+  A3 -->|Invalid| A6
+  A3 -.-> X1
