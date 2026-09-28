@@ -1,0 +1,23 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Receive eligibility-dependent action"] --> A2["Evaluate KTP requirement"]
+    A3{"Required?"}
+    A4["Allow permitted deferred state"]
+    A5["Validate verification evidence"]
+    A6{"Eligible?"}
+    A7["Allow governed action"]
+    A8["Request completion / block action"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Request action"] --> U2["Provide KTP / verification when required"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Resolve governed exception"]
+  end
+  U1 --> A1 --> A2 --> A3
+  A3 -->|No| A7
+  A3 -->|Deferred allowed| A4 --> A7
+  A3 -->|Yes| U2 --> A5 --> A6
+  A6 -->|Yes| A7
+  A6 -->|No| A8
+  A6 -.-> X1
