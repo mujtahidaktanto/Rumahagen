@@ -1,0 +1,21 @@
+flowchart LR
+  subgraph APP["APPLICATION"]
+    A1["Receive Leave / Forced Removal"] --> A2["End membership state"]
+    A3["Identify affected Agency Listings + add-ons"] --> A4{"Published + PROMO_ACTIVE?"}
+    A5["Keep Agency Published until promo expiry"] --> A6["Automatic transfer evaluation at expiry"]
+    A7["Transfer eligible Listing to Personal Draft"] --> A8["Preserve owner + Agency origin; do not migrate Lead History"]
+    A9["Preserve allocated add-on ownership"] --> A10["Record distinct trigger/audit reason"]
+  end
+  subgraph AGENT["AGENT"]
+    U1["Voluntary Leave / respond to governed removal"]
+  end
+  subgraph ADMIN["ADMIN"]
+    X1["Lead performs authorized Forced Removal"]
+  end
+  U1 --> A1
+  X1 --> A1
+  A1 --> A2 --> A3 --> A4
+  A4 -->|Yes| A5 --> A6 --> A7
+  A4 -->|No| A7
+  A7 --> A8
+  A3 --> A9 --> A10
