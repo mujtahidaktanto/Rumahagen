@@ -2,13 +2,12 @@
 
 // components/admin/TargetRoleSelect.tsx — pemilih "Role target" preset (M10, Superadmin-only): navigasi murni (?tab=preset&target_role=...), tidak ada state lokal — data preset di-refetch
 // server saat URL berubah (pola sama seperti NotificationControls.tsx).
+// PRESET_TARGET_ROLE_OPTIONS didefinisikan di lib/admin/admin-rules.ts (BUKAN di sini, dan JANGAN diimpor ulang dari sini oleh Server Component) — file ini "use client", dan Server Component yang
+// mengimpor NILAI dari file "use client" menerima client-reference proxy, bukan array sungguhan, sehingga `.includes()` gagal di runtime (lihat komentar di admin-rules.ts).
 import { useRouter } from "next/navigation";
 import type { Route } from "next";
-import { ROLE_CODES, ROLE_LABEL, type RoleCode } from "@/lib/auth/roles";
-
-/** Role target yang bisa dipilih Superadmin di layar ini — SELURUH katalog role (trigger enforce_preset_target_role_is_agent, 0004/0102, sengaja diperbaiki supaya Superadmin bisa
- * menargetkan role apa pun, bukan cuma 3 yang kebetulan tampil sebagai contoh di dropdown wireframe M10-Matriks-Izin). Manager tetap terkunci ke Agent (ditegakkan trigger yang sama). */
-export const PRESET_TARGET_ROLE_OPTIONS: RoleCode[] = [...ROLE_CODES];
+import { PRESET_TARGET_ROLE_OPTIONS } from "@/lib/admin/admin-rules";
+import { ROLE_LABEL, type RoleCode } from "@/lib/auth/roles";
 
 export function TargetRoleSelect({ value }: { value: RoleCode }) {
   const router = useRouter();

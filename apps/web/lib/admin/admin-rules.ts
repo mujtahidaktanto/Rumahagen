@@ -1,12 +1,17 @@
 // lib/admin/admin-rules.ts — aturan murni Fase 5 kelompok 1 (M09 Direktori Pengguna/Staf Internal/Audit & Oversight, M10 Matriks Izin). Kunci Record status persis nilai CHECK constraint
 // users.status (0002) dan permission_presets/role_permissions.granted_scope (0006/0007) — jangan menambah nilai yang tidak ada di constraint.
 import type { BadgeTone } from "@/components/ui/Badge";
-import type { RoleCode } from "@/lib/auth/roles";
+import { ROLE_CODES, type RoleCode } from "@/lib/auth/roles";
 
 export type UserStatus = "pending_review" | "active" | "suspended" | "rejected";
 export type InternalUserStatus = "active" | "suspended";
 export type GrantedScope = "all" | "own" | "none";
 export type AdminViewerRole = "superadmin" | "admin" | "manager";
+
+/** Role target yang bisa dipilih Superadmin di Matriks Izin > Preset — SELURUH katalog role (trigger enforce_preset_target_role_is_agent, 0004/0102). Manager tetap terkunci ke Agent (trigger sama).
+ * HARUS di sini (bukan components/admin/TargetRoleSelect.tsx yang "use client") — Server Component (app/admin/izin/page.tsx, PermissionMatrixView.tsx) yang mengimpor NILAI dari file "use client"
+ * menerima client-reference proxy, bukan array sungguhan, sehingga `.includes()` gagal di runtime ("X.includes is not a function", dibuktikan di staging 2026-09-30, digest 4289757755). */
+export const PRESET_TARGET_ROLE_OPTIONS: RoleCode[] = [...ROLE_CODES];
 
 export const USER_STATUS_TONE: Record<UserStatus, BadgeTone> = {
   pending_review: "warning",

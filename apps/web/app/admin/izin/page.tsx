@@ -4,9 +4,8 @@ import { getPermissionMatrixRows } from "@/lib/admin/permission-matrix-data";
 import { getPresetAssignCandidates, getPresetsForTargetRole } from "@/lib/admin/permission-preset-data";
 import { getRoleIdByCode } from "@/lib/admin/role-catalog-data";
 import { requireArea } from "@/lib/auth/session";
-import type { AdminViewerRole } from "@/lib/admin/admin-rules";
+import { PRESET_TARGET_ROLE_OPTIONS, type AdminViewerRole } from "@/lib/admin/admin-rules";
 import { isRoleCode, type RoleCode } from "@/lib/auth/roles";
-import { PRESET_TARGET_ROLE_OPTIONS } from "@/components/admin/TargetRoleSelect";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Matriks Izin | RumahAgen" };
