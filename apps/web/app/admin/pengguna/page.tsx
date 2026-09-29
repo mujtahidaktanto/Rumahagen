@@ -1,6 +1,7 @@
 // app/admin/pengguna/page.tsx — Direktori Pengguna (M09): semua pengguna (Superadmin/Admin) atau agent/mitra saja (Manager, dibatasi RLS).
 import { UserDirectoryView } from "@/components/admin/UserDirectoryView";
 import { getUserDirectory } from "@/lib/admin/user-directory-data";
+import { getRoleIdByCode } from "@/lib/admin/role-catalog-data";
 import { requireArea } from "@/lib/auth/session";
 import type { AdminViewerRole } from "@/lib/admin/admin-rules";
 
@@ -9,6 +10,6 @@ export const metadata = { title: "Direktori Pengguna | RumahAgen" };
 
 export default async function AdminUserDirectoryPage() {
   const user = await requireArea("admin");
-  const users = await getUserDirectory();
-  return <UserDirectoryView viewerRole={user.role as AdminViewerRole} users={users} />;
+  const [users, roleIdByCode] = await Promise.all([getUserDirectory(), getRoleIdByCode()]);
+  return <UserDirectoryView viewerRole={user.role as AdminViewerRole} users={users} roleIdByCode={roleIdByCode} />;
 }

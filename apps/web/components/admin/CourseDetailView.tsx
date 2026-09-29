@@ -1,6 +1,10 @@
+"use client";
+
 // components/admin/CourseDetailView.tsx — Detail Kursus (M04, wireframe M04-Detail-Kursus): 4 tab (Ringkasan/Pelajaran/Kuis/Peserta) lewat query string. "Kesiapan untuk terbit" dihitung
 // ulang di sini SESUAI BACKEND (minimal 1 pelajaran DAN minimal 1 kuis yang semuanya siap) — wireframe sendiri menganggap 0 kuis = siap (quizzes.every di array kosong = true), tapi trigger
-// enforce_course_quizzes_ready_on_publish (0150) mewajibkan >=1 kuis untuk pending_review maupun published. Dikoreksi di sini, dicatat di audit/FRONTEND_GAPS.md.
+// enforce_course_quizzes_ready_on_publish (0150) mewajibkan >=1 kuis untuk pending_review maupun published. Dikoreksi di sini, dicatat di audit/FRONTEND_GAPS.md. Komponen client (bukan Server
+// Component) SUPAYA boleh mengoper fungsi `trigger` render-prop ke CourseFormDialog/LessonFormDialog/QuizCreateDialog ("use client") — Server Component tidak boleh mengoper fungsi ke Client
+// Component (penyebab bug "Application error" yang pernah terjadi di rute kursus).
 import Link from "next/link";
 import type { Route } from "next";
 import { CourseFormDialog } from "@/components/admin/CourseFormDialog";
@@ -13,18 +17,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/Table";
-import {
-  COURSE_CATEGORY_LABEL,
-  COURSE_STATUS_LABEL,
-  COURSE_STATUS_TONE,
-  LESSON_TYPE_LABEL,
-  type CourseDetail,
-  type CourseEnrollmentRow,
-  type CourseLessonRow,
-  type CourseQuizRow,
-  type CoursePrereqPickerRow,
-  type InstructorPickerRow,
-} from "@/lib/admin/course-data";
+import type { CourseDetail, CourseEnrollmentRow, CourseLessonRow, CourseQuizRow, CoursePrereqPickerRow, InstructorPickerRow } from "@/lib/admin/course-data";
+import { COURSE_CATEGORY_LABEL, COURSE_STATUS_LABEL, COURSE_STATUS_TONE, LESSON_TYPE_LABEL } from "@/lib/admin/course-labels";
 import type { Part } from "@/lib/agent/dashboard-data";
 
 type Tab = "ringkasan" | "pelajaran" | "kuis" | "peserta";
