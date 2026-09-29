@@ -18,6 +18,8 @@ import type { ActiveContext, ContextOrg } from "@/lib/agent/context";
 import { MyListingDetailView } from "@/components/agent/MyListingDetailView";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 import type { CenterNotification, NotificationCenterData } from "@/lib/agent/notification-data";
+import { AiAssistantView } from "@/components/agent/AiAssistantView";
+import type { ActiveAiConnection } from "@/lib/agent/ai-data";
 import { parseNotificationSearch, type NotificationArea } from "@/lib/agent/notification-rules";
 import { CatalogView } from "@/components/agent/CatalogView";
 import { StatsView } from "@/components/agent/StatsView";
@@ -424,6 +426,26 @@ export default async function SampleAgentPage({ searchParams }: Props) {
     return (
       <div className="min-h-dvh bg-surface">
         <StatsView stats={stats} state={state} leaderOrgs={leaderOrgs} />
+      </div>
+    );
+  }
+  if (layar === "ai-assistant") {
+    // Verifikasi manual (tanpa login) untuk kunci pemilih model: kirim pesan (dummy, tanpa panggil API sungguhan — cukup ketik lalu tekan Enter akan gagal di jaringan,
+    // tapi state `messages` sudah terisi dari isian user sebelum panggilan API, cukup untuk menguji kunci UI) lalu cek Select "Pilih model" disabled dan tombol "Chat Baru" muncul.
+    const { keadaan = "dua-koneksi" } = await searchParams;
+    const conns: ActiveAiConnection[] =
+      keadaan === "kosong"
+        ? []
+        : keadaan === "satu-koneksi"
+          ? [{ id: "conn-1", providerName: "Google Gemini", providerCode: "gemini" }]
+          : [
+              { id: "conn-1", providerName: "Google Gemini", providerCode: "gemini" },
+              { id: "conn-2", providerName: "Cloudinary (Media AI)", providerCode: "cloudinary" },
+            ];
+    const data = keadaan === "gagal" ? { ok: false as const } : { ok: true as const, data: conns };
+    return (
+      <div className="min-h-dvh bg-surface">
+        <AiAssistantView data={data} agentName="Rian Saputra" />
       </div>
     );
   }

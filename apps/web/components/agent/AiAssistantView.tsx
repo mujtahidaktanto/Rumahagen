@@ -1,7 +1,9 @@
 "use client";
 
 // components/agent/AiAssistantView.tsx — AI Assistant (M13, wireframe 01-Agent/M13-AI-Assistant): chat dengan koneksi BYOK aktif milik sendiri lewat POST /ai-assistant/chat. Riwayat percakapan
-// HANYA di memori (Transient AI Chat Frame — tidak ada tabel penyimpanan pesan di skema M13); pindah koneksi atau memuat ulang halaman mengosongkan riwayat.
+// HANYA di memori (Transient AI Chat Frame — tidak ada tabel penyimpanan pesan di skema M13); pindah koneksi, "Chat Baru", atau memuat ulang halaman mengosongkan riwayat.
+// Aturan produk (2026-09-26): 1 chat aktif = 1 model tetap; ganti model butuh chat baru. Pemilih model dikunci begitu chat punya isi (messages.length > 0) — "Chat Baru" mengosongkan chat sekaligus
+// membuka kunci pemilih model. Pindah koneksi tetap boleh kapan saja (otomatis membuka chat baru dengan model bawaan koneksi itu).
 import type { Route } from "next";
 import { useState } from "react";
 import { LinkButton, Button } from "@/components/ui/Button";
@@ -106,13 +108,32 @@ function AiAssistantChat({ connections, agentName }: { connections: ActiveAiConn
             </span>
           )}
           {modelOptions.length > 0 ? (
-            <Select aria-label="Pilih model" value={model} onChange={(e) => setModel(e.target.value)} className="h-9 w-auto">
+            <Select
+              aria-label="Pilih model"
+              title={messages.length > 0 ? "Model terkunci selama chat ini berjalan. Mulai Chat Baru untuk memakai model lain." : undefined}
+              disabled={messages.length > 0}
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              className="h-9 w-auto"
+            >
               {modelOptions.map((m) => (
                 <option key={m.value} value={m.value}>
                   {m.label}
                 </option>
               ))}
             </Select>
+          ) : null}
+          {messages.length > 0 ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setMessages([]);
+                setError(null);
+              }}
+            >
+              Chat Baru
+            </Button>
           ) : null}
           <LinkButton href={"/agent/ai" as Route} variant="secondary" size="sm">
             Kelola Koneksi
