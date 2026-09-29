@@ -16,3 +16,8 @@ export const LESSON_TYPE_LABEL: Record<string, string> = { video: "Video", pdf: 
 
 export type CertTemplate = "classic" | "modern" | "corporate" | "premium";
 export const CERT_TEMPLATE_LABEL: Record<CertTemplate, string> = { classic: "Klasik Elegan", modern: "Modern Minimalis", corporate: "Korporat", premium: "Premium Art Deco" };
+
+export type CourseStatus = "draft" | "pending_review" | "published" | "archived";
+export const COURSE_STATUS_LABEL: Record<CourseStatus, string> = { draft: "Draf", pending_review: "Menunggu Tinjauan", published: "Terbit", archived: "Diarsipkan" };
+// BadgeTone diketik ulang di sini (bukan diimpor dari components/ui/Badge) supaya file ini benar-benar tanpa import apa pun.
+export const COURSE_STATUS_TONE: Record<CourseStatus, "neutral" | "warning" | "success" | "danger" | "info"> = { draft: "neutral", pending_review: "info", published: "success", archived: "warning" };

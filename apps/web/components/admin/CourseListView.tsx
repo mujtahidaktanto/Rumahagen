@@ -1,5 +1,9 @@
+"use client";
+
 // components/admin/CourseListView.tsx — Kelola Kursus (M04, wireframe M04-Kelola-Kursus): daftar courses lintas pemilik (RLS courses_select meloloskan SEMUA status untuk staf, bukan hanya
-// published). Filter status (chip link), kategori dan pencarian judul lewat GET form biasa (query string) — konsisten pola AuditOversightView, tanpa JS klien untuk filter.
+// published). Filter status (chip link), kategori dan pencarian judul lewat GET form biasa (query string) — konsisten pola AuditOversightView, tanpa JS klien untuk filter. Komponen client
+// (bukan Server Component) SUPAYA boleh mengoper fungsi `trigger` render-prop ke CourseFormDialog ("use client") — Server Component tidak boleh mengoper fungsi ke Client Component
+// (React akan melempar exception saat render, penyebab bug "Application error" yang pernah terjadi di rute ini).
 import Link from "next/link";
 import type { Route } from "next";
 import { CourseFormDialog } from "@/components/admin/CourseFormDialog";
@@ -8,8 +12,8 @@ import { Button, LinkButton } from "@/components/ui/Button";
 import { Input, Select } from "@/components/ui/Field";
 import { ErrorState } from "@/components/ui/States";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/Table";
-import { COURSE_CATEGORIES, COURSE_CATEGORY_LABEL, COURSE_STATUS_LABEL, COURSE_STATUS_TONE, type CourseListRow, type CourseStatus } from "@/lib/admin/course-data";
-import type { CoursePrereqPickerRow, InstructorPickerRow } from "@/lib/admin/course-data";
+import type { CourseListRow, CoursePrereqPickerRow, InstructorPickerRow } from "@/lib/admin/course-data";
+import { COURSE_CATEGORIES, COURSE_CATEGORY_LABEL, COURSE_STATUS_LABEL, COURSE_STATUS_TONE, type CourseStatus } from "@/lib/admin/course-labels";
 import type { Part } from "@/lib/agent/dashboard-data";
 
 const dtf = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" });

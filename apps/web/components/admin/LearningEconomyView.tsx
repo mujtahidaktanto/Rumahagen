@@ -1,6 +1,9 @@
+"use client";
+
 // components/admin/LearningEconomyView.tsx — Ekonomi Pembelajaran (M04, wireframe 02-Admin/M04-Learning-Economy-Config): 3 tab, ketiganya Superadmin/Admin/Manager setara (tidak ada
 // pembatasan lintas peran seperti modul lain — m04.learning_economy_configuration.*/m04.learning_activity.manage granted_scope 'all' utk ketiga role, RPC adjust_learning_points/
-// admin_issue_certificate juga membuka ketiganya).
+// admin_issue_certificate juga membuka ketiganya). Komponen client (bukan Server Component) SUPAYA boleh mengoper fungsi `trigger` render-prop ke ConfigKeyFormDialog/ActivityFormDialog
+// ("use client") — Server Component tidak boleh mengoper fungsi ke Client Component (penyebab bug "Application error" yang ditemukan di rute kursus dengan pola sama).
 import Link from "next/link";
 import type { Route } from "next";
 import { ActivityFormDialog } from "@/components/admin/ActivityFormDialog";

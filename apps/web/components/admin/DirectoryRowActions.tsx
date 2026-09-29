@@ -4,6 +4,8 @@
 // menjadi mitra atau, khusus Superadmin, ke role apa pun termasuk staf), "KTP" (GET /admin/agents/{id}/ktp, hanya role agent) dengan "Cabut Verifikasi" (POST /admin/agents/{id}/ktp/reset
 // { reason }), dan "Suspend" (PUT /admin/agents/{id}/suspend, hanya role agent + status active, Superadmin/Admin saja). Endpoint suspend TIDAK menerima body sama sekali (tidak ada kolom
 // alasan di API meski wireframe menunjukkan textarea alasan) — dialog di sini sengaja tanpa textarea; celah ini dicatat di audit/FRONTEND_GAPS.md.
+// FIX 2026-09-27: `role_id` pada PUT .../role WAJIB uuid (updateUserRoleSchema, lib/validation/admin.ts) — sebelumnya di sini terkirim kode role ("developer_partner" dkk, bukan uuid tabel
+// roles), selalu gagal 422 "Validasi body request gagal.". Dipetakan lewat `roleIdByCode` (lib/admin/role-catalog-data.ts), pola sama seperti StaffRowActions.
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
@@ -25,6 +27,7 @@ export function DirectoryRowActions({
   canKtp,
   canSuspend,
   canChangeRole,
+  roleIdByCode,
 }: {
   userId: string;
   name: string;
@@ -32,6 +35,7 @@ export function DirectoryRowActions({
   canKtp: boolean;
   canSuspend: boolean;
   canChangeRole: boolean;
+  roleIdByCode: Record<string, string>;
 }) {
   const router = useRouter();
   const [roleOpen, setRoleOpen] = useState(false);
@@ -48,10 +52,15 @@ export function DirectoryRowActions({
   const [ktpReason, setKtpReason] = useState("");
 
   async function saveRole() {
+    const roleId = roleIdByCode[newRole];
+    if (!roleId) {
+      setError("Role ini tidak ditemukan di katalog role. Muat ulang halaman ini.");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
-      await api.put(`/admin/users/${userId}/role`, { role_id: newRole }, { idempotency: true });
+      await api.put(`/admin/users/${userId}/role`, { role_id: roleId }, { idempotency: true });
       setRoleOpen(false);
       router.refresh();
     } catch (e) {

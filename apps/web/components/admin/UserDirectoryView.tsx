@@ -26,7 +26,7 @@ function initialsOf(name: string): string {
   return (first + last).toUpperCase() || "?";
 }
 
-export function UserDirectoryView({ viewerRole, users }: { viewerRole: AdminViewerRole; users: Part<DirectoryUserRow[]> }) {
+export function UserDirectoryView({ viewerRole, users, roleIdByCode }: { viewerRole: AdminViewerRole; users: Part<DirectoryUserRow[]>; roleIdByCode: Record<string, string> }) {
   const [filter, setFilter] = useState<"all" | UserStatus>("all");
   const [q, setQ] = useState("");
 
@@ -130,6 +130,7 @@ export function UserDirectoryView({ viewerRole, users }: { viewerRole: AdminView
                         canKtp={canManage && u.roleCode === "agent"}
                         canSuspend={canManage && u.roleCode === "agent" && u.status === "active"}
                         canChangeRole={canChangeUserRole(viewerRole, u.roleCode)}
+                        roleIdByCode={roleIdByCode}
                       />
                     </TD>
                   </TR>

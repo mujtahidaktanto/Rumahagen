@@ -6,16 +6,21 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Part } from "@/lib/agent/dashboard-data";
-import { COURSE_CATEGORIES, COURSE_CATEGORY_LABEL, LESSON_TYPE_LABEL, CERT_TEMPLATE_LABEL, type CourseCategory, type CertTemplate } from "@/lib/admin/course-labels";
-import type { BadgeTone } from "@/components/ui/Badge";
+import {
+  COURSE_CATEGORIES,
+  COURSE_CATEGORY_LABEL,
+  LESSON_TYPE_LABEL,
+  CERT_TEMPLATE_LABEL,
+  COURSE_STATUS_LABEL,
+  COURSE_STATUS_TONE,
+  type CourseCategory,
+  type CertTemplate,
+  type CourseStatus,
+} from "@/lib/admin/course-labels";
 import { certAssetSignedUrl } from "@/lib/storage/certificate-assets";
 
-export { COURSE_CATEGORIES, COURSE_CATEGORY_LABEL, LESSON_TYPE_LABEL, CERT_TEMPLATE_LABEL };
-export type { CourseCategory, CertTemplate };
-
-export type CourseStatus = "draft" | "pending_review" | "published" | "archived";
-export const COURSE_STATUS_LABEL: Record<CourseStatus, string> = { draft: "Draf", pending_review: "Menunggu Tinjauan", published: "Terbit", archived: "Diarsipkan" };
-export const COURSE_STATUS_TONE: Record<CourseStatus, BadgeTone> = { draft: "neutral", pending_review: "info", published: "success", archived: "warning" };
+export { COURSE_CATEGORIES, COURSE_CATEGORY_LABEL, LESSON_TYPE_LABEL, CERT_TEMPLATE_LABEL, COURSE_STATUS_LABEL, COURSE_STATUS_TONE };
+export type { CourseCategory, CertTemplate, CourseStatus };
 
 async function resolveOwnerLabels(supabase: Awaited<ReturnType<typeof createClient>>, createdByIds: string[]): Promise<Map<string, string>> {
   const uniq = Array.from(new Set(createdByIds));
