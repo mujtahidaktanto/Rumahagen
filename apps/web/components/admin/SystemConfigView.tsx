@@ -1,6 +1,10 @@
+"use client";
+
 // components/admin/SystemConfigView.tsx — Konfigurasi Sistem (M09, wireframe 02-Admin/M09-Konfigurasi-Sistem): tab System Config (key-value generik), SEO Config, Kuota Listing. Superadmin-only
 // untuk mengubah (m09.system_configuration.manage) — Admin/Manager melihat "Akses Ditolak" utuh (bukan cuma tombol simpan disembunyikan), mengikuti wireframe apa adanya karena kedua sub-resource
 // digerbangi permission yang sama persis dan tidak ada state "lihat saja" di dokumen sumber untuk layar ini.
+// "use client" WAJIB: komponen ini meneruskan prop fungsi (`trigger`) ke SystemConfigKeyDialog — Server Component tidak boleh meneruskan fungsi biasa ke Client Component (RSC error
+// "Functions cannot be passed directly to Client Components", dibuktikan di staging 2026-09-30, digest 606953783).
 import Link from "next/link";
 import type { Route } from "next";
 import { QuotaConfigForm } from "@/components/admin/QuotaConfigForm";
@@ -9,7 +13,8 @@ import { SystemConfigKeyDialog } from "@/components/admin/SystemConfigKeyDialog"
 import { Button } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
 import type { Part } from "@/lib/agent/dashboard-data";
-import { otherConfigRows, quotaFormFrom, type SeoConfig, type SystemConfigRow } from "@/lib/admin/system-config-data";
+import type { SeoConfig, SystemConfigRow } from "@/lib/admin/system-config-data";
+import { otherConfigRows, quotaFormFrom } from "@/lib/admin/system-config-rules";
 import { formatDateTime } from "@/lib/format";
 
 export type ConfigTab = "system" | "seo" | "kuota";

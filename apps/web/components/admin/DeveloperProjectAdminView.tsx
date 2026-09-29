@@ -1,5 +1,8 @@
+"use client";
+
 // components/admin/DeveloperProjectAdminView.tsx — Proyek Developer (M06, wireframe 02-Admin/M06-Developer-Project-Admin): oversight staf, 2 tab (Proyek, Developer Partner). Developer Partner
 // mengelola proyeknya sendiri lewat layar Proyek Saya (Fase F) — layar ini untuk staf (Superadmin/Admin/Manager, semuanya punya m06.developer_project.manage/publish dan m06.developer_partner.manage).
+// "use client" WAJIB: meneruskan prop fungsi `trigger` ke CreateProjectDialog/PartnerFormDialog/ProjectStatusDialog/LinkPartnerAccountDialog (bukti staging 2026-09-30, digest 606953783 — lihat SystemConfigView.tsx).
 import Link from "next/link";
 import type { Route } from "next";
 import { CreateProjectDialog } from "@/components/admin/CreateProjectDialog";

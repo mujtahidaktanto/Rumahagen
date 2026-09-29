@@ -1,6 +1,9 @@
+"use client";
+
 // components/admin/ContentNotifView.tsx — Konten & Notifikasi (M09, wireframe 02-Admin/M09-Konten-Notifikasi): 4 tab. Izin BERBEDA per tab (bukan satu gate untuk seluruh halaman):
 // Banner & Promosi dan Konten Publik = Superadmin+Admin (m11.announcement_promotion.publish / m11.static_public_content.publish); Template Notifikasi = Superadmin+Admin+Manager
 // (m09.notification_template_content.configure); Kirim Manual = Superadmin+Admin (dicek DI DALAM create_notification(), Manager ditolak 403 kalau memaksa).
+// "use client" WAJIB: meneruskan prop fungsi `trigger` ke BannerFormDialog/NotificationTemplateFormDialog/SendNotificationDialog (bukti staging 2026-09-30, digest 606953783 — lihat SystemConfigView.tsx).
 import Link from "next/link";
 import type { Route } from "next";
 import { BannerFormDialog } from "@/components/admin/BannerFormDialog";

@@ -1,6 +1,10 @@
 // lib/admin/system-config-rules.ts — aturan murni Konfigurasi Sistem (M09, wireframe 02-Admin/M09-Konfigurasi-Sistem): validasi tab Kuota Listing (7 kunci `listing_quota.*`, migration 0140) dan
 // format kode produk Pro. Angka juga ditegakkan di server (kolom system_configs.config_value bertipe TEXT tanpa CHECK numerik — validasi klien ini murni membantu UX, server tetap penentu akhir).
 // Superadmin-only untuk mengubah (m09.system_configuration.manage); Admin/Manager tidak lolos meski tab ini terlihat di menu.
+// `otherConfigRows`/`quotaFormFrom` HARUS di sini (bukan system-config-data.ts, yang mengimpor next/headers lewat createClient) — SystemConfigView.tsx memakainya dan harus "use client" karena
+// meneruskan prop fungsi `trigger` ke dialog; mengimpor NILAI dari file yang sama dengan next/headers akan ikut membundel kode server itu ke bundel klien dan build Next.js gagal.
+import type { SystemConfigRow } from "./system-config-data";
+
 export type QuotaForm = {
   freePersonal: string;
   freeOrganization: string;
@@ -44,3 +48,22 @@ export const QUOTA_KEYS = {
 
 /** Kunci ini dikelola khusus di tab Kuota Listing; disembunyikan dari daftar "key lain" di tab System Config supaya tidak tampil dobel. */
 export const QUOTA_KEY_SET = new Set<string>(Object.values(QUOTA_KEYS));
+
+/** Baris "key lain" untuk tab System Config: kunci listing_quota.* disembunyikan (dikelola di tab Kuota Listing sendiri, bukan hilang datanya). */
+export function otherConfigRows(rows: SystemConfigRow[]): SystemConfigRow[] {
+  return rows.filter((r) => !QUOTA_KEY_SET.has(r.key));
+}
+
+/** Isian bawaan tab Kuota Listing dari baris System Config yang sudah ada; kunci yang belum pernah dibuat = kosong (form tetap terisi manual). */
+export function quotaFormFrom(rows: SystemConfigRow[]): QuotaForm {
+  const byKey = new Map(rows.map((r) => [r.key, r.value ?? ""]));
+  return {
+    freePersonal: byKey.get("listing_quota.free_personal") ?? "",
+    freeOrganization: byKey.get("listing_quota.free_organization") ?? "",
+    proPersonal: byKey.get("listing_quota.pro_personal") ?? "",
+    proOrganization: byKey.get("listing_quota.pro_organization") ?? "",
+    validityDays: byKey.get("listing_quota.validity_days") ?? "",
+    graceDays: byKey.get("listing_quota.grace_days") ?? "",
+    proProductCodes: byKey.get("listing_quota.pro_product_codes") ?? "",
+  };
+}

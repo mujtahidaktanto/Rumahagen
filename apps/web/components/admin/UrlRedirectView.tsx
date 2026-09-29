@@ -1,5 +1,8 @@
+"use client";
+
 // components/admin/UrlRedirectView.tsx — Pengalihan URL (M11, wireframe 02-Admin/M11-Pengalihan-URL): daftar url_redirects (migration 0051), tulis hanya
 // m11.static_public_content.publish (superadmin+admin, migration 0130) — sama seperti gerbang tab Konten Publik di Konten & Notifikasi.
+// "use client" WAJIB: meneruskan prop fungsi `trigger` ke RedirectFormDialog (bukti staging 2026-09-30, digest 606953783 — lihat SystemConfigView.tsx untuk detail RSC-nya).
 import { RedirectFormDialog } from "@/components/admin/RedirectFormDialog";
 import { RedirectRowActions } from "@/components/admin/RedirectRowActions";
 import { Badge } from "@/components/ui/Badge";
