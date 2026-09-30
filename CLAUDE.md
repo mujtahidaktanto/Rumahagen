@@ -17,7 +17,7 @@ Sebelum menyentuh UI, baca `docs/frontend/FRONTEND_HANDOFF.md` (arsitektur, kont
 
 ## Aturan kerja database dan git
 
-- Migration ditulis dan diuji rollback di DB live; **diterapkan hanya setelah pemilik produk berkata "terapkan NNNN"**. Migration 0001–0165 sudah diterapkan di DB live (0165: tambah kolom `description` TEXT nullable ke `developer_projects`, diterapkan 2026-09-30, advisor keamanan dicek sesudahnya — tidak ada temuan baru). Kode yang memakainya (form Partner, halaman publik proyek) sudah ditulis dan aman dipakai. Sisa Fase 0 keamanan: pemilik mengaktifkan *leaked password protection* di dashboard Supabase Auth (lihat `audit/FASE0_SECURITY_PLAN.md`). Nomor berikutnya: 0166.
+- Migration ditulis dan diuji rollback di DB live; **diterapkan hanya setelah pemilik produk berkata "terapkan NNNN"**. Migration 0001–0166 sudah diterapkan di DB live (0166: bucket publik-baca `announcement-media` untuk unggah gambar banner, konsol admin `/admin/konten` tab Banner & Promosi, diterapkan 2026-09-30, advisor keamanan dicek sesudahnya — tidak ada temuan baru). Kode yang memakainya (unggah/ganti/hapus gambar banner) sudah ditulis dan aman dipakai — belum di-commit. Sisa Fase 0 keamanan: pemilik mengaktifkan *leaked password protection* di dashboard Supabase Auth (lihat `audit/FASE0_SECURITY_PLAN.md`). Nomor berikutnya: 0167.
 - Commit dan push hanya setelah diminta ("commit dan push"). Trailer commit: `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`.
 - Secret (service role, BYOK, Midtrans) tidak pernah dicetak atau dikirim lewat chat.
 

@@ -7,6 +7,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { BannerFormDialog } from "@/components/admin/BannerFormDialog";
+import { BannerRowActions } from "@/components/admin/BannerRowActions";
 import { NotificationTemplateFormDialog } from "@/components/admin/NotificationTemplateFormDialog";
 import { SendNotificationDialog } from "@/components/admin/SendNotificationDialog";
 import { Badge } from "@/components/ui/Badge";
@@ -88,18 +89,29 @@ export function ContentNotifView({
                 const st = bannerStatus(b.status);
                 return (
                   <li key={b.id} className="flex flex-wrap items-center justify-between gap-3 p-3.5">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="break-words text-body-md text-ink-900">{b.title}</span>
-                        <Badge tone={st.tone}>{st.label}</Badge>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-11 w-18 flex-none items-center justify-center overflow-hidden rounded-sm bg-ink-100 text-caption">
+                        {b.imageReference ? (
+                          // Pratinjau gambar banner; gambar biasa tanpa optimasi Next.
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={b.imageReference} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          "—"
+                        )}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="break-words text-body-md text-ink-900">{b.title}</span>
+                          <Badge tone={st.tone}>{st.label}</Badge>
+                        </div>
+                        <p className="text-caption">
+                          Prioritas {b.priority}
+                          {b.scheduleAt ? ` · Mulai ${formatDateTime(b.scheduleAt)}` : ""}
+                          {b.expiresAt ? ` · Berakhir ${formatDateTime(b.expiresAt)}` : ""}
+                        </p>
                       </div>
-                      <p className="text-caption">
-                        Prioritas {b.priority}
-                        {b.scheduleAt ? ` · Mulai ${formatDateTime(b.scheduleAt)}` : ""}
-                        {b.expiresAt ? ` · Berakhir ${formatDateTime(b.expiresAt)}` : ""}
-                      </p>
                     </div>
-                    {canManageBanner ? <BannerFormDialog banner={b} trigger={(open) => <Button variant="secondary" size="sm" onClick={open}>Ubah</Button>} /> : null}
+                    {canManageBanner ? <BannerRowActions banner={b} /> : null}
                   </li>
                 );
               })}
