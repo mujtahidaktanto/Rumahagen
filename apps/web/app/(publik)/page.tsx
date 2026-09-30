@@ -14,8 +14,8 @@ import { getAnnouncements, getFeaturedCourses, getFeaturedListings } from "@/lib
 import { getActiveHeroBanners } from "@/lib/public/home-hero-data";
 
 export const metadata: Metadata = {
-  title: "RumahAgen — Temukan Properti, Temukan Peluang",
-  description: "Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.",
+  title: "RumahAgen — Agen Lebih Siap, Bisnis Lebih Terarah",
+  description: "RumahAgen membantu agen mengelola listing, mendapatkan lead, melakukan follow-up, terhubung dengan developer, dan terus berkembang dalam satu ekosistem.",
 };
 
 const r = (p: string) => p as Route;
@@ -61,10 +61,14 @@ export default async function HomePage() {
       <div className="bg-linear-to-b from-blue-50 to-white py-10 xl:py-14">
         <div className="mx-auto grid w-full max-w-[1280px] items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-12 xl:px-10">
           <div className="flex flex-col gap-5">
+            <span className="inline-flex w-fit items-center gap-2 rounded-pill bg-gold-100 px-3 py-1.5 text-[11px] font-bold tracking-wide text-ink-900 uppercase">
+              <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold-600" aria-hidden="true" />
+              Agent First
+            </span>
             <h1 className="text-display xl:text-[38px] xl:leading-[46px]">
-              Temukan Properti, Temukan Peluang, Bersama <span className="text-blue-600">RumahAgen</span>
+              Agen Lebih Siap. Bisnis Lebih Terarah. Peluang Lebih Terhubung. Bersama <span className="text-blue-600">RumahAgen</span>.
             </h1>
-            <p className="max-w-115 text-body-lg text-ink-500">Platform properti yang menghubungkan pembeli, agen, developer, dan peluang belajar dalam satu ekosistem.</p>
+            <p className="max-w-115 text-body-lg text-ink-500">RumahAgen membantu agen mengelola listing, mendapatkan lead, melakukan follow-up, terhubung dengan developer, dan terus berkembang dalam satu ekosistem.</p>
             <HeroSearch />
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <span className="text-caption">Pencarian populer:</span>

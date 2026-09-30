@@ -30,7 +30,7 @@ export async function PublicHeader() {
             Masuk
           </LinkButton>
           <LinkButton href="/daftar" size="sm">
-            Daftar
+            Bergabung Gratis
           </LinkButton>
         </>
       )}
