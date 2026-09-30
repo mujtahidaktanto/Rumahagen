@@ -101,24 +101,38 @@ async function loadEntitlements(supabase: SupabaseClient, userId: string, orgNam
   return { ok: true, data: (data ?? []).map((e) => ({ id: e.id, type: e.entitlement_type, capacity: Number(e.capacity_value ?? 0), status: e.lifecycle_status, startsAt: e.starts_at, endsAt: e.ends_at, ownerOrg: orgName(e.organization_id) })) };
 }
 
-/** Saldo yang benar-benar bisa dipakai: saldo Refresh add-on (stock_remaining) dan saldo slot beli pribadi (purchased.balance). Sisa per entitlement tidak dibuka API, jadi tidak ditampilkan per baris. */
-async function loadBalances(supabase: SupabaseClient, now: Date): Promise<Part<Balances>> {
+/** Saldo yang benar-benar bisa dipakai: saldo Refresh add-on (stock_remaining) dan saldo slot beli pribadi (purchased.balance). Sisa per entitlement tidak dibuka API, jadi tidak ditampilkan per baris.
+ *  `dailyAllowance` (quota.allowance = default_daily + extra_daily, 0159) juga diambil di sini — dipakai getOrdersData untuk menambal nilai entitlement
+ *  'listing_refresh_allowance', yang capacity_value-nya SELALU 0/NULL di commercial_entitlements (nilai sesungguhnya hidup di quota_capacities, bukan
+ *  dicerminkan balik; lihat ensure_refresh_base_pool/configure_refresh_allowance 0159/0119) — tanpa ini kartu "Jatah Refresh Harian" selalu tampil 0. */
+async function loadBalances(supabase: SupabaseClient, now: Date): Promise<{ balances: Part<Balances>; dailyAllowance: number | null }> {
   const day = todayWIB(now);
   const [stats, quota] = await Promise.all([
     supabase.rpc("agent_statistics_summary", { p_from: day, p_to: day, p_organization_id: null }),
     supabase.rpc("listing_quota_summary", { p_organization_id: null }),
   ]);
-  if (stats.error && quota.error) return { ok: false };
-  const refresh = (stats.data as { quota?: { stock_remaining?: number } } | null)?.quota?.stock_remaining;
+  const statsQuota = (stats.data as { quota?: { stock_remaining?: number; allowance?: number } } | null)?.quota;
+  const refresh = statsQuota?.stock_remaining;
   const slots = (quota.data as { purchased?: { balance?: number } } | null)?.purchased?.balance;
-  return { ok: true, data: { refreshStock: stats.error || refresh === undefined ? null : Number(refresh), slotBalance: quota.error || slots === undefined ? null : Number(slots) } };
+  const balances: Part<Balances> = stats.error && quota.error
+    ? { ok: false }
+    : { ok: true, data: { refreshStock: stats.error || refresh === undefined ? null : Number(refresh), slotBalance: quota.error || slots === undefined ? null : Number(slots) } };
+  return { balances, dailyAllowance: stats.error || statsQuota?.allowance === undefined ? null : Number(statsQuota.allowance) };
 }
 
 export async function getOrdersData(userId: string, orgs: ContextOrg[], tampil: number, now: Date = new Date()): Promise<OrdersData> {
   const supabase = await createClient();
   const names = new Map(orgs.map((o) => [o.id, o.name]));
   const orgName = (id: string | null) => (id ? (names.get(id) ?? "Organisasi") : null);
-  const [orders, entitlements, balances] = await Promise.all([loadOrders(supabase, userId, tampil, orgName), loadEntitlements(supabase, userId, orgName), loadBalances(supabase, now)]);
+  const [orders, entitlementsRaw, { balances, dailyAllowance }] = await Promise.all([
+    loadOrders(supabase, userId, tampil, orgName),
+    loadEntitlements(supabase, userId, orgName),
+    loadBalances(supabase, now),
+  ]);
+  const entitlements: Part<EntitlementItem[]> =
+    entitlementsRaw.ok && dailyAllowance !== null
+      ? { ok: true, data: entitlementsRaw.data.map((e) => (e.type === "listing_refresh_allowance" ? { ...e, capacity: dailyAllowance } : e)) }
+      : entitlementsRaw;
   return { orders, entitlements, balances };
 }
 
