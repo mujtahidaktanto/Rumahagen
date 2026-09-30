@@ -40,7 +40,7 @@ function Tile({ label, value, hint, href }: { label: string; value: ReactNode; h
 }
 
 const QUICK_ACTIONS: { title: string; note: string; icon: ReactNode; href: string | null }[] = [
-  { title: "Buat Proyek Baru", note: "Ajukan proyek coming soon", icon: <BuildingIcon size={20} />, href: null },
+  { title: "Buat Proyek Baru", note: "Ajukan proyek coming soon", icon: <BuildingIcon size={20} />, href: "/partner/proyek/baru" },
   { title: "Unggah Marketing Kit", note: "Brosur dan daftar harga", icon: <FolderIcon size={20} />, href: null },
   { title: "Tinjau Klaim", note: "Setujui atau tolak klaim agen", icon: <CheckCircleIcon size={20} />, href: null },
   { title: "Ajukan Event", note: "Launching, open house, gathering", icon: <CalendarIcon size={20} />, href: null },
@@ -125,7 +125,7 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
         <ErrorState title="Ringkasan gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
       ) : (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <Tile label="Proyek Saya" value={nf.format(stats.projectsTotal)} hint={`${nf.format(stats.projectsActive)} aktif · ${nf.format(stats.projectsComingSoon)} coming soon`} />
+          <Tile label="Proyek Saya" value={nf.format(stats.projectsTotal)} hint={`${nf.format(stats.projectsActive)} aktif · ${nf.format(stats.projectsComingSoon)} coming soon`} href="/partner/proyek" />
           <Tile label="Klaim Menunggu Review" value={nf.format(stats.claimsPending)} hint="Perlu keputusan Anda" />
           <Tile label="Klaim Disetujui" value={nf.format(stats.claimsApproved)} hint="Agen aktif memasarkan proyek Anda" />
           <Tile label="Event Menunggu Persetujuan" value={nf.format(stats.eventsPending)} hint="Ditinjau tim RumahAgen" />
@@ -195,7 +195,14 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
         </Widget>
       </div>
 
-      <Widget title="Proyek Saya">
+      <Widget
+        title="Proyek Saya"
+        action={
+          <Link href={"/partner/proyek" as Route} className="text-label-lg text-blue-600">
+            Kelola proyek
+          </Link>
+        }
+      >
         {!projects ? (
           <div className="p-5">
             <ErrorState title="Proyek gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
@@ -209,7 +216,7 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
             {projects.map((p) => {
               const st = PROJECT_STATUS[p.status] ?? { label: p.status, tone: "neutral" as const };
               return (
-                <div key={p.id} className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 first:border-t-0">
+                <Link key={p.id} href={`/partner/proyek/${p.id}` as Route} className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 text-inherit no-underline first:border-t-0 hover:bg-ink-50 hover:no-underline">
                   <span className="flex h-9 w-9 flex-none items-center justify-center rounded-sm bg-ink-50 text-ink-500">
                     <BuildingIcon size={18} />
                   </span>
@@ -218,7 +225,7 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
                     <div className="truncate text-caption">{p.location ?? "—"}</div>
                   </div>
                   <Badge tone={st.tone}>{st.label}</Badge>
-                </div>
+                </Link>
               );
             })}
           </div>
