@@ -10,12 +10,13 @@ import { BannerFormDialog } from "@/components/admin/BannerFormDialog";
 import { NotificationTemplateFormDialog } from "@/components/admin/NotificationTemplateFormDialog";
 import { SendNotificationDialog } from "@/components/admin/SendNotificationDialog";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
+import { Button, LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
 import type { Part } from "@/lib/agent/dashboard-data";
-import type { BannerRow, NotificationTemplateRow } from "@/lib/admin/content-notif-data";
+import type { BannerRow, NotificationTemplateRow, StaticContentRow } from "@/lib/admin/content-notif-data";
 import type { DirectoryUserRow } from "@/lib/admin/user-directory-data";
 import { bannerStatus } from "@/lib/admin/content-notif-rules";
+import { staticContentStatus } from "@/lib/admin/static-content-rules";
 import { NOTIFICATION_TYPE } from "@/lib/agent/notification-rules";
 import { formatDateTime } from "@/lib/format";
 
@@ -34,21 +35,26 @@ export function ContentNotifView({
   canSendManual,
   banners,
   templates,
+  canManageContent,
   users,
+  staticContent,
 }: {
   tab: ContentTab;
   canManageBanner: boolean;
   canManageTemplate: boolean;
   canSendManual: boolean;
+  canManageContent: boolean;
   banners: Part<BannerRow[]>;
   templates: Part<NotificationTemplateRow[]>;
   users: Part<DirectoryUserRow[]>;
+  staticContent: Part<StaticContentRow[]>;
 }) {
   return (
     <div className="flex w-full flex-col">
       <div className="flex flex-wrap items-center justify-between gap-3 p-4 lg:px-8 lg:pt-8">
         <h1 className="text-headline">Konten &amp; Notifikasi</h1>
         {tab === "banner" && canManageBanner ? <BannerFormDialog trigger={(open) => <Button onClick={open}>+ Buat Banner</Button>} /> : null}
+        {tab === "konten" && canManageContent ? <LinkButton href={"/admin/konten/konten-publik/baru" as Route}>+ Buat Halaman</LinkButton> : null}
         {tab === "kirim" && canSendManual && users.ok ? <SendNotificationDialog users={users.data} trigger={(open) => <Button onClick={open}>+ Kirim Notifikasi</Button>} /> : null}
       </div>
 
@@ -104,7 +110,39 @@ export function ContentNotifView({
         {tab === "konten" ? (
           <div className="flex flex-col gap-3">
             <p className="text-body-md text-ink-500">Hanya Superadmin dan Admin yang bisa mengubah konten publik; Manager hanya melihat.</p>
-            <ErrorState title="Konten Publik belum tersedia di layar ini" message="Tabel static_public_content sudah ada di database, tetapi belum ada satu pun route API yang membacanya/menulisnya (bukan cuma UI yang kurang) — lihat audit/FRONTEND_GAPS.md. Menunggu keputusan menambah API baru sebelum tab ini bisa dibangun." />
+            {!staticContent.ok ? (
+              <ErrorState title="Konten publik gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
+            ) : staticContent.data.length === 0 ? (
+              <div className="py-16 text-center">
+                <p className="text-body-md text-ink-500">Belum ada halaman konten publik.</p>
+                {canManageContent ? (
+                  <div className="mt-4 flex justify-center">
+                    <LinkButton href={"/admin/konten/konten-publik/baru" as Route}>+ Buat Halaman</LinkButton>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <ul className="flex flex-col divide-y divide-ink-50 rounded-md border border-ink-100 bg-white">
+                {staticContent.data.map((c) => {
+                  const st = staticContentStatus(c.status);
+                  return (
+                    <li key={c.id} className="flex flex-wrap items-center justify-between gap-3 p-3.5">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="break-words text-body-md text-ink-900">{c.title}</span>
+                          <Badge tone={st.tone}>{st.label}</Badge>
+                        </div>
+                        <p className="font-mono text-caption">/konten/{c.slug}</p>
+                        <p className="text-caption">Diubah {formatDateTime(c.updatedAt)}</p>
+                      </div>
+                      <LinkButton href={`/admin/konten/konten-publik/${c.id}` as Route} variant="secondary" size="sm">
+                        {canManageContent ? "Ubah" : "Lihat"}
+                      </LinkButton>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         ) : null}
 
