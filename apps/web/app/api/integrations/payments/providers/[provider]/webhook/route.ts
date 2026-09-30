@@ -52,7 +52,16 @@ export const POST = withApiHandler({}, async (ctx) => {
     throw paymentLookupError;
   }
   if (!payment) {
-    throw new ApiError("NOT_FOUND", "payment_transactions dengan payment_reference ini tidak ditemukan.");
+    // Order tidak dikenal (order_id contoh dari "Test notification URL" Midtrans,
+    // atau notifikasi basi untuk order yang sudah dihapus) — balas 200 (bukan 404)
+    // supaya Midtrans tidak menganggap endpoint gagal dan mengulang terus-menerus;
+    // tetap dicatat untuk investigasi staf (pola sama seperti amount_mismatch di bawah).
+    await admin.from("reconciliation_cases").insert({
+      case_number: `REC-${Date.now()}`,
+      mismatch_category: "orphaned_payment",
+      evidence: { order_id: body.order_id, raw_payload: body },
+    });
+    return { data: { status: "order_not_found_ignored" } };
   }
 
   // Sertakan gross_amount di idempotency key (bukan cuma order_id+status) —
