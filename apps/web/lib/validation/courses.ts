@@ -57,3 +57,14 @@ export const createCourseLessonSchema = z.object({
 export type CreateCourseLessonInput = z.infer<typeof createCourseLessonSchema>;
 
 export const updateCourseLessonSchema = createCourseLessonSchema.partial();
+
+// POST /courses/{id}/lessons/upload-url — materi PDF/Slide pelajaran (migration 0168, bucket `course-materials`). Video TIDAK lewat sini (tetap tautan URL).
+// Konstanta di sini (bukan lib/storage/course-materials.ts, yang mengimpor @/lib/supabase/admin) supaya aman dipakai LessonFormDialog.tsx sisi klien juga —
+// pola sama seperti lib/admin/course-labels.ts (mengimpor NILAI dari modul server ikut membundel kode server ke klien dan build Next.js gagal).
+export const MAX_COURSE_MATERIAL_BYTES = 20_971_520; // 20 MB, sama seperti marketing-kits (0147)
+export const createCourseMaterialUploadSchema = z.object({
+  file_name: z.string().trim().min(1).max(255),
+  content_type: z.literal("application/pdf"),
+  size_bytes: z.number().int().positive().max(MAX_COURSE_MATERIAL_BYTES).optional(),
+});
+export type CreateCourseMaterialUploadInput = z.infer<typeof createCourseMaterialUploadSchema>;
