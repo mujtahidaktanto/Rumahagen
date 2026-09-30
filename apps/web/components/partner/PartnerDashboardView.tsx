@@ -41,7 +41,7 @@ function Tile({ label, value, hint, href }: { label: string; value: ReactNode; h
 
 const QUICK_ACTIONS: { title: string; note: string; icon: ReactNode; href: string | null }[] = [
   { title: "Buat Proyek Baru", note: "Ajukan proyek coming soon", icon: <BuildingIcon size={20} />, href: "/partner/proyek/baru" },
-  { title: "Unggah Marketing Kit", note: "Brosur dan daftar harga", icon: <FolderIcon size={20} />, href: null },
+  { title: "Unggah Marketing Kit", note: "Brosur dan daftar harga", icon: <FolderIcon size={20} />, href: "/partner/marketing-kit" },
   { title: "Tinjau Klaim", note: "Setujui atau tolak klaim agen", icon: <CheckCircleIcon size={20} />, href: null },
   { title: "Ajukan Event", note: "Launching, open house, gathering", icon: <CalendarIcon size={20} />, href: null },
 ];

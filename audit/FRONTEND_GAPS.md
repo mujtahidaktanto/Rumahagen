@@ -449,6 +449,14 @@ Tiga dari 7 tujuan nav Developer Partner (`03-Developer-Partner`, 9 layar wirefr
 3. **Logo perusahaan TANPA unggah berkas** — wireframe menggambar tombol "Unggah logo", tapi tidak ada bucket storage untuk logo developer (migration 0158 hanya membuat `avatars` dan `listing-photos`, tidak ada bucket ketiga). Diganti kolom tautan https biasa (pola sama seperti listing media sebelum bucket ada) — kalau nanti perlu unggah berkas sungguhan, butuh migration bucket baru + `POST /developer-partners/{id}/logo/upload-url` (belum ada), perlu izin dulu.
 4. **Belum diuji dengan login sungguhan** (kata sandi akun uji Developer Partner tidak dimiliki Claude) — diverifikasi lewat `tsc --noEmit`, `next build`, `vitest run` (301 lulus, naik dari 299).
 
+## 2026-09-30 — Fase 6 lanjut: Marketing Kit (Developer Partner)
+
+4 dari 7 tujuan nav Developer Partner selesai. Tanpa migration/API baru — infrastruktur unggah marketing kit (bucket privat `marketing-kits`, migration 0147) dan API `GET/POST /developer-projects/{id}/marketing-kit`, `GET/PUT/DELETE /marketing-kit/{id}` sudah lengkap (termasuk `download_url` bertanda tangan 1 jam yang dihasilkan server). Kode: `lib/partner/marketing-kit-{data,rules}.ts` (rules diuji, 4 kasus), `components/partner/MarketingKitView.tsx`, rute `app/partner/marketing-kit/{page,loading}.tsx`. Dashboard: pintasan "Unggah Marketing Kit" diaktifkan.
+
+1. **Layar per-proyek (pemilih Proyek), bukan daftar gabungan** — sesuai wireframe: `marketing_kit.project_id` NOT NULL, jadi tidak ada "semua kit lintas proyek" secara alami; pemilih proyek di atas daftar berkas, bawaan proyek pertama bila `?proyek=` kosong/tidak valid.
+2. **"Ganti berkas" (tombol terpisah di wireframe) TIDAK dibuat** — disederhanakan jadi Hapus lalu Unggah ulang (satu jalur, bukan dua); tidak mengubah kontrak API, murni pengurangan jumlah tombol.
+3. **Belum diuji dengan login sungguhan** — diverifikasi lewat `tsc --noEmit`, `next build` (bundel klien `/partner/marketing-kit` 6.9 kB, bukan lagi rute server statis), `vitest run` (306 lulus, naik dari 303).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
