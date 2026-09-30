@@ -1,5 +1,13 @@
-import { AreaHome } from "@/components/shell/AreaHome";
+// app/instructor/page.tsx — Dashboard Instruktur (M08, Fase 6). Menggantikan placeholder "dibangun di Fase 6".
+import { InstructorDashboardView } from "@/components/instructor/InstructorDashboardView";
+import { getInstructorDashboard } from "@/lib/instructor/dashboard-data";
+import { requireArea } from "@/lib/auth/session";
 
-export default function InstructorHomePage() {
-  return <AreaHome title="Dashboard" note="Area Instruktur (M04, M05) dibangun di Fase 6." />;
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Dashboard | RumahAgen" };
+
+export default async function InstructorHomePage() {
+  const user = await requireArea("instructor");
+  const data = await getInstructorDashboard(user.id);
+  return <InstructorDashboardView name={user.name} data={data} />;
 }
