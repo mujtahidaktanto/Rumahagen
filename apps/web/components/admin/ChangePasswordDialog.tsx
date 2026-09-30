@@ -2,6 +2,9 @@
 
 // components/admin/ChangePasswordDialog.tsx — Ganti Kata Sandi (Profil Saya, Admin): tidak ada API ganti-sandi-langsung untuk staf (hanya alur email
 // lupa-sandi, sama seperti /lupa-password), jadi tombol ini memakai ulang POST /auth/forgot-password ke email akun sendiri.
+// redirect_to HARUS /lupa-password?tahap=reset (bukan /login) — itu satu-satunya halaman yang tahu cara menampilkan form "buat kata sandi baru" setelah
+// /api/auth/callback memasang sesi recovery (lihat app/(auth)/lupa-password/RecoveryFlow.tsx). Bug ditemukan pemilik produk 2026-09-30: link email selalu
+// terasa "kedaluwarsa" karena landing di /login (yang tidak tahu itu link reset) alih-alih halaman resetnya.
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
@@ -24,7 +27,7 @@ export function ChangePasswordDialog({ email }: { email: string }) {
     setBusy(true);
     setError(null);
     try {
-      await api.post("/auth/forgot-password", { email, redirect_to: "/login" }, { idempotency: true });
+      await api.post("/auth/forgot-password", { email, redirect_to: "/lupa-password?tahap=reset" }, { idempotency: true });
       setSent(true);
     } catch (e) {
       setError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : "Link belum terkirim karena ada gangguan. Coba lagi.");
