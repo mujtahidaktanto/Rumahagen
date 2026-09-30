@@ -1,6 +1,7 @@
 // app/(publik)/page.tsx — Homepage publik (M11 Homepage): Hero + pencarian, Jelajahi RumahAgen, Properti Pilihan, Pengumuman & Promo, Tingkatkan Kompetensi.
 // Data dibaca di server (RLS anon): tiap bagian punya keadaan kosong dan gagal sendiri sehingga satu bagian yang gagal tidak menjatuhkan halaman.
 import type { Metadata, Route } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { HeroSearch } from "@/components/public/HeroSearch";
@@ -73,11 +74,16 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
-          <div className="relative hidden h-105 overflow-hidden rounded-lg bg-linear-to-br from-blue-700 to-blue-500 lg:block" aria-hidden="true">
-            <div className="absolute bottom-7 left-7 max-w-80 text-white">
-              <div className="text-title-lg">Rumah untuk Masa Depan yang Lebih Baik</div>
-              <div className="text-body-md text-white/85">Bersama ribuan agen profesional di seluruh Indonesia</div>
-            </div>
+          {/* Rasio DIKUNCI 4:3 (bukan tinggi tetap px) supaya komposisi gambar tetap konsisten di semua lebar layar ≥lg; object-cover yang memotong otomatis. */}
+          <div className="relative hidden aspect-[4/3] overflow-hidden rounded-lg lg:block">
+            <Image
+              src="/hero/banner-1.webp"
+              alt="Bergabung gratis di RumahAgen: kelola listing, dapatkan lead, terhubung dengan developer, dan akses learning dalam satu platform"
+              fill
+              priority
+              sizes="(min-width: 1280px) 576px, (min-width: 1024px) 464px, 0px"
+              className="object-cover"
+            />
           </div>
         </div>
       </div>
