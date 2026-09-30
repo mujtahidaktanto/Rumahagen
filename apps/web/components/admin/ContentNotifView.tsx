@@ -1,28 +1,33 @@
 "use client";
 
-// components/admin/ContentNotifView.tsx — Konten & Notifikasi (M09, wireframe 02-Admin/M09-Konten-Notifikasi): 4 tab. Izin BERBEDA per tab (bukan satu gate untuk seluruh halaman):
-// Banner & Promosi dan Konten Publik = Superadmin+Admin (m11.announcement_promotion.publish / m11.static_public_content.publish); Template Notifikasi = Superadmin+Admin+Manager
-// (m09.notification_template_content.configure); Kirim Manual = Superadmin+Admin (dicek DI DALAM create_notification(), Manager ditolak 403 kalau memaksa).
+// components/admin/ContentNotifView.tsx — Konten & Notifikasi (M09, wireframe 02-Admin/M09-Konten-Notifikasi): 5 tab. Izin BERBEDA per tab (bukan satu gate untuk seluruh halaman):
+// Banner Hero Beranda, Banner & Promosi, dan Konten Publik = Superadmin+Admin (m11.static_public_content.publish / m11.announcement_promotion.publish); Template Notifikasi =
+// Superadmin+Admin+Manager (m09.notification_template_content.configure); Kirim Manual = Superadmin+Admin (dicek DI DALAM create_notification(), Manager ditolak 403 kalau memaksa).
+// Banner Hero Beranda (home_hero_banners, migration 0167) TIDAK SAMA dengan Banner & Promosi (public_announcement_promotion, 0014/0028) — yang pertama slide di blok hero
+// Homepage (app/(publik)/page.tsx), yang kedua kartu di halaman /promo. Keduanya bernama "banner" sehari-hari sehingga sering tertukar — label tab dibuat eksplisit berbeda.
 // "use client" WAJIB: meneruskan prop fungsi `trigger` ke BannerFormDialog/NotificationTemplateFormDialog/SendNotificationDialog (bukti staging 2026-09-30, digest 606953783 — lihat SystemConfigView.tsx).
 import Link from "next/link";
 import type { Route } from "next";
 import { BannerFormDialog } from "@/components/admin/BannerFormDialog";
 import { BannerRowActions } from "@/components/admin/BannerRowActions";
+import { HeroBannerFormDialog } from "@/components/admin/HeroBannerFormDialog";
+import { HeroBannerRowActions } from "@/components/admin/HeroBannerRowActions";
 import { NotificationTemplateFormDialog } from "@/components/admin/NotificationTemplateFormDialog";
 import { SendNotificationDialog } from "@/components/admin/SendNotificationDialog";
 import { Badge } from "@/components/ui/Badge";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { ErrorState } from "@/components/ui/States";
 import type { Part } from "@/lib/agent/dashboard-data";
-import type { BannerRow, NotificationTemplateRow, StaticContentRow } from "@/lib/admin/content-notif-data";
+import type { BannerRow, HeroBannerRow, NotificationTemplateRow, StaticContentRow } from "@/lib/admin/content-notif-data";
 import type { DirectoryUserRow } from "@/lib/admin/user-directory-data";
 import { bannerStatus } from "@/lib/admin/content-notif-rules";
 import { staticContentStatus } from "@/lib/admin/static-content-rules";
 import { NOTIFICATION_TYPE } from "@/lib/agent/notification-rules";
 import { formatDateTime } from "@/lib/format";
 
-export type ContentTab = "banner" | "konten" | "template" | "kirim";
+export type ContentTab = "hero" | "banner" | "konten" | "template" | "kirim";
 const TABS: { key: ContentTab; label: string }[] = [
+  { key: "hero", label: "Banner Hero Beranda" },
   { key: "banner", label: "Banner & Promosi" },
   { key: "konten", label: "Konten Publik" },
   { key: "template", label: "Template Notifikasi" },
@@ -31,6 +36,8 @@ const TABS: { key: ContentTab; label: string }[] = [
 
 export function ContentNotifView({
   tab,
+  canManageHero,
+  heroBanners,
   canManageBanner,
   canManageTemplate,
   canSendManual,
@@ -41,6 +48,8 @@ export function ContentNotifView({
   staticContent,
 }: {
   tab: ContentTab;
+  canManageHero: boolean;
+  heroBanners: Part<HeroBannerRow[]>;
   canManageBanner: boolean;
   canManageTemplate: boolean;
   canSendManual: boolean;
@@ -54,6 +63,7 @@ export function ContentNotifView({
     <div className="flex w-full flex-col">
       <div className="flex flex-wrap items-center justify-between gap-3 p-4 lg:px-8 lg:pt-8">
         <h1 className="text-headline">Konten &amp; Notifikasi</h1>
+        {tab === "hero" && canManageHero ? <HeroBannerFormDialog trigger={(open) => <Button onClick={open}>+ Buat Slide</Button>} /> : null}
         {tab === "banner" && canManageBanner ? <BannerFormDialog trigger={(open) => <Button onClick={open}>+ Buat Banner</Button>} /> : null}
         {tab === "konten" && canManageContent ? <LinkButton href={"/admin/konten/konten-publik/baru" as Route}>+ Buat Halaman</LinkButton> : null}
         {tab === "kirim" && canSendManual && users.ok ? <SendNotificationDialog users={users.data} trigger={(open) => <Button onClick={open}>+ Kirim Notifikasi</Button>} /> : null}
@@ -68,6 +78,47 @@ export function ContentNotifView({
       </div>
 
       <div className="flex flex-col gap-4 p-4 lg:p-8">
+        {tab === "hero" ? (
+          <>
+            <p className="text-body-md text-ink-500">Slide tampil bergantian di blok hero Homepage (samping kotak pencarian). Urutan tampil = angka kecil dulu; hanya slide Aktif yang tampil publik.</p>
+            {!canManageHero ? <p className="text-body-md text-ink-500">Anda hanya bisa melihat. Mengubah membutuhkan izin mengelola konten publik.</p> : null}
+            {!heroBanners.ok ? (
+              <ErrorState title="Slide banner gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
+            ) : heroBanners.data.length === 0 ? (
+              <div className="py-16 text-center">
+                <p className="text-body-md text-ink-500">Belum ada slide. Tanpa slide aktif, blok hero menampilkan latar biru bawaan.</p>
+                {canManageHero ? (
+                  <div className="mt-4 flex justify-center">
+                    <HeroBannerFormDialog trigger={(open) => <Button onClick={open}>+ Buat Slide</Button>} />
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <ul className="flex flex-col divide-y divide-ink-50 rounded-md border border-ink-100 bg-white">
+                {heroBanners.data.map((b) => (
+                  <li key={b.id} className="flex flex-wrap items-center justify-between gap-3 p-3.5">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-11 w-18 flex-none items-center justify-center overflow-hidden rounded-sm bg-ink-100 text-caption">
+                        {/* Pratinjau gambar slide; gambar biasa tanpa optimasi Next. */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={b.imageReference} alt="" className="h-full w-full object-cover" />
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="break-words text-body-md text-ink-900">{b.altText || "(tanpa teks alternatif)"}</span>
+                          <Badge tone={b.isActive ? "success" : "neutral"}>{b.isActive ? "Aktif" : "Nonaktif"}</Badge>
+                        </div>
+                        <p className="text-caption">Urutan {b.displayOrder}</p>
+                      </div>
+                    </div>
+                    {canManageHero ? <HeroBannerRowActions banner={b} /> : null}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        ) : null}
+
         {tab === "banner" ? (
           !canManageBanner ? <p className="text-body-md text-ink-500">Anda hanya bisa melihat banner. Mengubah membutuhkan izin mengelola banner &amp; promosi.</p> : null
         ) : null}

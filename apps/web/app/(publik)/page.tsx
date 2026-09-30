@@ -1,9 +1,9 @@
 // app/(publik)/page.tsx — Homepage publik (M11 Homepage): Hero + pencarian, Jelajahi RumahAgen, Properti Pilihan, Pengumuman & Promo, Tingkatkan Kompetensi.
 // Data dibaca di server (RLS anon): tiap bagian punya keadaan kosong dan gagal sendiri sehingga satu bagian yang gagal tidak menjatuhkan halaman.
 import type { Metadata, Route } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { HeroBannerCarousel } from "@/components/public/HeroBannerCarousel";
 import { HeroSearch } from "@/components/public/HeroSearch";
 import { PropertyCard } from "@/components/public/PropertyCard";
 import { LinkButton } from "@/components/ui/Button";
@@ -11,6 +11,7 @@ import { EmptyState, ErrorState } from "@/components/ui/States";
 import { BookIcon, BuildingIcon, CalendarIcon, ChevronRightIcon, ClockIcon, DocIcon, OfficeIcon, TagIcon, UserIcon, UsersIcon } from "@/components/ui/icons";
 import { formatDate } from "@/lib/format";
 import { getAnnouncements, getFeaturedCourses, getFeaturedListings } from "@/lib/public/home-data";
+import { getActiveHeroBanners } from "@/lib/public/home-hero-data";
 
 export const metadata: Metadata = {
   title: "RumahAgen — Temukan Properti, Temukan Peluang",
@@ -53,7 +54,7 @@ function Section({ title, subtitle, href, hrefLabel, children }: { title: string
 }
 
 export default async function HomePage() {
-  const [listings, announcements, courses] = await Promise.all([getFeaturedListings(4), getAnnouncements(3), getFeaturedCourses(2)]);
+  const [listings, announcements, courses, heroBanners] = await Promise.all([getFeaturedListings(4), getAnnouncements(3), getFeaturedCourses(2), getActiveHeroBanners()]);
 
   return (
     <>
@@ -74,17 +75,18 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
-          {/* Rasio DIKUNCI 4:3 (bukan tinggi tetap px) supaya komposisi gambar tetap konsisten di semua lebar layar ≥lg; object-cover yang memotong otomatis. */}
-          <div className="relative hidden aspect-[4/3] overflow-hidden rounded-lg lg:block">
-            <Image
-              src="/hero/banner-1.webp"
-              alt="Bergabung gratis di RumahAgen: kelola listing, dapatkan lead, terhubung dengan developer, dan akses learning dalam satu platform"
-              fill
-              priority
-              sizes="(min-width: 1280px) 576px, (min-width: 1024px) 464px, 0px"
-              className="object-cover"
-            />
-          </div>
+          {/* Rasio DIKUNCI 4:3 (bukan tinggi tetap px) supaya komposisi gambar tetap konsisten di semua lebar layar ≥lg; object-cover yang memotong otomatis.
+              Slide dikelola admin (/admin/konten, tab Banner Hero Beranda) — beda dari Banner & Promosi (public_announcement_promotion, tampil di /promo). */}
+          {heroBanners.ok && heroBanners.slides.length > 0 ? (
+            <HeroBannerCarousel slides={heroBanners.slides} />
+          ) : (
+            <div className="relative hidden aspect-[4/3] overflow-hidden rounded-lg bg-linear-to-br from-blue-700 to-blue-500 lg:block" aria-hidden="true">
+              <div className="absolute bottom-7 left-7 max-w-80 text-white">
+                <div className="text-title-lg">Rumah untuk Masa Depan yang Lebih Baik</div>
+                <div className="text-body-md text-white/85">Bersama ribuan agen profesional di seluruh Indonesia</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

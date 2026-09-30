@@ -1,4 +1,5 @@
-// lib/admin/content-notif-data.ts — data Konten & Notifikasi (M09): tab Banner & Promosi (public_announcement_promotion, migration 0014/0028), Template Notifikasi (notification_templates, 0013,
+// lib/admin/content-notif-data.ts — data Konten & Notifikasi (M09): tab Banner & Promosi (public_announcement_promotion, migration 0014/0028, tampil di /promo), Banner Hero Beranda
+// (home_hero_banners, migration 0167, tampil di blok hero Homepage — BUKAN tabel yang sama dengan Banner & Promosi), Template Notifikasi (notification_templates, 0013,
 // 6 tipe terkunci CHECK), dan Konten Publik (static_public_content, migration 0037 — route /api/admin/static-content dibuat 2026-09-30, sebelumnya tidak ada sama sekali). Riwayat "Kirim Manual"
 // tetap TIDAK di sini (tidak ada tabel riwayat notifikasi manual terpisah dari notifications pribadi penerima).
 import { createClient } from "@/lib/supabase/server";
@@ -42,6 +43,27 @@ export async function getBanners(): Promise<Part<BannerRow[]>> {
       expiresAt: b.expires_at,
       status: b.status,
     })),
+  };
+}
+
+export type HeroBannerRow = { id: string; imageReference: string; altText: string | null; ctaReference: string | null; displayOrder: number; isActive: boolean };
+
+const HERO_BANNER_SELECT = "id, image_reference, alt_text, cta_reference, display_order, is_active";
+
+/** Slide banner hero Homepage (home_hero_banners, migration 0167) — BUKAN Banner & Promosi (getBanners acima, public_announcement_promotion, tampil di /promo). */
+export async function getHeroBanners(): Promise<Part<HeroBannerRow[]>> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("home_hero_banners")
+    .select(HERO_BANNER_SELECT)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(200)
+    .returns<{ id: string; image_reference: string; alt_text: string | null; cta_reference: string | null; display_order: number; is_active: boolean }[]>();
+  if (error) return { ok: false };
+  return {
+    ok: true,
+    data: (data ?? []).map((b) => ({ id: b.id, imageReference: b.image_reference, altText: b.alt_text, ctaReference: b.cta_reference, displayOrder: b.display_order, isActive: b.is_active })),
   };
 }
 

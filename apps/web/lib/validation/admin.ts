@@ -58,6 +58,20 @@ export type BannerInput = z.infer<typeof bannerSchema>;
 export const updateBannerSchema = bannerSchema.partial();
 export type UpdateBannerInput = z.infer<typeof updateBannerSchema>;
 
+// POST/PUT /admin/home-hero-banners — slide banner hero HALAMAN UTAMA (migration 0167, home_hero_banners). BUKAN public_announcement_promotion di atas
+// (itu untuk /promo) — lihat komentar migration 0167 untuk perbedaannya.
+export const heroBannerSchema = z.object({
+  image_reference: z.string().min(1).max(500),
+  alt_text: z.string().max(200).optional(),
+  cta_reference: z.string().max(500).optional(),
+  display_order: z.coerce.number().int().optional(),
+  is_active: z.boolean().optional(),
+});
+export type HeroBannerInput = z.infer<typeof heroBannerSchema>;
+
+export const updateHeroBannerSchema = heroBannerSchema.partial();
+export type UpdateHeroBannerInput = z.infer<typeof updateHeroBannerSchema>;
+
 // GET/PUT /admin/config/seo — CORE-CFG-SEO-01 (STEP11-B9 §6), tabel baru
 // seo_config (migration 0097, permission m09.system_configuration.manage)
 export const seoConfigUpdateSchema = z.object({
