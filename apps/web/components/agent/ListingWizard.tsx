@@ -118,9 +118,16 @@ export function ListingWizard(p: WizardProps) {
   const [mediaError, setMediaError] = useState<string | null>(null);
   const createdId = useRef<string | null>(null);
   const createKey = useRef<string>(newIdempotencyKey());
+  const [seoSameAsListing, setSeoSameAsListing] = useState(false);
 
   const step = WIZARD_STEPS[idx]!;
   const set = <K extends keyof WizardValues>(k: K, val: WizardValues[K]) => setV((x) => ({ ...x, [k]: val }));
+
+  // Meta Title/Description SEO mengikuti Judul/Deskripsi Listing selama sakelar ini aktif (dipangkas ke batas 70/160 karakter); dimatikan lagi = kembali bisa diisi manual.
+  useEffect(() => {
+    if (!seoSameAsListing) return;
+    setV((x) => ({ ...x, metaTitle: x.title.slice(0, 70), metaDescription: x.description.slice(0, 160) }));
+  }, [seoSameAsListing, v.title, v.description]);
   const errors: StepErrors = shown[step.key] ? validateStep(step.key, v, { locked }) : {};
 
   const provinces = useOptions("/ref-provinces", {}, true);
@@ -689,11 +696,15 @@ export function ListingWizard(p: WizardProps) {
             <Field label="Deskripsi Listing" hint={`${nf.format(v.description.length)} karakter`}>
               {(a) => <Textarea rows={7} placeholder="Rumah minimalis modern 2 lantai, kondisi siap huni…" value={v.description} onChange={(e) => set("description", e.target.value)} {...a} />}
             </Field>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-label-lg">Samakan dengan Judul &amp; Deskripsi Listing</span>
+              <Switch checked={seoSameAsListing} onChange={setSeoSameAsListing} aria-label="Samakan Meta Title/Description SEO dengan Judul dan Deskripsi Listing" />
+            </div>
             <Field label="Meta Title SEO (opsional)" hint={`${v.metaTitle.length}/70`} error={errors.metaTitle}>
-              {(a) => <Input maxLength={70} value={v.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} {...a} />}
+              {(a) => <Input maxLength={70} disabled={seoSameAsListing} value={v.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} {...a} />}
             </Field>
             <Field label="Meta Description SEO (opsional)" hint={`${v.metaDescription.length}/160`} error={errors.metaDescription}>
-              {(a) => <Textarea rows={2} maxLength={160} value={v.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} {...a} />}
+              {(a) => <Textarea rows={2} maxLength={160} disabled={seoSameAsListing} value={v.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} {...a} />}
             </Field>
           </>
         ) : null}

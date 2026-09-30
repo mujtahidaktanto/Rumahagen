@@ -17,7 +17,7 @@ Sebelum menyentuh UI, baca `docs/frontend/FRONTEND_HANDOFF.md` (arsitektur, kont
 
 ## Aturan kerja database dan git
 
-- Migration ditulis dan diuji rollback di DB live; **diterapkan hanya setelah pemilik produk berkata "terapkan NNNN"**. Migration 0001–0164 sudah diterapkan di DB live (0146 perbaikan RPC anon dan 0153 sudah diterapkan dan di-commit; 0164 koreksi kepemilikan BYOK M13 — role `agent` ditambah `m13.own_byok_connection.*` scope `own` selain `developer_partner`, MVP dua role saja — diterapkan 2026-09-26, **belum di-commit**). Sisa Fase 0 keamanan: pemilik mengaktifkan *leaked password protection* di dashboard Supabase Auth (lihat `audit/FASE0_SECURITY_PLAN.md`). Nomor berikutnya: 0165.
+- Migration ditulis dan diuji rollback di DB live; **diterapkan hanya setelah pemilik produk berkata "terapkan NNNN"**. Migration 0001–0165 sudah diterapkan di DB live (0165: tambah kolom `description` TEXT nullable ke `developer_projects`, diterapkan 2026-09-30, advisor keamanan dicek sesudahnya — tidak ada temuan baru). Kode yang memakainya (form Partner, halaman publik proyek) sudah ditulis dan aman dipakai. Sisa Fase 0 keamanan: pemilik mengaktifkan *leaked password protection* di dashboard Supabase Auth (lihat `audit/FASE0_SECURITY_PLAN.md`). Nomor berikutnya: 0166.
 - Commit dan push hanya setelah diminta ("commit dan push"). Trailer commit: `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`.
 - Secret (service role, BYOK, Midtrans) tidak pernah dicetak atau dikirim lewat chat.
 

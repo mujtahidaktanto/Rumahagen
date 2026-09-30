@@ -137,7 +137,7 @@ export function ProjectDetailView({ project: p, viewer, partnership }: { project
       <div className="grid items-start gap-8 pt-8 pb-14 lg:grid-cols-[1fr_340px]">
         <div className="flex min-w-0 flex-col gap-8">
           <Section title="Deskripsi">
-            <RichText text={p.meta_description} empty="Developer belum menambahkan deskripsi proyek." />
+            <RichText text={p.description || p.meta_description} empty="Developer belum menambahkan deskripsi proyek." />
           </Section>
 
           <Section title="Legalitas & Kepercayaan">

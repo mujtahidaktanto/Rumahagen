@@ -2,7 +2,8 @@
 // Pengunjung melihat proyek berstatus active | coming_soon | sold_out milik developer partner `active` (developer_projects_select); `inactive` tidak terlihat.
 // KOMISI (commission_scheme, extra_commission) TIDAK PERNAH dibaca untuk pengunjung/peran lain: hanya Agent yang login melihat "Info Kemitraan Agen" (wireframe), lewat
 // getProjectPartnership(). Catatan keamanan: RLS mengizinkan anon membaca kolom komisi lewat REST langsung (lihat audit/FRONTEND_GAPS.md); halaman ini hanya tidak menampilkannya.
-// developer_projects tidak punya kolom deskripsi; meta_description dipakai sebagai deskripsi bila ada.
+// developer_projects.description (migration 0165, menunggu diterapkan) menampung deskripsi panjang; sebelum 0165 (atau proyek lama yang belum diisi ulang) kosong, jadi
+// halaman ini jatuh ke meta_description bila description kosong (lihat ProjectDetailView.tsx) supaya proyek lama tidak tiba-tiba kehilangan teksnya.
 import { createClient } from "@/lib/supabase/server";
 import { PROPERTY_TYPES, type PropertyType } from "./listing-params";
 
@@ -97,6 +98,8 @@ export type ProjectDetail = {
   id: string;
   slug: string;
   name: string;
+  /** Deskripsi panjang (migration 0165), terpisah dari meta_description (SEO). Proyek lama (dibuat sebelum 0165) bisa kosong meski meta_description terisi. */
+  description: string | null;
   meta_title: string | null;
   meta_description: string | null;
   category: string;
@@ -143,7 +146,7 @@ type DetailRow = Omit<ProjectDetail, "cityName" | "provinceName" | "districtName
 
 // Kolom komisi SENGAJA tidak ada di sini.
 const DETAIL_SELECT =
-  "id, slug, name, meta_title, meta_description, category, transaction_type, property_type, location, latitude, longitude, price_min, price_max, price_unit, is_negotiable, unit_availability, bedrooms, bathrooms, land_area, building_area, floors, carport_capacity, electrical_power, water_source, furnishing, year_built, certificate_type, certificate_transferred, imb_status, dispute_free_declared, status, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), media:developer_project_media(type, url, created_at), developer:developer_partners(id, company_name, company_logo, description, pic_name, pic_contact)";
+  "id, slug, name, description, meta_title, meta_description, category, transaction_type, property_type, location, latitude, longitude, price_min, price_max, price_unit, is_negotiable, unit_availability, bedrooms, bathrooms, land_area, building_area, floors, carport_capacity, electrical_power, water_source, furnishing, year_built, certificate_type, certificate_transferred, imb_status, dispute_free_declared, status, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), media:developer_project_media(type, url, created_at), developer:developer_partners(id, company_name, company_logo, description, pic_name, pic_contact)";
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

@@ -31,6 +31,10 @@ export type ProjectDetail = {
   developerId: string;
   name: string;
   slug: string;
+  /** Deskripsi panjang, terpisah dari metaTitle/metaDescription (migration 0165). */
+  description: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
   category: string;
   transactionType: string;
   propertyType: string | null;
@@ -76,6 +80,9 @@ export async function getMyProjectById(id: string): Promise<Part<ProjectDetail |
       developerId: p.developer_id as string,
       name: p.name as string,
       slug: p.slug as string,
+      description: (p.description as string) ?? null,
+      metaTitle: (p.meta_title as string) ?? null,
+      metaDescription: (p.meta_description as string) ?? null,
       category: p.category as string,
       transactionType: p.transaction_type as string,
       propertyType: (p.property_type as string) ?? null,

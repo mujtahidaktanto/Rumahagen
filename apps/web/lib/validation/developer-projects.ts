@@ -39,6 +39,7 @@ export const createDeveloperProjectSchema = z.object({
   developer_id: z.string().uuid(),
   name: z.string().min(1).max(200),
   slug: z.string().min(1).max(220).optional(),
+  description: z.string().optional(), // migration 0165 — terpisah dari meta_description (SEO), sama pola dengan listings.description
   meta_title: z.string().max(70).optional(),
   meta_description: z.string().max(160).optional(),
   category: z.enum(["primary", "secondary"]),

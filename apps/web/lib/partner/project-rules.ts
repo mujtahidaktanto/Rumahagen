@@ -1,12 +1,16 @@
 // lib/partner/project-rules.ts — aturan murni Proyek Saya (M06, wireframe 03-Developer-Partner/M06-{Kelola-Proyek,Form-Proyek,Detail-Proyek}). Label status/kategori/transaksi
 // DIPAKAI ULANG dari lib/admin/developer-admin-rules.ts (sama persis, murni tanpa I/O). Developer Partner TIDAK bisa memilih status "active" — publish/aktivasi hanya tim
-// RumahAgen (trigger enforce_developer_project_publish_permission, migration 0034; SOURCE-Developer-Partner.md §7).
+// RumahAgen (trigger enforce_developer_project_publish_permission, migration 0034; SOURCE-Developer-Partner.md §7). `description`/`metaTitle`/`metaDescription` (migration
+// 0165, permintaan pemilik produk 2026-09-30) menyamakan field Form Proyek dengan Form Listing Agent — Deskripsi terpisah dari Meta Title/Description SEO.
 export { PROJECT_STATUS, projectStatus, CATEGORY_LABEL, TRANSACTION_LABEL } from "@/lib/admin/developer-admin-rules";
 
 export const PARTNER_PROJECT_STATUS_OPTIONS = ["coming_soon", "sold_out", "inactive"] as const;
 
 export type ProjectForm = {
   name: string;
+  description: string;
+  metaTitle: string;
+  metaDescription: string;
   category: "primary" | "secondary";
   transactionType: "sale" | "rent";
   propertyType: string;
@@ -38,7 +42,7 @@ export type ProjectForm = {
   extraCommission: string;
 };
 
-export type ProjectFormErrors = Partial<Record<"name" | "provinceId" | "cityId" | "districtId", string>>;
+export type ProjectFormErrors = Partial<Record<"name" | "provinceId" | "cityId" | "districtId" | "metaTitle" | "metaDescription", string>>;
 
 export function validateProjectForm(f: ProjectForm): ProjectFormErrors {
   const errors: ProjectFormErrors = {};
@@ -47,5 +51,7 @@ export function validateProjectForm(f: ProjectForm): ProjectFormErrors {
   if (!f.provinceId) errors.provinceId = "Pilih provinsi.";
   if (!f.cityId) errors.cityId = "Pilih kota/kabupaten.";
   if (!f.districtId) errors.districtId = "Pilih kecamatan.";
+  if (f.metaTitle.length > 70) errors.metaTitle = "Maksimal 70 karakter.";
+  if (f.metaDescription.length > 160) errors.metaDescription = "Maksimal 160 karakter.";
   return errors;
 }

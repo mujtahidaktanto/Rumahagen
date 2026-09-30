@@ -3,7 +3,8 @@
 // components/partner/ProjectFormView.tsx — Form Proyek + Detail Proyek gabungan (M06, wireframe 03-Developer-Partner/M06-{Form-Proyek,Detail-Proyek}): buat proyek baru
 // (POST /admin/developer-projects) atau ubah + kelola media + ubah status proyek milik sendiri (PUT /admin/developer-projects/{id}, upload lewat
 // /developer-projects/{id}/uploads + POST .../media, migration 0147). Status "Aktif" TIDAK ditawarkan — publish hanya tim RumahAgen (SOURCE-Developer-Partner.md §7);
-// bila trigger tetap menolak transisi, pesan servernya ditampilkan apa adanya (bukan dikira-kira).
+// bila trigger tetap menolak transisi, pesan servernya ditampilkan apa adanya (bukan dikira-kira). Deskripsi Proyek + Meta Title/Description SEO (migration 0165, menunggu
+// diterapkan) menyamakan field dengan Form Listing Agent; sakelar "Samakan dengan Nama & Deskripsi" menyalin otomatis ke Meta Title/Description selagi aktif.
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Route } from "next";
@@ -53,6 +54,9 @@ function n(v: number | null): string {
 function formFrom(p?: ProjectDetail): ProjectForm {
   return {
     name: p?.name ?? "",
+    description: p?.description ?? "",
+    metaTitle: p?.metaTitle ?? "",
+    metaDescription: p?.metaDescription ?? "",
     category: (p?.category as "primary" | "secondary") ?? "primary",
     transactionType: (p?.transactionType as "sale" | "rent") ?? "sale",
     propertyType: p?.propertyType ?? "",
@@ -93,6 +97,9 @@ function numOrUndef(v: string): number | undefined {
 function bodyFrom(f: ProjectForm) {
   return {
     name: f.name.trim(),
+    description: f.description.trim() || undefined,
+    meta_title: f.metaTitle.trim() || undefined,
+    meta_description: f.metaDescription.trim() || undefined,
     category: f.category,
     transaction_type: f.transactionType,
     property_type: f.propertyType || undefined,
@@ -133,8 +140,15 @@ export function ProjectFormView({ developerId, project, media }: { developerId: 
   const [tried, setTried] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [seoSameAsProject, setSeoSameAsProject] = useState(false);
   const errors = tried ? validateProjectForm(f) : {};
   const dirty = JSON.stringify(f) !== JSON.stringify(initial);
+
+  // Meta Title/Description SEO mengikuti Nama/Deskripsi Proyek selama sakelar ini aktif (dipangkas ke batas 70/160 karakter); dimatikan lagi = kembali bisa diisi manual.
+  useEffect(() => {
+    if (!seoSameAsProject) return;
+    setF((x) => ({ ...x, metaTitle: x.name.slice(0, 70), metaDescription: x.description.slice(0, 160) }));
+  }, [seoSameAsProject, f.name, f.description]);
 
   const provinces = useOptions("/ref-provinces", {}, true);
   const cities = useOptions("/ref-cities", { province_id: f.provinceId }, !!f.provinceId);
@@ -173,6 +187,9 @@ export function ProjectFormView({ developerId, project, media }: { developerId: 
       <Section title="Identitas &amp; Klasifikasi">
         <Field label="Nama Proyek" required error={errors.name}>
           {(a) => <Input {...a} value={f.name} onChange={(e) => set("name", e.target.value)} maxLength={200} />}
+        </Field>
+        <Field label="Deskripsi Proyek" hint={`${f.description.length} karakter`}>
+          {(a) => <Textarea {...a} rows={6} placeholder="Ceritakan proyek ini: konsep, keunggulan, fasilitas…" value={f.description} onChange={(e) => set("description", e.target.value)} />}
         </Field>
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
           <Field label="Kategori">
@@ -352,6 +369,19 @@ export function ProjectFormView({ developerId, project, media }: { developerId: 
         <p className="text-caption">Non-eksklusivitas: proyek ini tidak bisa ditandai eksklusif wilayah tertentu.</p>
         <Field label="Skema komisi">{(a) => <Input {...a} value={f.commissionScheme} onChange={(e) => set("commissionScheme", e.target.value)} maxLength={255} />}</Field>
         <Field label="Komisi tambahan">{(a) => <Textarea {...a} rows={2} value={f.extraCommission} onChange={(e) => set("extraCommission", e.target.value)} />}</Field>
+      </Section>
+
+      <Section title="SEO">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-label-lg">Samakan dengan Nama &amp; Deskripsi Proyek</span>
+          <Switch checked={seoSameAsProject} onChange={setSeoSameAsProject} aria-label="Samakan Meta Title/Description SEO dengan Nama dan Deskripsi Proyek" />
+        </div>
+        <Field label="Meta Title SEO (opsional)" hint={`${f.metaTitle.length}/70`} error={errors.metaTitle}>
+          {(a) => <Input {...a} maxLength={70} disabled={seoSameAsProject} value={f.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} />}
+        </Field>
+        <Field label="Meta Description SEO (opsional)" hint={`${f.metaDescription.length}/160`} error={errors.metaDescription}>
+          {(a) => <Textarea {...a} rows={2} maxLength={160} disabled={seoSameAsProject} value={f.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} />}
+        </Field>
       </Section>
 
       {isEdit ? <StatusSection project={project} /> : null}
