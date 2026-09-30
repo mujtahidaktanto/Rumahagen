@@ -3791,3 +3791,12 @@ ew_certificate_verification_code tertutup untuk anon dan authenticated (REST ano
   - `components/admin/LessonFormDialog.tsx` DAN `components/instructor/CourseDetailView.tsx` (`LessonDialog`, implementasi terpisah — kedua screen dibuat konsisten) — field "Alamat konten" jadi kondisional: URL untuk Video, pemilih berkas PDF untuk PDF/Slide.
 - **Belum diuji visual dengan lesson sungguhan** (perlu login Admin/Instruktur, tidak dimiliki Claude) — diverifikasi lewat `tsc --noEmit`, `next build`, `vitest run`.
 - **Rollback:** `DELETE FROM storage.buckets WHERE id = 'course-materials'` (hanya bila bucket kosong).
+
+## `0169` — Notifikasi pembelian add-on di `fulfill_commercial_order` (✅ DITERAPKAN 2026-10-01)
+
+**STATUS:** Ditulis dan **DITERAPKAN 2026-10-01**. Diverifikasi lewat testing live (transaksi sandbox Midtrans sungguhan → notifikasi masuk); advisor keamanan dicek sesudahnya — tidak ada temuan baru dari migration ini.
+
+- **Celah ditemukan lewat testing langsung** (bukan laporan pemilik produk): setelah integrasi webhook Midtrans sandbox diperbaiki dan diuji end-to-end (checkout Pro Triwulan via GoPay dan Paket Refresh Listing via kartu), pemilik produk mengamati notifikasi masuk untuk pembelian **langganan Pro** tapi **tidak ada notifikasi sama sekali** untuk pembelian **add-on**.
+- **Akar masalah:** `fulfill_commercial_order` (0142) memanggil `notify_user()` hanya di cabang `IF v_sub_id IS NOT NULL` (langganan). Cabang `ELSE` (addon — refresh listing, slot listing, dll., sejak 0079/0081/0141) tidak pernah memanggil `notify_user()` — celah ini ada sejak addon fulfillment pertama kali dibuat, bukan regresi baru.
+- **Perubahan:** `CREATE OR REPLACE FUNCTION fulfill_commercial_order` — body identik dengan 0142, ditambah `PERFORM notify_user(...)` di cabang addon (tipe `'lainnya'`, judul "Pembelian {nama addon} berhasil", entity `addon`/`v_addon.id`), pola sama seperti notifikasi langganan. **Tidak ada perubahan skema** — hanya redefinisi fungsi.
+- **Rollback:** jalankan ulang isi `CREATE OR REPLACE FUNCTION fulfill_commercial_order` dari 0142 (menghapus blok `ELSIF v_order.user_id IS NOT NULL THEN ... notify_user(...)` yang ditambahkan di sini).
