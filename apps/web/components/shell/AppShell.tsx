@@ -92,9 +92,13 @@ export function AppShell({ items, title, tone = "blue", user, profileHref, foote
         aria-label={`Navigasi ${title}`}
         className={cn("sticky top-0 hidden h-dvh flex-none flex-col transition-[width] duration-200 lg:flex", toneBg[tone], collapsed ? "w-19" : "w-60")}
       >
-        {/* Kepala putih berisi logo (logo berwarna, seperti wireframe); di keadaan ringkas hanya tombol tampil/sembunyikan */}
+        {/* Kepala putih berisi logo (logo berwarna, seperti wireframe); di keadaan ringkas hanya tombol tampil/sembunyikan. Logo bertaut ke halaman publik. */}
         <div className={cn("flex h-19 flex-none items-center border-b border-ink-100 bg-white px-4", collapsed ? "justify-center" : "justify-between")}>
-          {collapsed ? null : <Logo height={34} />}
+          {collapsed ? null : (
+            <Link href={"/" as Route} aria-label="Ke halaman publik RumahAgen">
+              <Logo height={34} />
+            </Link>
+          )}
           <IconButton
             label={collapsed ? "Tampilkan navigasi" : "Sembunyikan navigasi"}
             aria-expanded={!collapsed}
@@ -121,7 +125,9 @@ export function AppShell({ items, title, tone = "blue", user, profileHref, foote
           <IconButton label="Buka navigasi" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(true)}>
             <MenuIcon />
           </IconButton>
-          <Logo height={28} />
+          <Link href={"/" as Route} aria-label="Ke halaman publik RumahAgen">
+            <Logo height={28} />
+          </Link>
           <span className="ml-auto pr-1 text-label-lg text-ink-500">{title}</span>
           {mobileTop}
         </header>
@@ -142,7 +148,9 @@ export function AppShell({ items, title, tone = "blue", user, profileHref, foote
       >
         <div className="flex h-full flex-col">
           <div className="flex h-16 flex-none items-center justify-between border-b border-ink-100 bg-white px-4">
-            <Logo height={28} />
+            <Link href={"/" as Route} aria-label="Ke halaman publik RumahAgen" onClick={() => setDrawerOpen(false)}>
+              <Logo height={28} />
+            </Link>
             <IconButton label="Tutup navigasi" onClick={() => setDrawerOpen(false)} className="-mr-2">
               <CloseIcon />
             </IconButton>
