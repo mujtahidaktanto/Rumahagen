@@ -1,5 +1,5 @@
-// components/instructor/InstructorDashboardView.tsx — isi Dashboard Instruktur (M08, wireframe 04-Instructor/M08-Dashboard-Instruktur). Pintasan ke layar yang belum dibangun
-// (Sesi Saya/Form Sesi, Kursus Saya, Event) tampil "Segera hadir" sampai halamannya ada (pola sama seperti components/partner/PartnerDashboardView.tsx).
+// components/instructor/InstructorDashboardView.tsx — isi Dashboard Instruktur (M08, wireframe 04-Instructor/M08-Dashboard-Instruktur). Semua pintasan Sesi/Kursus/Event kini aktif;
+// hanya Profil Instruktur yang masih tersisa dari Fase 6 (belum ada tile/pintasan ke sana di dashboard ini, sesuai wireframe M08 yang memang tidak menyertakannya).
 import Link from "next/link";
 import type { Route } from "next";
 import type { ReactNode } from "react";
@@ -38,7 +38,7 @@ function Tile({ label, value, hint, href }: { label: string; value: ReactNode; h
 
 const QUICK_ACTIONS: { title: string; note: string; icon: ReactNode; href: string | null }[] = [
   { title: "Buat Sesi Baru", note: "Broadcast, interaktif, atau on-demand", icon: <VideoIcon size={20} />, href: "/instructor/sesi/baru" },
-  { title: "Buat Event", note: "Terbitkan langsung tanpa tinjauan tim", icon: <CalendarIcon size={20} />, href: null },
+  { title: "Buat Event", note: "Terbitkan langsung tanpa tinjauan tim", icon: <CalendarIcon size={20} />, href: "/instructor/event/baru" },
   { title: "Pusat Notifikasi", note: "Lihat semua notifikasi", icon: <BellIcon size={20} />, href: "/instructor/notifikasi" },
 ];
 
