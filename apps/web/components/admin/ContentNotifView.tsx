@@ -98,8 +98,8 @@ export function ContentNotifView({
                 {heroBanners.data.map((b) => (
                   <li key={b.id} className="flex flex-wrap items-center justify-between gap-3 p-3.5">
                     <div className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-11 w-18 flex-none items-center justify-center overflow-hidden rounded-sm bg-ink-100 text-caption">
-                        {/* Pratinjau gambar slide; gambar biasa tanpa optimasi Next. */}
+                      <span className="flex aspect-[4/3] h-11 flex-none items-center justify-center overflow-hidden rounded-sm bg-ink-100 text-caption">
+                        {/* Pratinjau gambar slide (rasio sama dengan wadah tampil di Homepage); gambar biasa tanpa optimasi Next. */}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={b.imageReference} alt="" className="h-full w-full object-cover" />
                       </span>

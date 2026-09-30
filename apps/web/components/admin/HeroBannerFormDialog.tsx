@@ -2,7 +2,8 @@
 
 // components/admin/HeroBannerFormDialog.tsx — Buat/Ubah slide Banner Hero Beranda (Konten & Notifikasi, tab Banner Hero Beranda): POST/PUT /admin/home-hero-banners(/{id})
 // atas home_hero_banners (migration 0167). BUKAN BannerFormDialog.tsx (itu untuk Banner & Promosi/public_announcement_promotion, tampil di /promo) — tabel, bucket, dan
-// endpoint berbeda meski pola unggah gambarnya sama. Gambar WAJIB diisi (kolom NOT NULL); dipangkas 4:1 lewat CropDialog seperti banner promo.
+// endpoint berbeda meski pola unggah gambarnya sama. Gambar WAJIB diisi (kolom NOT NULL); dipangkas RASIO 4:3 lewat CropDialog — HARUS SAMA dengan aspect-[4/3] wadah
+// blok hero Homepage (bukan ORG_BANNER 4:1 milik banner Organisasi — pernah tertukar, membuat gambar terpotong parah kiri-kanan saat ditampilkan di wadah 4:3).
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
@@ -13,9 +14,9 @@ import { buildCtaReference, parseCtaForEdit, CTA_KINDS, CTA_KIND_LABEL, CTA_PAGE
 import { ApiClientError, api } from "@/lib/api-client";
 import { CropDialog } from "@/components/media/CropDialog";
 import { loadSource, pickProblem, putToSignedUrl, type Encoded, type Source } from "@/lib/media/image-processing";
-import { ORG_BANNER } from "@/lib/media/variants";
+import { HOME_HERO_BANNER } from "@/lib/media/variants";
 
-const BANNER_FRAME = { w: 480, h: 120 };
+const BANNER_FRAME = { w: 400, h: 300 };
 type Picked = { enc: Encoded; preview: string } | null;
 type UploadTarget = { upload_url: string; public_url: string };
 
@@ -135,7 +136,7 @@ export function HeroBannerFormDialog({ banner, trigger }: { banner?: HeroBannerR
               Gambar <span className="text-danger-600">*</span>
             </span>
             <div className="flex items-center gap-3">
-              <span className="flex h-16 w-64 flex-none items-center justify-center overflow-hidden rounded-md bg-ink-100 text-caption">
+              <span className="flex aspect-[4/3] h-16 flex-none items-center justify-center overflow-hidden rounded-md bg-ink-100 text-caption">
                 {currentImage ? (
                   // Pratinjau berkas lokal atau URL tersimpan; gambar biasa tanpa optimasi Next.
                   // eslint-disable-next-line @next/next/no-img-element
@@ -151,7 +152,7 @@ export function HeroBannerFormDialog({ banner, trigger }: { banner?: HeroBannerR
                 </Button>
               </span>
             </div>
-            <p className="text-caption">JPG, PNG, atau WebP hingga 25 MB. Memanjang 4:1. Anda bisa geser dan zoom untuk mengatur bagian yang tampil.</p>
+            <p className="text-caption">JPG, PNG, atau WebP hingga 25 MB. Rasio 4:3 (sama seperti wadah tampil di Homepage). Anda bisa geser dan zoom untuk mengatur bagian yang tampil.</p>
           </div>
 
           <Field label="Teks Alternatif" hint="Dibaca pembaca layar dan mesin pencari; kosongkan bila gambar murni dekoratif.">
@@ -222,9 +223,9 @@ export function HeroBannerFormDialog({ banner, trigger }: { banner?: HeroBannerR
       <CropDialog
         source={cropping}
         frame={BANNER_FRAME}
-        output={ORG_BANNER}
+        output={HOME_HERO_BANNER}
         title="Atur Gambar Slide"
-        description="Geser dan zoom foto sampai bagian yang Anda mau pas di dalam bingkai memanjang."
+        description="Geser dan zoom foto sampai bagian yang Anda mau pas di dalam bingkai."
         onCancel={() => setCropping(null)}
         onConfirm={applyCropped}
       />

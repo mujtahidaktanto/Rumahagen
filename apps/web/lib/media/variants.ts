@@ -129,6 +129,10 @@ export function sourceRectFor(iw: number, ih: number, f: Frame, c: CropState): {
   return { sx: -c.x / s, sy: -c.y / s, sw: f.w / s, sh: f.h / s };
 }
 
-// Ukuran banner: rasio 4:1 (halaman Organisasi dan halaman publik memakai rasio yang sama).
+// Ukuran banner Organisasi: rasio 4:1 (logo + banner memanjang di Edit Branding, /agent/organisasi).
 export const ORG_LOGO_SIZE = 512;
 export const ORG_BANNER = { w: 1600, h: 400 } as const;
+
+// Ukuran slide Banner Hero Beranda: rasio 4:3 — SAMA dengan aspect-[4/3] pada wadah blok hero Homepage (app/(publik)/page.tsx, HeroBannerCarousel.tsx).
+// BUKAN ORG_BANNER (4:1) di atas — pernah tertukar sehingga gambar terpotong parah (lebar hasil pangkas 4:1 jauh lebih lebar dari wadah tampil 4:3).
+export const HOME_HERO_BANNER = { w: 1200, h: 900 } as const;
