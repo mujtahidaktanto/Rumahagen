@@ -20,6 +20,16 @@ export const metadata: Metadata = {
 
 const r = (p: string) => p as Route;
 
+// Nada ikon "Jelajahi RumahAgen" dari 4 warna katalog desain saja (bg-*-100/text-*-600 — sama seperti nada Badge), diputar bergantian agar tiap ikon beda warna
+// tanpa menambah warna baru di luar katalog (keputusan pemilik produk 2026-09-30: tetap 4 warna brand, bukan menambah ungu/pink/cyan ke tokens.css).
+const EXPLORE_TONES = ["blue", "gold", "success", "danger"] as const;
+const EXPLORE_TONE_CLASS: Record<(typeof EXPLORE_TONES)[number], string> = {
+  blue: "bg-blue-100 text-blue-600",
+  gold: "bg-gold-100 text-gold-600",
+  success: "bg-success-100 text-success-600",
+  danger: "bg-danger-100 text-danger-600",
+};
+
 const EXPLORE = [
   { href: "/listing", label: "Listing", icon: <OfficeIcon size={20} /> },
   { href: "/agen", label: "Agen", icon: <UserIcon size={20} /> },
@@ -30,7 +40,7 @@ const EXPLORE = [
   { href: "/learning-session", label: "Learning Session", icon: <ClockIcon size={20} /> },
   { href: "/konten", label: "Konten Publik", icon: <DocIcon size={20} /> },
   { href: "/promo", label: "Promo", icon: <TagIcon size={20} /> },
-];
+].map((e, i) => ({ ...e, tone: EXPLORE_TONES[i % EXPLORE_TONES.length] }));
 
 const POPULAR = ["Rumah", "Apartemen", "Tanah", "Ruko", "Bogor", "Jakarta"];
 
@@ -102,7 +112,7 @@ export default async function HomePage() {
                 href={r(e.href)}
                 className="flex h-full flex-col items-center gap-2.5 rounded-md border border-ink-100 px-2 py-4 text-center text-ink-900 no-underline hover:border-blue-200 hover:bg-blue-50 hover:no-underline"
               >
-                <span className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-blue-100 text-blue-600">{e.icon}</span>
+                <span className={`flex h-11 w-11 flex-none items-center justify-center rounded-full ${EXPLORE_TONE_CLASS[e.tone]}`}>{e.icon}</span>
                 <span className="text-[13px] font-bold">{e.label}</span>
               </Link>
             </li>
