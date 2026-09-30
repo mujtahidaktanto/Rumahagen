@@ -43,7 +43,7 @@ const QUICK_ACTIONS: { title: string; note: string; icon: ReactNode; href: strin
   { title: "Buat Proyek Baru", note: "Ajukan proyek coming soon", icon: <BuildingIcon size={20} />, href: "/partner/proyek/baru" },
   { title: "Unggah Marketing Kit", note: "Brosur dan daftar harga", icon: <FolderIcon size={20} />, href: "/partner/marketing-kit" },
   { title: "Tinjau Klaim", note: "Setujui atau tolak klaim agen", icon: <CheckCircleIcon size={20} />, href: "/partner/klaim" },
-  { title: "Ajukan Event", note: "Launching, open house, gathering", icon: <CalendarIcon size={20} />, href: null },
+  { title: "Ajukan Event", note: "Launching, open house, gathering", icon: <CalendarIcon size={20} />, href: "/partner/event/baru" },
 ];
 
 function QuickAction({ a }: { a: (typeof QUICK_ACTIONS)[number] }) {
@@ -128,7 +128,7 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
           <Tile label="Proyek Saya" value={nf.format(stats.projectsTotal)} hint={`${nf.format(stats.projectsActive)} aktif · ${nf.format(stats.projectsComingSoon)} coming soon`} href="/partner/proyek" />
           <Tile label="Klaim Menunggu Review" value={nf.format(stats.claimsPending)} hint="Perlu keputusan Anda" href="/partner/klaim?status=pending" />
           <Tile label="Klaim Disetujui" value={nf.format(stats.claimsApproved)} hint="Agen aktif memasarkan proyek Anda" href="/partner/klaim?status=approved" />
-          <Tile label="Event Menunggu Persetujuan" value={nf.format(stats.eventsPending)} hint="Ditinjau tim RumahAgen" />
+          <Tile label="Event Menunggu Persetujuan" value={nf.format(stats.eventsPending)} hint="Ditinjau tim RumahAgen" href="/partner/event" />
         </div>
       )}
 

@@ -466,6 +466,16 @@ Tiga dari 7 tujuan nav Developer Partner (`03-Developer-Partner`, 9 layar wirefr
 3. **Approval PDF** memakai `GET /api/claims/{id}/approval-pdf` yang sudah ada (tautan biasa, cookie sesi ikut otomatis) — tidak ada penanganan khusus di klien.
 4. **Belum diuji dengan login sungguhan** — diverifikasi lewat `tsc --noEmit`, `next build` (bundel klien `/partner/klaim` 5.6 kB), `vitest run` (309 lulus, naik dari 306).
 
+## 2026-09-30 — Fase 6 lanjut: Ajukan Event Mitra (Developer Partner)
+
+6 dari 7 tujuan nav Developer Partner selesai — hanya Hasil Kemitraan tersisa. Tanpa migration/API baru — `POST /developer-partners/events` (endpoint khusus yang memvalidasi `related_project_id` benar-benar milik mitra) sudah ada sejak migration 0115. Kode: `lib/partner/event-{data,rules}.ts` (`getMyEventForEdit`/`getEventRegistrants` DIPAKAI ULANG langsung dari `lib/agent/event-data.ts`, murni per `userId` tanpa logika khas Agent; rules juga sebagian besar re-export dari `lib/agent/event-rules.ts`, diuji 1 kasus baru untuk `canEditPartnerEvent`), `components/partner/{MyEventsView,PartnerEventForm}.tsx`, rute `app/partner/event/{page,loading}.tsx` + `/baru/{page,loading}.tsx` + `/[id]/{page,loading}.tsx`. Dashboard: pintasan "Ajukan Event" dan tile "Event Menunggu Persetujuan" diaktifkan.
+
+1. **Bisa diubah HANYA selagi status Menunggu Persetujuan** — ditegaskan eksplisit di kode sumber wireframe sendiri (`canEdit: e.status === 'pending_approval'`), beda dari Ajukan Event Agent yang boleh mengedit event Ditolak untuk mengajukan ulang. Developer Partner sama sekali tidak punya `m05.event.publish`, jadi tidak ada tombol Terbitkan maupun alur ajukan-ulang di sisi ini — event Ditolak/Dibatalkan/Terbit murni tampilan baca saja.
+2. **Visibilitas "Organisasi Saya" TIDAK ditawarkan** — Developer Partner tidak punya organisasi (beda dari Agent); hanya Publik dan Privat.
+3. **Kategori bawaan "Peluncuran Proyek"** (bukan "Pelatihan" seperti Agent) — event mitra lazimnya launching/open house/gathering, bukan pelatihan internal.
+4. **Pemilih "Proyek terkait" DIBATASI proyek milik mitra sendiri** — `POST /developer-partners/events` memvalidasi ini di server (menolak proyek orang lain), tapi `PUT /events/{id}` generik (dipakai untuk mengubah pengajuan yang sudah ada) **TIDAK** melakukan pengecekan lintas-tabel yang sama (celah nyata, bukan diarang — dicek langsung di kode route). Pembatasan dropdown di klien jadi satu-satunya pagar untuk jalur ubah; kalau ingin ditutup penuh di server, `PUT /events/{id}` perlu tambahan validasi serupa (butuh izin, itu API).
+5. **Belum diuji dengan login sungguhan** — diverifikasi lewat `tsc --noEmit`, `next build` (bundel klien `/partner/event/[id]` 623 B, form-nya sendiri di `PartnerEventForm.tsx`), `vitest run` (310 lulus, naik dari 309).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).
