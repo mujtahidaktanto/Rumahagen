@@ -457,6 +457,15 @@ Tiga dari 7 tujuan nav Developer Partner (`03-Developer-Partner`, 9 layar wirefr
 2. **"Ganti berkas" (tombol terpisah di wireframe) TIDAK dibuat** — disederhanakan jadi Hapus lalu Unggah ulang (satu jalur, bukan dua); tidak mengubah kontrak API, murni pengurangan jumlah tombol.
 3. **Belum diuji dengan login sungguhan** — diverifikasi lewat `tsc --noEmit`, `next build` (bundel klien `/partner/marketing-kit` 6.9 kB, bukan lagi rute server statis), `vitest run` (306 lulus, naik dari 303).
 
+## 2026-09-30 — Fase 6 lanjut: Klaim Masuk / Review Klaim (Developer Partner)
+
+5 dari 7 tujuan nav Developer Partner selesai. Tanpa migration/API baru — celah lama "tidak ada agregat klaim masuk lintas proyek" (SOURCE-Developer-Partner.md §6) TERNYATA sudah ditutup migration 0147 (RPC `partner_incoming_claims`, dibuat sesi cloud paralel 2026-09-24 setelah dokumen sumber ditulis) yang belum pernah dipakai layar manapun sampai sekarang. Kode: `lib/partner/claims-{data,rules}.ts` (rules diuji, 3 kasus), `components/partner/ReviewClaimsView.tsx`, rute `app/partner/klaim/{page,loading}.tsx`. Dashboard: pintasan "Tinjau Klaim", tile Klaim Menunggu/Disetujui (deep-link `?status=`), dan widget "Klaim yang Perlu Ditinjau" semua diaktifkan.
+
+1. **Kontak Agent (WhatsApp + email) ditampilkan apa adanya** — teks banner di wireframe M06-Review-Klaim ("Anda hanya melihat nama dan profil publik agen") sudah usang; RPC `partner_incoming_claims` sendiri memuat WhatsApp dan email TERLEPAS dari pengaturan visibilitas profil (keputusan produk 2026-09-25 tercatat di komentar migration 0147: "mengajukan klaim = kesediaan dihubungi developer pemilik proyek"). Banner di layar ini ditulis ulang mengikuti keputusan yang lebih baru, bukan teks wireframe.
+2. **Filter status di klien, bukan re-fetch server** — RPC dibatasi 200 baris sekali panggil (cukup untuk skala MVP), jadi semua klaim dimuat sekali lalu disaring/dihitung di klien; hanya filter Proyek yang memicu permintaan server baru (`?proyek=`). Filter Status ikut tersinkron ke URL (`?status=`) supaya tile Dashboard bisa deep-link, tapi berpindah tab TIDAK memuat ulang data dari server.
+3. **Approval PDF** memakai `GET /api/claims/{id}/approval-pdf` yang sudah ada (tautan biasa, cookie sesi ikut otomatis) — tidak ada penanganan khusus di klien.
+4. **Belum diuji dengan login sungguhan** — diverifikasi lewat `tsc --noEmit`, `next build` (bundel klien `/partner/klaim` 5.6 kB), `vitest run` (309 lulus, naik dari 306).
+
 ## Catatan performa
 
 6. **Pencarian kata kunci listing lambat di skala besar (bukan mendesak).** `ILIKE '%kata%'` di bawah RLS tidak bisa memakai indeks trigram (ILIKE tidak leakproof): ±100 ms di 30.000 listing, tumbuh linear. Perbaikan bila perlu: fungsi `SECURITY DEFINER` `search_published_listing_ids(q, ...)` (hanya membaca listing published, boleh dipanggil anon) + indeks pg_trgm parsial; atau mesin pencari khusus. Diukur saat menulis migration 0154 (indeks harga/tipe/terbaru, tanpa trigram).

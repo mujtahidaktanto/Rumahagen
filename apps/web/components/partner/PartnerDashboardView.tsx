@@ -42,7 +42,7 @@ function Tile({ label, value, hint, href }: { label: string; value: ReactNode; h
 const QUICK_ACTIONS: { title: string; note: string; icon: ReactNode; href: string | null }[] = [
   { title: "Buat Proyek Baru", note: "Ajukan proyek coming soon", icon: <BuildingIcon size={20} />, href: "/partner/proyek/baru" },
   { title: "Unggah Marketing Kit", note: "Brosur dan daftar harga", icon: <FolderIcon size={20} />, href: "/partner/marketing-kit" },
-  { title: "Tinjau Klaim", note: "Setujui atau tolak klaim agen", icon: <CheckCircleIcon size={20} />, href: null },
+  { title: "Tinjau Klaim", note: "Setujui atau tolak klaim agen", icon: <CheckCircleIcon size={20} />, href: "/partner/klaim" },
   { title: "Ajukan Event", note: "Launching, open house, gathering", icon: <CalendarIcon size={20} />, href: null },
 ];
 
@@ -126,8 +126,8 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
       ) : (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <Tile label="Proyek Saya" value={nf.format(stats.projectsTotal)} hint={`${nf.format(stats.projectsActive)} aktif · ${nf.format(stats.projectsComingSoon)} coming soon`} href="/partner/proyek" />
-          <Tile label="Klaim Menunggu Review" value={nf.format(stats.claimsPending)} hint="Perlu keputusan Anda" />
-          <Tile label="Klaim Disetujui" value={nf.format(stats.claimsApproved)} hint="Agen aktif memasarkan proyek Anda" />
+          <Tile label="Klaim Menunggu Review" value={nf.format(stats.claimsPending)} hint="Perlu keputusan Anda" href="/partner/klaim?status=pending" />
+          <Tile label="Klaim Disetujui" value={nf.format(stats.claimsApproved)} hint="Agen aktif memasarkan proyek Anda" href="/partner/klaim?status=approved" />
           <Tile label="Event Menunggu Persetujuan" value={nf.format(stats.eventsPending)} hint="Ditinjau tim RumahAgen" />
         </div>
       )}
@@ -139,7 +139,14 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <Widget title="Klaim yang Perlu Ditinjau">
+        <Widget
+          title="Klaim yang Perlu Ditinjau"
+          action={
+            <Link href={"/partner/klaim" as Route} className="text-label-lg text-blue-600">
+              Semua klaim
+            </Link>
+          }
+        >
           {!claims ? (
             <div className="p-5">
               <ErrorState title="Klaim gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
@@ -151,7 +158,7 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
           ) : (
             <div className="flex flex-col">
               {claims.map((c) => (
-                <div key={c.id} className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 first:border-t-0">
+                <Link key={c.id} href={"/partner/klaim" as Route} className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 text-inherit no-underline first:border-t-0 hover:bg-ink-50 hover:no-underline">
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-label-lg">{c.agentName}</div>
                     <div className="truncate text-caption">
@@ -159,7 +166,7 @@ export function PartnerDashboardView({ data }: { data: PartnerDashboardData }) {
                     </div>
                   </div>
                   <Badge tone={claimStatus("pending").tone}>{claimStatus("pending").label}</Badge>
-                </div>
+                </Link>
               ))}
             </div>
           )}
