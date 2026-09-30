@@ -23,7 +23,8 @@ const r = (p: string) => p as Route;
 // Nada ikon "Jelajahi RumahAgen" dari 4 warna katalog desain saja (bg-*-100/text-*-600 — sama seperti nada Badge), diputar bergantian agar tiap ikon beda warna
 // tanpa menambah warna baru di luar katalog (keputusan pemilik produk 2026-09-30: tetap 4 warna brand, bukan menambah ungu/pink/cyan ke tokens.css).
 const EXPLORE_TONES = ["blue", "gold", "success", "danger"] as const;
-const EXPLORE_TONE_CLASS: Record<(typeof EXPLORE_TONES)[number], string> = {
+type ExploreTone = (typeof EXPLORE_TONES)[number];
+const EXPLORE_TONE_CLASS: Record<ExploreTone, string> = {
   blue: "bg-blue-100 text-blue-600",
   gold: "bg-gold-100 text-gold-600",
   success: "bg-success-100 text-success-600",
@@ -40,7 +41,7 @@ const EXPLORE = [
   { href: "/learning-session", label: "Learning Session", icon: <ClockIcon size={20} /> },
   { href: "/konten", label: "Konten Publik", icon: <DocIcon size={20} /> },
   { href: "/promo", label: "Promo", icon: <TagIcon size={20} /> },
-].map((e, i) => ({ ...e, tone: EXPLORE_TONES[i % EXPLORE_TONES.length] }));
+].map((e, i) => ({ ...e, tone: EXPLORE_TONES[i % EXPLORE_TONES.length] as ExploreTone }));
 
 const POPULAR = ["Rumah", "Apartemen", "Tanah", "Ruko", "Bogor", "Jakarta"];
 
