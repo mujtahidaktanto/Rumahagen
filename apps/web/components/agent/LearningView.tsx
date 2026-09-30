@@ -67,8 +67,14 @@ export function LearningView({ data }: { data: MyLearning }) {
             {data.courses.data.map((c) => (
               <li key={c.enrollmentId}>
                 <Link href={`/agent/belajar/${c.courseId}` as Route} className="flex h-full flex-col overflow-hidden rounded-md border border-ink-100 text-inherit no-underline hover:shadow-2 hover:no-underline">
-                  <span aria-hidden="true" className="flex h-24 items-center justify-center bg-ink-100 text-ink-300">
-                    <BookIcon size={28} />
+                  <span aria-hidden="true" className="flex aspect-[16/9] items-center justify-center overflow-hidden bg-ink-100 text-ink-300">
+                    {c.coverImageUrl ? (
+                      // Foto sampul kursus (courses.cover_image_url, migration 0170); gambar biasa tanpa optimasi Next (pola sama seperti foto banner).
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={c.coverImageUrl} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      <BookIcon size={28} />
+                    )}
                   </span>
                   <span className="flex flex-1 flex-col gap-2 p-3.5">
                     {c.category ? (

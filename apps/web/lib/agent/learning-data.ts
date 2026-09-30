@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Part } from "./dashboard-data";
 import { safeHttps } from "./learning-rules";
 
-export type MyCourse = { enrollmentId: string; courseId: string; title: string; category: string | null; status: string; progress: number; lessonCount: number; completedAt: string | null };
+export type MyCourse = { enrollmentId: string; courseId: string; title: string; category: string | null; status: string; progress: number; lessonCount: number; completedAt: string | null; coverImageUrl: string | null };
 export type MyCertificate = {
   /** id sertifikat; null = kursus selesai tetapi sertifikat belum diterbitkan (terbit saat diunduh). */
   id: string | null;
@@ -36,12 +36,12 @@ async function loadPoints(supabase: SupabaseClient, userId: string): Promise<Par
   return { ok: true, data: Number(data?.balance_projection ?? 0) };
 }
 
-type EnrollRow = { id: string; course_id: string; status: string; progress_percent: number; completed_at: string | null; course: { title: string; category: string | null; lessons: { count: number }[] } | null };
+type EnrollRow = { id: string; course_id: string; status: string; progress_percent: number; completed_at: string | null; course: { title: string; category: string | null; cover_image_url: string | null; lessons: { count: number }[] } | null };
 
 async function loadEnrollments(supabase: SupabaseClient, userId: string): Promise<{ rows: EnrollRow[] } | null> {
   const { data, error } = await supabase
     .from("enrollments")
-    .select("id, course_id, status, progress_percent, completed_at, course:courses(title, category, lessons:course_lessons(count))")
+    .select("id, course_id, status, progress_percent, completed_at, course:courses(title, category, cover_image_url, lessons:course_lessons(count))")
     .eq("agent_id", userId)
     .order("enrolled_at", { ascending: false })
     .limit(LIST_MAX)
@@ -136,6 +136,7 @@ export async function getMyLearning(userId: string): Promise<MyLearning> {
             progress: e.status === "completed" ? 100 : e.progress_percent,
             lessonCount: e.course?.lessons?.[0]?.count ?? 0,
             completedAt: e.completed_at,
+            coverImageUrl: e.course?.cover_image_url ?? null,
           })),
         }
       : { ok: false },

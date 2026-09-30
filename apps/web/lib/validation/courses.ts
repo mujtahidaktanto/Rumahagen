@@ -14,6 +14,7 @@ export const createCourseSchema = z.object({
   prerequisite_course_id: z.string().uuid().optional(),
   passing_grade: z.coerce.number().int().min(0).max(100).optional(),
   created_by: z.string().uuid().optional(),
+  cover_image_url: z.string().max(500).optional(),
 });
 export type CreateCourseInput = z.infer<typeof createCourseSchema>;
 
@@ -23,6 +24,7 @@ export const updateCourseSchema = z.object({
   description: z.string().optional(),
   prerequisite_course_id: z.string().uuid().nullable().optional(),
   passing_grade: z.coerce.number().int().min(0).max(100).optional(),
+  cover_image_url: z.string().max(500).optional(),
 });
 export type UpdateCourseInput = z.infer<typeof updateCourseSchema>;
 
@@ -68,3 +70,9 @@ export const createCourseMaterialUploadSchema = z.object({
   size_bytes: z.number().int().positive().max(MAX_COURSE_MATERIAL_BYTES).optional(),
 });
 export type CreateCourseMaterialUploadInput = z.infer<typeof createCourseMaterialUploadSchema>;
+
+// POST /courses/cover-upload-url — foto sampul kursus (migration 0170, bucket `course-covers`). Tanpa course id (bisa dipanggil sebelum course dibuat).
+export const createCourseCoverUploadSchema = z.object({
+  content_type: z.enum(["image/webp", "image/jpeg"]),
+});
+export type CreateCourseCoverUploadInput = z.infer<typeof createCourseCoverUploadSchema>;

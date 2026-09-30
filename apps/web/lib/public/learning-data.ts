@@ -19,7 +19,7 @@ export type { CourseCategory } from "@/lib/public/learning-labels";
 
 // ── Kursus ─────────────────────────────────────────────────────────────────────
 
-export type CourseSummary = { id: string; title: string; category: string; description: string | null; lessonCount: number };
+export type CourseSummary = { id: string; title: string; category: string; description: string | null; lessonCount: number; coverImageUrl: string | null };
 export const COURSE_PAGE_SIZE = 12;
 export const COURSE_MAX_SHOWN = 96;
 
@@ -49,7 +49,7 @@ export async function searchCourses(s: CourseSearch): Promise<CoursesResult> {
   const supabase = await createClient();
   let query = supabase
     .from("courses")
-    .select("id, title, category, description, lessons:course_lessons(count)", { count: "exact" })
+    .select("id, title, category, description, cover_image_url, lessons:course_lessons(count)", { count: "exact" })
     .eq("status", "published")
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
@@ -58,9 +58,13 @@ export async function searchCourses(s: CourseSearch): Promise<CoursesResult> {
   if (s.kategori) query = query.eq("category", s.kategori);
   const kw = s.q.replace(/[,()%*\\]/g, " ").replace(/\s+/g, " ").trim();
   if (kw) query = query.or(`title.ilike.%${kw}%,description.ilike.%${kw}%`);
-  const { data, count, error } = await query.returns<{ id: string; title: string; category: string; description: string | null; lessons: { count: number }[] }[]>();
+  const { data, count, error } = await query.returns<{ id: string; title: string; category: string; description: string | null; cover_image_url: string | null; lessons: { count: number }[] }[]>();
   if (error) return { ok: false, items: [], total: 0 };
-  return { ok: true, items: (data ?? []).map((c) => ({ id: c.id, title: c.title, category: c.category, description: c.description, lessonCount: c.lessons?.[0]?.count ?? 0 })), total: count ?? 0 };
+  return {
+    ok: true,
+    items: (data ?? []).map((c) => ({ id: c.id, title: c.title, category: c.category, description: c.description, lessonCount: c.lessons?.[0]?.count ?? 0, coverImageUrl: c.cover_image_url })),
+    total: count ?? 0,
+  };
 }
 
 export type Lesson = { id: string; title: string; content_type: string };

@@ -21,19 +21,25 @@ export function CourseCard({ course: c }: { course: CourseSummary }) {
   return (
     <Link
       href={`/learning/${c.id}` as Route}
-      className="flex h-full min-w-0 flex-col gap-2.5 rounded-md border border-ink-100 bg-white p-5 text-inherit no-underline transition-shadow hover:shadow-2 hover:no-underline"
+      className="flex h-full min-w-0 flex-col overflow-hidden rounded-md border border-ink-100 bg-white text-inherit no-underline transition-shadow hover:shadow-2 hover:no-underline"
     >
-      <span className="flex items-center justify-between gap-2">
-        <span className="flex h-10 w-10 items-center justify-center rounded-sm bg-blue-100 text-blue-600">
-          <BookIcon size={18} />
-        </span>
-        <Badge tone="info" dot={false}>
+      <span aria-hidden="true" className="flex aspect-[16/9] items-center justify-center overflow-hidden bg-ink-100 text-ink-300">
+        {c.coverImageUrl ? (
+          // Foto sampul kursus (courses.cover_image_url, migration 0170); gambar biasa tanpa optimasi Next (pola sama seperti foto banner).
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={c.coverImageUrl} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <BookIcon size={28} />
+        )}
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col gap-2.5 p-5">
+        <Badge tone="info" dot={false} className="self-start">
           {COURSE_CATEGORY_LABEL[c.category] ?? c.category}
         </Badge>
+        <span className="line-clamp-2 min-h-11 text-title-md text-ink-900">{c.title}</span>
+        <span className="line-clamp-2 min-h-10 text-body-md text-ink-500">{excerptOf(c.description)}</span>
+        <span className="mt-auto text-caption">{c.lessonCount} materi</span>
       </span>
-      <span className="line-clamp-2 min-h-11 text-title-md text-ink-900">{c.title}</span>
-      <span className="line-clamp-2 min-h-10 text-body-md text-ink-500">{excerptOf(c.description)}</span>
-      <span className="mt-auto text-caption">{c.lessonCount} materi</span>
     </Link>
   );
 }

@@ -32,6 +32,13 @@ import {
 import type { Part } from "@/lib/agent/dashboard-data";
 import { ApiClientError, api } from "@/lib/api-client";
 import { MAX_COURSE_MATERIAL_BYTES } from "@/lib/validation/courses";
+import { CropDialog } from "@/components/media/CropDialog";
+import { loadSource, pickProblem, putToSignedUrl, type Encoded, type Source } from "@/lib/media/image-processing";
+import { COURSE_COVER } from "@/lib/media/variants";
+
+const COVER_FRAME = { w: 400, h: 225 };
+type PickedCover = { enc: Encoded; preview: string } | null;
+// UploadTarget ({ upload_url, public_url }) sudah dideklarasikan di bawah (dipakai LessonDialog) — satu modul, tidak diulang di sini.
 
 type Tab = "ringkasan" | "pelajaran" | "kuis";
 
@@ -89,18 +96,59 @@ export function CourseDetailView({
   const locked = course.status === "pending_review";
 
   const [f, setF] = useState<CourseForm>(() => formFrom(course));
-  const dirty = JSON.stringify(f) !== JSON.stringify(formFrom(course));
+  const [pick, setPick] = useState<PickedCover>(null);
+  const [cropping, setCropping] = useState<Source | null>(null);
+  const coverFileRef = useRef<HTMLInputElement>(null);
+  const dirty = JSON.stringify(f) !== JSON.stringify(formFrom(course)) || pick !== null;
   const [savingInfo, setSavingInfo] = useState(false);
   const [infoError, setInfoError] = useState<string | null>(null);
+
+  function resetInfoForm() {
+    setF(formFrom(course));
+    if (pick) URL.revokeObjectURL(pick.preview);
+    setPick(null);
+  }
+
+  async function onPickCover(files: FileList | null) {
+    const file = files?.[0];
+    if (coverFileRef.current) coverFileRef.current.value = "";
+    if (!file) return;
+    setInfoError(null);
+    const problem = pickProblem(file);
+    if (problem) return setInfoError(problem);
+    try {
+      setCropping(await loadSource(file));
+    } catch (e) {
+      setInfoError(e instanceof Error ? e.message : "Foto tidak bisa dibuka. Coba foto lain.");
+    }
+  }
+
+  function applyCroppedCover(enc: Encoded) {
+    setCropping(null);
+    setPick((old) => {
+      if (old) URL.revokeObjectURL(old.preview);
+      return { enc, preview: URL.createObjectURL(enc.blob) };
+    });
+  }
+
+  const coverPreview = pick ? pick.preview : course.coverImageUrl;
 
   async function saveInfo() {
     setSavingInfo(true);
     setInfoError(null);
     try {
-      await api.put(`/courses/${course.id}`, toCoursePayload(f));
+      let coverImageUrl: string | undefined;
+      if (pick) {
+        const t = await api.post<UploadTarget>("/courses/cover-upload-url", { content_type: pick.enc.type }, { idempotency: true });
+        await putToSignedUrl(t.data.upload_url, pick.enc.blob, pick.enc.type);
+        coverImageUrl = t.data.public_url;
+      }
+      await api.put(`/courses/${course.id}`, { ...toCoursePayload(f), ...(pick ? { cover_image_url: coverImageUrl } : {}) });
+      if (pick) URL.revokeObjectURL(pick.preview);
+      setPick(null);
       router.refresh();
     } catch (e) {
-      setInfoError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : "Belum berhasil disimpan. Periksa koneksi Anda lalu coba lagi.");
+      setInfoError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : e instanceof Error && e.message !== "upload" ? e.message : "Belum berhasil disimpan. Periksa koneksi Anda lalu coba lagi.");
     } finally {
       setSavingInfo(false);
     }
@@ -168,6 +216,26 @@ export function CourseDetailView({
 
             <div className="flex flex-col gap-3.5 rounded-md border border-ink-100 bg-white p-5">
               <span className="text-title-md">Informasi kursus</span>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-lg">Foto sampul</span>
+                <div className="flex items-center gap-3">
+                  <span className="flex aspect-[16/9] h-16 flex-none items-center justify-center overflow-hidden rounded-md bg-ink-100 text-caption">
+                    {coverPreview ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={coverPreview} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      "Belum ada"
+                    )}
+                  </span>
+                  <span className="flex flex-col gap-1.5">
+                    <input ref={coverFileRef} type="file" accept="image/*" className="sr-only" onChange={(e) => void onPickCover(e.target.files)} disabled={locked} />
+                    <Button variant="secondary" size="sm" disabled={locked || savingInfo} onClick={() => coverFileRef.current?.click()}>
+                      {coverPreview ? "Ganti & Atur" : "Unggah"}
+                    </Button>
+                  </span>
+                </div>
+                <p className="text-caption">JPG, PNG, atau WebP hingga 25 MB. Rasio 16:9 (sama seperti kartu kursus). Opsional.</p>
+              </div>
               <Field label="Judul kursus" required>
                 {(a) => <Input {...a} disabled={locked} maxLength={200} value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} />}
               </Field>
@@ -206,7 +274,7 @@ export function CourseDetailView({
               ) : null}
               {dirty && !locked ? (
                 <div className="flex justify-end gap-2.5">
-                  <Button variant="secondary" disabled={savingInfo} onClick={() => setF(formFrom(course))}>
+                  <Button variant="secondary" disabled={savingInfo} onClick={resetInfoForm}>
                     Batalkan
                   </Button>
                   <Button loading={savingInfo} onClick={() => void saveInfo()}>
@@ -274,6 +342,15 @@ export function CourseDetailView({
           </div>
         )}
       </div>
+      <CropDialog
+        source={cropping}
+        frame={COVER_FRAME}
+        output={COURSE_COVER}
+        title="Atur Foto Sampul"
+        description="Geser dan zoom foto sampai bagian yang Anda mau pas di dalam bingkai."
+        onCancel={() => setCropping(null)}
+        onConfirm={applyCroppedCover}
+      />
     </div>
   );
 }

@@ -123,9 +123,9 @@ export default async function SampleAgentPage({ searchParams }: Props) {
       courses: {
         ok: true,
         data: [
-          { enrollmentId: "e1", courseId: "c1", title: "Financial & KPR: Dasar Analisis DBR", category: "financial_kpr", status: "in_progress", progress: 60, lessonCount: 3, completedAt: null },
-          { enrollmentId: "e2", courseId: "c2", title: "Sales Skill: Negosiasi Properti Tingkat Lanjut dengan Judul yang Sangat Panjang untuk Menguji Pemotongan Teks", category: "sales_skill", status: "completed", progress: 100, lessonCount: 5, completedAt: day(4) },
-          { enrollmentId: "e3", courseId: "c3", title: "Legal & Regulasi: Memahami PPJB", category: "legal_regulasi", status: "in_progress", progress: 20, lessonCount: 4, completedAt: null },
+          { enrollmentId: "e1", courseId: "c1", title: "Financial & KPR: Dasar Analisis DBR", category: "financial_kpr", status: "in_progress", progress: 60, lessonCount: 3, completedAt: null, coverImageUrl: null },
+          { enrollmentId: "e2", courseId: "c2", title: "Sales Skill: Negosiasi Properti Tingkat Lanjut dengan Judul yang Sangat Panjang untuk Menguji Pemotongan Teks", category: "sales_skill", status: "completed", progress: 100, lessonCount: 5, completedAt: day(4), coverImageUrl: null },
+          { enrollmentId: "e3", courseId: "c3", title: "Legal & Regulasi: Memahami PPJB", category: "legal_regulasi", status: "in_progress", progress: 20, lessonCount: 4, completedAt: null, coverImageUrl: null },
         ],
       },
       certificates: {

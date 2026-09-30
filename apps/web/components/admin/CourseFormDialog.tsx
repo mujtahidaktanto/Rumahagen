@@ -1,10 +1,12 @@
 "use client";
 
 // components/admin/CourseFormDialog.tsx — Buat/Ubah Kursus (M04, wireframe M04-Form-Kursus): POST /courses (create) atau PUT /courses/{id} (edit). Field dasar saja (title/category/
-// description/passing_grade/prerequisite_course_id) — organizer_type/certificate_template/signer/logo/quiz_*/awards_title_definition_id diatur di layar terpisah "Sertifikat Kursus"
-// (staff-only, trigger DB terpisah). "Pemilik" (created_by) HANYA bisa ditetapkan saat membuat — updateCourseSchema tidak menerima created_by sama sekali.
+// description/passing_grade/prerequisite_course_id/cover_image_url) — organizer_type/certificate_template/signer/logo/quiz_*/awards_title_definition_id diatur di layar terpisah
+// "Sertifikat Kursus" (staff-only, trigger DB terpisah). "Pemilik" (created_by) HANYA bisa ditetapkan saat membuat — updateCourseSchema tidak menerima created_by sama sekali.
+// Foto sampul (migration 0170) dipangkas rasio 16:9 lewat CropDialog — HARUS SAMA dengan aspect-[16/9] kartu "Course Saya" (components/agent/LearningView.tsx) dan kartu katalog
+// publik /learning (components/public/LearningCards.tsx). Diunggah lewat POST /courses/cover-upload-url (tanpa course id — aman dipanggil sebelum course dibuat).
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import type { Route } from "next";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
@@ -12,7 +14,13 @@ import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import type { CourseDetail, CoursePrereqPickerRow, InstructorPickerRow } from "@/lib/admin/course-data";
 import { COURSE_CATEGORIES, COURSE_CATEGORY_LABEL, type CourseCategory } from "@/lib/admin/course-labels";
 import { ApiClientError, api } from "@/lib/api-client";
+import { CropDialog } from "@/components/media/CropDialog";
+import { loadSource, pickProblem, putToSignedUrl, type Encoded, type Source } from "@/lib/media/image-processing";
+import { COURSE_COVER } from "@/lib/media/variants";
 
+const COVER_FRAME = { w: 400, h: 225 };
+type Picked = { enc: Encoded; preview: string } | null;
+type UploadTarget = { upload_url: string; public_url: string };
 type CreatedCourse = { id: string };
 
 export function CourseFormDialog({
@@ -35,8 +43,12 @@ export function CourseFormDialog({
   const [passingGrade, setPassingGrade] = useState(course ? String(course.passingGrade) : "70");
   const [prereq, setPrereq] = useState(course?.prerequisiteCourseId ?? "none");
   const [owner, setOwner] = useState("me");
+  const [coverUrl, setCoverUrl] = useState(course?.coverImageUrl ?? null);
+  const [pick, setPick] = useState<Picked>(null);
+  const [cropping, setCropping] = useState<Source | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   function openDialog() {
     setTitle(course?.title ?? "");
@@ -45,9 +57,36 @@ export function CourseFormDialog({
     setPassingGrade(course ? String(course.passingGrade) : "70");
     setPrereq(course?.prerequisiteCourseId ?? "none");
     setOwner("me");
+    setCoverUrl(course?.coverImageUrl ?? null);
+    if (pick) URL.revokeObjectURL(pick.preview);
+    setPick(null);
     setError(null);
     setOpen(true);
   }
+
+  async function onPickCover(files: FileList | null) {
+    const file = files?.[0];
+    if (fileRef.current) fileRef.current.value = "";
+    if (!file) return;
+    setError(null);
+    const problem = pickProblem(file);
+    if (problem) return setError(problem);
+    try {
+      setCropping(await loadSource(file));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Foto tidak bisa dibuka. Coba foto lain.");
+    }
+  }
+
+  function applyCroppedCover(enc: Encoded) {
+    setCropping(null);
+    setPick((old) => {
+      if (old) URL.revokeObjectURL(old.preview);
+      return { enc, preview: URL.createObjectURL(enc.blob) };
+    });
+  }
+
+  const coverPreview = pick ? pick.preview : coverUrl;
 
   const grade = Number(passingGrade);
   const canSave = title.trim().length > 0 && Number.isInteger(grade) && grade >= 0 && grade <= 100;
@@ -56,10 +95,16 @@ export function CourseFormDialog({
     setBusy(true);
     setError(null);
     try {
+      let coverImageUrl = coverUrl ?? undefined;
+      if (pick) {
+        const t = await api.post<UploadTarget>("/courses/cover-upload-url", { content_type: pick.enc.type }, { idempotency: true });
+        await putToSignedUrl(t.data.upload_url, pick.enc.blob, pick.enc.type);
+        coverImageUrl = t.data.public_url;
+      }
       if (isEdit) {
         await api.put(
           `/courses/${course.id}`,
-          { title: title.trim(), category, description: description.trim() || undefined, passing_grade: grade, prerequisite_course_id: prereq === "none" ? null : prereq },
+          { title: title.trim(), category, description: description.trim() || undefined, passing_grade: grade, prerequisite_course_id: prereq === "none" ? null : prereq, cover_image_url: coverImageUrl },
           { idempotency: true },
         );
         setOpen(false);
@@ -74,6 +119,7 @@ export function CourseFormDialog({
             passing_grade: grade,
             prerequisite_course_id: prereq === "none" ? undefined : prereq,
             created_by: owner === "me" ? undefined : owner,
+            cover_image_url: coverImageUrl,
           },
           { idempotency: true },
         );
@@ -81,7 +127,7 @@ export function CourseFormDialog({
         router.push(`/admin/kursus/${res.data.id}` as Route);
       }
     } catch (e) {
-      setError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : "Belum berhasil disimpan. Periksa koneksi Anda lalu coba lagi.");
+      setError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : e instanceof Error && e.message !== "upload" ? e.message : "Belum berhasil disimpan. Periksa koneksi Anda lalu coba lagi.");
     } finally {
       setBusy(false);
     }
@@ -107,6 +153,26 @@ export function CourseFormDialog({
         }
       >
         <div className="flex max-h-[65vh] flex-col gap-3.5 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-label-lg">Foto sampul</span>
+            <div className="flex items-center gap-3">
+              <span className="flex aspect-[16/9] h-16 flex-none items-center justify-center overflow-hidden rounded-md bg-ink-100 text-caption">
+                {coverPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={coverPreview} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  "Belum ada"
+                )}
+              </span>
+              <span className="flex flex-col gap-1.5">
+                <input ref={fileRef} type="file" accept="image/*" className="sr-only" onChange={(e) => void onPickCover(e.target.files)} />
+                <Button variant="secondary" size="sm" disabled={busy} onClick={() => fileRef.current?.click()}>
+                  {coverPreview ? "Ganti & Atur" : "Unggah"}
+                </Button>
+              </span>
+            </div>
+            <p className="text-caption">JPG, PNG, atau WebP hingga 25 MB. Rasio 16:9 (sama seperti kartu kursus). Opsional.</p>
+          </div>
           <Field label="Judul kursus" required>
             {(a) => <Input {...a} maxLength={200} value={title} onChange={(e) => setTitle(e.target.value)} />}
           </Field>
@@ -158,6 +224,15 @@ export function CourseFormDialog({
           ) : null}
         </div>
       </Dialog>
+      <CropDialog
+        source={cropping}
+        frame={COVER_FRAME}
+        output={COURSE_COVER}
+        title="Atur Foto Sampul"
+        description="Geser dan zoom foto sampai bagian yang Anda mau pas di dalam bingkai."
+        onCancel={() => setCropping(null)}
+        onConfirm={applyCroppedCover}
+      />
     </>
   );
 }

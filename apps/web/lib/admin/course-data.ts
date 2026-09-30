@@ -121,13 +121,14 @@ export type CourseDetail = {
   ownerLabel: string;
   reviewNote: string | null;
   submittedForReviewAt: string | null;
+  coverImageUrl: string | null;
 };
 
 export async function getCourseDetail(id: string): Promise<Part<CourseDetail>> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("courses")
-    .select("id, title, category, description, status, passing_grade, prerequisite_course_id, created_by, review_note, submitted_for_review_at")
+    .select("id, title, category, description, status, passing_grade, prerequisite_course_id, created_by, review_note, submitted_for_review_at, cover_image_url")
     .eq("id", id)
     .maybeSingle<{
       id: string;
@@ -140,6 +141,7 @@ export async function getCourseDetail(id: string): Promise<Part<CourseDetail>> {
       created_by: string;
       review_note: string | null;
       submitted_for_review_at: string | null;
+      cover_image_url: string | null;
     }>();
   if (error || !data) return { ok: false };
 
@@ -158,6 +160,7 @@ export async function getCourseDetail(id: string): Promise<Part<CourseDetail>> {
       ownerLabel: ownerLabelById.get(data.created_by) ?? "Tim RumahAgen",
       reviewNote: data.review_note,
       submittedForReviewAt: data.submitted_for_review_at,
+      coverImageUrl: data.cover_image_url,
     },
   };
 }

@@ -74,6 +74,7 @@ export type CourseDetail = {
   createdBy: string;
   reviewNote: string | null;
   submittedForReviewAt: string | null;
+  coverImageUrl: string | null;
 };
 
 /** Kembali null bila tidak ditemukan ATAU bukan milik userId (halaman memanggil notFound() pada dua-duanya, sama seperti dicek lewat RLS). */
@@ -81,7 +82,7 @@ export async function getCourseDetail(id: string, userId: string): Promise<Part<
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("courses")
-    .select("id, title, category, description, status, passing_grade, prerequisite_course_id, created_by, review_note, submitted_for_review_at")
+    .select("id, title, category, description, status, passing_grade, prerequisite_course_id, created_by, review_note, submitted_for_review_at, cover_image_url")
     .eq("id", id)
     .maybeSingle<{
       id: string;
@@ -94,6 +95,7 @@ export async function getCourseDetail(id: string, userId: string): Promise<Part<
       created_by: string;
       review_note: string | null;
       submitted_for_review_at: string | null;
+      cover_image_url: string | null;
     }>();
   if (error) return { ok: false };
   if (!data || data.created_by !== userId) return { ok: true, data: null };
@@ -111,6 +113,7 @@ export async function getCourseDetail(id: string, userId: string): Promise<Part<
       createdBy: data.created_by,
       reviewNote: data.review_note,
       submittedForReviewAt: data.submitted_for_review_at,
+      coverImageUrl: data.cover_image_url,
     },
   };
 }

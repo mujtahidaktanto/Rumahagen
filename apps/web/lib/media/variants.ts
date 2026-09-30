@@ -136,3 +136,8 @@ export const ORG_BANNER = { w: 1600, h: 400 } as const;
 // Ukuran slide Banner Hero Beranda: rasio 4:3 — SAMA dengan aspect-[4/3] pada wadah blok hero Homepage (app/(publik)/page.tsx, HeroBannerCarousel.tsx).
 // BUKAN ORG_BANNER (4:1) di atas — pernah tertukar sehingga gambar terpotong parah (lebar hasil pangkas 4:1 jauh lebih lebar dari wadah tampil 4:3).
 export const HOME_HERO_BANNER = { w: 1200, h: 900 } as const;
+
+// Ukuran foto sampul Kursus: rasio 16:9 — SAMA dengan aspect-[16/9] pada kartu "Course Saya" (components/agent/LearningView.tsx) dan kartu katalog publik
+// /learning (components/public/LearningCards.tsx). Dipilih baru di migration 0170 (courses.cover_image_url) — sebelumnya kartu itu cuma h-24 tetap untuk
+// menengahkan ikon placeholder, bukan rasio yang disengaja untuk foto.
+export const COURSE_COVER = { w: 1280, h: 720 } as const;

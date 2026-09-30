@@ -6,6 +6,7 @@ import { withApiHandler } from "@/lib/api/handler";
 import { validateJsonBody } from "@/lib/api/validate";
 import { updateCourseSchema } from "@/lib/validation/courses";
 import { ApiError } from "@/lib/api/errors";
+import { removeCourseCoverByUrl } from "@/lib/storage/course-covers";
 import { createClient } from "@/lib/supabase/server";
 
 export const GET = withApiHandler({}, async (ctx) => {
@@ -30,6 +31,8 @@ export const PUT = withApiHandler({}, async (ctx) => {
   const body = await validateJsonBody(ctx.request, updateCourseSchema);
   const supabase = await createClient();
 
+  const { data: before } = await supabase.from("courses").select("cover_image_url").eq("id", ctx.params.id).maybeSingle<{ cover_image_url: string | null }>();
+
   const { data, error } = await supabase
     .from("courses")
     .update(body)
@@ -42,6 +45,11 @@ export const PUT = withApiHandler({}, async (ctx) => {
   }
   if (!data) {
     throw new ApiError("NOT_FOUND", "Course tidak ditemukan atau Anda tidak punya akses.");
+  }
+
+  // Foto sampul lama dihapus dari storage setelah diganti (tautan lama/eksternal diabaikan).
+  if (before && "cover_image_url" in body && before.cover_image_url && before.cover_image_url !== data.cover_image_url) {
+    await removeCourseCoverByUrl(before.cover_image_url);
   }
 
   return { data };
