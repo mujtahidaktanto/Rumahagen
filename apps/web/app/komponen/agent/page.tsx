@@ -253,10 +253,10 @@ export default async function SampleAgentPage({ searchParams }: Props) {
     const inv = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString();
     const quota = { ok: true as const, data: { scope: "organization" as const, free: { limit: 50, used: 9, remaining: 41, period_start: null, resets_at: inv(5) }, pro: { limit: 100, used: 0, remaining: 0, period_start: null, resets_at: null, active: false }, purchased: { balance: 0 }, total_remaining: 41, validity_days: 90, grace_days: 7 } };
     const roster: RosterMember[] = [
-      { memberId: "m1", agentId: "a1", role: "leader", joinedAt: at(700), name: "Rian Saputra", isSelf: org !== "member" },
-      { memberId: "m2", agentId: "a2", role: "member", joinedAt: at(240), name: "Dewi Anggraini", isSelf: org === "member" },
-      { memberId: "m3", agentId: "a3", role: "member", joinedAt: at(150), name: "Bambang Sutrisno", isSelf: false },
-      { memberId: "m4", agentId: "a4", role: "member", joinedAt: at(60), name: "Siti Rahma", isSelf: false },
+      { memberId: "m1", agentId: "a1", role: "leader", joinedAt: at(700), name: "Rian Saputra", isSelf: org !== "member", publicSlug: "rian-saputra" },
+      { memberId: "m2", agentId: "a2", role: "member", joinedAt: at(240), name: "Dewi Anggraini", isSelf: org === "member", publicSlug: null },
+      { memberId: "m3", agentId: "a3", role: "member", joinedAt: at(150), name: "Bambang Sutrisno", isSelf: false, publicSlug: "bambang-sutrisno" },
+      { memberId: "m4", agentId: "a4", role: "member", joinedAt: at(60), name: "Siti Rahma", isSelf: false, publicSlug: null },
     ];
     const status = org === "closing" ? "closing" : org === "ditutup" ? "closed" : org === "dibekukan" ? "suspended" : "active";
     const base: MyOrgData = {
@@ -315,9 +315,9 @@ export default async function SampleAgentPage({ searchParams }: Props) {
     const { peran = "leader" } = await searchParams;
     const at = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
     const roster: RosterMember[] = [
-      { memberId: "m1", agentId: "a1", role: "leader", joinedAt: at(700), name: "Rian Saputra", isSelf: peran !== "member" },
-      { memberId: "m2", agentId: "a2", role: "member", joinedAt: at(240), name: "Dewi Anggraini", isSelf: peran === "member" },
-      { memberId: "m3", agentId: "a3", role: "member", joinedAt: at(150), name: "Bambang Sutrisno", isSelf: false },
+      { memberId: "m1", agentId: "a1", role: "leader", joinedAt: at(700), name: "Rian Saputra", isSelf: peran !== "member", publicSlug: "rian-saputra" },
+      { memberId: "m2", agentId: "a2", role: "member", joinedAt: at(240), name: "Dewi Anggraini", isSelf: peran === "member", publicSlug: null },
+      { memberId: "m3", agentId: "a3", role: "member", joinedAt: at(150), name: "Bambang Sutrisno", isSelf: false, publicSlug: "bambang-sutrisno" },
     ];
     const pending: PendingRequest[] = [
       { id: "p1", kind: "agent_request", createdAt: at(2), expiresAt: null, isExpired: false, agentName: "Fajar Nugroho", agentOffice: "Ray White Kelapa Gading" },

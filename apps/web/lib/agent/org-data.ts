@@ -6,7 +6,7 @@ import type { ListingQuotaSummary } from "@/lib/validation/listing-quota";
 import type { Part } from "./dashboard-data";
 
 export type MyInvitation = { id: string; organizationId: string; organizationName: string; organizationType: string; leaderName: string; createdAt: string; expiresAt: string | null; isExpired: boolean };
-export type RosterMember = { memberId: string; agentId: string; role: string; joinedAt: string; name: string; isSelf: boolean };
+export type RosterMember = { memberId: string; agentId: string; role: string; joinedAt: string; name: string; isSelf: boolean; publicSlug: string | null };
 export type PendingRequest = { id: string; kind: "leader_invite" | "agent_request"; createdAt: string; expiresAt: string | null; isExpired: boolean; agentName: string; agentOffice: string | null };
 
 export type OrgInfo = {
@@ -72,8 +72,8 @@ const toInfo = (id: string, o: OrgRow): OrgInfo => ({
 async function loadRoster(supabase: Supabase, orgId: string): Promise<Part<RosterMember[]>> {
   const { data, error } = await supabase.rpc("organization_roster", { p_organization_id: orgId });
   if (error) return { ok: false };
-  const rows = (data ?? []) as { member_id: string; agent_id: string; role: string; joined_at: string; agent_name: string; is_self: boolean }[];
-  return { ok: true, data: rows.map((r) => ({ memberId: r.member_id, agentId: r.agent_id, role: r.role, joinedAt: r.joined_at, name: r.agent_name, isSelf: r.is_self })) };
+  const rows = (data ?? []) as { member_id: string; agent_id: string; role: string; joined_at: string; agent_name: string; is_self: boolean; public_slug: string | null }[];
+  return { ok: true, data: rows.map((r) => ({ memberId: r.member_id, agentId: r.agent_id, role: r.role, joinedAt: r.joined_at, name: r.agent_name, isSelf: r.is_self, publicSlug: r.public_slug })) };
 }
 
 async function loadPending(supabase: Supabase, orgId: string): Promise<Part<PendingRequest[]>> {

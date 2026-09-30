@@ -166,7 +166,13 @@ export function OrganizationView({ data, maskedEmail }: { data: OrgPageData; mas
                   {initialsOf(m.name)}
                 </span>
                 <span className="min-w-0 flex-1 truncate text-label-lg">
-                  {m.name}
+                  {m.publicSlug ? (
+                    <Link href={`/agen/${m.publicSlug}` as Route} className="text-blue-600">
+                      {m.name}
+                    </Link>
+                  ) : (
+                    m.name
+                  )}
                   {m.isSelf ? <span className="ml-1.5 text-caption font-normal">(Anda)</span> : null}
                 </span>
                 <Badge tone={ROLE_TONE[m.role] ?? "neutral"} dot={false}>

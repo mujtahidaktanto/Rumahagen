@@ -219,7 +219,13 @@ export function OrgMembersPanel({ orgId, orgName, role, status, roster, pending 
                 <Avatar name={m.name} />
                 <span className="min-w-0 flex-1 basis-48">
                   <span className="block truncate text-label-lg">
-                    {m.name}
+                    {m.publicSlug ? (
+                      <Link href={`/agen/${m.publicSlug}` as Route} className="text-blue-600">
+                        {m.name}
+                      </Link>
+                    ) : (
+                      m.name
+                    )}
                     {m.isSelf ? <span className="ml-1.5 text-caption font-normal">(Anda)</span> : null}
                   </span>
                   <span className="text-caption">Bergabung {relativeTimeId(m.joinedAt)}</span>
