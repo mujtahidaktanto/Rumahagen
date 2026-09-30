@@ -37,7 +37,7 @@ function Tile({ label, value, hint, href }: { label: string; value: ReactNode; h
 }
 
 const QUICK_ACTIONS: { title: string; note: string; icon: ReactNode; href: string | null }[] = [
-  { title: "Buat Sesi Baru", note: "Broadcast, interaktif, atau on-demand", icon: <VideoIcon size={20} />, href: null },
+  { title: "Buat Sesi Baru", note: "Broadcast, interaktif, atau on-demand", icon: <VideoIcon size={20} />, href: "/instructor/sesi/baru" },
   { title: "Buat Event", note: "Terbitkan langsung tanpa tinjauan tim", icon: <CalendarIcon size={20} />, href: null },
   { title: "Pusat Notifikasi", note: "Lihat semua notifikasi", icon: <BellIcon size={20} />, href: "/instructor/notifikasi" },
 ];
@@ -97,8 +97,8 @@ export function InstructorDashboardView({ name, data }: { name: string; data: In
         <ErrorState title="Ringkasan gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
       ) : (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <Tile label="Sesi Mendatang" value={nf.format(stats.upcomingCount)} hint="Terjadwal atau sedang live" />
-          <Tile label="Sedang Live" value={nf.format(stats.liveCount)} hint="Sesi berlangsung sekarang" />
+          <Tile label="Sesi Mendatang" value={nf.format(stats.upcomingCount)} hint="Terjadwal atau sedang live" href="/instructor/sesi" />
+          <Tile label="Sedang Live" value={nf.format(stats.liveCount)} hint="Sesi berlangsung sekarang" href="/instructor/sesi" />
           <Tile label="Kehadiran Belum Dinilai" value={nf.format(stats.pendingAttendanceCount)} hint="Peserta pada sesi selesai" />
           <Tile label="Event Saya" value={nf.format(stats.eventsUnpublishedCount)} hint="Belum diterbitkan" href="/instructor/event" />
         </div>
@@ -111,7 +111,14 @@ export function InstructorDashboardView({ name, data }: { name: string; data: In
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <Widget title="Sesi Mendatang">
+        <Widget
+          title="Sesi Mendatang"
+          action={
+            <Link href={"/instructor/sesi" as Route} className="text-label-lg text-blue-600">
+              Semua sesi
+            </Link>
+          }
+        >
           {!upcoming ? (
             <div className="p-5">
               <ErrorState title="Sesi gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
@@ -123,7 +130,11 @@ export function InstructorDashboardView({ name, data }: { name: string; data: In
           ) : (
             <div className="flex flex-col">
               {upcoming.map((s) => (
-                <div key={s.id} className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 first:border-t-0">
+                <Link
+                  key={s.id}
+                  href={`/instructor/sesi/${s.id}` as Route}
+                  className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 text-inherit no-underline first:border-t-0 hover:bg-blue-50 hover:no-underline"
+                >
                   <span className="flex h-9 w-9 flex-none items-center justify-center rounded-sm bg-ink-50 text-ink-500">
                     <VideoIcon size={18} />
                   </span>
@@ -134,7 +145,7 @@ export function InstructorDashboardView({ name, data }: { name: string; data: In
                     </div>
                   </div>
                   <Badge tone={sessionStatus(s.status).tone}>{sessionStatus(s.status).label}</Badge>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -152,7 +163,11 @@ export function InstructorDashboardView({ name, data }: { name: string; data: In
           ) : (
             <div className="flex flex-col">
               {pendingAttendance.map((s) => (
-                <div key={s.sessionId} className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 first:border-t-0">
+                <Link
+                  key={s.sessionId}
+                  href={`/instructor/sesi/${s.sessionId}` as Route}
+                  className="flex items-center gap-3 border-t border-ink-50 px-5 py-3 text-inherit no-underline first:border-t-0 hover:bg-blue-50 hover:no-underline"
+                >
                   <span className="flex h-9 w-9 flex-none items-center justify-center rounded-sm bg-warning-100 text-warning-600">
                     <PinIcon size={18} />
                   </span>
@@ -160,7 +175,7 @@ export function InstructorDashboardView({ name, data }: { name: string; data: In
                     <div className="truncate text-label-lg">{s.title}</div>
                     <div className="truncate text-caption">{s.ungradedCount} peserta belum dinilai{s.endAt ? ` · Selesai ${relativeTimeId(s.endAt)}` : ""}</div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

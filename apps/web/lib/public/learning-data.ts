@@ -3,32 +3,19 @@
 // mengizinkan sesi publik untuk pengguna yang LOGIN (auth.uid() tidak null), jadi pengunjung anonim tidak pernah menerima baris sesi -> halaman menampilkan "Masuk untuk cek akses".
 // learning_sessions tidak punya kolom judul/deskripsi: judul memakai judul kursus terkait (bila ada), deskripsi memakai deskripsi kursus.
 import { createClient } from "@/lib/supabase/server";
+import { COURSE_CATEGORIES, isUuid, type CourseCategory } from "@/lib/public/learning-labels";
 
-export const COURSE_CATEGORIES = ["sales_skill", "legal_regulasi", "produk_developer", "financial_kpr", "lainnya"] as const;
-export type CourseCategory = (typeof COURSE_CATEGORIES)[number];
-export const COURSE_CATEGORY_LABEL: Record<string, string> = {
-  sales_skill: "Sales Skill",
-  legal_regulasi: "Legal & Regulasi",
-  produk_developer: "Produk Developer",
-  financial_kpr: "Financial & KPR",
-  lainnya: "Lainnya",
-};
-
-export const LESSON_TYPE_LABEL: Record<string, string> = { video: "Video", pdf: "PDF", slide: "Slide" };
-
-export const SESSION_TYPE_LABEL: Record<string, string> = { broadcast: "Broadcast", interactive: "Interaktif", on_demand: "On-Demand" };
-export const SESSION_STATUS_LABEL: Record<string, string> = {
-  draft: "Draft",
-  scheduled: "Terjadwal",
-  live: "Sedang Berlangsung",
-  ended: "Selesai",
-  cancelled: "Dibatalkan",
-  failed: "Gagal Dilaksanakan",
-};
-export const SESSION_VISIBILITY_LABEL: Record<string, string> = { public: "Publik", organization: "Organisasi", partner: "Mitra", private: "Privat" };
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-export const isUuid = (v: string) => UUID.test(v);
+export {
+  COURSE_CATEGORIES,
+  COURSE_CATEGORY_LABEL,
+  LESSON_TYPE_LABEL,
+  SESSION_TYPE_LABEL,
+  SESSION_STATUS_LABEL,
+  SESSION_VISIBILITY_LABEL,
+  isUuid,
+  sessionTitle,
+} from "@/lib/public/learning-labels";
+export type { CourseCategory } from "@/lib/public/learning-labels";
 
 // ── Kursus ─────────────────────────────────────────────────────────────────────
 
@@ -228,9 +215,4 @@ export async function isEnrolledInSession(sessionId: string, userId: string): Pr
   const supabase = await createClient();
   const { data } = await supabase.from("session_enrollments").select("id").eq("session_id", sessionId).eq("agent_id", userId).limit(1);
   return (data?.length ?? 0) > 0;
-}
-
-/** Judul tampilan sesi: judul kursus terkait, atau "Sesi {tipe}" bila tidak ada kursus (learning_sessions tidak punya kolom judul). */
-export function sessionTitle(s: Pick<SessionSummary, "courseTitle" | "session_type">): string {
-  return s.courseTitle ?? `Sesi ${SESSION_TYPE_LABEL[s.session_type] ?? s.session_type}`;
 }
