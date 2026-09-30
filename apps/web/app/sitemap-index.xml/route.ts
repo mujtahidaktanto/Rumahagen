@@ -8,6 +8,12 @@
 // Rute publik murni (bukan JSON API) -- TIDAK dibungkus withApiHandler
 // karena kontrak responsnya XML mentah untuk crawler, bukan amplop
 // {data, meta} REST internal.
+//
+// 2026-09-30: ditambah 5 sitemap (events/organizations/content/promo/courses)
+// yang sebelumnya tercatat sebagai celah di audit/FRONTEND_GAPS.md -- entity
+// publik ini sudah punya metadata SEO lengkap di halamannya masing-masing
+// tapi belum dibantu ditemukan lewat sitemap. Pola sama persis dengan 3
+// sitemap Core (STEP11-B9), bukan kontrak evidenced terpisah.
 
 import { createClient } from "@/lib/supabase/server";
 import { buildSitemapIndexXml, isSitemapEnabled, xmlResponse } from "@/lib/seo/sitemap";
@@ -22,7 +28,16 @@ export async function GET() {
     }
 
     return xmlResponse(
-      buildSitemapIndexXml(["/sitemap-listings.xml", "/sitemap-agents.xml", "/sitemap-developer-projects.xml"]),
+      buildSitemapIndexXml([
+        "/sitemap-listings.xml",
+        "/sitemap-agents.xml",
+        "/sitemap-developer-projects.xml",
+        "/sitemap-events.xml",
+        "/sitemap-organizations.xml",
+        "/sitemap-content.xml",
+        "/sitemap-promo.xml",
+        "/sitemap-courses.xml",
+      ]),
     );
   } catch (err) {
     console.error("[sitemap-index.xml] gagal membangun sitemap index:", err);
