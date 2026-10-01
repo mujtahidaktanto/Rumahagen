@@ -1,4 +1,11 @@
 // lib/ai/adapters.ts
+// Dua sistem adapter AI TERPISAH di repo ini, jangan tertukar: file ini untuk BYOK Agent sendiri
+// (POST /ai-assistant/chat, resolve by provider CODE substring) -- lib/ai/platform/ (migration
+// 0174) untuk Koneksi AI Platform milik RumahAgen (superadmin, resolve by ai_providers.api_style,
+// validateKey/listModels/generate terpisah + hitungan token). Beda endpoint provider juga: modul
+// ini pakai endpoint native tiap provider (Gemini generateContent, dst.) -- lib/ai/platform/ pakai
+// endpoint kompatibel OpenAI untuk Gemini/Groq/Cerebras/Mistral/OpenRouter sesuai desain platform.
+//
 // Adapter provider AI untuk POST /ai-assistant/chat (STEP11-B10 §3/§11):
 // "Provider-specific payloads remain adapter/provider-internal" — kontrak
 // route (lib/validation/ai-providers.ts: aiChatSchema, messages[] gaya

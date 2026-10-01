@@ -6,16 +6,18 @@ import type { Route } from "next";
 import { AiProviderRowActions } from "@/components/admin/AiProviderRowActions";
 import { CreateAiProviderDialog } from "@/components/admin/CreateAiProviderDialog";
 import { ForceAiConnectionDialog } from "@/components/admin/ForceAiConnectionDialog";
+import { PlatformAiConnectionsView } from "@/components/admin/PlatformAiConnectionsView";
 import { Badge } from "@/components/ui/Badge";
 import { ErrorState } from "@/components/ui/States";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/Table";
 import type { AiConnectionAdminRow, AiProviderAdminRow } from "@/lib/admin/ai-provider-admin-data";
+import type { PlatformFeatureSettingRow, PlatformProviderRow } from "@/lib/admin/platform-ai-data";
 import { AI_BILLING_LABEL, AI_CONNECTION_STATUS_LABEL, AI_CONNECTION_STATUS_TONE } from "@/lib/agent/ai-rules";
 import type { Part } from "@/lib/agent/dashboard-data";
 
 const dtf = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" });
 
-type Tab = "catalogue" | "conn";
+type Tab = "catalogue" | "conn" | "platform";
 
 function tabHref(tab: Tab): Route {
   return `/admin/provider-ai?tab=${tab}` as Route;
@@ -26,11 +28,15 @@ export function AiProviderCatalogueView({
   tab,
   providers,
   connections,
+  platformProviders,
+  platformFeatureSettings,
 }: {
   isSuperadmin: boolean;
   tab: Tab;
   providers: Part<AiProviderAdminRow[]>;
   connections: Part<AiConnectionAdminRow[]> | null;
+  platformProviders: Part<PlatformProviderRow[]> | null;
+  platformFeatureSettings: Part<PlatformFeatureSettingRow[]> | null;
 }) {
   return (
     <div className="flex w-full flex-col">
@@ -49,6 +55,11 @@ export function AiProviderCatalogueView({
         <Link href={tabHref("conn")} className={`border-b-2 py-3.5 text-label-lg font-bold ${tab === "conn" ? "border-blue-600 text-blue-600" : "border-transparent text-ink-300"}`}>
           Koneksi Agent
         </Link>
+        {isSuperadmin ? (
+          <Link href={tabHref("platform")} className={`border-b-2 py-3.5 text-label-lg font-bold ${tab === "platform" ? "border-blue-600 text-blue-600" : "border-transparent text-ink-300"}`}>
+            Koneksi AI RumahAgen
+          </Link>
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-4 p-4 lg:p-8">
@@ -86,51 +97,59 @@ export function AiProviderCatalogueView({
               <p className="text-caption">GET katalog terbuka untuk role manapun yang lolos autentikasi (dipakai layar Koneksi AI agent) — mutasi (create/edit/disable/enable/retire) murni Superadmin.</p>
             </>
           )
-        ) : !isSuperadmin ? (
-          <p className="py-16 text-center text-body-md text-ink-500">
-            Koneksi Agent hanya untuk Superadmin — RLS `agent_ai_connections_select` hanya memberi Superadmin akses lihat lintas agent (Admin/Manager tidak diberi grant permission ini sama
-            sekali).
-          </p>
-        ) : !connections?.ok ? (
-          <ErrorState title="Data koneksi gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
-        ) : (
-          <>
-            <p className="text-body-md text-ink-500">agent_ai_connections lintas agent — force-intervention (revoke/disconnect/disable) tetap Superadmin-only, dibungkus fungsi admin_force_provider_connection().</p>
-            <Table>
-              <THead>
-                <TR>
-                  <TH>Agent</TH>
-                  <TH>Provider</TH>
-                  <TH>Status</TH>
-                  <TH>Terhubung</TH>
-                  <TH>Aksi</TH>
-                </TR>
-              </THead>
-              <TBody>
-                {connections.data.length === 0 ? (
+        ) : tab === "conn" ? (
+          !isSuperadmin ? (
+            <p className="py-16 text-center text-body-md text-ink-500">
+              Koneksi Agent hanya untuk Superadmin — RLS `agent_ai_connections_select` hanya memberi Superadmin akses lihat lintas agent (Admin/Manager tidak diberi grant permission ini sama
+              sekali).
+            </p>
+          ) : !connections?.ok ? (
+            <ErrorState title="Data koneksi gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
+          ) : (
+            <>
+              <p className="text-body-md text-ink-500">agent_ai_connections lintas agent — force-intervention (revoke/disconnect/disable) tetap Superadmin-only, dibungkus fungsi admin_force_provider_connection().</p>
+              <Table>
+                <THead>
                   <TR>
-                    <TD colSpan={5} className="py-12 text-center text-body-md text-ink-300">
-                      Belum ada koneksi AI.
-                    </TD>
+                    <TH>Agent</TH>
+                    <TH>Provider</TH>
+                    <TH>Status</TH>
+                    <TH>Terhubung</TH>
+                    <TH>Aksi</TH>
                   </TR>
-                ) : (
-                  connections.data.map((c) => (
-                    <TR key={c.id}>
-                      <TD className="text-body-md">{c.agentName}</TD>
-                      <TD className="text-body-md">{c.providerName}</TD>
-                      <TD>
-                        <Badge tone={AI_CONNECTION_STATUS_TONE[c.status]}>{AI_CONNECTION_STATUS_LABEL[c.status]}</Badge>
-                      </TD>
-                      <TD className="text-body-md text-ink-500">{dtf.format(new Date(c.connectedAt))}</TD>
-                      <TD>
-                        <ForceAiConnectionDialog connectionId={c.id} agentName={c.agentName} />
+                </THead>
+                <TBody>
+                  {connections.data.length === 0 ? (
+                    <TR>
+                      <TD colSpan={5} className="py-12 text-center text-body-md text-ink-300">
+                        Belum ada koneksi AI.
                       </TD>
                     </TR>
-                  ))
-                )}
-              </TBody>
-            </Table>
-          </>
+                  ) : (
+                    connections.data.map((c) => (
+                      <TR key={c.id}>
+                        <TD className="text-body-md">{c.agentName}</TD>
+                        <TD className="text-body-md">{c.providerName}</TD>
+                        <TD>
+                          <Badge tone={AI_CONNECTION_STATUS_TONE[c.status]}>{AI_CONNECTION_STATUS_LABEL[c.status]}</Badge>
+                        </TD>
+                        <TD className="text-body-md text-ink-500">{dtf.format(new Date(c.connectedAt))}</TD>
+                        <TD>
+                          <ForceAiConnectionDialog connectionId={c.id} agentName={c.agentName} />
+                        </TD>
+                      </TR>
+                    ))
+                  )}
+                </TBody>
+              </Table>
+            </>
+          )
+        ) : !isSuperadmin ? (
+          <p className="py-16 text-center text-body-md text-ink-500">Koneksi AI RumahAgen hanya untuk Superadmin.</p>
+        ) : !platformProviders || !platformFeatureSettings ? (
+          <ErrorState title="Data Koneksi AI RumahAgen gagal dimuat" message="Muat ulang halaman ini beberapa saat lagi." />
+        ) : (
+          <PlatformAiConnectionsView providers={platformProviders} featureSettings={platformFeatureSettings} />
         )}
       </div>
     </div>
