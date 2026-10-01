@@ -84,7 +84,10 @@ export function MarketingKitView({
         ))}
       </Select>
 
-      <KitList projectId={selected} initial={kit} />
+      {/* key={selected}: paksa KitList dipasang ulang saat proyek berganti -- useState(initial) di dalamnya hanya membaca nilai awal sekali, tidak pernah
+          menyinkronkan ulang ke prop `initial` yang baru dari server saat dropdown proyek diganti (ditemukan lewat testing live: daftar berkas tetap
+          menampilkan proyek sebelumnya sampai halaman di-refresh manual). */}
+      <KitList key={selected} projectId={selected} initial={kit} />
     </div>
   );
 }
