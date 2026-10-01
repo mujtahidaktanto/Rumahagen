@@ -1,6 +1,10 @@
 // lib/agent/ai-data.ts — data layar Koneksi AI Saya dan AI Assistant (M13 BYOK: migration 0015/0016/0080/0093; permission m13.own_byok_connection.* untuk role Agent ditambahkan 0164).
 // Dibaca langsung dari Supabase dengan RLS pemanggil (agent_ai_connections_select, ai_providers_select_active_or_admin) — bukan lewat /api/* (aturan itu untuk kode BROWSER; komponen
 // server boleh query langsung, pola sama seperti lib/agent/org-data.ts dan dashboard-data.ts). encrypted_api_key/encrypted_secondary_key TIDAK PERNAH di-select di sini.
+// Filter .eq("available_for_agent", true) (2026-10-01): kolom ini baru ada setelah migration 0174 (Koneksi AI Platform) diterapkan -- provider khusus platform (Groq/Cerebras/Mistral/
+// OpenRouter/Anthropic/OpenAI) TIDAK BOLEH tampil di sini. PENTING soal urutan deploy: query ini akan gagal (kolom belum ada) kalau kode ini aktif SEBELUM migration 0174 diterapkan --
+// beda dari pola "aman di-deploy duluan" migration lain di repo ini, karena ini mengubah query layar yang SUDAH hidup (Gemini/Cloudinary), bukan fitur baru. Terapkan migration 0174
+// lebih dulu, baru deploy perubahan ini.
 import { createClient } from "@/lib/supabase/server";
 import type { Part } from "./dashboard-data";
 import type { AiBillingType, AiConnectionStatus } from "./ai-rules";
@@ -67,6 +71,7 @@ export async function getAiConnectionsPage(userId: string): Promise<AiConnection
       .from("ai_providers")
       .select("id, code, display_name, logo_url, billing_type, setup_instructions_url, usage_terms_note")
       .eq("status", "active")
+      .eq("available_for_agent", true)
       .order("display_name")
       .returns<ProviderRow[]>(),
   ]);
