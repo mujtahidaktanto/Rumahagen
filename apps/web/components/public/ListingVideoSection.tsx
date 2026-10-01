@@ -2,7 +2,7 @@
 
 // components/public/ListingVideoSection.tsx — tautan Video dan Virtual Tour/3D (listing_videos, migration 0047) di Detail Listing publik: SENGAJA bagian terpisah
 // di bawah galeri foto (bukan digabung ke ListingGallery), dan kartu Video terpisah dari kartu Virtual Tour (agen bisa isi salah satu saja tanpa tercampur).
-// Pemutar (iframe YouTube/Vimeo atau <video> berkas langsung) baru dimuat saat tombol "Putar"/"Buka" diklik (malas-muat) -- sebelum diklik cuma kartu ringan tanpa
+// Pemutar (iframe YouTube/Vimeo/Instagram atau <video> berkas langsung) baru dimuat saat tombol "Putar"/"Buka" diklik (malas-muat) -- sebelum diklik cuma kartu ringan tanpa
 // kode pihak ketiga, supaya tidak membebani waktu muat halaman awal. TANPA autoplay -- pemutar bawaan YouTube/Vimeo tampil dulu (thumbnail + tombol putarnya
 // sendiri), suara baru jalan kalau pengunjung klik tombol putar itu secara eksplisit (hindari suara mengejutkan begitu kartu diklik). Tombol Tutup melepas
 // iframe/<video> dari DOM sepenuhnya (bukan cuma disembunyikan) supaya pemutaran benar-benar berhenti, lalu kembali ke tampilan kartu.
@@ -28,6 +28,14 @@ function vimeoId(url: string): string | null {
   const m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   return m ? m[1]! : null;
 }
+// Reel/Post publik Instagram: embed ringan tanpa skrip embed.js resmi Meta (cukup untuk "tonton video", tanpa like/komentar interaktif).
+// TIDAK dijamin Meta selamanya -- mereka bisa memblokir iframe ini sewaktu-waktu di luar kendali kita, karenanya selalu disertai tautan cadangan "Buka di tab baru".
+function instagramEmbedUrl(url: string): string | null {
+  const m = url.match(/instagram\.com\/(p|reel|reels)\/([\w-]+)/);
+  if (!m) return null;
+  const kind = m[1] === "reels" ? "reel" : m[1];
+  return `https://www.instagram.com/${kind}/${m[2]}/embed/captioned/`;
+}
 const isDirectFile = (url: string) => /\.(mp4|webm|ogv)(\?|$)/i.test(url);
 
 function VideoCard({ url }: { url: string }) {
@@ -48,6 +56,21 @@ function VideoCard({ url }: { url: string }) {
   }
   const yt = youtubeId(url);
   const vm = !yt ? vimeoId(url) : null;
+  const ig = !yt && !vm ? instagramEmbedUrl(url) : null;
+
+  if (ig) {
+    // Rasio Instagram (potret/persegi) beda dari YouTube/Vimeo -- bukan dipaksa 16:9, dan selalu ada tautan cadangan karena embed-nya bisa diblokir Meta sewaktu-waktu.
+    return (
+      <div className="relative mx-auto flex w-full max-w-[400px] flex-col overflow-hidden rounded-md bg-ink-900">
+        <CloseButton onClick={() => setPlaying(false)} label="Tutup video" />
+        <iframe src={ig} title="Video Properti (Instagram)" className="h-[600px] w-full border-0" />
+        <a href={url} target="_blank" rel="noreferrer" className="bg-ink-900 px-3 py-2 text-center text-caption text-white/70 underline">
+          Tidak tampil? Buka di Instagram
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className="relative aspect-video w-full overflow-hidden rounded-md bg-ink-900">
       <CloseButton onClick={() => setPlaying(false)} label="Tutup video" />
