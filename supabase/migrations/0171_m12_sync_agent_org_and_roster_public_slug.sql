@@ -87,8 +87,10 @@ BEGIN
     RAISE EXCEPTION 'organization_roster: hanya anggota organisasi' USING ERRCODE = '42501';
   END IF;
   RETURN QUERY
+    -- public_slug di-cast ::text -- agent_profiles.public_slug VARCHAR, RETURNS TABLE deklarasi text; tanpa cast PostgREST/plpgsql menolak
+    -- "structure of query does not match function result type" (ditemukan lewat testing live, sama seperti agent_name di kolom sebelumnya).
     SELECT m.id, m.agent_id, m.role, m.joined_at, COALESCE(ap.full_name, 'Anggota')::text, (m.agent_id = auth.uid()),
-           (CASE WHEN ap.profile_visibility = 'public' THEN ap.public_slug ELSE NULL END)
+           (CASE WHEN ap.profile_visibility = 'public' THEN ap.public_slug ELSE NULL END)::text
     FROM public.organization_members m
     LEFT JOIN public.agent_profiles ap ON ap.user_id = m.agent_id
     WHERE m.organization_id = p_organization_id AND m.status = 'active'
