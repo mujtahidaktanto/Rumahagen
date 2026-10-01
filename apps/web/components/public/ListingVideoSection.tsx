@@ -3,10 +3,20 @@
 // components/public/ListingVideoSection.tsx — tautan Video dan Virtual Tour/3D (listing_videos, migration 0047) di Detail Listing publik: SENGAJA bagian terpisah
 // di bawah galeri foto (bukan digabung ke ListingGallery), dan kartu Video terpisah dari kartu Virtual Tour (agen bisa isi salah satu saja tanpa tercampur).
 // Pemutar (iframe YouTube/Vimeo atau <video> berkas langsung) baru dimuat saat tombol "Putar"/"Buka" diklik (malas-muat) -- sebelum diklik cuma kartu ringan tanpa
-// kode pihak ketiga, supaya tidak membebani waktu muat halaman awal. Virtual tour ditanam apa adanya (tautan share penyedia tur seperti Matterport umumnya
-// sudah bisa ditanam langsung); kalau gagal ditanam, tautan "Buka di tab baru" tetap tersedia sebagai cadangan.
+// kode pihak ketiga, supaya tidak membebani waktu muat halaman awal. TANPA autoplay -- pemutar bawaan YouTube/Vimeo tampil dulu (thumbnail + tombol putarnya
+// sendiri), suara baru jalan kalau pengunjung klik tombol putar itu secara eksplisit (hindari suara mengejutkan begitu kartu diklik). Tombol Tutup melepas
+// iframe/<video> dari DOM sepenuhnya (bukan cuma disembunyikan) supaya pemutaran benar-benar berhenti, lalu kembali ke tampilan kartu.
+// Virtual tour ditanam apa adanya (tautan share penyedia tur seperti Matterport umumnya sudah bisa ditanam langsung); kalau gagal ditanam, tautan "Buka di tab baru" tetap tersedia sebagai cadangan.
 import { useState } from "react";
-import { PlayCircleIcon, VideoIcon, LayersIcon } from "@/components/ui/icons";
+import { CloseIcon, PlayCircleIcon, VideoIcon, LayersIcon } from "@/components/ui/icons";
+
+function CloseButton({ onClick, label }: { onClick: () => void; label: string }) {
+  return (
+    <button type="button" onClick={onClick} aria-label={label} className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-ink-900/70 text-white hover:bg-ink-900">
+      <CloseIcon size={16} />
+    </button>
+  );
+}
 
 type VideoRow = { url: string; type: "video" | "virtual_tour" };
 
@@ -39,14 +49,15 @@ function VideoCard({ url }: { url: string }) {
   const yt = youtubeId(url);
   const vm = !yt ? vimeoId(url) : null;
   return (
-    <div className="aspect-video w-full overflow-hidden rounded-md bg-ink-900">
+    <div className="relative aspect-video w-full overflow-hidden rounded-md bg-ink-900">
+      <CloseButton onClick={() => setPlaying(false)} label="Tutup video" />
       {yt ? (
-        <iframe src={`https://www.youtube-nocookie.com/embed/${yt}?autoplay=1`} title="Video Properti" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen className="h-full w-full" />
+        <iframe src={`https://www.youtube-nocookie.com/embed/${yt}`} title="Video Properti" allow="encrypted-media; picture-in-picture" allowFullScreen className="h-full w-full" />
       ) : vm ? (
-        <iframe src={`https://player.vimeo.com/video/${vm}?autoplay=1`} title="Video Properti" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen className="h-full w-full" />
+        <iframe src={`https://player.vimeo.com/video/${vm}`} title="Video Properti" allow="encrypted-media; picture-in-picture" allowFullScreen className="h-full w-full" />
       ) : isDirectFile(url) ? (
         // eslint-disable-next-line jsx-a11y/media-has-caption
-        <video controls autoPlay className="h-full w-full">
+        <video controls className="h-full w-full">
           <source src={url} />
         </video>
       ) : (
@@ -75,7 +86,8 @@ function VirtualTourCard({ url }: { url: string }) {
     );
   }
   return (
-    <div className="flex aspect-video w-full flex-col overflow-hidden rounded-md bg-ink-900">
+    <div className="relative flex aspect-video w-full flex-col overflow-hidden rounded-md bg-ink-900">
+      <CloseButton onClick={() => setPlaying(false)} label="Tutup virtual tour" />
       <iframe src={url} title="Virtual Tour" allow="fullscreen; xr-spatial-tracking" allowFullScreen className="h-full w-full" />
       <a href={url} target="_blank" rel="noreferrer" className="bg-ink-900 px-3 py-2 text-center text-caption text-white/70 underline">
         Tidak tampil? Buka di tab baru
