@@ -128,8 +128,12 @@ export const POST = withApiHandler<MetaSeoResult>({}, async (ctx) => {
     try {
       parsed = metaSeoAiResponseSchema.parse(extractJsonBlock(result.text)) as MetaSeoAiResponse;
     } catch {
-      const retry = await adapter.generate(model.baseUrl, apiKey, model.modelId, { system: `${META_SEO_SYSTEM}\n\nKembalikan JSON valid saja, sesuai skema.`, user: userPrompt, maxOutputTokens, temperature });
-      parsed = metaSeoAiResponseSchema.parse(extractJsonBlock(retry.text)) as MetaSeoAiResponse;
+      try {
+        const retry = await adapter.generate(model.baseUrl, apiKey, model.modelId, { system: `${META_SEO_SYSTEM}\n\nKembalikan JSON valid saja, sesuai skema.`, user: userPrompt, maxOutputTokens, temperature });
+        parsed = metaSeoAiResponseSchema.parse(extractJsonBlock(retry.text)) as MetaSeoAiResponse;
+      } catch {
+        throw new AdapterCallError({ kind: "server", message: "AI tidak bisa menghasilkan format yang valid. Coba lagi." });
+      }
     }
     return { parsed, inputTokens: result.inputTokens, outputTokens: result.outputTokens, latencyMs };
   }

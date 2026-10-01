@@ -166,8 +166,12 @@ export const POST = withApiHandler<GenerateResult>({}, async (ctx) => {
       parsed = descriptionAiResponseSchema.parse(extractJsonBlock(result.text)) as DescriptionAiResponse;
     } catch {
       // Satu kali coba ulang kalau JSON tidak valid -- docs "Parse JSON. Gagal parse -> satu kali coba ulang".
-      const retry = await adapter.generate(model.baseUrl, apiKey, model.modelId, { system: `${systemPrompt}\n\nKembalikan JSON valid saja, sesuai skema.`, user: userPrompt, maxOutputTokens: maxOutputTokens, temperature: temperature });
-      parsed = descriptionAiResponseSchema.parse(extractJsonBlock(retry.text)) as DescriptionAiResponse;
+      try {
+        const retry = await adapter.generate(model.baseUrl, apiKey, model.modelId, { system: `${systemPrompt}\n\nKembalikan JSON valid saja, sesuai skema.`, user: userPrompt, maxOutputTokens: maxOutputTokens, temperature: temperature });
+        parsed = descriptionAiResponseSchema.parse(extractJsonBlock(retry.text)) as DescriptionAiResponse;
+      } catch {
+        throw new AdapterCallError({ kind: "server", message: "AI tidak bisa menghasilkan format yang valid. Coba lagi." });
+      }
     }
     return { parsed, inputTokens: result.inputTokens, outputTokens: result.outputTokens, latencyMs };
   }

@@ -43,7 +43,18 @@ Gaya:
     Jangan menulis kalimat penutup atau ajakan; sistem yang menambahkannya.
 11. Untuk project developer: tonjolkan rentang harga dan ketersediaan unit; jangan menyebut komisi.
 
-Kembalikan HANYA satu objek JSON sesuai skema. Tanpa teks lain.`;
+Format JSON (semua kunci di bawah WAJIB ada persis seperti ini; array yang tidak ada isinya ditulis
+"[]" -- JANGAN null, JANGAN dihilangkan):
+{
+  "judul_saran": string atau null (saran judul listing singkat dan menarik; null untuk project developer atau bila tidak ada saran),
+  "deskripsi": string (draf iklan sesuai aturan gaya di atas),
+  "poin_unggulan": array string (maksimal 5, keunggulan ringkas di luar kawasan; [] bila tidak ada),
+  "poin_area": array {"id": string, "teks": string} (HANYA memakai id yang benar-benar ada di FAKTA_KAWASAN; [] bila FAKTA_KAWASAN kosong atau tidak dipakai),
+  "saran_field": array {"field": string, "nilai": string atau number atau boolean, "jenis": "isi_kosong" atau "konflik", "bukti": string (potongan TEKS_AGEN), "keyakinan": "tinggi" atau "sedang" atau "rendah"} ([] bila tidak ada saran),
+  "catatan_verifikasi": array string ([] bila tidak ada catatan)
+}
+
+Kembalikan HANYA objek JSON di atas, dengan nilai terisi. Tanpa teks lain, tanpa markdown code fence.`;
 
 function randomMarker(): string {
   return `DATA_${Math.random().toString(16).slice(2, 10)}`;
