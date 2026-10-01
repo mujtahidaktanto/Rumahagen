@@ -74,8 +74,6 @@ type Row = {
   carport_capacity: number | null;
   certificate_type: string | null;
   description: string | null;
-  view_count: number;
-  cta_click_count: number;
   last_refreshed_at: string | null;
   published_at: string | null;
   city: { name: string } | null;
@@ -85,8 +83,10 @@ type Row = {
   amenities: { amenity: { name: string } | null }[] | null;
 };
 
+// view_count/cta_click_count TIDAK dibaca di sini (kolom mati di listings, tidak pernah ada kode yang menambah nilainya) -- dihitung live dari
+// listing_views/listing_leads lewat RPC listing_engagement_counts (migration 0173), dipanggil di getMyListingDetail setelah baris didapat.
 const SELECT =
-  "id, agent_id, organization_id, slug, title, status, rejection_reason, transaction_type, category, property_type, price, price_unit, is_negotiable, address, land_area, building_area, bedrooms, bathrooms, floors, carport_capacity, certificate_type, description, view_count, cta_click_count, last_refreshed_at, published_at, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), photos:listing_photos(url, alt_text, is_cover, sort_order), amenities:listing_amenities(amenity:amenities(name))";
+  "id, agent_id, organization_id, slug, title, status, rejection_reason, transaction_type, category, property_type, price, price_unit, is_negotiable, address, land_area, building_area, bedrooms, bathrooms, floors, carport_capacity, certificate_type, description, last_refreshed_at, published_at, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), photos:listing_photos(url, alt_text, is_cover, sort_order), amenities:listing_amenities(amenity:amenities(name))";
 
 async function loadLeads(supabase: SupabaseClient, listingId: string, userId: string): Promise<Part<{ items: MyLead[]; total: number }>> {
   const { data, count, error } = await supabase
@@ -127,7 +127,12 @@ export async function getMyListingDetail(id: string, userId: string, orgs: Conte
     const { data: roster } = await supabase.rpc("organization_roster", { p_organization_id: org.id });
     creator = ((roster ?? []) as { agent_id: string; agent_name: string }[]).find((m) => m.agent_id === r.agent_id)?.agent_name ?? "Mantan anggota";
   }
-  const [leads, refresh] = mine ? await Promise.all([loadLeads(supabase, id, userId), loadRefreshQuota(supabase, now)]) : [null, null];
+  const [leads, refresh, engagement] = await Promise.all([
+    mine ? loadLeads(supabase, id, userId) : Promise.resolve(null),
+    mine ? loadRefreshQuota(supabase, now) : Promise.resolve(null),
+    supabase.rpc("listing_engagement_counts", { p_listing_ids: [id] }),
+  ]);
+  const counts = (engagement.data as { listing_id: string; views: number; leads: number }[] | null)?.[0];
   const photos = [...(r.photos ?? [])].sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order).map((p) => ({ url: p.url, alt: p.alt_text }));
   return {
     state: "ok",
@@ -158,8 +163,8 @@ export async function getMyListingDetail(id: string, userId: string, orgs: Conte
       description: r.description,
       amenities: (r.amenities ?? []).map((a) => a.amenity?.name).filter((n): n is string => !!n),
       photos,
-      viewCount: r.view_count ?? 0,
-      ctaClickCount: r.cta_click_count ?? 0,
+      viewCount: Number(counts?.views ?? 0),
+      ctaClickCount: Number(counts?.leads ?? 0),
       lastRefreshedAt: r.last_refreshed_at,
       publishedAt: r.published_at,
     },

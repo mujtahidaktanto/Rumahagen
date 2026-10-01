@@ -36,13 +36,21 @@ type Row = {
   status: string;
   price: number;
   price_unit: string | null;
-  view_count: number;
   city: { name: string } | null;
   province: { name: string } | null;
   photos: { url: string; is_cover: boolean; sort_order: number }[] | null;
 };
 
-const SELECT = "id, agent_id, title, status, price, price_unit, view_count, city:ref_cities(name), province:ref_provinces(name), photos:listing_photos(url, is_cover, sort_order)";
+// view_count TIDAK dibaca di sini (kolom mati di listings, tidak pernah ada kode yang menambah nilainya) -- "dilihat" dihitung live dari listing_views
+// lewat RPC listing_engagement_counts (migration 0173), dipanggil setelah rows didapat (lihat loadList di bawah).
+const SELECT = "id, agent_id, title, status, price, price_unit, city:ref_cities(name), province:ref_provinces(name), photos:listing_photos(url, is_cover, sort_order)";
+
+async function loadViewCounts(supabase: SupabaseClient, listingIds: string[]): Promise<Map<string, number>> {
+  if (listingIds.length === 0) return new Map();
+  const { data } = await supabase.rpc("listing_engagement_counts", { p_listing_ids: listingIds });
+  const rows = (data ?? []) as { listing_id: string; views: number; leads: number }[];
+  return new Map(rows.map((r) => [r.listing_id, Number(r.views)]));
+}
 
 async function loadQuota(supabase: SupabaseClient, orgId: string | null): Promise<Part<ListingQuotaSummary>> {
   const { data, error } = await supabase.rpc("listing_quota_summary", { p_organization_id: orgId });
@@ -88,6 +96,7 @@ async function loadList(supabase: SupabaseClient, userId: string, orgId: string 
   }
 
   const names = leader && orgId ? await loadCreatorNames(supabase, orgId) : null;
+  const views = await loadViewCounts(supabase, rows.map((r) => r.id));
   const counts: Record<string, number> = Object.fromEntries(MY_LISTING_STATUSES.map((k) => [k, 0]));
   for (const r of all.data ?? []) counts[r.status] = (counts[r.status] ?? 0) + 1;
 
@@ -105,7 +114,7 @@ async function loadList(supabase: SupabaseClient, userId: string, orgId: string 
           status: r.status,
           location: [r.city?.name, r.province?.name].filter(Boolean).join(", ") || null,
           priceText: formatListingPrice(Number(r.price), r.price_unit),
-          viewCount: r.view_count ?? 0,
+          viewCount: views.get(r.id) ?? 0,
           coverUrl: cover?.url ?? null,
           note: listingQuotaNote(r, slots.get(r.id) ?? null, quotaFull, now),
           owner: names ? (r.agent_id === userId ? "Anda" : (names.get(r.agent_id) ?? "Mantan anggota")) : null,
