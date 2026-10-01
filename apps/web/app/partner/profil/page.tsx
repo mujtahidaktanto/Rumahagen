@@ -1,6 +1,7 @@
-// app/partner/profil/page.tsx — Profil Developer (M06, Fase 6).
+// app/partner/profil/page.tsx — Profil Developer (M06, Fase 6). Berkas legalitas dan riwayat perumahan (migration 0172) dimuat sekali di sini dan dioper sebagai
+// data awal ke panel klien masing-masing (pola sama seperti Marketing Kit) — hanya bila profil sudah terhubung (result.data tidak null).
 import { PartnerProfileView } from "@/components/partner/PartnerProfileView";
-import { getMyPartnerProfile } from "@/lib/partner/profile-data";
+import { getDeveloperLegalDocuments, getDeveloperProjectHistory, getMyPartnerProfile } from "@/lib/partner/profile-data";
 import { ErrorState } from "@/components/ui/States";
 import { requireArea } from "@/lib/auth/session";
 
@@ -17,5 +18,8 @@ export default async function PartnerProfilePage() {
       </div>
     );
   }
-  return <PartnerProfileView profile={result.data} name={user.name} email={user.email} />;
+  const [legalDocuments, projectHistory] = result.data
+    ? await Promise.all([getDeveloperLegalDocuments(result.data.id), getDeveloperProjectHistory(result.data.id)])
+    : [null, null];
+  return <PartnerProfileView profile={result.data} name={user.name} email={user.email} legalDocuments={legalDocuments} projectHistory={projectHistory} />;
 }

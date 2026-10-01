@@ -1,9 +1,12 @@
 "use client";
 
 // components/partner/PartnerProfileView.tsx — Profil Developer (M06, wireframe 03-Developer-Partner/M06-Profil-Developer). Mengedit developer_partners milik sendiri lewat
-// PUT /developer-partners/{id} (RLS developer_partners_update_own, migration 0126) — hanya nama, logo (URL teks, lihat profile-rules.ts), Tentang Developer, PIC dikirim
-// (user_id/status TIDAK, itu ditolak 403 untuk mitra sesuai trigger trg_developer_partner_self_edit_columns).
-import { useState } from "react";
+// PUT /developer-partners/{id} (RLS developer_partners_update_own, migration 0126) — nama, logo, Tentang Developer, PIC dikirim (user_id/status TIDAK, itu ditolak 403
+// untuk mitra sesuai trigger trg_developer_partner_self_edit_columns). Logo (migration 0172) diunggah+dipangkas kotak lewat CropDialog (pola sama seperti logo
+// Organisasi, OrgBrandingDialog.tsx) — upload ditunda sampai "Simpan Perubahan" ditekan, sama seperti field teks lain di form ini.
+// Berkas Legalitas (DeveloperLegalDocsPanel, PRIVAT) dan Riwayat Perumahan (DeveloperProjectHistoryPanel, PUBLIK) adalah resource terpisah dari developer_partners
+// sendiri (tabel+endpoint sendiri, migration 0172) — dirender di bawah form ini, tiap panel menyimpan sendiri (bukan bagian dari tombol Simpan Perubahan profil).
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Route } from "next";
 import { Badge } from "@/components/ui/Badge";
@@ -11,15 +14,37 @@ import { Button, LinkButton } from "@/components/ui/Button";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { BuildingIcon, UserIcon } from "@/components/ui/icons";
 import { SUPPORT_EMAIL } from "@/lib/config";
-import type { MyPartnerProfile } from "@/lib/partner/profile-data";
+import type { LegalDocumentRow, MyPartnerProfile, ProjectHistoryRow } from "@/lib/partner/profile-data";
 import { validatePartnerProfileForm, type PartnerProfileForm } from "@/lib/partner/profile-rules";
 import { ApiClientError, api } from "@/lib/api-client";
+import type { Part } from "@/lib/agent/dashboard-data";
+import { CropDialog } from "@/components/media/CropDialog";
+import { loadSource, pickProblem, putToSignedUrl, type Encoded, type Source } from "@/lib/media/image-processing";
+import { DEVELOPER_LOGO_SIZE } from "@/lib/media/variants";
+import { DeveloperLegalDocsPanel } from "./DeveloperLegalDocsPanel";
+import { DeveloperProjectHistoryPanel } from "./DeveloperProjectHistoryPanel";
+
+const LOGO_FRAME = { w: 220, h: 220 };
+type Picked = { enc: Encoded; preview: string } | null;
+type UploadTarget = { upload_url: string; public_url: string };
 
 function formFrom(p: MyPartnerProfile): PartnerProfileForm {
   return { companyName: p.companyName, companyLogo: p.companyLogo ?? "", description: p.description ?? "", picName: p.picName ?? "", picContact: p.picContact ?? "" };
 }
 
-export function PartnerProfileView({ profile, name, email }: { profile: MyPartnerProfile | null; name: string; email: string | null }) {
+export function PartnerProfileView({
+  profile,
+  name,
+  email,
+  legalDocuments,
+  projectHistory,
+}: {
+  profile: MyPartnerProfile | null;
+  name: string;
+  email: string | null;
+  legalDocuments: Part<LegalDocumentRow[]> | null;
+  projectHistory: Part<ProjectHistoryRow[]> | null;
+}) {
   if (!profile) {
     return (
       <div className="mx-auto flex w-full max-w-[720px] flex-col gap-4 p-4 lg:p-8">
@@ -35,7 +60,7 @@ export function PartnerProfileView({ profile, name, email }: { profile: MyPartne
     );
   }
 
-  return <ProfileForm profile={profile} name={name} email={email} />;
+  return <ProfileForm profile={profile} name={name} email={email} legalDocuments={legalDocuments} projectHistory={projectHistory} />;
 }
 
 function AccountCard({ name, email }: { name: string; email: string | null }) {
@@ -52,21 +77,68 @@ function AccountCard({ name, email }: { name: string; email: string | null }) {
   );
 }
 
-function ProfileForm({ profile, name, email }: { profile: MyPartnerProfile; name: string; email: string | null }) {
+function ProfileForm({
+  profile,
+  name,
+  email,
+  legalDocuments,
+  projectHistory,
+}: {
+  profile: MyPartnerProfile;
+  name: string;
+  email: string | null;
+  legalDocuments: Part<LegalDocumentRow[]> | null;
+  projectHistory: Part<ProjectHistoryRow[]> | null;
+}) {
   const router = useRouter();
   const initial = formFrom(profile);
   const [f, setF] = useState<PartnerProfileForm>(initial);
+  const [logoPick, setLogoPick] = useState<Picked>(null);
+  const [cropping, setCropping] = useState<Source | null>(null);
   const [tried, setTried] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const logoFileRef = useRef<HTMLInputElement>(null);
   const errors = tried ? validatePartnerProfileForm(f) : {};
-  const dirty = JSON.stringify(f) !== JSON.stringify(initial);
+  const dirty = JSON.stringify(f) !== JSON.stringify(initial) || logoPick !== null;
+  const logoPreview = logoPick ? logoPick.preview : f.companyLogo || null;
 
   function set<K extends keyof PartnerProfileForm>(k: K, v: PartnerProfileForm[K]) {
     setF((x) => ({ ...x, [k]: v }));
     setSaved(false);
     setError(null);
+  }
+
+  function resetAll() {
+    setF(initial);
+    if (logoPick) URL.revokeObjectURL(logoPick.preview);
+    setLogoPick(null);
+    setSaved(false);
+    setError(null);
+  }
+
+  async function onPickLogo(files: FileList | null) {
+    const file = files?.[0];
+    if (logoFileRef.current) logoFileRef.current.value = "";
+    if (!file) return;
+    setError(null);
+    const problem = pickProblem(file);
+    if (problem) return setError(problem);
+    try {
+      setCropping(await loadSource(file));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Foto tidak bisa dibuka. Coba foto lain.");
+    }
+  }
+
+  function applyCroppedLogo(enc: Encoded) {
+    setCropping(null);
+    setLogoPick((old) => {
+      if (old) URL.revokeObjectURL(old.preview);
+      return { enc, preview: URL.createObjectURL(enc.blob) };
+    });
+    setSaved(false);
   }
 
   async function save() {
@@ -76,21 +148,29 @@ function ProfileForm({ profile, name, email }: { profile: MyPartnerProfile; name
     setBusy(true);
     setError(null);
     try {
+      let companyLogo = f.companyLogo.trim() || undefined;
+      if (logoPick) {
+        const t = await api.post<UploadTarget>(`/developer-partners/${profile.id}/media-upload-url`, { kind: "logo", content_type: logoPick.enc.type }, { idempotency: true });
+        await putToSignedUrl(t.data.upload_url, logoPick.enc.blob, logoPick.enc.type);
+        companyLogo = t.data.public_url;
+      }
       await api.put(
         `/developer-partners/${profile.id}`,
         {
           company_name: f.companyName.trim(),
-          company_logo: f.companyLogo.trim() || undefined,
+          company_logo: companyLogo,
           description: f.description.trim() || undefined,
           pic_name: f.picName.trim() || undefined,
           pic_contact: f.picContact.trim() || undefined,
         },
         { idempotency: true },
       );
+      if (logoPick) URL.revokeObjectURL(logoPick.preview);
+      setLogoPick(null);
       setSaved(true);
       router.refresh();
     } catch (e) {
-      setError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : "Profil gagal disimpan. Perubahan Anda belum tersimpan; coba lagi.");
+      setError(e instanceof ApiClientError && e.code !== "UNKNOWN_ERROR" ? e.message : e instanceof Error && e.message !== "upload" ? e.message : "Profil gagal disimpan. Perubahan Anda belum tersimpan; coba lagi.");
     } finally {
       setBusy(false);
     }
@@ -118,9 +198,41 @@ function ProfileForm({ profile, name, email }: { profile: MyPartnerProfile; name
           <Field label="Nama perusahaan" required hint={`${f.companyName.length}/200 karakter`} error={errors.companyName}>
             {(a) => <Input {...a} value={f.companyName} onChange={(e) => set("companyName", e.target.value)} maxLength={200} />}
           </Field>
-          <Field label="Logo perusahaan (opsional)" hint="Tautan https ke gambar PNG/JPG. Tampil di halaman publik Developer/Proyek." error={errors.companyLogo}>
-            {(a) => <Input {...a} type="url" placeholder="https://…" value={f.companyLogo} onChange={(e) => set("companyLogo", e.target.value)} />}
-          </Field>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-label-lg">Logo perusahaan (opsional)</span>
+            <div className="flex items-center gap-3">
+              <span className="flex aspect-square h-16 flex-none items-center justify-center overflow-hidden rounded-md bg-ink-100 text-caption">
+                {logoPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoPreview} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  "Belum ada"
+                )}
+              </span>
+              <span className="flex flex-col gap-1.5">
+                <input ref={logoFileRef} type="file" accept="image/*" className="sr-only" onChange={(e) => void onPickLogo(e.target.files)} />
+                <Button variant="secondary" size="sm" disabled={busy} onClick={() => logoFileRef.current?.click()}>
+                  {logoPreview ? "Ganti & Atur" : "Unggah"}
+                </Button>
+                {logoPreview ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-danger-600"
+                    disabled={busy}
+                    onClick={() => {
+                      if (logoPick) URL.revokeObjectURL(logoPick.preview);
+                      setLogoPick(null);
+                      set("companyLogo", "");
+                    }}
+                  >
+                    Hapus
+                  </Button>
+                ) : null}
+              </span>
+            </div>
+            <p className="text-caption">JPG, PNG, atau WebP hingga 25 MB. Persegi 1:1. Tampil di halaman publik Developer/Proyek.</p>
+          </div>
           <Field label="Tentang Developer" hint="Deskripsi perusahaan yang tampil di publik. Ini BUKAN deskripsi proyek maupun listing.">
             {(a) => <Textarea {...a} rows={4} value={f.description} onChange={(e) => set("description", e.target.value)} />}
           </Field>
@@ -146,7 +258,7 @@ function ProfileForm({ profile, name, email }: { profile: MyPartnerProfile; name
         <div className="fixed inset-x-0 bottom-0 z-10 flex items-center justify-between gap-3 border-t border-ink-100 bg-white p-4 shadow-3">
           <span className="text-body-md text-ink-700">Ada perubahan yang belum disimpan.</span>
           <div className="flex gap-2.5">
-            <Button variant="secondary" disabled={busy} onClick={() => setF(initial)}>
+            <Button variant="secondary" disabled={busy} onClick={resetAll}>
               Batalkan
             </Button>
             <Button loading={busy} onClick={() => void save()}>
@@ -155,6 +267,19 @@ function ProfileForm({ profile, name, email }: { profile: MyPartnerProfile; name
           </div>
         </div>
       ) : null}
+
+      <DeveloperLegalDocsPanel developerId={profile.id} initial={legalDocuments} />
+      <DeveloperProjectHistoryPanel developerId={profile.id} initial={projectHistory} />
+
+      <CropDialog
+        source={cropping}
+        frame={LOGO_FRAME}
+        output={{ w: DEVELOPER_LOGO_SIZE, h: DEVELOPER_LOGO_SIZE }}
+        title="Atur Logo"
+        description="Geser dan zoom foto sampai logo pas di dalam bingkai."
+        onCancel={() => setCropping(null)}
+        onConfirm={applyCroppedLogo}
+      />
     </div>
   );
 }

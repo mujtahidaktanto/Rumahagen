@@ -8,10 +8,7 @@ describe("validatePartnerProfileForm", () => {
     expect(validatePartnerProfileForm(EMPTY).companyName).toBeDefined();
     expect(validatePartnerProfileForm({ ...EMPTY, companyName: "PT Kanaya" }).companyName).toBeUndefined();
   });
-  it("logo kosong ok, harus https bila diisi", () => {
-    expect(validatePartnerProfileForm({ ...EMPTY, companyName: "PT Kanaya" }).companyLogo).toBeUndefined();
-    expect(validatePartnerProfileForm({ ...EMPTY, companyName: "PT Kanaya", companyLogo: "http://x.com/a.png" }).companyLogo).toBeDefined();
-    expect(validatePartnerProfileForm({ ...EMPTY, companyName: "PT Kanaya", companyLogo: "bukan-url" }).companyLogo).toBeDefined();
-    expect(validatePartnerProfileForm({ ...EMPTY, companyName: "PT Kanaya", companyLogo: "https://x.com/a.png" }).companyLogo).toBeUndefined();
+  it("logo tidak lagi divalidasi di sini (diisi lewat unggah, bukan teks bebas)", () => {
+    expect(validatePartnerProfileForm({ ...EMPTY, companyName: "PT Kanaya", companyLogo: "https://x.com/a.png" })).toEqual({});
   });
 });

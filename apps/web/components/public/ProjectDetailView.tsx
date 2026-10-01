@@ -8,17 +8,14 @@ import { EnrollButton } from "@/components/public/EnrollButton";
 import { ListingGallery } from "@/components/public/ListingGallery";
 import { RichText } from "@/components/public/RichText";
 import { ShareButton } from "@/components/public/ShareButton";
-import { WhatsAppButton } from "@/components/public/WhatsAppButton";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { AreaIcon, BathIcon, BedIcon, CheckCircleIcon, PinIcon } from "@/components/ui/icons";
-import { formatArea, formatPriceRange, whatsappUrl } from "@/lib/format";
+import { formatArea, formatPriceRange } from "@/lib/format";
 import { CERTIFICATE_LABEL, FURNISHING_LABEL, IMB_LABEL, WATER_LABEL } from "@/lib/public/listing-detail";
 import { PROPERTY_TYPE_LABEL, type PropertyType } from "@/lib/public/listing-params";
 import { CLAIM_STATUS_LABEL, PROJECT_STATUS_LABEL, type Partnership, type ProjectDetail } from "@/lib/public/project-data";
 import { safeHref } from "@/lib/public/promo-data";
-import { buildProjectWhatsAppMessage } from "@/lib/public/whatsapp-message";
-import { SITE_URL } from "@/lib/seo/sitemap";
 import { initialsOf } from "@/lib/initials";
 
 export type Viewer = "guest" | "agent" | "other";
@@ -56,9 +53,6 @@ export function ProjectDetailView({ project: p, viewer, partnership }: { project
   const location = [p.location, p.districtName, p.cityName, p.provinceName].filter(Boolean).join(", ");
   const dev = p.developer;
   const priceLabel = formatPriceRange(p.price_min, p.price_max, p.price_unit);
-  const wa = dev?.pic_contact
-    ? whatsappUrl(dev.pic_contact, buildProjectWhatsAppMessage({ picName: dev.pic_name, projectName: p.name, slug: p.slug, location: p.location, priceLabel, siteUrl: SITE_URL }))
-    : null;
   const logo = safeHref(dev?.company_logo);
   const mapsUrl = p.latitude !== null && p.longitude !== null ? `https://www.google.com/maps?q=${p.latitude},${p.longitude}` : null;
   const overlay =
@@ -212,13 +206,9 @@ export function ProjectDetailView({ project: p, viewer, partnership }: { project
                     <p className="line-clamp-3 text-body-md text-ink-700">{dev.description}</p>
                   </div>
                 ) : null}
-                {wa ? (
-                  <WhatsAppButton href={wa} className="w-full" />
-                ) : dev.pic_contact ? (
-                  <p className="text-body-md text-ink-700">Kontak: {dev.pic_contact}</p>
-                ) : (
-                  <p className="rounded-md bg-ink-50 p-3 text-body-md text-ink-500">Kontak developer belum tersedia.</p>
-                )}
+                <LinkButton href={`/developer/${dev.slug}` as Route} className="w-full">
+                  Lihat Profil Developer
+                </LinkButton>
               </>
             ) : (
               <p className="text-body-md text-ink-500">Informasi developer belum tersedia.</p>

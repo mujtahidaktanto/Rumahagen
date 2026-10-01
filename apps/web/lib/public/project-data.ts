@@ -133,7 +133,7 @@ export type ProjectDetail = {
   status: string;
   photos: { url: string; alt: string | null }[];
   videos: string[];
-  developer: { id: string; company_name: string; company_logo: string | null; description: string | null; pic_name: string | null; pic_contact: string | null } | null;
+  developer: { id: string; company_name: string; company_logo: string | null; description: string | null; pic_name: string | null; pic_contact: string | null; slug: string } | null;
 };
 
 type DetailRow = Omit<ProjectDetail, "cityName" | "provinceName" | "districtName" | "photos" | "videos" | "developer"> & {
@@ -146,7 +146,7 @@ type DetailRow = Omit<ProjectDetail, "cityName" | "provinceName" | "districtName
 
 // Kolom komisi SENGAJA tidak ada di sini.
 const DETAIL_SELECT =
-  "id, slug, name, description, meta_title, meta_description, category, transaction_type, property_type, location, latitude, longitude, price_min, price_max, price_unit, is_negotiable, unit_availability, bedrooms, bathrooms, land_area, building_area, floors, carport_capacity, electrical_power, water_source, furnishing, year_built, certificate_type, certificate_transferred, imb_status, dispute_free_declared, status, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), media:developer_project_media(type, url, created_at), developer:developer_partners(id, company_name, company_logo, description, pic_name, pic_contact)";
+  "id, slug, name, description, meta_title, meta_description, category, transaction_type, property_type, location, latitude, longitude, price_min, price_max, price_unit, is_negotiable, unit_availability, bedrooms, bathrooms, land_area, building_area, floors, carport_capacity, electrical_power, water_source, furnishing, year_built, certificate_type, certificate_transferred, imb_status, dispute_free_declared, status, city:ref_cities(name), province:ref_provinces(name), district:ref_districts(name), media:developer_project_media(type, url, created_at), developer:developer_partners(id, company_name, company_logo, description, pic_name, pic_contact, slug)";
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

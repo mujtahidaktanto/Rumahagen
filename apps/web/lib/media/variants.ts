@@ -141,3 +141,7 @@ export const HOME_HERO_BANNER = { w: 1200, h: 900 } as const;
 // /learning (components/public/LearningCards.tsx). Dipilih baru di migration 0170 (courses.cover_image_url) — sebelumnya kartu itu cuma h-24 tetap untuk
 // menengahkan ikon placeholder, bukan rasio yang disengaja untuk foto.
 export const COURSE_COVER = { w: 1280, h: 720 } as const;
+
+// Ukuran logo perusahaan Developer Partner: persegi 1:1, 512 px — pola sama seperti ORG_LOGO_SIZE (migration 0172, developer_partners.company_logo
+// sebelumnya tautan URL teks bebas, sekarang diunggah+dipangkas kotak lewat CropDialog seperti logo Organisasi).
+export const DEVELOPER_LOGO_SIZE = 512;

@@ -14,6 +14,16 @@ import { z } from "zod";
 
 const listPartnersQuerySchema = z.object({ mine: z.enum(["true", "false"]).optional() });
 
+// Slug URL publik (/developer/{slug}, migration 0172) -- pola sama seperti slugify() di app/api/organizations/route.ts.
+function slugify(name: string): string {
+  const base = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  const suffix = Math.random().toString(36).slice(2, 8);
+  return `${base}-${suffix}`.slice(0, 170);
+}
+
 export const GET = withApiHandler({}, async (ctx) => {
   const url = new URL(ctx.request.url);
   const { limit, offset } = parsePagination(url.searchParams);
@@ -44,7 +54,11 @@ export const POST = withApiHandler({ requireIdempotencyKey: true }, async (ctx) 
   const body = await validateJsonBody(ctx.request, createDeveloperPartnerSchema);
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from("developer_partners").insert(body).select().single();
+  const { data, error } = await supabase
+    .from("developer_partners")
+    .insert({ ...body, slug: slugify(body.company_name) })
+    .select()
+    .single();
 
   if (error) {
     throw error;
