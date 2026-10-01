@@ -7,6 +7,7 @@ import { ErrorState } from "@/components/ui/States";
 import { getWizardSource } from "@/lib/agent/listing-edit-data";
 import { getMyContextOrgs } from "@/lib/agent/shell-data";
 import { WIZARD_STEPS, type StepKey } from "@/lib/agent/listing-wizard";
+import { getAiAvailability } from "@/lib/ai/platform/feature-available";
 import { requireArea } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,7 @@ export default async function EditListingPage({ params, searchParams }: Props) {
   }
   const s = res.source;
   if (s.status === "suspended") redirect(`/agent/listing/${id}` as Route);
-  const orgs = await getMyContextOrgs(user.id);
+  const [orgs, aiAvailable] = await Promise.all([getMyContextOrgs(user.id), getAiAvailability("listing_description")]);
   const start = (WIZARD_STEPS.map((x) => x.key) as string[]).includes(langkah ?? "") ? (langkah as StepKey) : undefined;
   return (
     <ListingWizard
@@ -48,6 +49,7 @@ export default async function EditListingPage({ params, searchParams }: Props) {
       existingPhotos={s.photos}
       existingVideos={s.videos}
       startStep={start}
+      aiAvailable={aiAvailable}
     />
   );
 }

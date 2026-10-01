@@ -19,12 +19,14 @@ import { capSource, loadSource, makeListingVariants, pickProblem, type Source } 
 import { uploadListingPhoto, type ProcessedPhoto } from "@/lib/media/upload";
 import { PHOTO_EDIT_MAX_DIM, listingPhotoUrl } from "@/lib/media/variants";
 import { PhotoEditDialog } from "@/components/media/PhotoEditDialog";
+import { AiDescriptionDialog } from "@/components/ai/AiDescriptionDialog";
+import { AiMetaSeoDialog } from "@/components/ai/AiMetaSeoDialog";
 import type { ContextOrg } from "@/lib/agent/context";
 import { quotaLevel } from "@/lib/agent/listing-quota";
 import { publishErrorMessage } from "@/lib/agent/listing-rules";
 import {
   CERTIFICATES, FURNISHINGS, IMB_STATUSES, MAX_PHOTOS, MAX_VIDEOS, PRICE_UNITS, PROPERTY_TYPES, WATER_SOURCES, WIZARD_STEPS, defaultPriceUnit, diffIds, diffMedia, firstInvalidStep,
-  formatPriceInput, isHttpsUrl, parseNumber, specLine, toCreatePayload, toUpdatePayload, validateStep, type StepKey, type StepErrors, type WizardValues,
+  formatPriceInput, isHttpsUrl, parseInteger, parseNumber, specLine, toCreatePayload, toUpdatePayload, validateStep, type StepKey, type StepErrors, type WizardValues,
 } from "@/lib/agent/listing-wizard";
 import { formatListingPrice } from "@/lib/format";
 import { PROPERTY_TYPE_LABEL } from "@/lib/public/listing-params";
@@ -50,6 +52,8 @@ export type WizardProps = {
   startStep?: StepKey;
   /** Organisasi yang diikuti (pilihan pemilik kuota di langkah Mulai). */
   orgs?: ContextOrg[];
+  /** Tombol AI ("Bantu tulis deskripsi"/"Generate MetaSEO") tampil hanya bila fitur aktif (dicek server lewat RPC ai_feature_available, migration 0174/0175). */
+  aiAvailable?: { description: boolean; metaSeo: boolean };
 };
 
 const nf = new Intl.NumberFormat("id-ID");
@@ -128,6 +132,59 @@ export function ListingWizard(p: WizardProps) {
 
   const step = WIZARD_STEPS[idx]!;
   const set = <K extends keyof WizardValues>(k: K, val: WizardValues[K]) => setV((x) => ({ ...x, [k]: val }));
+
+  /** Isian form saat ini -> payload generateDescriptionFieldsSchema (lib/validation/ai-generate.ts). */
+  function buildAiFields(): Record<string, unknown> {
+    return {
+      title: v.title.trim() || undefined,
+      category: v.category || undefined,
+      transaction_type: v.transactionType || "sale",
+      property_type: v.propertyType,
+      price: parseNumber(v.price) ?? undefined,
+      price_unit: v.priceUnit,
+      is_negotiable: v.isNegotiable,
+      province_id: v.provinceId || undefined,
+      city_id: v.cityId || undefined,
+      district_id: v.districtId || undefined,
+      area_keyword: v.areaKeyword.trim() || undefined,
+      land_area: parseNumber(v.landArea) ?? undefined,
+      building_area: parseNumber(v.buildingArea) ?? undefined,
+      bedrooms: parseInteger(v.bedrooms) ?? undefined,
+      bathrooms: parseInteger(v.bathrooms) ?? undefined,
+      floors: parseInteger(v.floors) ?? undefined,
+      carport_capacity: parseInteger(v.carport) ?? undefined,
+      electrical_power: parseInteger(v.electricalPower) ?? undefined,
+      water_source: v.waterSource || undefined,
+      furnishing: v.furnishing || undefined,
+      year_built: parseInteger(v.yearBuilt) ?? undefined,
+      certificate_type: v.certificateType || undefined,
+      certificate_transferred: v.certificateType ? v.certificateTransferred : undefined,
+      imb_status: v.imbStatus || undefined,
+      amenity_ids: v.amenityIds.length > 0 ? v.amenityIds : undefined,
+    };
+  }
+
+  /** Saran field dari dialog AI (snake_case) -> set() wizard. */
+  function applyAiSuggestion(field: string, value: unknown) {
+    switch (field) {
+      case "bedrooms": return set("bedrooms", String(value));
+      case "bathrooms": return set("bathrooms", String(value));
+      case "floors": return set("floors", String(value));
+      case "carport_capacity": return set("carport", String(value));
+      case "land_area": return set("landArea", String(value));
+      case "building_area": return set("buildingArea", String(value));
+      case "electrical_power": return set("electricalPower", String(value));
+      case "year_built": return set("yearBuilt", String(value));
+      case "property_type": return set("propertyType", String(value));
+      case "certificate_type": return set("certificateType", String(value));
+      case "certificate_transferred": return set("certificateTransferred", Boolean(value));
+      case "imb_status": return set("imbStatus", String(value));
+      case "water_source": return set("waterSource", String(value));
+      case "furnishing": return set("furnishing", String(value));
+      case "district_id": return set("districtId", String(value));
+      default: return;
+    }
+  }
 
   // Meta Title/Description SEO mengikuti Judul/Deskripsi Listing selama sakelar ini aktif (dipangkas ke batas 70/160 karakter); dimatikan lagi = kembali bisa diisi manual.
   useEffect(() => {
@@ -734,6 +791,16 @@ export function ListingWizard(p: WizardProps) {
             <Field label="Deskripsi Listing" hint={`${nf.format(v.description.length)} karakter`}>
               {(a) => <Textarea rows={7} placeholder="Rumah minimalis modern 2 lantai, kondisi siap huni…" value={v.description} onChange={(e) => set("description", e.target.value)} {...a} />}
             </Field>
+            {p.aiAvailable?.description ? (
+              <AiDescriptionDialog
+                entityType="listing"
+                entityId={p.listingId ?? null}
+                buildFields={buildAiFields}
+                currentDescription={v.description}
+                onApply={({ description }) => set("description", description)}
+                onApplySuggestion={applyAiSuggestion}
+              />
+            ) : null}
             <div className="flex items-center justify-between gap-3">
               <span className="text-label-lg">Samakan dengan Judul &amp; Deskripsi Listing</span>
               <Switch checked={seoSameAsListing} onChange={setSeoSameAsListing} aria-label="Samakan Meta Title/Description SEO dengan Judul dan Deskripsi Listing" />
@@ -744,6 +811,19 @@ export function ListingWizard(p: WizardProps) {
             <Field label="Meta Description SEO (opsional)" hint={`${v.metaDescription.length}/160`} error={errors.metaDescription}>
               {(a) => <Textarea rows={2} maxLength={160} disabled={seoSameAsListing} value={v.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} {...a} />}
             </Field>
+            {p.aiAvailable?.metaSeo ? (
+              <AiMetaSeoDialog
+                entityType="listing"
+                entityId={p.listingId ?? null}
+                buildFields={buildAiFields}
+                currentDescription={v.description}
+                disabled={seoSameAsListing}
+                onApply={({ metaTitle, metaDescription }) => {
+                  set("metaTitle", metaTitle);
+                  set("metaDescription", metaDescription);
+                }}
+              />
+            ) : null}
           </>
         ) : null}
 

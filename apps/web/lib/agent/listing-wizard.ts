@@ -110,7 +110,7 @@ export function parseNumber(raw: string): number | null {
   const n = Number(t.replace(/\./g, "").replace(",", "."));
   return Number.isFinite(n) ? n : null;
 }
-const parseInteger = (raw: string): number | null => {
+export const parseInteger = (raw: string): number | null => {
   const n = parseNumber(raw);
   return n !== null && Number.isInteger(n) ? n : null;
 };

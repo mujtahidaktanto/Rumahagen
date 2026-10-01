@@ -13,6 +13,8 @@ import { Button, LinkButton } from "@/components/ui/Button";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { Switch } from "@/components/ui/Switch";
 import { ErrorState } from "@/components/ui/States";
+import { AiDescriptionDialog } from "@/components/ai/AiDescriptionDialog";
+import { AiMetaSeoDialog } from "@/components/ai/AiMetaSeoDialog";
 import { CERTIFICATE_LABEL, FURNISHING_LABEL, IMB_LABEL, WATER_LABEL } from "@/lib/public/listing-labels";
 import { PROPERTY_TYPE_LABEL } from "@/lib/public/listing-params";
 import { putToSignedUrl } from "@/lib/media/image-processing";
@@ -132,7 +134,18 @@ function bodyFrom(f: ProjectForm) {
   };
 }
 
-export function ProjectFormView({ developerId, project, media }: { developerId: string; project?: ProjectDetail; media?: Part<ProjectMediaRow[]> }) {
+export function ProjectFormView({
+  developerId,
+  project,
+  media,
+  aiAvailable,
+}: {
+  developerId: string;
+  project?: ProjectDetail;
+  media?: Part<ProjectMediaRow[]>;
+  /** Tombol AI ("Bantu tulis deskripsi"/"Generate MetaSEO") tampil hanya bila fitur aktif (dicek server lewat RPC ai_feature_available, migration 0174/0175). */
+  aiAvailable?: { description: boolean; metaSeo: boolean };
+}) {
   const router = useRouter();
   const isEdit = !!project;
   const initial = formFrom(project);
@@ -157,6 +170,60 @@ export function ProjectFormView({ developerId, project, media }: { developerId: 
   function set<K extends keyof ProjectForm>(k: K, v: ProjectForm[K]) {
     setF((x) => ({ ...x, [k]: v }));
     setError(null);
+  }
+
+  /** Isian form saat ini -> payload generateDescriptionFieldsSchema (lib/validation/ai-generate.ts). */
+  function buildAiFields(): Record<string, unknown> {
+    return {
+      name: f.name.trim() || undefined,
+      category: f.category || undefined,
+      transaction_type: f.transactionType,
+      property_type: f.propertyType,
+      price_min: numOrUndef(f.priceMin),
+      price_max: numOrUndef(f.priceMax),
+      price_unit: f.priceUnit,
+      is_negotiable: f.isNegotiable,
+      unit_availability: f.unitAvailability.trim() || undefined,
+      province_id: f.provinceId || undefined,
+      city_id: f.cityId || undefined,
+      district_id: f.districtId || undefined,
+      area_keyword: f.areaKeyword.trim() || undefined,
+      land_area: numOrUndef(f.landArea),
+      building_area: numOrUndef(f.buildingArea),
+      bedrooms: numOrUndef(f.bedrooms),
+      bathrooms: numOrUndef(f.bathrooms),
+      floors: numOrUndef(f.floors),
+      carport_capacity: numOrUndef(f.carportCapacity),
+      electrical_power: numOrUndef(f.electricalPower),
+      water_source: f.waterSource || undefined,
+      furnishing: f.furnishing || undefined,
+      year_built: numOrUndef(f.yearBuilt),
+      certificate_type: f.certificateType || undefined,
+      certificate_transferred: f.certificateType ? f.certificateTransferred : undefined,
+      imb_status: f.imbStatus || undefined,
+    };
+  }
+
+  /** Saran field dari dialog AI (snake_case) -> set() form proyek. */
+  function applyAiSuggestion(field: string, value: unknown) {
+    switch (field) {
+      case "bedrooms": return set("bedrooms", String(value));
+      case "bathrooms": return set("bathrooms", String(value));
+      case "floors": return set("floors", String(value));
+      case "carport_capacity": return set("carportCapacity", String(value));
+      case "land_area": return set("landArea", String(value));
+      case "building_area": return set("buildingArea", String(value));
+      case "electrical_power": return set("electricalPower", String(value));
+      case "year_built": return set("yearBuilt", String(value));
+      case "property_type": return set("propertyType", String(value));
+      case "certificate_type": return set("certificateType", String(value));
+      case "certificate_transferred": return set("certificateTransferred", Boolean(value));
+      case "imb_status": return set("imbStatus", String(value));
+      case "water_source": return set("waterSource", String(value));
+      case "furnishing": return set("furnishing", String(value));
+      case "district_id": return set("districtId", String(value));
+      default: return;
+    }
   }
 
   async function save() {
@@ -191,6 +258,16 @@ export function ProjectFormView({ developerId, project, media }: { developerId: 
         <Field label="Deskripsi Proyek" hint={`${f.description.length} karakter`}>
           {(a) => <Textarea {...a} rows={6} placeholder="Ceritakan proyek ini: konsep, keunggulan, fasilitas…" value={f.description} onChange={(e) => set("description", e.target.value)} />}
         </Field>
+        {aiAvailable?.description ? (
+          <AiDescriptionDialog
+            entityType="developer_project"
+            entityId={project?.id ?? null}
+            buildFields={buildAiFields}
+            currentDescription={f.description}
+            onApply={({ description }) => set("description", description)}
+            onApplySuggestion={applyAiSuggestion}
+          />
+        ) : null}
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
           <Field label="Kategori">
             {(a) => (
@@ -382,6 +459,19 @@ export function ProjectFormView({ developerId, project, media }: { developerId: 
         <Field label="Meta Description SEO (opsional)" hint={`${f.metaDescription.length}/160`} error={errors.metaDescription}>
           {(a) => <Textarea {...a} rows={2} maxLength={160} disabled={seoSameAsProject} value={f.metaDescription} onChange={(e) => set("metaDescription", e.target.value)} />}
         </Field>
+        {aiAvailable?.metaSeo ? (
+          <AiMetaSeoDialog
+            entityType="developer_project"
+            entityId={project?.id ?? null}
+            buildFields={buildAiFields}
+            currentDescription={f.description}
+            disabled={seoSameAsProject}
+            onApply={({ metaTitle, metaDescription }) => {
+              set("metaTitle", metaTitle);
+              set("metaDescription", metaDescription);
+            }}
+          />
+        ) : null}
       </Section>
 
       {isEdit ? <StatusSection project={project} /> : null}

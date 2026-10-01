@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ProjectFormView } from "@/components/partner/ProjectFormView";
 import { getMyProjectById, getProjectMedia } from "@/lib/partner/project-data";
 import { ErrorState } from "@/components/ui/States";
+import { getAiAvailability } from "@/lib/ai/platform/feature-available";
 import { requireArea } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ type Props = { params: Promise<{ id: string }> };
 export default async function ProjectDetailPage({ params }: Props) {
   await requireArea("partner");
   const { id } = await params;
-  const [project, media] = await Promise.all([getMyProjectById(id), getProjectMedia(id)]);
+  const [project, media, aiAvailable] = await Promise.all([getMyProjectById(id), getProjectMedia(id), getAiAvailability("project_description")]);
   if (!project.ok) {
     return (
       <div className="mx-auto w-full max-w-[900px] p-4 lg:p-8">
@@ -23,5 +24,5 @@ export default async function ProjectDetailPage({ params }: Props) {
     );
   }
   if (!project.data) notFound();
-  return <ProjectFormView developerId={project.data.developerId} project={project.data} media={media} />;
+  return <ProjectFormView developerId={project.data.developerId} project={project.data} media={media} aiAvailable={aiAvailable} />;
 }

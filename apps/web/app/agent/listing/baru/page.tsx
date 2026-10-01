@@ -4,6 +4,7 @@ import { ListingWizard } from "@/components/agent/ListingWizard";
 import { getDefaultWhatsapp, getWizardSource } from "@/lib/agent/listing-edit-data";
 import { getActiveContext, getMyContextOrgs } from "@/lib/agent/shell-data";
 import { EMPTY_WIZARD, type WizardValues } from "@/lib/agent/listing-wizard";
+import { getAiAvailability } from "@/lib/ai/platform/feature-available";
 import { requireArea } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ type Props = { searchParams: Promise<{ salin?: string }> };
 export default async function NewListingPage({ searchParams }: Props) {
   const user = await requireArea("agent");
   const { salin } = await searchParams;
-  const [whatsapp, orgs] = await Promise.all([getDefaultWhatsapp(user.id), getMyContextOrgs(user.id)]);
+  const [whatsapp, orgs, aiAvailable] = await Promise.all([getDefaultWhatsapp(user.id), getMyContextOrgs(user.id), getAiAvailability("listing_description")]);
   // Pemilik kuota bawaan = konteks aktif di Context Switcher (bisa diganti di langkah Mulai).
   const context = await getActiveContext(user.id, orgs);
   const organizationId = context.kind === "org" ? context.org.id : "";
@@ -30,5 +31,5 @@ export default async function NewListingPage({ searchParams }: Props) {
       mode = "salin";
     }
   }
-  return <ListingWizard mode={mode} initial={initial} orgs={orgs} />;
+  return <ListingWizard mode={mode} initial={initial} orgs={orgs} aiAvailable={aiAvailable} />;
 }
