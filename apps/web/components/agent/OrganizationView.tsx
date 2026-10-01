@@ -72,6 +72,28 @@ export function OrganizationView({ data, maskedEmail }: { data: OrgPageData; mas
   }
 
   const { org, role } = data;
+
+  if (org.status === "closed") {
+    return (
+      <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-5 p-4 lg:p-8">
+        <h1 className="text-headline">Organisasi</h1>
+        <div className="flex flex-col items-center gap-3.5 px-4 py-14 text-center">
+          <span aria-hidden="true" className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-ink-100 text-ink-500">
+            <BuildingIcon size={32} />
+          </span>
+          <h2 className="text-title-lg">&quot;{org.name}&quot; Sudah Ditutup</h2>
+          <p className="max-w-[440px] text-body-md text-ink-500">Organisasi ini sudah ditutup secara permanen dan tidak bisa dibuka kembali. Listing dan riwayat Anda tetap aman. Buat organisasi baru atau bergabung ke organisasi lain untuk melanjutkan.</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <LinkButton href={"/agent/organisasi/baru" as Route}>Buat Organisasi Baru</LinkButton>
+            <LinkButton href={"/organisasi" as Route} variant="secondary">
+              Cari Organisasi untuk Bergabung
+            </LinkButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const isLeader = role === "leader";
   const banner = orgBanner(org.status, isLeader);
   const step = closeStep(org.status, isLeader);
