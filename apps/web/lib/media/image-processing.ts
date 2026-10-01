@@ -56,6 +56,19 @@ export async function loadSource(file: File): Promise<Source> {
   return { canvas, width, height };
 }
 
+/** Mengecilkan sumber bila sisi terpanjang melebihi `maxDim` (tidak pernah memperbesar); dipakai sebelum menahan foto di memori untuk diedit ulang (PhotoEditDialog). */
+export function capSource(src: Source, maxDim: number): Source {
+  if (Math.max(src.width, src.height) <= maxDim) return src;
+  const { width, height } = fitWithin(src.width, src.height, maxDim);
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d")!;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(src.canvas, 0, 0, width, height);
+  return { canvas, width, height };
+}
+
 /** Memutar sumber 90 derajat searah jarum jam. */
 export function rotateSource(src: Source): Source {
   const canvas = document.createElement("canvas");

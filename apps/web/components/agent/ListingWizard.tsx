@@ -3,7 +3,9 @@
 // components/agent/ListingWizard.tsx — Wizard Buat/Edit Listing (M03, wireframe 01-Agent/M03-Create-Listing-Wizard): 9 langkah (Mulai, Kategori, Lokasi, Detail, Harga, Legalitas, Media, Kontak,
 // Terbitkan). Mode: baru (POST /listings lalu fasilitas dan media), salin (isian dari listing lain, tanpa media), edit (PUT /listings/{id} + selisih fasilitas/media). Data disimpan di server hanya saat
 // "Simpan sebagai Draf"/"Terbitkan"; API POST /listings butuh semua kolom wajib sehingga tidak bisa menyimpan draf parsial per langkah. Terbit = PATCH status published (memakai kuota; 409 bila habis;
-// listing tetap tersimpan sebagai draf). Foto: dipilih dari perangkat (hingga 25 MB), dikecilkan di browser jadi tiga varian WebP/JPEG (<3 MB) dan diunggah setelah listing dibuat; video hanya tautan https. Pemilik kuota (Pribadi atau organisasi yang diikuti) dipilih di langkah Mulai; bawaannya konteks aktif Context Switcher, dan terkunci saat edit.
+// listing tetap tersimpan sebagai draf). Foto: dipilih dari perangkat (hingga 25 MB), dikecilkan di browser jadi tiga varian WebP/JPEG (<3 MB) dan diunggah setelah listing dibuat; video hanya tautan https.
+// Foto yang baru dipilih (belum diunggah) bisa diedit lagi lewat tombol Edit -> PhotoEditDialog (bingkai/zoom/kecerahan/kontras; kanvas sumber ditahan di `sources`); foto yang sudah tersimpan di server
+// belum bisa diedit ulang di v1 ini. Pemilik kuota (Pribadi atau organisasi yang diikuti) dipilih di langkah Mulai; bawaannya konteks aktif Context Switcher, dan terkunci saat edit.
 import Link from "next/link";
 import type { Route } from "next";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -13,9 +15,10 @@ import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import { AlertIcon, CheckCircleIcon, InfoIcon } from "@/components/ui/icons";
 import { Switch } from "@/components/ui/Switch";
 import { ApiClientError, api, newIdempotencyKey } from "@/lib/api-client";
-import { loadSource, makeListingVariants, pickProblem } from "@/lib/media/image-processing";
+import { capSource, loadSource, makeListingVariants, pickProblem, type Source } from "@/lib/media/image-processing";
 import { uploadListingPhoto, type ProcessedPhoto } from "@/lib/media/upload";
-import { listingPhotoUrl } from "@/lib/media/variants";
+import { PHOTO_EDIT_MAX_DIM, listingPhotoUrl } from "@/lib/media/variants";
+import { PhotoEditDialog } from "@/components/media/PhotoEditDialog";
 import type { ContextOrg } from "@/lib/agent/context";
 import { quotaLevel } from "@/lib/agent/listing-quota";
 import { publishErrorMessage } from "@/lib/agent/listing-rules";
@@ -113,6 +116,9 @@ export function ListingWizard(p: WizardProps) {
   const [processing, setProcessing] = useState(0);
   const [uploadNote, setUploadNote] = useState<string | null>(null);
   const pending = useRef(new Map<string, Pending>());
+  /** Sumber asli (dikecilkan ke PHOTO_EDIT_MAX_DIM) tiap foto pending, ditahan supaya bisa dibuka lagi lewat PhotoEditDialog; foto yang sudah tersimpan di server (bukan pending) belum bisa diedit ulang. */
+  const sources = useRef(new Map<string, Source>());
+  const [editing, setEditing] = useState<{ key: string; source: Source } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [videoInput, setVideoInput] = useState("");
   const [mediaError, setMediaError] = useState<string | null>(null);
@@ -190,9 +196,11 @@ export function ListingWizard(p: WizardProps) {
       }
       setProcessing((n) => n + 1);
       try {
-        const photo = await makeListingVariants(await loadSource(f));
+        const capped = capSource(await loadSource(f), PHOTO_EDIT_MAX_DIM);
+        const photo = await makeListingVariants(capped);
         const key = PENDING + crypto.randomUUID();
         pending.current.set(key, { ...photo, preview: URL.createObjectURL(photo.blobs.sm), name: f.name });
+        sources.current.set(key, capped);
         added.push(key);
         count += 1;
       } catch (e) {
@@ -208,7 +216,32 @@ export function ListingWizard(p: WizardProps) {
     const p = pending.current.get(u);
     if (p) URL.revokeObjectURL(p.preview);
     pending.current.delete(u);
+    sources.current.delete(u);
     set("photoUrls", v.photoUrls.filter((x) => x !== u));
+  }
+  function openEditPhoto(key: string) {
+    const src = sources.current.get(key);
+    if (!src || phase === "saving") return;
+    setEditing({ key, source: src });
+  }
+  async function applyEditedPhoto(edited: Source) {
+    const key = editing?.key;
+    setEditing(null);
+    if (!key) return;
+    setProcessing((n) => n + 1);
+    setMediaError(null);
+    try {
+      const photo = await makeListingVariants(edited);
+      const old = pending.current.get(key);
+      if (old) URL.revokeObjectURL(old.preview);
+      pending.current.set(key, { ...photo, preview: URL.createObjectURL(photo.blobs.sm), name: old?.name ?? "Foto" });
+      sources.current.set(key, edited);
+      setV((x) => ({ ...x, photoUrls: [...x.photoUrls] }));
+    } catch (e) {
+      setMediaError(e instanceof Error ? e.message : "Foto gagal diproses.");
+    } finally {
+      setProcessing((n) => n - 1);
+    }
   }
   function addVideo() {
     const u = videoInput.trim();
@@ -649,6 +682,11 @@ export function ListingWizard(p: WizardProps) {
                             Jadikan sampul
                           </Button>
                         ) : null}
+                        {pend ? (
+                          <Button size="sm" variant="ghost" disabled={phase === "saving"} onClick={() => openEditPhoto(u)}>
+                            Edit
+                          </Button>
+                        ) : null}
                         <Button size="sm" variant="ghost" className="text-danger-600" onClick={() => removePhoto(u)}>
                           Hapus
                         </Button>
@@ -753,6 +791,14 @@ export function ListingWizard(p: WizardProps) {
           <Button onClick={next}>Lanjut →</Button>
         )}
       </div>
+
+      <PhotoEditDialog
+        source={editing?.source ?? null}
+        title="Atur Foto"
+        description="Pilih rasio bingkai, geser/zoom, lalu sesuaikan kecerahan dan kontras bila perlu."
+        onCancel={() => setEditing(null)}
+        onConfirm={(edited) => void applyEditedPhoto(edited)}
+      />
     </div>
   );
 }

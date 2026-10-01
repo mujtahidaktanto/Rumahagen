@@ -11,6 +11,10 @@ export type ListingVariant = keyof typeof LISTING_VARIANTS;
 export const LISTING_VARIANT_ORDER: ListingVariant[] = ["sm", "md", "lg"];
 export const MAX_LISTING_PHOTOS = 20;
 
+// Sisi terpanjang maksimal sumber yang disimpan untuk diedit ulang (PhotoEditDialog, foto listing): cukup untuk varian "lg" (2048) tanpa menahan kanvas
+// seukuran foto kamera asli (bisa puluhan MB) di memori selama sesi wizard berjalan.
+export const PHOTO_EDIT_MAX_DIM = 2400;
+
 export const AVATAR_BUCKET = "avatars";
 export const LISTING_PHOTO_BUCKET = "listing-photos";
 
