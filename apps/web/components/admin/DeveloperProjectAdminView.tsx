@@ -6,6 +6,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { CreateProjectDialog } from "@/components/admin/CreateProjectDialog";
+import { DeveloperLegalDocsDialog } from "@/components/admin/DeveloperLegalDocsDialog";
 import { LinkPartnerAccountDialog } from "@/components/admin/LinkPartnerAccountDialog";
 import { PartnerFormDialog } from "@/components/admin/PartnerFormDialog";
 import { ProjectStatusDialog } from "@/components/admin/ProjectStatusDialog";
@@ -132,6 +133,7 @@ export function DeveloperProjectAdminView({ tab, projects, partners, users }: { 
                             <td className="p-3">
                               <div className="flex flex-wrap gap-2">
                                 <PartnerFormDialog partner={p} trigger={(open) => <Button variant="secondary" size="sm" onClick={open}>Edit</Button>} />
+                                <DeveloperLegalDocsDialog partnerId={p.id} companyName={p.companyName} trigger={(open) => <Button variant="secondary" size="sm" onClick={open}>Berkas Legalitas</Button>} />
                                 {!p.userId ? <LinkPartnerAccountDialog partnerId={p.id} companyName={p.companyName} candidates={unlinked} trigger={(open) => <Button variant="secondary" size="sm" onClick={open}>Hubungkan Akun</Button>} /> : null}
                               </div>
                             </td>

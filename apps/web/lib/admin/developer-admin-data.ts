@@ -34,16 +34,26 @@ export async function getDeveloperProjects(): Promise<Part<ProjectRow[]>> {
   };
 }
 
-export type PartnerRow = { id: string; companyName: string; picName: string | null; picContact: string | null; status: string; userId: string | null; linkedEmail: string | null };
+export type PartnerRow = {
+  id: string;
+  companyName: string;
+  companyLogo: string | null;
+  description: string | null;
+  picName: string | null;
+  picContact: string | null;
+  status: string;
+  userId: string | null;
+  linkedEmail: string | null;
+};
 
 export async function getDeveloperPartners(): Promise<Part<PartnerRow[]>> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("developer_partners")
-    .select("id, company_name, pic_name, pic_contact, status, user_id")
+    .select("id, company_name, company_logo, description, pic_name, pic_contact, status, user_id")
     .order("company_name")
     .limit(200)
-    .returns<{ id: string; company_name: string; pic_name: string | null; pic_contact: string | null; status: string; user_id: string | null }[]>();
+    .returns<{ id: string; company_name: string; company_logo: string | null; description: string | null; pic_name: string | null; pic_contact: string | null; status: string; user_id: string | null }[]>();
   if (error) return { ok: false };
 
   const linkedIds = [...new Set((data ?? []).map((p) => p.user_id).filter((v): v is string => !!v))];
@@ -56,6 +66,16 @@ export async function getDeveloperPartners(): Promise<Part<PartnerRow[]>> {
 
   return {
     ok: true,
-    data: (data ?? []).map((p) => ({ id: p.id, companyName: p.company_name, picName: p.pic_name, picContact: p.pic_contact, status: p.status, userId: p.user_id, linkedEmail: p.user_id ? (emailById.get(p.user_id) ?? "—") : null })),
+    data: (data ?? []).map((p) => ({
+      id: p.id,
+      companyName: p.company_name,
+      companyLogo: p.company_logo,
+      description: p.description,
+      picName: p.pic_name,
+      picContact: p.pic_contact,
+      status: p.status,
+      userId: p.user_id,
+      linkedEmail: p.user_id ? (emailById.get(p.user_id) ?? "—") : null,
+    })),
   };
 }
