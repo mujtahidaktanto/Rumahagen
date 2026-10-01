@@ -1,6 +1,7 @@
 // lib/public/listing-detail.ts — data Detail Listing publik (M11), dibaca di server dengan RLS pemanggil: pengunjung hanya melihat listing `published`; pemilik dan staf juga
 // melihat status lain (draft, sold, rented, suspended, expired, dst.) sehingga halaman memberi spanduk "tidak tersedia" untuk mereka. Profil agen dibaca dari view
-// `public_agent_profiles` (hanya profil publik dan akun aktif); agen berprofil privat tidak tampil sebagai kartu agen.
+// `public_agent_profiles` (hanya profil publik dan akun aktif); agen berprofil privat tidak tampil sebagai kartu agen. `listing_videos` (tautan video/virtual tour, migration 0047,
+// RLS sudah publik untuk listing published sejak 0054) baru dibaca di sini mulai 2026-10-01 -- sebelumnya tersimpan di database tapi tidak pernah ditampilkan di halaman publik.
 import { createClient } from "@/lib/supabase/server";
 import { getAgentRatings, type RatingSummary } from "./agent-reviews";
 import { LISTING_CARD_SELECT, toFeaturedListing, type FeaturedListing, type ListingCardRow } from "./home-data";
@@ -44,6 +45,7 @@ export type ListingDetail = {
   districtName: string | null;
   photos: { url: string; alt: string | null }[];
   amenities: string[];
+  videos: { url: string; type: "video" | "virtual_tour" }[];
 };
 
 export type ListingAgent = {
@@ -58,7 +60,7 @@ export type ListingAgent = {
   is_verified: boolean;
 };
 
-type Row = Omit<ListingDetail, "cityName" | "provinceName" | "districtName" | "photos" | "amenities"> & {
+type Row = Omit<ListingDetail, "cityName" | "provinceName" | "districtName" | "photos" | "amenities" | "videos"> & {
   city: { name: string } | null;
   province: { name: string } | null;
   district: { name: string } | null;
@@ -88,10 +90,11 @@ export async function getListingDetail(slug: string): Promise<ListingDetailResul
     districtName: district?.name ?? null,
     photos: [...(photos ?? [])].sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order).map((p) => ({ url: p.url, alt: p.alt_text })),
     amenities: (amenities ?? []).map((a) => a.amenity?.name).filter((n): n is string => !!n),
+    videos: [],
   };
 
-  // Kartu agen dan listing serupa bersifat pelengkap: gagal memuat tidak boleh menjatuhkan halaman.
-  const [agentRes, similar, ratings] = await Promise.all([
+  // Kartu agen, listing serupa, dan video/virtual tour bersifat pelengkap: gagal memuat tidak boleh menjatuhkan halaman.
+  const [agentRes, similar, ratings, videosRes] = await Promise.all([
     supabase
       .from("public_agent_profiles")
       .select("user_id, public_slug, full_name, avatar_url, organization_name, active_listings_count, whatsapp_number, public_cta_enabled, is_verified")
@@ -99,7 +102,9 @@ export async function getListingDetail(slug: string): Promise<ListingDetailResul
       .maybeSingle<ListingAgent>(),
     getSimilarListings(listing),
     getAgentRatings([listing.agent_id]),
+    supabase.from("listing_videos").select("url, type").eq("listing_id", listing.id).returns<{ url: string; type: "video" | "virtual_tour" }[]>(),
   ]);
+  listing.videos = videosRes.error ? [] : (videosRes.data ?? []);
   return { state: "ok", listing, agent: agentRes.error ? null : agentRes.data, agentRating: ratings.get(listing.agent_id), similar };
 }
 

@@ -4,6 +4,7 @@ import type { Route } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ListingGallery } from "@/components/public/ListingGallery";
+import { ListingVideoSection } from "@/components/public/ListingVideoSection";
 import { PropertyCard } from "@/components/public/PropertyCard";
 import { ShareButton } from "@/components/public/ShareButton";
 import { ViewTracker } from "@/components/public/ViewTracker";
@@ -130,6 +131,7 @@ export function ListingDetailView({ listing: l, agent, agentRating, similar, tra
           )
         }
       />
+      <ListingVideoSection videos={l.videos} />
 
       <div className="flex flex-col gap-4 pt-6 md:flex-row md:items-start md:justify-between md:gap-6">
         <div className="flex min-w-0 flex-col gap-2">

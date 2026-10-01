@@ -63,6 +63,7 @@ export default async function SampleListingPage({ searchParams }: Props) {
     districtName: "Serpong",
     photos: kosong ? [] : [photo(1), photo(2), photo(3), photo(4)],
     amenities: kosong ? [] : ["Carport 2 Mobil", "Keamanan 24 Jam", "Taman", "Dekat Sekolah"],
+    videos: kosong ? [] : [{ url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", type: "video" }],
   };
   const agent: ListingAgent | null = kosong
     ? null
