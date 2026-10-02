@@ -1,0 +1,26 @@
+-- 0176_fix_subscription_plan_has_sales_grant.sql
+-- Perbaikan bug: Superadmin/Admin tidak bisa Ubah/Aktifkan/Nonaktifkan Paket Langganan
+-- (/admin/paket) -- selalu gagal dengan "Anda tidak punya akses untuk operasi ini." walau
+-- role, status akun, dan hak akses (has_permission) semuanya benar.
+--
+-- AKAR MASALAH (ditemukan+direproduksi lewat transaksi uji di DB live, bukan dugaan):
+-- Trigger enforce_subscription_plan_terms() (migration 0142, BEFORE UPDATE/DELETE di
+-- subscription_plans) BUKAN SECURITY DEFINER -- jadi berjalan dengan hak akses pemanggil asli
+-- (role "authenticated"), bukan hak elevated. Di dalamnya trigger memanggil fungsi
+-- subscription_plan_has_sales(uuid, text), yang DIBUAT SECURITY DEFINER (benar, supaya bisa baca
+-- commercial_orders/subscriptions lintas RLS) TAPI migration 0142 lupa memberi
+-- "GRANT EXECUTE ... TO authenticated" padanya -- berbeda dari fungsi SECURITY DEFINER lain di
+-- proyek ini (has_permission, is_superadmin) yang semuanya sudah benar di-grant ke
+-- authenticated/anon. Akibatnya: SETIAP UPDATE/DELETE ke subscription_plans (termasuk
+-- sekadar ganti status aktif/nonaktif, bukan hanya ganti harga) gagal dengan Postgres error
+-- 42501 "permission denied for function subscription_plan_has_sales" -- sama sekali TIDAK
+-- berhubungan dengan RLS/has_permission/status akun (yang sudah dicek dan semuanya benar),
+-- tapi error code-nya (42501) dipetakan ke pesan generik yang sama oleh lib/api/handler.ts,
+-- sehingga terlihat seperti masalah izin peran padahal bukan.
+--
+-- Diuji: transaksi BEGIN...ROLLBACK di DB live mereproduksi error persis di atas untuk akun
+-- superadmin aktif dengan has_permission('m14.commercial_administration.configure') = true;
+-- setelah GRANT di bawah ditambahkan (dalam transaksi uji terpisah, ikut di-ROLLBACK), UPDATE
+-- yang sama berhasil.
+
+GRANT EXECUTE ON FUNCTION public.subscription_plan_has_sales(uuid, text) TO authenticated;
